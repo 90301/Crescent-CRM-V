@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import dbUtils.*;
+import users.User;
 
 /**
  * Handles all the data-storage.
@@ -23,10 +24,15 @@ import dbUtils.*;
  */
 public class DataHolder {
 
+	//will not be static after the transition
 	private static ConcurrentHashMap<String, Client> localClientMap = new ConcurrentHashMap<String, Client>();
 	private static ConcurrentHashMap<String, Location> localLocationMap = new ConcurrentHashMap<String, Location>();
 	private static ConcurrentHashMap<String, Status> localStatusMap = new ConcurrentHashMap<String, Status>();
 	private static ConcurrentHashMap<String, Group> localGroupMap = new ConcurrentHashMap<String, Group>();
+	
+	//Will be static after the transition
+	private static ConcurrentHashMap<String, User> localUserpMap = new ConcurrentHashMap<String, User>();
+	
 	static final boolean writeCredentials = false;
 	static final String credentialsFile = "credentials.dat";
 	static final boolean readCredentials = false;

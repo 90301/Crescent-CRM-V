@@ -3,6 +3,7 @@ package users;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
+import java.util.ArrayList;
 import java.util.Base64;
 
 import javax.crypto.SecretKeyFactory;
@@ -34,6 +35,17 @@ public class User extends MaxObject {
 	public static final String passHashField = "PassHash";
 	//private static final SecureRandom random = new SecureRandom();
 	PasswordAuthentication pa = new PasswordAuthentication();
+	ArrayList<String> databasesAccsessable;
+	public static final String dataBasesAccsessableField = "databasesAccsessable";
+	/*
+	 * Serialized with gson
+	 */
+	
+	String databaseSelected;
+	public static final String databaseSelectedField = "databaseSelectedField";
+	
+	
+	
 	/*
 	 * TODO:
 	 * Add permissions (Must be extensible)
