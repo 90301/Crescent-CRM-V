@@ -29,18 +29,25 @@ public class User extends MaxObject {
 	 * > setupDBTypes
 	 * 
 	 */
+	
+	/*
+	 * Logging in info
+	 */
 	String userName;
 	public static final String userNameField = "UserName";
 	String passHash;
 	public static final String passHashField = "PassHash";
 	//private static final SecureRandom random = new SecureRandom();
 	PasswordAuthentication pa = new PasswordAuthentication();
+	
+	/*
+	 * Database selection
+	 */
 	ArrayList<String> databasesAccsessable;
 	public static final String dataBasesAccsessableField = "databasesAccsessable";
-	/*
-	 * Serialized with gson
-	 */
 	
+	//Serialized with gson as json text
+	 	
 	String databaseSelected;
 	public static final String databaseSelectedField = "databaseSelectedField";
 	
@@ -82,6 +89,9 @@ public class User extends MaxObject {
 	public void createTableForClass(MaxDBTable table) {
 		table.addDatatype(userNameField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
 		table.addDatatype(passHashField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
+		//database selection
+		table.addDatatype(dataBasesAccsessableField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
+		table.addDatatype(databaseSelectedField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
 		table.setPrimaryKeyName(userNameField);
 		table.createTable();
 	}

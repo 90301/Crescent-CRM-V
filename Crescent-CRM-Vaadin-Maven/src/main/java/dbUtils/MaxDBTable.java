@@ -52,8 +52,9 @@ public class MaxDBTable extends MaxDB {
 	}
 
 	/**
+	 * @deprecated
 	 * A safer (but slower) way of adding a datatype.
-	 * 
+	 * UPDATE: Just called add datatype
 	 * @param name
 	 * @param datatype
 	 */
