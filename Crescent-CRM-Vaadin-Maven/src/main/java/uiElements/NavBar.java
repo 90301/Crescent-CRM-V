@@ -25,7 +25,7 @@ public class NavBar {
 	Button userEditorButton;
 	Button schedulerButton;
 	Label statusLabel;
-	
+	public static final String BUTTON_WIDTH = "120px";
 	
 	public Layout generateNavBar() {
 		
@@ -46,6 +46,9 @@ public class NavBar {
 		sidebarLayout.addComponent(userEditorButton);
 		sidebarLayout.addComponent(schedulerButton);
 		
+		crmButton.setWidth(BUTTON_WIDTH);
+		userEditorButton.setWidth(BUTTON_WIDTH);
+        schedulerButton.setWidth(BUTTON_WIDTH);
 		generatedLayout = true;
 		
 		return sidebarLayout;
