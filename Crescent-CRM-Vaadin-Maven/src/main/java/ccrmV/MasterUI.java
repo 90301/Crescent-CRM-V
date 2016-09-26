@@ -15,6 +15,7 @@ import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
 import uiElements.NavBar;
+import users.User;
 
 @Theme("mytheme")
 public class MasterUI extends UI {
@@ -55,6 +56,8 @@ public class MasterUI extends UI {
 	
 	Crescent_crm_vaadinUI mainApp = new Crescent_crm_vaadinUI();
 	UserEditor userEditor = new UserEditor();
+	
+	User user = null;//logged in user
 	
 	protected void init(VaadinRequest request) {
 		

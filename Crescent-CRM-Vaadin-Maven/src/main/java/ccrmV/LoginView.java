@@ -19,6 +19,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
+import users.User;
 
 public class LoginView extends VerticalLayout implements View {
 
@@ -93,6 +94,8 @@ public MasterUI masterUi;
 		String code = "";
 		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE) {
 			loginSucsess = true;
+			User loggedInUser = DataHolder.getUser(userField.getValue());
+			masterUi.user = loggedInUser;
 			masterUi.startMainApp();
 		} else {
 			welcomeLabel.setData(code);
