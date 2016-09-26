@@ -7,7 +7,12 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Resource;
+import com.vaadin.server.ThemeResource;
+import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -31,18 +36,26 @@ public class LoginView extends VerticalLayout implements View {
 	
 	@Override
 	public void enter(ViewChangeEvent VCevent) {
+		//define components
 		welcomeLabel = new Label("Welcome : " + host);
 		userField = new TextField("User: ");
 		passField = new PasswordField("Pass: ");
 		loginButton = new Button("Login", event -> attemptLogin());
+		Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
+		
+		Image image = new Image(null, res);
 		
 		addEnterKeyActionToTextField(passField);
-		
-		
+	
+		//add components
+	    this.setMargin(true);
+		this.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+		this.addComponent(image);
 		this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
 		this.addComponent(loginButton);
+		
 		
 	}
 	
