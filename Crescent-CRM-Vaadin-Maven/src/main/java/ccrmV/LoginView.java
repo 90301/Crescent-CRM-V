@@ -13,6 +13,8 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import clientInfo.DataHolder;
+
 public class LoginView extends VerticalLayout implements View {
 
 	/**
@@ -74,9 +76,13 @@ public MasterUI masterUi;
 	private void attemptLogin() {
 		//welcomeLabel.setValue("U: " + userField.getValue() + " P: " + passField.getValue());
 		// TODO Auto-generated method stub
-		if (userField.getValue().contains("ccrmUser") && passField.getValue().contains("ccrmPass") || MasterUI.authenicatedHosts.contains(host)) {
+		//if (userField.getValue().contains("ccrmUser") && passField.getValue().contains("ccrmPass") || MasterUI.authenicatedHosts.contains(host)) {
+		String code = "";
+		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE) {
 			loginSucsess = true;
 			masterUi.startMainApp();
+		} else {
+			welcomeLabel.setData(code);
 		}
 	}
 

@@ -22,6 +22,7 @@ import users.User;
  * @author inhaler
  *
  */
+@SuppressWarnings("unused")
 public class DataHolder {
 
 	//will not be static after the transition
@@ -31,7 +32,7 @@ public class DataHolder {
 	private static ConcurrentHashMap<String, Group> localGroupMap = new ConcurrentHashMap<String, Group>();
 	
 	//Will be static after the transition
-	private static ConcurrentHashMap<String, User> localUserpMap = new ConcurrentHashMap<String, User>();
+	private static ConcurrentHashMap<String, User> localUserMap = new ConcurrentHashMap<String, User>();
 	
 	static final boolean writeCredentials = false;
 	static final String credentialsFile = "credentials.dat";
@@ -54,7 +55,11 @@ public class DataHolder {
 	public static String GROUP_TABLE_TITLE = "groupsTable";
 	static MaxDBTable clientTable;
 	public static String CLIENT_TABLE_TITLE = "clientsTable";
-
+	
+	//Persistant (user table)
+	static MaxDBTable userTable;
+	public static String USER_TABLE_TITLE = "usersTable";
+	
 	static ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup;
 	static ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup;
 
@@ -63,7 +68,10 @@ public class DataHolder {
 	
 	
 	
-	
+	/**
+	 * Set up all the static databases.
+	 * This will change later.
+	 */
 	public static void initalizeDatabases() {
 
 		/*
@@ -82,12 +90,16 @@ public class DataHolder {
 		statusTable = setupDatabaseTable(statusTable, STATUS_TABLE_TITLE, mysqlDatabase, Status.class);
 		locationTable = setupDatabaseTable(locationTable, LOCATION_TABLE_TITLE, mysqlDatabase, Location.class);
 		clientTable = setupDatabaseTable(clientTable, CLIENT_TABLE_TITLE, mysqlDatabase, Client.class);
-
+		userTable = setupDatabaseTable(userTable, USER_TABLE_TITLE, mysqlDatabase, User.class);
+		
+		
 		loadMaxObjects(localStatusMap, statusTable, Status.class);
 		loadMaxObjects(localGroupMap, groupTable, Group.class);
 		loadMaxObjects(localLocationMap, locationTable, Location.class);
 		loadMaxObjects(localClientMap, clientTable, Client.class);
-
+		
+		loadMaxObjects(localUserMap, userTable, User.class);
+		
 		// BACKUP all data to a CSV file
 		backupAllCsv();
 
@@ -99,12 +111,14 @@ public class DataHolder {
 		localMapLookup.put(Location.class, localLocationMap);
 		localMapLookup.put(Status.class, localStatusMap);
 		localMapLookup.put(Group.class, localGroupMap);
+		localMapLookup.put(User.class, localUserMap);
 
 		tableLookup = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 		tableLookup.put(Client.class, clientTable);
 		tableLookup.put(Location.class, locationTable);
 		tableLookup.put(Status.class, statusTable);
 		tableLookup.put(Group.class, groupTable);
+		tableLookup.put(User.class, userTable);
 		// OUTPUT GENERIC Maps
 
 		System.out.println("CREATED LOCAL LOOKUPS" + "\n" + localMapLookup + "\n" + tableLookup);
@@ -114,9 +128,43 @@ public class DataHolder {
 		//closeAllDatabaseConnections();
 		
 		setupTemplate();
+		
+		//If there are no users, create a user
+		
+		if (localUserMap.isEmpty()) {
+			User starterUser = new User();
+			starterUser.setUserName("ccrmUser");
+			starterUser.setPassword("ccrmPass");
+			starterUser.setAdmin(true);
+			store(starterUser,User.class);
+			
+		}
 
 	}
-
+	
+	
+	//login failure codes:
+	public static final String NO_USER_CODE = "No such user in the system!";
+	public static final String WRONG_PASS_CODE = "Wrong Username or Password";
+	public static final String SUCCESS_CODE = "SUCCESSFUL LOGIN!";
+	/*
+	 * Logging in
+	 */
+	public static String attemptLogin(String userName, String pass) {
+		User userLoggingIn = localUserMap.get(userName);
+		if (userLoggingIn != null) {
+			boolean loginSucsess =  userLoggingIn.checkPassword(pass);
+			if (loginSucsess) {
+				System.out.println("Logged into: " + userLoggingIn);
+				return SUCCESS_CODE;
+			} else {
+				return WRONG_PASS_CODE;
+			}
+			
+		} else {
+			return NO_USER_CODE;
+		}
+	}
 	
 	/***
 	 *    TTTTTTT    EEEEEEE    MM    MM    PPPPPP     LL           AAA      TTTTTTT    EEEEEEE     SSSSS  
@@ -168,9 +216,7 @@ public class DataHolder {
 			templateClient = c;
 		}
 	}
-	
-	
-	
+
 	
 	private static void closeAllDatabaseConnections() {
 		statusTable.closeDB();

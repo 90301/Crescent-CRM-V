@@ -47,10 +47,13 @@ public class User extends MaxObject {
 	public static final String dataBasesAccsessableField = "databasesAccsessable";
 	
 	//Serialized with gson as json text
-	 	
+	
+	
 	String databaseSelected;
 	public static final String databaseSelectedField = "databaseSelectedField";
 	
+	Boolean admin;
+	public static final String adminField = "admin";
 	
 	
 	/*
@@ -70,14 +73,14 @@ public class User extends MaxObject {
 	public void loadInternalFromMap() {
 		this.userName = (String) dbMap.get(userNameField);
 		this.passHash = (String) dbMap.get(passHashField);
-		
+		this.admin = (boolean) dbMap.get(adminField);
 	}
 
 	@Override
 	public void updateDBMap() {
 		dbMap.put(userNameField, userName);
 		dbMap.put(passHashField, passHash);
-
+		dbMap.put(adminField, admin);
 	}
 
 	@Override
@@ -92,6 +95,8 @@ public class User extends MaxObject {
 		//database selection
 		table.addDatatype(dataBasesAccsessableField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
 		table.addDatatype(databaseSelectedField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
+		//Administration / rights
+		table.addDatatype(adminField, MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN);
 		table.setPrimaryKeyName(userNameField);
 		table.createTable();
 	}
@@ -99,7 +104,7 @@ public class User extends MaxObject {
 	public void setPassword(String pass) {
 		
 		this.passHash = pa.hash(pass.toCharArray());
-		
+		updateDBMap();
 	}
 	
 	public Boolean checkPassword(String pass) {
@@ -116,8 +121,20 @@ public class User extends MaxObject {
 	public void setupDBDatatypes() {
 		dbDatatypes.put(userNameField, String.class);
 		//Traditional Way ^^^
-		dbDatatypes.put(passHashField, passHashField.getClass());
+		dbDatatypes.put(passHashField, String.class);
 		//Would this work? ^^^
+		dbDatatypes.put(adminField, Boolean.class);
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+		updateDBMap();
+		
+	}
+
+	public void setAdmin(boolean admin) {
+		this.admin = admin;
+		updateDBMap();
 		
 	}
 

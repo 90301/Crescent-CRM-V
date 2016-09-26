@@ -32,6 +32,7 @@ public abstract class MaxObject {
 		// value
 		// SQL representation
 		//TODO: escape  commas in notes to prevent issues
+		this.updateDBMap();
 		String insertValues = " ";
 		String keys = "(";
 		String values = "(";
@@ -54,6 +55,10 @@ public abstract class MaxObject {
 				String modValue = sdf.format(value);
 				System.out.println("date: " + modValue);
 				values += "'" + modValue + "'";
+			} else if (value instanceof Boolean) {
+				//MYSQL requires no quotes for a true/false value
+					values +=  ""+value;
+				
 			} else {
 				values += "'" + value + "'";
 			}

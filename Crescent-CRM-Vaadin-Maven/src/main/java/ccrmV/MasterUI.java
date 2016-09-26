@@ -13,6 +13,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
+import clientInfo.DataHolder;
 import uiElements.NavBar;
 
 @Theme("mytheme")
@@ -56,6 +57,9 @@ public class MasterUI extends UI {
 	UserEditor userEditor = new UserEditor();
 	
 	protected void init(VaadinRequest request) {
+		
+		DataHolder.initalizeDatabases();
+		
 		userHost = request.getRemoteHost();
 		mainNavigator = new Navigator(this,this);
 		LoginView lv = new LoginView();
