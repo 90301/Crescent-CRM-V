@@ -85,8 +85,8 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 	Label versionLabel;
 
-	public static final double versionNumber = .60;
-	public static final String versionDescription = " User Login";
+	public static final double versionNumber = .61;
+	public static final String versionDescription = " Create Users";
 	private static final int MAX_NOTE_ROWS = 20;
 
 	public Client selectedClient;

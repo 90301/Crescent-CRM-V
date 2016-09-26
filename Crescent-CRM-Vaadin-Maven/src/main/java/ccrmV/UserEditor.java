@@ -10,7 +10,9 @@ import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import clientInfo.DataHolder;
 import uiElements.NavBar;
+import users.User;
 
 public class UserEditor extends VerticalLayout implements View {
 
@@ -23,6 +25,10 @@ public class UserEditor extends VerticalLayout implements View {
 	
 	Accordion userEditorAccordion;
 	VerticalLayout userCreatorLayout;
+	
+	TextField createUserNameTextField;
+	PasswordField createUserPassField;
+	Button createUserButton;
 	
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
@@ -66,9 +72,13 @@ public class UserEditor extends VerticalLayout implements View {
 		
 		userCreatorLayout = new VerticalLayout();
 		
-		TextField createUserNameTextField = new TextField("User Name");
-		PasswordField createUserPassField = new PasswordField("Password");
-		Button createUserButton = new Button("Create New User");
+		createUserNameTextField = new TextField("User Name");
+		createUserPassField = new PasswordField("Password");
+		createUserButton = new Button("Create New User");
+		
+		//Listeners
+		createUserButton.addClickListener(click -> createNewUserClick());
+		
 		
 		userCreatorLayout.addComponent(createUserNameTextField);
 		userCreatorLayout.addComponent(createUserPassField);
@@ -86,6 +96,27 @@ public class UserEditor extends VerticalLayout implements View {
 		this.addComponent(userEditorAccordion);
 		
 		this.alreadyGenerated = true;
+	}
+
+	/**
+	 * Creates a new user with 
+	 */
+	private void createNewUserClick() {
+		String userName = createUserNameTextField.getValue();
+		String pass = createUserPassField.getValue();
+		
+		
+		User nUser = new User();
+		//Check to see if a user already has a specific name
+		if (DataHolder.getUser(userName) == null) {
+			nUser.setUserName(userName);
+			nUser.setPassword(pass);
+			nUser.setAdmin(false);
+			DataHolder.store(nUser, User.class);
+		} else {
+			//User already exists
+			
+		}
 	}
 
 }
