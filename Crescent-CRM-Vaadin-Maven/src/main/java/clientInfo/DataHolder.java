@@ -441,4 +441,9 @@ public class DataHolder {
 		return localGroupMap;
 	}
 
+	public static User getUser(String userName) {
+		// TODO Auto-generated method stub
+		return localUserMap.get(userName);
+	}
+
 }
