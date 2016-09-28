@@ -14,6 +14,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
+import clientInfo.UserDataHolder;
 import uiElements.NavBar;
 import users.User;
 
@@ -58,6 +59,11 @@ public class MasterUI extends UI {
 	UserEditor userEditor = new UserEditor();
 	
 	User user = null;//logged in user
+	
+	
+	//This is intended to make it so we can just call masterUI.userDataHolder
+	//everywhere dataholder used to be called.
+	public UserDataHolder userDataHolder;//Set when logging in
 	
 	protected void init(VaadinRequest request) {
 		

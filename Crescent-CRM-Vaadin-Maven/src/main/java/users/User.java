@@ -43,6 +43,7 @@ public class User extends MaxObject {
 	/*
 	 * Database selection
 	 */
+	//TODO: make this concurrent
 	ArrayList<String> databasesAccsessable;
 	public static final String dataBasesAccsessableField = "databasesAccsessable";
 	
@@ -71,16 +72,29 @@ public class User extends MaxObject {
 
 	@Override
 	public void loadInternalFromMap() {
+		
 		this.userName = (String) dbMap.get(userNameField);
 		this.passHash = (String) dbMap.get(passHashField);
+		this.databaseSelected = (String) dbMap.get(databaseSelectedField);
 		this.admin = (boolean) dbMap.get(adminField);
+		
+		safetyCheck();
 	}
 
 	@Override
 	public void updateDBMap() {
+		safetyCheck();
 		dbMap.put(userNameField, userName);
 		dbMap.put(passHashField, passHash);
+		dbMap.put(databaseSelectedField, this.databaseSelected);
 		dbMap.put(adminField, admin);
+	}
+
+	private void safetyCheck() {
+		if (this.databaseSelected==null){
+			this.databaseSelected="";
+		}
+		
 	}
 
 	@Override
@@ -123,6 +137,10 @@ public class User extends MaxObject {
 		//Traditional Way ^^^
 		dbDatatypes.put(passHashField, String.class);
 		//Would this work? ^^^
+		dbDatatypes.put(databaseSelectedField, String.class);
+		
+		dbDatatypes.put(dataBasesAccsessableField, String.class);//JSON converted
+		
 		dbDatatypes.put(adminField, Boolean.class);
 	}
 
@@ -135,6 +153,20 @@ public class User extends MaxObject {
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 		updateDBMap();
+		
+	}
+	
+	public void setDatabaseSelected(String selectedDB) {
+		//TODO: Error checking and access requirements
+		this.databaseSelected = selectedDB;
+	}
+	public String getDatabaseSelected() {
+		return databaseSelected;
+		
+	}
+
+	public void addDatabaseAccsessable(String string) {
+		this.databasesAccsessable.add("");
 		
 	}
 

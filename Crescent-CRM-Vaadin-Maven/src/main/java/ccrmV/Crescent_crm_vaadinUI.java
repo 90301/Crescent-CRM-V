@@ -86,7 +86,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 	Label versionLabel;
 
 	public static final double versionNumber = .62;
-	public static final String versionDescription = " main user login";
+	public static final String versionDescription = " main user loginf";
 	private static final int MAX_NOTE_ROWS = 20;
 
 	public Client selectedClient;
@@ -141,9 +141,9 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		// Template code
 		if (selectedClient.getName().contains(DataHolder.TEMPLATE_STRING)) {
 
-			Group tGroup = DataHolder.getGroup(DataHolder.TEMPLATE_STRING);
-			Location tLocation = DataHolder.getLocation(DataHolder.TEMPLATE_STRING);
-			Status tStatus = DataHolder.getStatus(DataHolder.TEMPLATE_STRING);
+			Group tGroup = masterUi.userDataHolder.getGroup(DataHolder.TEMPLATE_STRING);
+			Location tLocation = masterUi.userDataHolder.getLocation(DataHolder.TEMPLATE_STRING);
+			Status tStatus = masterUi.userDataHolder.getStatus(DataHolder.TEMPLATE_STRING);
 			selectedClient.setGroup(tGroup);
 			selectedClient.setLocation(tLocation);
 			selectedClient.setStatus(tStatus);
@@ -151,18 +151,18 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		} else {
 			// normal client creation
 			// if valid, set the field
-			Group cGroup = DataHolder.getGroup((String) clientGroup.getValue());
+			Group cGroup = masterUi.userDataHolder.getGroup((String) clientGroup.getValue());
 			if (cGroup != null) {
 				selectedClient.setGroup(cGroup);
 			}
 			// Resolve field
-			Location cLocation = DataHolder.getLocation((String) clientLocation.getValue());
+			Location cLocation = masterUi.userDataHolder.getLocation((String) clientLocation.getValue());
 			// if valid, set the field
 			if (cLocation != null) {
 				selectedClient.setLocation(cLocation);
 			}
 			// Resolve field
-			Status cStatus = DataHolder.getStatus((String) clientStatus.getValue());
+			Status cStatus = masterUi.userDataHolder.getStatus((String) clientStatus.getValue());
 			// if valid, set the field
 			if (cStatus != null) {
 				selectedClient.setStatus(cStatus);
@@ -171,7 +171,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		}
 		selectedClient.setLastUpdatedToNow();
 
-		DataHolder.store(selectedClient, Client.class);
+		masterUi.userDataHolder.store(selectedClient, Client.class);
 		updateClientTable();
 	}
 
@@ -185,13 +185,13 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		// set up filter comparison objects
 		Status filterStatusTest = null;
 		if (filterStatus.getValue() != null)
-			filterStatusTest = DataHolder.getStatus(filterStatus.getValue().toString());
+			filterStatusTest = masterUi.userDataHolder.getStatus(filterStatus.getValue().toString());
 		Location filterLocationTest = null;
 		if (filterLocation.getValue() != null)
-			filterLocationTest = DataHolder.getLocation(filterLocation.getValue().toString());
+			filterLocationTest = masterUi.userDataHolder.getLocation(filterLocation.getValue().toString());
 		Group filterGroupTest = null;
 		if (filterGroup.getValue() != null)
-			filterGroupTest = DataHolder.getGroup(filterGroup.getValue().toString());
+			filterGroupTest = masterUi.userDataHolder.getGroup(filterGroup.getValue().toString());
 
 		String filterNameTest = null;
 		if (filterClientTextField.getValue() != null && !stringNullCheck(filterClientTextField.getValue()))
@@ -202,7 +202,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 		System.out.println("Looking for: " + filterNameTest);
 
-		for (Client c : DataHolder.getAllClients()) {
+		for (Client c : masterUi.userDataHolder.getAllClients()) {
 
 			if (clientTable.containsId(c.getPrimaryKey())) {
 				// remove old item
@@ -255,19 +255,19 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		csvBackupSelect.clear();
 
 		// create clients
-		fillComboBox(createClientStatus, DataHolder.getAllStatus());
-		fillComboBox(createClientLocation, DataHolder.getAllLocations());
-		fillComboBox(createClientGroup, DataHolder.getAllGroups());
+		fillComboBox(createClientStatus, masterUi.userDataHolder.getAllStatus());
+		fillComboBox(createClientLocation, masterUi.userDataHolder.getAllLocations());
+		fillComboBox(createClientGroup, masterUi.userDataHolder.getAllGroups());
 
 		// Client editor
-		fillComboBox(clientStatus, DataHolder.getAllStatus());
-		fillComboBox(clientLocation, DataHolder.getAllLocations());
-		fillComboBox(clientGroup, DataHolder.getAllGroups());
+		fillComboBox(clientStatus, masterUi.userDataHolder.getAllStatus());
+		fillComboBox(clientLocation, masterUi.userDataHolder.getAllLocations());
+		fillComboBox(clientGroup, masterUi.userDataHolder.getAllGroups());
 
 		// filter
-		fillComboBox(filterStatus, DataHolder.getAllStatus());
-		fillComboBox(filterLocation, DataHolder.getAllLocations());
-		fillComboBox(filterGroup, DataHolder.getAllGroups());
+		fillComboBox(filterStatus, masterUi.userDataHolder.getAllStatus());
+		fillComboBox(filterLocation, masterUi.userDataHolder.getAllLocations());
+		fillComboBox(filterGroup, masterUi.userDataHolder.getAllGroups());
 
 		fillComboBox(csvBackupSelect, BackupManager.getCsvBackups());
 	}
@@ -300,7 +300,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 		// null check
 		if (clientTable.getValue() != null && !stringNullCheck((String) clientTable.getValue())) {
-			localSelClient = DataHolder.getClient((String) clientTable.getValue());
+			localSelClient = masterUi.userDataHolder.getClient((String) clientTable.getValue());
 			if (localSelClient == null) {
 				System.out.println(
 						"Null value: " + localSelClient + " found for client: " + (String) clientTable.getValue());
@@ -364,7 +364,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		if (text != nullValue && text.compareTo("") != 0) {
 			Location location = new Location();
 			location.setLocationName(text);
-			DataHolder.store(location, Location.class);
+			masterUi.userDataHolder.store(location, Location.class);
 		}
 		fillAllComboBoxes();
 	}
@@ -376,7 +376,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		if (text != nullValue && text.compareTo("") != 0) {
 			Status s = new Status();
 			s.setStatusName(text);
-			DataHolder.store(s, Status.class);
+			masterUi.userDataHolder.store(s, Status.class);
 		}
 		fillAllComboBoxes();
 	}
@@ -388,7 +388,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		if (text != nullValue && text.compareTo("") != 0) {
 			Group g = new Group();
 			g.setGroupName(text);
-			DataHolder.store(g, Group.class);
+			masterUi.userDataHolder.store(g, Group.class);
 		}
 		fillAllComboBoxes();
 	}
@@ -431,9 +431,9 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 		Client c = new Client();
 		// make sure the location and status are valid
-		Location l = DataHolder.getLocationMap().get(createClientLocation.getValue().toString());
-		Status s = DataHolder.getStatusMap().get(createClientStatus.getValue().toString());
-		Group g = DataHolder.getGroupMap().get(createClientGroup.getValue().toString());
+		Location l = masterUi.userDataHolder.getLocationMap().get(createClientLocation.getValue().toString());
+		Status s = masterUi.userDataHolder.getStatusMap().get(createClientStatus.getValue().toString());
+		Group g = masterUi.userDataHolder.getGroupMap().get(createClientGroup.getValue().toString());
 		if (l != null && s != null && g != null) {
 			c.setLocation(l);
 			c.setStatus(s);
@@ -448,15 +448,15 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 		c.setId(Client.genId());
 		// set notes to template client
-		if (DataHolder.templateClient != null) {
-			c.setNotes(DataHolder.templateClient.getNotes());
+		if (masterUi.userDataHolder.templateClient != null) {
+			c.setNotes(masterUi.userDataHolder.templateClient.getNotes());
 		} else {
 			c.setNotes("Notes:");
 		}
 
 		System.out.println("Created Client: " + c);
 
-		DataHolder.store(c, Client.class);
+		masterUi.userDataHolder.store(c, Client.class);
 		updateClientTable();
 	}
 
@@ -541,7 +541,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 		// but a better fix may be to just do a test, instead of running the
 		// whole process.
-		DataHolder.initalizeDatabases();
+		masterUi.userDataHolder.initalizeDatabases();
 
 		// This is the top level layout (for now)
 		// hopefully this can be changed later.

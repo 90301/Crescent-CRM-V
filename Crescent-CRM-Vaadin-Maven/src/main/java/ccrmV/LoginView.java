@@ -96,6 +96,7 @@ public MasterUI masterUi;
 			loginSucsess = true;
 			User loggedInUser = DataHolder.getUser(userField.getValue());
 			masterUi.user = loggedInUser;
+			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			masterUi.startMainApp();
 		} else {
 			welcomeLabel.setData(code);

@@ -20,6 +20,7 @@ public class Client extends MaxObject {
 	//Dates
 	private java.util.Date lastUpdated = new Date(); public static final String lastUpdatedField = "lastUpdated";
 	
+	private UserDataHolder userDataHolder;
 	/*
 	 * TYPE CHECKING MUST BE DONE
 	 * To insure values are not null before creating the client
@@ -131,7 +132,7 @@ public class Client extends MaxObject {
 	}
 	
 	public void setLocation(String locationName) {
-		this.location = DataHolder.getLocation(locationName);
+		this.location = userDataHolder.getLocation(locationName);
 		updateDBMap();
 	}
 	
@@ -167,7 +168,7 @@ public class Client extends MaxObject {
 	}
 	
 	public void setStatus(String statusName) {
-		this.status = DataHolder.getStatus(statusName);
+		this.status = userDataHolder.getStatus(statusName);
 		updateDBMap();
 	}
 	
@@ -221,7 +222,7 @@ public class Client extends MaxObject {
 	}
 	
 	public void setGroup(String groupName) {
-		this.group = DataHolder.getGroup(groupName);
+		this.group = userDataHolder.getGroup(groupName);
 		updateDBMap();
 	}
 	
@@ -253,6 +254,14 @@ public class Client extends MaxObject {
 
 			String strLastUpdated = SIMPLE_DATE_FORMAT.format(lastUpdated);
 			return strLastUpdated;
+	}
+
+	public UserDataHolder getUserDataHolder() {
+		return userDataHolder;
+	}
+
+	public void setUserDataHolder(UserDataHolder userDataHolder) {
+		this.userDataHolder = userDataHolder;
 	}
 
 

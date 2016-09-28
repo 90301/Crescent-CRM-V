@@ -26,13 +26,16 @@ import users.User;
 public class DataHolder {
 
 	//will not be static after the transition
+	/*
 	private static ConcurrentHashMap<String, Client> localClientMap = new ConcurrentHashMap<String, Client>();
 	private static ConcurrentHashMap<String, Location> localLocationMap = new ConcurrentHashMap<String, Location>();
 	private static ConcurrentHashMap<String, Status> localStatusMap = new ConcurrentHashMap<String, Status>();
 	private static ConcurrentHashMap<String, Group> localGroupMap = new ConcurrentHashMap<String, Group>();
-	
+	*/
 	//Will be static after the transition
 	private static ConcurrentHashMap<String, User> localUserMap = new ConcurrentHashMap<String, User>();
+	private static ConcurrentHashMap<String, UserDataHolder> userDataHolderMap = new ConcurrentHashMap<String,UserDataHolder>();
+	
 	
 	static final boolean writeCredentials = false;
 	static final String credentialsFile = "credentials.dat";
@@ -64,6 +67,7 @@ public class DataHolder {
 	static ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup;
 
 	public static final String TEMPLATE_STRING = "[[TEMPLATE]]";
+	public static final boolean MULTI_USER_MODE = true;
 	public static Client templateClient;
 	
 	
@@ -86,18 +90,23 @@ public class DataHolder {
 		/*
 		 * Set up the tables
 		 */
+		if (MULTI_USER_MODE==false) {
 		groupTable = setupDatabaseTable(groupTable, GROUP_TABLE_TITLE, mysqlDatabase, Group.class);
 		statusTable = setupDatabaseTable(statusTable, STATUS_TABLE_TITLE, mysqlDatabase, Status.class);
 		locationTable = setupDatabaseTable(locationTable, LOCATION_TABLE_TITLE, mysqlDatabase, Location.class);
 		clientTable = setupDatabaseTable(clientTable, CLIENT_TABLE_TITLE, mysqlDatabase, Client.class);
+		}
 		userTable = setupDatabaseTable(userTable, USER_TABLE_TITLE, mysqlDatabase, User.class);
 		
 		
+		/*
+		if (MULTI_USER_MODE==false) {
 		loadMaxObjects(localStatusMap, statusTable, Status.class);
 		loadMaxObjects(localGroupMap, groupTable, Group.class);
 		loadMaxObjects(localLocationMap, locationTable, Location.class);
 		loadMaxObjects(localClientMap, clientTable, Client.class);
-		
+		}
+		*/
 		loadMaxObjects(localUserMap, userTable, User.class);
 		
 		// BACKUP all data to a CSV file
@@ -107,17 +116,25 @@ public class DataHolder {
 		 * SET UP GENERIC MAPS
 		 */
 		localMapLookup = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
+		/*
+		if (MULTI_USER_MODE==false) {
 		localMapLookup.put(Client.class, localClientMap);
 		localMapLookup.put(Location.class, localLocationMap);
 		localMapLookup.put(Status.class, localStatusMap);
 		localMapLookup.put(Group.class, localGroupMap);
+		}
+		*/
 		localMapLookup.put(User.class, localUserMap);
 
 		tableLookup = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
+		/*
+		if (MULTI_USER_MODE==false) {
 		tableLookup.put(Client.class, clientTable);
 		tableLookup.put(Location.class, locationTable);
 		tableLookup.put(Status.class, statusTable);
 		tableLookup.put(Group.class, groupTable);
+		}
+		*/
 		tableLookup.put(User.class, userTable);
 		// OUTPUT GENERIC Maps
 
@@ -127,7 +144,8 @@ public class DataHolder {
 		// try closing all the database connections
 		//closeAllDatabaseConnections();
 		
-		setupTemplate();
+		// Change this for multi user
+		//setupTemplate();
 		
 		//If there are no users, create a user
 		
@@ -135,6 +153,9 @@ public class DataHolder {
 			User starterUser = new User();
 			starterUser.setUserName("ccrmUser");
 			starterUser.setPassword("ccrmPass");
+			starterUser.setDatabaseSelected("");//default database
+			starterUser.addDatabaseAccsessable("");
+			starterUser.addDatabaseAccsessable("ccrmUser");
 			starterUser.setAdmin(true);
 			store(starterUser,User.class);
 			
@@ -175,6 +196,7 @@ public class DataHolder {
 	 *                                                                                                     
 	 */
 	
+	/*
 	public static void setupTemplate() {
 		
 		Client c;
@@ -226,10 +248,15 @@ public class DataHolder {
 		mysqlDatabase.closeDB();
 
 	}
+	*/
 
 	// BACKUPS
 
+	/**
+	 * @deprecated
+	 */
 	public static void backupAllCsv() {
+		/*
 		ArrayList<String> fileNames = new ArrayList<String>();
 		fileNames.add("status.csv");
 		fileNames.add("location.csv");
@@ -252,19 +279,19 @@ public class DataHolder {
 
 		String zipFileName = "Backup_" + zipDateFormat.format(date);
 		BackupManager.zipFiles(fileNames, zipFileName);
-
+		*/
 	}
 
 	/**
-	 * Expects files to be named a certain thing for now
+	 * @deprecated
 	 */
 	private static void restoreAllCsv() {
-
+		/*
 		BackupManager.restore("status", Status.class, localStatusMap);
 		BackupManager.restore("location", Location.class, localLocationMap);
 		BackupManager.restore("group", Group.class, localGroupMap);
 		BackupManager.restore("client", Client.class, localClientMap);
-
+		*/
 	}
 
 	public static void restoreFromBackup(String fileName) {
@@ -374,10 +401,11 @@ public class DataHolder {
 		table.insertInTable(obj);
 	}
 
-	/*
-	 * CLIENTS
-	 */
+	
+	
 
+
+	/*
 
 	public static Client getClient(String id) {
 		return localClientMap.get(id);
@@ -387,9 +415,6 @@ public class DataHolder {
 		return localClientMap.values();
 	}
 
-	/*
-	 * LOCATION
-	 */
 
 
 	public static Location getLocation(String id) {
@@ -400,9 +425,6 @@ public class DataHolder {
 		return localLocationMap.values();
 	}
 
-	/*
-	 * STATUS
-	 */
 
 
 	public static Status getStatus(String id) {
@@ -413,9 +435,6 @@ public class DataHolder {
 		return localStatusMap.values();
 	}
 
-	/*
-	 * GROUPs
-	 */
 
 
 	public static Group getGroup(String id) {
@@ -440,10 +459,16 @@ public class DataHolder {
 		// TODO Auto-generated method stub
 		return localGroupMap;
 	}
+	*/
 
 	public static User getUser(String userName) {
 		// TODO Auto-generated method stub
 		return localUserMap.get(userName);
+	}
+
+	public static UserDataHolder getUserDataHolder(User loggedInUser) {
+		// TODO Auto-generated method stub
+		return userDataHolderMap.get(loggedInUser.getDatabaseSelected());
 	}
 
 }
