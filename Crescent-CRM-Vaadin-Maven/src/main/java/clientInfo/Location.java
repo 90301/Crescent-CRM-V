@@ -63,7 +63,9 @@ public class Location extends MaxObject {
 	}
 	public void setLocationName(String locationName) {
 		this.locationName = locationName;
-		dbMap.put(locationNameField, this.locationName);
+		updateDBMap();
+		//dbMap.put(locationNameField, this.locationName);
+		
 	}
 	public void createTableForClass(MaxDBTable table) {
 		table.addDatatype(locationNameField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);

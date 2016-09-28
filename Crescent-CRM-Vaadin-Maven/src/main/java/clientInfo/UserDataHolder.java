@@ -1,6 +1,9 @@
 package clientInfo;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -10,7 +13,7 @@ import dbUtils.MaxObject;
 //TODO: make this extend max object, and have a table of available databases
 public class UserDataHolder {
 
-	private String user;
+	//private String user;
 	private String databasePrefix;
 	// will not be after the transition
 	private ConcurrentHashMap<String, Client> userClientMap = new ConcurrentHashMap<String, Client>();
@@ -52,10 +55,10 @@ public class UserDataHolder {
 				DataHolder.mysqlDatabase, Client.class);
 
 		// load the data
-		DataHolder.loadMaxObjects(userStatusMap, userStatusTable, Status.class);
-		DataHolder.loadMaxObjects(userGroupMap, userGroupTable, Group.class);
-		DataHolder.loadMaxObjects(userLocationMap, userLocationTable, Location.class);
-		DataHolder.loadMaxObjects(userClientMap, userClientTable, Client.class);
+		loadMaxObjects(userStatusMap, userStatusTable, Status.class);
+		loadMaxObjects(userGroupMap, userGroupTable, Group.class);
+		loadMaxObjects(userLocationMap, userLocationTable, Location.class);
+		loadMaxObjects(userClientMap, userClientTable, Client.class);
 
 		/*
 		 * User Database lookup tables
@@ -126,17 +129,59 @@ public class UserDataHolder {
 
 		table.insertInTable(obj);
 	}
+	
+	/**
+	 * Version of loadMaxObjects that sets the user data holder
+	 * @param localMap
+	 * @param table
+	 * @param ref
+	 */
+	@SuppressWarnings("unchecked")
+	public <T extends MaxObject> void loadMaxObjects(Map<String, T> localMap, MaxDBTable table, Class<T> ref) {
+
+		System.out.println("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref);
+		if (table == null) {
+			return;// This is a bug
+		}
+		ResultSet allObjects = table.getAllRows();
+		System.out.println("Result set: " + allObjects);
+		if (allObjects == null) {
+			System.out.println("NO  objects found");
+			return;// no results found
+		}
+		try {
+			while (allObjects.next()) {
+				MaxObject obj;
+				obj = ref.newInstance();
+				obj.setUserDataHolder(this);
+				obj.loadFromDB(allObjects);
+				System.out.println("Loaded: " + obj + " from database.");
+				if (obj.getPrimaryKey() != null) {
+					localMap.put(obj.getPrimaryKey(), (T) obj);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+			allObjects.close();
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 
 	/*
 	 * Getters and Setters
 	 */
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
+	
 
 	public String getDatabasePrefix() {
 		return databasePrefix;

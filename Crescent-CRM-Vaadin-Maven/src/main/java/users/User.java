@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashMap;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
@@ -44,7 +45,7 @@ public class User extends MaxObject {
 	 * Database selection
 	 */
 	//TODO: make this concurrent
-	ArrayList<String> databasesAccsessable;
+	ArrayList<String> databasesAccsessable = new ArrayList<String>();
 	public static final String dataBasesAccsessableField = "databasesAccsessable";
 	
 	//Serialized with gson as json text
@@ -67,7 +68,11 @@ public class User extends MaxObject {
 	 * 
 	 */
 	public User() {
-		//constructor currently does nothing.
+		init();
+	}
+	
+	public void init() {
+		
 	}
 
 	@Override
@@ -133,6 +138,10 @@ public class User extends MaxObject {
 	 */
 	@Override
 	public void setupDBDatatypes() {
+		if (dbDatatypes == null) {
+			dbDatatypes = new HashMap<String, Class<?>>();
+		}
+		
 		dbDatatypes.put(userNameField, String.class);
 		//Traditional Way ^^^
 		dbDatatypes.put(passHashField, String.class);
@@ -166,7 +175,7 @@ public class User extends MaxObject {
 	}
 
 	public void addDatabaseAccsessable(String string) {
-		this.databasesAccsessable.add("");
+		this.databasesAccsessable.add(string);
 		
 	}
 

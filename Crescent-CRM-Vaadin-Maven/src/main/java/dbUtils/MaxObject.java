@@ -11,6 +11,7 @@ import java.util.Map;
 //import com.google.gwt.thirdparty.javascript.jscomp.FunctionInformationMap.Entry;
 
 import clientInfo.Client;
+import clientInfo.UserDataHolder;
 
 /**
  * A serialization for objects SUBCLASSES MUST IMPLEMENT A NO ARGUMENT
@@ -71,8 +72,14 @@ public abstract class MaxObject {
 	}
 
 	public void loadFromDB(ResultSet rs) {
-		System.out.println("MaxObject.loadFromDB()");
-		for (String key : dbMap.keySet()) {
+		if (dbMap.keySet().size()==0){
+			//load the db keys if not already loaded
+			this.setupDBDatatypes();
+		}
+		
+		System.out.println("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.");
+		//for (String key : dbMap.keySet()) {
+		for (String key : dbDatatypes.keySet()) {
 			try {
 				Object value = rs.getObject(key);
 				dbMap.put(key, value);
@@ -111,6 +118,14 @@ public abstract class MaxObject {
 
 	public abstract void setupDBDatatypes();
 
+	public UserDataHolder userDataHolder;
+	/**
+	 * sets the user data holder
+	 * @param udh
+	 */
+	public void setUserDataHolder(UserDataHolder udh) {
+		this.userDataHolder = udh;
+	}
 	/**
 	 * Loads data into dbMap from a csv file map.
 	 * 

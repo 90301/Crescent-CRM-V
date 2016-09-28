@@ -468,7 +468,13 @@ public class DataHolder {
 
 	public static UserDataHolder getUserDataHolder(User loggedInUser) {
 		// TODO Auto-generated method stub
-		return userDataHolderMap.get(loggedInUser.getDatabaseSelected());
+		UserDataHolder userDataHolder = userDataHolderMap.get(loggedInUser.getDatabaseSelected());
+		if (userDataHolder==null) {
+			//create the user data holder if it doesn't exist
+			userDataHolder = new UserDataHolder();
+			userDataHolder.setDatabasePrefix(loggedInUser.getDatabaseSelected());
+		}
+		return userDataHolder;
 	}
 
 }

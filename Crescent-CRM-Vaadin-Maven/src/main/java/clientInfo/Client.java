@@ -20,7 +20,7 @@ public class Client extends MaxObject {
 	//Dates
 	private java.util.Date lastUpdated = new Date(); public static final String lastUpdatedField = "lastUpdated";
 	
-	private UserDataHolder userDataHolder;
+	//private UserDataHolder userDataHolder;
 	/*
 	 * TYPE CHECKING MUST BE DONE
 	 * To insure values are not null before creating the client
@@ -256,6 +256,7 @@ public class Client extends MaxObject {
 			return strLastUpdated;
 	}
 
+	/*
 	public UserDataHolder getUserDataHolder() {
 		return userDataHolder;
 	}
@@ -263,6 +264,6 @@ public class Client extends MaxObject {
 	public void setUserDataHolder(UserDataHolder userDataHolder) {
 		this.userDataHolder = userDataHolder;
 	}
-
+	*/
 
 }
