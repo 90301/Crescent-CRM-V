@@ -57,7 +57,8 @@ public class UserEditor extends VerticalLayout implements View {
 
 		//Ensure the user is logged in
 		if (masterUi.loggedIn == false)
-			return;
+			masterUi.enterLogin();
+			//return;
 		
 		if (this.alreadyGenerated ) {
 			this.removeAllComponents();

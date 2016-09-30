@@ -47,6 +47,7 @@ public class MasterUI extends UI {
 		private static final long serialVersionUID = 1L;
 
 	}
+	public static final String LOGIN = "Login";
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
 	
@@ -93,11 +94,11 @@ public class MasterUI extends UI {
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
 		}
-		mainNavigator.addView("", lv);
+		mainNavigator.addView(LOGIN, lv);
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		
-		//mainNavigator.navigateTo("Login View");
+		enterLogin();
 		
 		/*
 		 * Start of capstone
@@ -121,5 +122,8 @@ public class MasterUI extends UI {
 		mainNavigator.navigateTo(USER_EDITOR);
 	}
 	
+	public void enterLogin() {
+		mainNavigator.navigateTo(LOGIN);
+	}
 
 }

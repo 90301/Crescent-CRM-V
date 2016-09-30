@@ -85,8 +85,8 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 
 	Label versionLabel;
 
-	public static final double versionNumber = .65;
-	public static final String versionDescription = " User Database Support Started";
+	public static final double versionNumber = .66;
+	public static final String versionDescription = " Login Redirect";
 	private static final int MAX_NOTE_ROWS = 20;
 
 	public Client selectedClient;
@@ -513,7 +513,7 @@ public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
 		
 		
 		if (masterUi.loggedIn == false)
-			return;
+			masterUi.enterLogin();
 		
 		/*
 		 * This is a bug fix which removes all the layout information
