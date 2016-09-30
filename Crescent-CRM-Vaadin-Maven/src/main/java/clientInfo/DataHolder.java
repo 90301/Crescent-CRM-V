@@ -50,18 +50,12 @@ public class DataHolder {
 	static String dbPass = "test";
 
 	static MaxDB mysqlDatabase;
-	static MaxDBTable statusTable;
-	public static String STATUS_TABLE_TITLE = "statusTable";
-	static MaxDBTable locationTable;
-	public static String LOCATION_TABLE_TITLE = "locationsTable";
-	static MaxDBTable groupTable;
-	public static String GROUP_TABLE_TITLE = "groupsTable";
-	static MaxDBTable clientTable;
-	public static String CLIENT_TABLE_TITLE = "clientsTable";
-	
+
 	//Persistant (user table)
-	static MaxDBTable userTable;
+	static MaxDBTable userTable,userDataHolderTable;
 	public static String USER_TABLE_TITLE = "usersTable";
+	public static String USER_DATA_HOLDER_TABLE_TITLE = "userDataHolderTable";
+	
 	
 	static ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup;
 	static ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup;
@@ -90,24 +84,13 @@ public class DataHolder {
 		/*
 		 * Set up the tables
 		 */
-		if (MULTI_USER_MODE==false) {
-		groupTable = setupDatabaseTable(groupTable, GROUP_TABLE_TITLE, mysqlDatabase, Group.class);
-		statusTable = setupDatabaseTable(statusTable, STATUS_TABLE_TITLE, mysqlDatabase, Status.class);
-		locationTable = setupDatabaseTable(locationTable, LOCATION_TABLE_TITLE, mysqlDatabase, Location.class);
-		clientTable = setupDatabaseTable(clientTable, CLIENT_TABLE_TITLE, mysqlDatabase, Client.class);
-		}
+
 		userTable = setupDatabaseTable(userTable, USER_TABLE_TITLE, mysqlDatabase, User.class);
+		userDataHolderTable = setupDatabaseTable(userDataHolderTable, USER_DATA_HOLDER_TABLE_TITLE, mysqlDatabase, UserDataHolder.class);
 		
-		
-		/*
-		if (MULTI_USER_MODE==false) {
-		loadMaxObjects(localStatusMap, statusTable, Status.class);
-		loadMaxObjects(localGroupMap, groupTable, Group.class);
-		loadMaxObjects(localLocationMap, locationTable, Location.class);
-		loadMaxObjects(localClientMap, clientTable, Client.class);
-		}
-		*/
+
 		loadMaxObjects(localUserMap, userTable, User.class);
+		loadMaxObjects(userDataHolderMap, userDataHolderTable, UserDataHolder.class);
 		
 		// BACKUP all data to a CSV file
 		backupAllCsv();
@@ -116,26 +99,14 @@ public class DataHolder {
 		 * SET UP GENERIC MAPS
 		 */
 		localMapLookup = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
-		/*
-		if (MULTI_USER_MODE==false) {
-		localMapLookup.put(Client.class, localClientMap);
-		localMapLookup.put(Location.class, localLocationMap);
-		localMapLookup.put(Status.class, localStatusMap);
-		localMapLookup.put(Group.class, localGroupMap);
-		}
-		*/
+
 		localMapLookup.put(User.class, localUserMap);
+		localMapLookup.put(UserDataHolder.class, userDataHolderMap);
 
 		tableLookup = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
-		/*
-		if (MULTI_USER_MODE==false) {
-		tableLookup.put(Client.class, clientTable);
-		tableLookup.put(Location.class, locationTable);
-		tableLookup.put(Status.class, statusTable);
-		tableLookup.put(Group.class, groupTable);
-		}
-		*/
+
 		tableLookup.put(User.class, userTable);
+		tableLookup.put(UserDataHolder.class, userDataHolderTable);
 		// OUTPUT GENERIC Maps
 
 		System.out.println("CREATED LOCAL LOOKUPS" + "\n" + localMapLookup + "\n" + tableLookup);
@@ -187,68 +158,6 @@ public class DataHolder {
 		}
 	}
 	
-	/***
-	 *    TTTTTTT    EEEEEEE    MM    MM    PPPPPP     LL           AAA      TTTTTTT    EEEEEEE     SSSSS  
-	 *      TTT      EE         MMM  MMM    PP   PP    LL          AAAAA       TTT      EE         SS      
-	 *      TTT      EEEEE      MM MM MM    PPPPPP     LL         AA   AA      TTT      EEEEE       SSSSS  
-	 *      TTT      EE         MM    MM    PP         LL         AAAAAAA      TTT      EE              SS 
-	 *      TTT      EEEEEEE    MM    MM    PP         LLLLLLL    AA   AA      TTT      EEEEEEE     SSSSS  
-	 *                                                                                                     
-	 */
-	
-	/*
-	public static void setupTemplate() {
-		
-		Client c;
-		
-		if ((c=getClient(TEMPLATE_STRING)) == null) {
-			Location loc;
-			Status status;
-			Group group;
-			c = new Client();
-			//create a client with "template name"
-			//does the "template" location exist?
-			if ((loc=getLocation(TEMPLATE_STRING))== null) {
-				loc = new Location();
-				loc.setLocationName(TEMPLATE_STRING);
-				store(loc, Location.class);
-			}
-			if ((status=getStatus(TEMPLATE_STRING))==null) {
-				status = new Status();
-				status.setStatusName(TEMPLATE_STRING);
-				store(status,Status.class);
-			}
-			
-			if ((group=getGroup(TEMPLATE_STRING))==null) {
-				group = new Group();
-				group.setGroupName(TEMPLATE_STRING);
-				store(group, Group.class);
-			}
-			
-			c.setId(TEMPLATE_STRING);
-			c.setName(TEMPLATE_STRING);
-			c.setGroup(group);
-			c.setLocation(loc);
-			c.setStatus(status);
-			c.setNotes("");
-			store(c,Client.class);
-			templateClient = c;
-		} else {
-			System.out.println("TEMPLATE: " + TEMPLATE_STRING + " already found" + c);
-			templateClient = c;
-		}
-	}
-
-	
-	private static void closeAllDatabaseConnections() {
-		statusTable.closeDB();
-		clientTable.closeDB();
-		groupTable.closeDB();
-		locationTable.closeDB();
-		mysqlDatabase.closeDB();
-
-	}
-	*/
 
 	// BACKUPS
 
@@ -401,65 +310,6 @@ public class DataHolder {
 		table.insertInTable(obj);
 	}
 
-	
-	
-
-
-	/*
-
-	public static Client getClient(String id) {
-		return localClientMap.get(id);
-	}
-
-	public static Collection<Client> getAllClients() {
-		return localClientMap.values();
-	}
-
-
-
-	public static Location getLocation(String id) {
-		return localLocationMap.get(id);
-	}
-
-	public static Collection<Location> getAllLocations() {
-		return localLocationMap.values();
-	}
-
-
-
-	public static Status getStatus(String id) {
-		return localStatusMap.get(id);
-	}
-
-	public static Collection<Status> getAllStatus() {
-		return localStatusMap.values();
-	}
-
-
-
-	public static Group getGroup(String id) {
-		return localGroupMap.get(id);
-	}
-
-	public static Collection<Group> getAllGroups() {
-		return localGroupMap.values();
-	}
-
-	public static ConcurrentHashMap<String, Location> getLocationMap() {
-		// TODO Auto-generated method stub
-		return localLocationMap;
-	}
-
-	public static ConcurrentHashMap<String, Status> getStatusMap() {
-		// TODO Auto-generated method stub
-		return localStatusMap;
-	}
-
-	public static ConcurrentHashMap<String, Group> getGroupMap() {
-		// TODO Auto-generated method stub
-		return localGroupMap;
-	}
-	*/
 
 	public static User getUser(String userName) {
 		// TODO Auto-generated method stub
@@ -484,6 +334,7 @@ public class DataHolder {
 			//create the user data holder if it doesn't exist
 			userDataHolder = new UserDataHolder();
 			userDataHolder.setDatabasePrefix(loggedInUser.getDatabaseSelected());
+			store(userDataHolder, UserDataHolder.class);
 		}
 		return userDataHolder;
 	}

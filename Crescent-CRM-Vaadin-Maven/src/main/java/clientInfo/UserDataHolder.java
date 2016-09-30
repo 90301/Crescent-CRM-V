@@ -3,6 +3,7 @@ package clientInfo;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -11,8 +12,9 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxObject;
 
 //TODO: make this extend max object, and have a table of available databases
-public class UserDataHolder {
+public class UserDataHolder extends MaxObject {
 
+	public static final String databasePrefixField = "DatabasePrefix";
 	//private String user;
 	private String databasePrefix;
 	// will not be after the transition
@@ -189,6 +191,7 @@ public class UserDataHolder {
 
 	public void setDatabasePrefix(String databasePrefix) {
 		this.databasePrefix = databasePrefix;
+		updateDBMap();
 	}
 
 	public Client getClient(String id) {
@@ -247,5 +250,41 @@ public class UserDataHolder {
 	public ConcurrentHashMap<String, Group> getGroupMap() {
 		// TODO Auto-generated method stub
 		return userGroupMap;
+	}
+
+	@Override
+	public void loadInternalFromMap() {
+		this.databasePrefix = (String) dbMap.get(databasePrefixField);
+		
+	}
+
+	@Override
+	public void updateDBMap() {
+		dbMap.put(databasePrefix, this.databasePrefix);
+		
+	}
+
+	@Override
+	public String getPrimaryKey() {
+		// TODO Auto-generated method stub
+		return this.databasePrefix;
+	}
+
+	@Override
+	public void createTableForClass(MaxDBTable table) {
+
+		table.addDatatype(databasePrefixField, MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING);
+		table.setPrimaryKeyName(databasePrefixField);
+		table.createTable();
+		
+	}
+
+	@Override
+	public void setupDBDatatypes() {
+		if (dbDatatypes == null) {
+			dbDatatypes = new HashMap<String, Class<?>>();
+		}
+		dbDatatypes.put(databasePrefixField, String.class);
+		
 	}
 }

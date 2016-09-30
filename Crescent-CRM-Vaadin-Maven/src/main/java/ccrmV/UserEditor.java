@@ -27,7 +27,11 @@ public class UserEditor extends VerticalLayout implements View {
 	private boolean alreadyGenerated = false;
 	
 	Accordion userEditorAccordion;
-	VerticalLayout userCreatorLayout;
+	
+	
+	
+	
+	Layout userCreatorLayout;
 	
 	TextField createUserNameTextField;
 	PasswordField createUserPassField;
@@ -107,7 +111,9 @@ public class UserEditor extends VerticalLayout implements View {
 			
 			adminDatabaseSelector = new ComboBox("Database");
 			
-			adminAddDatabaseButton = new Button("Add database to user!");
+			adminAddDatabaseButton = new Button("Add database to user");
+			
+			adminAddDatabaseButton.addClickListener(click -> addDatabaseClick());
 			
 			adminLayout.addComponent(adminUserSelector);
 			adminLayout.addComponent(adminDatabaseSelector);
@@ -133,6 +139,8 @@ public class UserEditor extends VerticalLayout implements View {
 	
 	//populate data!
 	
+
+
 	private void populateAllData() {
 		
 		if (masterUi.user.getAdmin()) {
@@ -164,6 +172,11 @@ public class UserEditor extends VerticalLayout implements View {
 			//User already exists
 			
 		}
+	}
+	
+	private void addDatabaseClick() {
+		
+		
 	}
 
 }
