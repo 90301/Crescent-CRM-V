@@ -74,20 +74,30 @@ public abstract class MaxObject {
 	public void loadFromDB(ResultSet rs) {
 		if (dbMap.keySet().size()==0){
 			//load the db keys if not already loaded
-			this.setupDBDatatypes();
+			//this.setupDBDatatypes();
+			this.updateDBMap();
 		}
 		
 		System.out.println("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.");
 		//for (String key : dbMap.keySet()) {
-		for (String key : dbDatatypes.keySet()) {
+		for (String key : dbMap.keySet()) {
 			try {
 				Object value = rs.getObject(key);
 				dbMap.put(key, value);
 				System.out.println("Loaded value: " + key + " , " + value);
 
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+				System.err.println("Error code: " + e.getErrorCode() +" SQL EXCEPTION!");
+				System.err.println("Error Message: " + e.getMessage());
+				if (e.getMessage().contains("Column") && e.getMessage().contains("not found.")) {
+					//Special debugging
+					//This should be fixed later
+					System.err.println("key not found: " + key + " in: " + this);
+					
+				} else {
+					e.printStackTrace();
+				}
 			}
 		}
 		loadInternalFromMap();
