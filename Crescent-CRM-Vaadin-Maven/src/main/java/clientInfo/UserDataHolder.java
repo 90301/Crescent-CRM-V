@@ -132,6 +132,26 @@ public class UserDataHolder extends MaxObject {
 		table.insertInTable(obj);
 	}
 	
+
+	/**
+	 * Retrieves an item based on a class ref.
+	 * May be volatile if you give it a class not found in
+	 * localMapLookup
+	 * 
+	 * @param itemName - the item name (primary key)
+	 * @param ref - The class (EX User.class)
+	 * @return the object if it exists, or null
+	 */
+	public <T extends MaxObject> MaxObject retrieve(String itemName, Class<T> ref) {
+		// TODO Auto-generated method stub
+		MaxObject item;
+		@SuppressWarnings("unchecked")
+		Map<String,T> lMap = (Map<String, T>) localMapLookup.get(ref);
+		item = lMap.get(itemName);
+		
+		return item;
+	}
+	
 	/**
 	 * Version of loadMaxObjects that sets the user data holder
 	 * @param localMap

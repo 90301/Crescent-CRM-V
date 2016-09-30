@@ -14,6 +14,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
+import dbUtils.InhalerUtils;
 import uiElements.NavBar;
 import users.User;
 
@@ -175,8 +176,19 @@ public class UserEditor extends VerticalLayout implements View {
 	}
 	
 	private void addDatabaseClick() {
+		//initial null value checking
+		String userName = (String) adminUserSelector.getValue();
+		
+		if (InhalerUtils.stringNullCheck(userName))
+			return;
+		
+		User u = DataHolder.getUser(userName);
+		
+		if (u==null)
+			return;
 		
 		
+		//UserDataHolder udh = ;
 	}
 
 }

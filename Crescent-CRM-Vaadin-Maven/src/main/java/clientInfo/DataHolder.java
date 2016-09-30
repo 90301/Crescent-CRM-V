@@ -326,17 +326,63 @@ public class DataHolder {
 		return userDataHolderMap;
 	}
 	
-	
+	/**
+	 * Looks up the userDataHolder based on a user.
+	 * Creates the holder if it doesn't already exist.
+	 * @param loggedInUser
+	 * @return
+	 */
 	public static UserDataHolder getUserDataHolder(User loggedInUser) {
 		// TODO Auto-generated method stub
-		UserDataHolder userDataHolder = userDataHolderMap.get(loggedInUser.getDatabaseSelected());
+		UserDataHolder userDataHolder = getUserDataHolder(loggedInUser.getDatabaseSelected());
+		return userDataHolder;
+	}
+
+	/**
+	 * Looks up the userDataHolder based on the userDataHolder Name.
+	 * Creates the holder if it doesn't already exist.
+	 * @param dataHolderName
+	 * @return
+	 */
+	public static UserDataHolder getUserDataHolder(String dataHolderName) {
+		// TODO Auto-generated method stub
+		UserDataHolder userDataHolder = userDataHolderMap.get(dataHolderName);
 		if (userDataHolder==null) {
 			//create the user data holder if it doesn't exist
 			userDataHolder = new UserDataHolder();
-			userDataHolder.setDatabasePrefix(loggedInUser.getDatabaseSelected());
+			userDataHolder.setDatabasePrefix(dataHolderName);
 			store(userDataHolder, UserDataHolder.class);
 		}
 		return userDataHolder;
+	}
+
+	/**
+	 * Tests to see if the class is a static class
+	 * @param ref - the class to test (EX User.Class)
+	 * @return if it was found (true / false)
+	 */
+	public static boolean containsClass(Class ref) {
+		return tableLookup.containsKey(ref);
+	}
+
+
+	/**
+	 * Retrieves an item based on a class ref.
+	 * May be volitile if you give it a class not found in
+	 * localMapLookup
+	 * 
+	 * @param itemName - the item name (primary key)
+	 * @param ref - The class (EX User.class)
+	 * @return the object if it exists, or null
+	 */
+	public static <T extends MaxObject> MaxObject retrieve(String itemName, Class<T> ref) {
+		// TODO Auto-generated method stub
+		MaxObject item;
+		@SuppressWarnings("unchecked")
+		Map<String,T> lMap = (Map<String, T>) localMapLookup.get(ref);
+		item = lMap.get(itemName);
+		
+		return item;
 	}
 
 }
