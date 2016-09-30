@@ -465,7 +465,18 @@ public class DataHolder {
 		// TODO Auto-generated method stub
 		return localUserMap.get(userName);
 	}
-
+	
+	public static ConcurrentHashMap<String, User> getUserMap() {
+		// TODO Auto-generated method stub
+		return localUserMap;
+	}
+	
+	public static ConcurrentHashMap<String, UserDataHolder> getUserDataHolderMap() {
+		// TODO Auto-generated method stub
+		return userDataHolderMap;
+	}
+	
+	
 	public static UserDataHolder getUserDataHolder(User loggedInUser) {
 		// TODO Auto-generated method stub
 		UserDataHolder userDataHolder = userDataHolderMap.get(loggedInUser.getDatabaseSelected());

@@ -179,4 +179,9 @@ public class User extends MaxObject {
 		
 	}
 
+	public boolean getAdmin() {
+		// TODO Auto-generated method stub
+		return admin;
+	}
+
 }

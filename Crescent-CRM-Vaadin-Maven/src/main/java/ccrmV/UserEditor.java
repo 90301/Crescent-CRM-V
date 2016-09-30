@@ -4,8 +4,11 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -29,6 +32,14 @@ public class UserEditor extends VerticalLayout implements View {
 	TextField createUserNameTextField;
 	PasswordField createUserPassField;
 	Button createUserButton;
+	
+	//Admin menu
+	Layout adminLayout;
+	//may need to change this to a grid later. needs to be improved a lot, bare
+	//bones functonality implemented 
+	ComboBox adminUserSelector, adminDatabaseSelector;
+	Button adminAddDatabaseButton;
+	//user options (select a database)
 	
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
@@ -80,13 +91,34 @@ public class UserEditor extends VerticalLayout implements View {
 		//Listeners
 		createUserButton.addClickListener(click -> createNewUserClick());
 		
-		
+		userCreatorLayout.setCaption("Create Users");
 		userCreatorLayout.addComponent(createUserNameTextField);
 		userCreatorLayout.addComponent(createUserPassField);
 		userCreatorLayout.addComponent(createUserButton);
 		
 		userEditorAccordion.addComponent(userCreatorLayout);
 		
+		if (masterUi.user.getAdmin()) {
+			//Admin menu!
+			adminLayout = new HorizontalLayout();
+			adminLayout.setCaption("Admin");
+			
+			adminUserSelector = new ComboBox("User");
+			
+			adminDatabaseSelector = new ComboBox("Database");
+			
+			adminAddDatabaseButton = new Button("Add database to user!");
+			
+			adminLayout.addComponent(adminUserSelector);
+			adminLayout.addComponent(adminDatabaseSelector);
+			adminLayout.addComponent(adminAddDatabaseButton);
+			
+			userEditorAccordion.addComponent(adminLayout);
+			
+		}
+		
+		//Data in itmes
+		populateAllData();
 		
 		//put them on the screen
 		
@@ -97,6 +129,20 @@ public class UserEditor extends VerticalLayout implements View {
 		this.addComponent(userEditorAccordion);
 		
 		this.alreadyGenerated = true;
+	}
+	
+	//populate data!
+	
+	private void populateAllData() {
+		
+		if (masterUi.user.getAdmin()) {
+			//populate the admin menu stuff
+			adminUserSelector.removeAllItems();
+			adminUserSelector.addItems(DataHolder.getUserMap().keySet());
+			
+			adminDatabaseSelector.removeAllItems();
+			adminDatabaseSelector.addItems(DataHolder.getUserDataHolderMap().keySet());
+		}
 	}
 
 	/**
