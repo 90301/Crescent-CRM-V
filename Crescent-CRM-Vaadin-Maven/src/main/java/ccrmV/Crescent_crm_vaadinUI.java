@@ -36,7 +36,7 @@ import uiElements.NavBar;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
-public class Crescent_crm_vaadinUI extends VerticalLayout implements View {
+public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	/*
 	 * in order for databases to work, The driver must be added to the server.

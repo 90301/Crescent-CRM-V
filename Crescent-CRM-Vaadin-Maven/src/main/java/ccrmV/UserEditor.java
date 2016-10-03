@@ -18,7 +18,7 @@ import dbUtils.InhalerUtils;
 import uiElements.NavBar;
 import users.User;
 
-public class UserEditor extends VerticalLayout implements View {
+public class UserEditor extends HorizontalLayout implements View {
 
 	
 	
@@ -29,6 +29,9 @@ public class UserEditor extends VerticalLayout implements View {
 	
 	Accordion userEditorAccordion;
 	
+	Layout topHorrizontal,topVertical;
+	
+	//This  --> Horrizontal --> Vertical
 	
 	
 	
