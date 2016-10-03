@@ -33,7 +33,7 @@ public class NavBar {
 		
 		sidebarLayout.removeAllComponents();
 		
-		statusLabel = new Label("Nav Bar Generated on: " + System.currentTimeMillis());
+		statusLabel = new Label("NavBar");
 		
 		crmButton = new Button("CRM", event -> this.crmClick() );
 		
