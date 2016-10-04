@@ -1,10 +1,14 @@
 package ccrmV;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -60,6 +64,7 @@ public class UserEditor extends HorizontalLayout implements View {
 	
 	ListSelect adminUserListSelect;
 	
+	Layout adminSettingsLayout;
 	Grid adminSettingsGrid;
 	
 	public UserEditor() {
@@ -127,6 +132,8 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		userCreatorLayout = new VerticalLayout();
 		
+		((AbstractOrderedLayout) userCreatorLayout).setMargin(true);
+		
 		createUserNameTextField = new TextField("User Name");
 		createUserPassField = new PasswordField("Password");
 		createUserButton = new Button("Create New User");
@@ -161,6 +168,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminSettingsGrid = new Grid();
 			
+			adminSettingsLayout = new VerticalLayout();
+			
+			generateSettingsGrid();
+			
+			
+			
 			//TODO:change the name of this caption??
 			adminSettingsGrid.setCaption("User Settings");
 			/*
@@ -170,7 +183,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			*/
 			adminLayout.addComponent(adminUserListSelect);
 			
+			adminSettingsLayout.addComponent(adminSettingsGrid);
 			
+			adminSettingsLayout.addComponent(adminDatabaseSelector);
+			adminSettingsLayout.addComponent(adminAddDatabaseButton);
+			
+			adminLayout.addComponent(adminSettingsLayout);
 			userEditorAccordion.addComponent(adminLayout);
 			
 		}
@@ -189,6 +207,23 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+	private void generateSettingsGrid() {
+		
+		adminSettingsGrid.removeAllColumns();
+		adminSettingsGrid.addColumn("Setting Name", String.class).setEditable(false);
+		adminSettingsGrid.addColumn("Value", Boolean.class).setEditable(true);
+		
+		//TODO remove test code
+		adminSettingsGrid.addRow("Admin", true);
+		
+		/*
+		SortedMap<String,Object> settings = new TreeMap<String,Object>(); 
+		settings.put("ADMIN", true);
+		*/
+		
+		
+	}
+
 	//populate data!
 	
 
@@ -202,6 +237,10 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminDatabaseSelector.removeAllItems();
 			adminDatabaseSelector.addItems(DataHolder.getUserDataHolderMap().keySet());
+			
+			adminUserListSelect.removeAllItems();
+			adminUserListSelect.addItems(DataHolder.getUserMap().keySet());
+			
 		}
 	}
 
