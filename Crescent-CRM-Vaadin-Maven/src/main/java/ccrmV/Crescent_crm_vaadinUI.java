@@ -85,8 +85,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	Label versionLabel;
 
-	public static final double versionNumber = .67;
-	public static final String versionDescription = " Weekend Progress";
+	public static final double versionNumber = .68;
+	public static final String versionDescription = " AutoLogin";
 	private static final int MAX_NOTE_ROWS = 20;
 
 	public Client selectedClient;
