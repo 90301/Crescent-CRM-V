@@ -51,6 +51,10 @@ public class MasterUI extends UI {
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
 	
+	public static final Boolean DEVELOPER_MODE = true;
+	public static final Boolean DEV_AUTO_LOGIN = true;
+	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
+	
 	
 	public boolean loggedIn = false;
 	public static ArrayList<String> authenicatedHosts = new ArrayList<String>();

@@ -57,7 +57,9 @@ public class LoginView extends VerticalLayout implements View {
 		this.addComponent(passField);
 		this.addComponent(loginButton);
 		
-		
+		if (MasterUI.DEV_AUTO_LOGIN && MasterUI.DEVELOPER_MODE) {
+			attemptLogin();
+		}
 	}
 	
 	
@@ -92,12 +94,22 @@ public MasterUI masterUi;
 		// TODO Auto-generated method stub
 		//if (userField.getValue().contains("ccrmUser") && passField.getValue().contains("ccrmPass") || MasterUI.authenicatedHosts.contains(host)) {
 		String code = "";
-		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE) {
+		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE ||
+				(MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
+			if ((MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
+			//dev mode auto login	
+				loginSucsess = true;
+				User loggedInUser = DataHolder.getUser(MasterUI.DEV_AUTOLOGIN_USER);
+				masterUi.user = loggedInUser;
+				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
+			} else {
 			loginSucsess = true;
 			User loggedInUser = DataHolder.getUser(userField.getValue());
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
+			}
 			masterUi.startMainApp();
+			
 		} else {
 			welcomeLabel.setData(code);
 		}
