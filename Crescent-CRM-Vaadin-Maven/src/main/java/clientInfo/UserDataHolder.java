@@ -271,6 +271,11 @@ public class UserDataHolder extends MaxObject {
 		// TODO Auto-generated method stub
 		return userGroupMap;
 	}
+	
+	public ConcurrentHashMap<String, Client> getClientMap() {
+		// TODO Auto-generated method stub
+		return userClientMap;
+	}
 
 	@Override
 	public void loadInternalFromMap() {

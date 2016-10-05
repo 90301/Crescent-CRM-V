@@ -50,6 +50,7 @@ public class MasterUI extends UI {
 	public static final String LOGIN = "Login";
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
+	public static final String SCHEDULER = "scheduler";
 	
 	public static final Boolean DEVELOPER_MODE = true;
 	public static final Boolean DEV_AUTO_LOGIN = true;
@@ -62,7 +63,7 @@ public class MasterUI extends UI {
 	
 	Crescent_crm_vaadinUI mainApp = new Crescent_crm_vaadinUI();
 	UserEditor userEditor = new UserEditor();
-	
+	SchedulerView schedulerView = new SchedulerView();
 	User user = null;//logged in user
 	
 	
@@ -93,6 +94,8 @@ public class MasterUI extends UI {
 		userEditor.masterUi = this;
 		userEditor.navBar = navBar;
 		
+		schedulerView.MasterUi = this;
+		schedulerView.navBar = navBar;
 		
 		
 		if (authenicatedHosts.contains(userHost)) {
@@ -101,6 +104,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(LOGIN, lv);
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
+		mainNavigator.addView(SCHEDULER, schedulerView);
 		
 		enterLogin();
 		
@@ -128,6 +132,9 @@ public class MasterUI extends UI {
 	
 	public void enterLogin() {
 		mainNavigator.navigateTo(LOGIN);
+	}
+	public void enterScheduler() {
+		mainNavigator.navigateTo(SCHEDULER);
 	}
 
 }

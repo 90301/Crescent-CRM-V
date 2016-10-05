@@ -64,17 +64,14 @@ public class NavBar {
 	}
 
 	private void schedulerClick() {
-		// TODO Auto-generated method stub
-		
+		masterUi.enterScheduler();
 	}
 
 	private void userEditorClick() {
-		// TODO Auto-generated method stub
 		masterUi.enterUserEditor();
 	}
 
 	private void crmClick() {
-		// TODO Auto-generated method stub
 		masterUi.enterCRM();
 	}
 
