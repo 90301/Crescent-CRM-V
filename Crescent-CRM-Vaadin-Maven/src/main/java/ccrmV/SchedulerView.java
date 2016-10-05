@@ -38,13 +38,13 @@ public class SchedulerView extends HorizontalLayout implements View {
 	 * UI Components
 	 */
 	Calendar cal = new Calendar();
-	private TextField createEventNameTextField;
-	private ComboBox createEventClientComboBox;
-	private DateField createEventStartDateField;
-	private TextField createEventDurrationTextField;
-	private ComboBox createEventDurrationComboBox;
+	private TextField createEventNameTextField = new TextField("Event Name");
+	private ComboBox createEventClientComboBox =  new ComboBox("Client");
+	private DateField createEventStartDateField = new PopupDateField("Event Start");
+	private TextField createEventDurrationTextField  = new TextField("Durration");
+	private ComboBox createEventDurrationComboBox = new ComboBox("Durration Unit");
 	
-	private Button createEventButton;
+	private Button createEventButton  = new Button("Create Event");
 	
 	
 	public static final ArrayList<String> baseTimeList = new ArrayList<>();
@@ -77,13 +77,13 @@ public class SchedulerView extends HorizontalLayout implements View {
         cal.setEndDate(endDate);
         
         
-        createEventNameTextField = new TextField("Event Name");
+        //createEventNameTextField = ;
         
-        createEventClientComboBox = new ComboBox("Client");
+        //createEventClientComboBox =
         
         
         //date selection
-        createEventStartDateField = new PopupDateField("Event Start");
+        //createEventStartDateField = ;
         String dateTimeFormat = "MM-dd-yyyy HH:mm aa";
 		createEventStartDateField.setDateFormat(dateTimeFormat);
         createEventStartDateField.setValue(new Date());
@@ -92,13 +92,13 @@ public class SchedulerView extends HorizontalLayout implements View {
          //Show the popup with minute / hour  selectors
         createEventStartDateField.setResolution(Resolution.MINUTE);
         
-        createEventDurrationTextField = new TextField("Durration");
+        //createEventDurrationTextField
         createEventDurrationTextField.setWidth("80px");
         
-        createEventDurrationComboBox = new ComboBox("Durration Unit");
+        //createEventDurrationComboBox 
         createEventDurrationComboBox.setWidth("120px");
         
-        createEventButton = new Button("Create Event");
+        //createEventButton
         
         
         createEventLayout.addComponent(createEventNameTextField);
