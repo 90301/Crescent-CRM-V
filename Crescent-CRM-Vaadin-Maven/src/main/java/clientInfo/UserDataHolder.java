@@ -76,6 +76,9 @@ public class UserDataHolder extends MaxObject {
 		tableLookup.put(Location.class, userLocationTable);
 		tableLookup.put(Status.class, userStatusTable);
 		tableLookup.put(Group.class, userGroupTable);
+		
+		
+		setupTemplate();
 
 	}
 
