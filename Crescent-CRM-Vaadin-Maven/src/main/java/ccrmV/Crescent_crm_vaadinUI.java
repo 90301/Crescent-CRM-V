@@ -545,6 +545,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		this.addComponent(navBar.sidebarLayout);
 
 		((AbstractOrderedLayout) layout).setMargin(true);
+		((AbstractOrderedLayout) layout).setSpacing(true);
+		
 		
 		panel.setContent(layout);
 		//panel.setSizeFull();
@@ -630,6 +632,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createClientLayout.addComponent(createClientButton);
 
 		createClientLayout.setComponentAlignment(createClientButton, Alignment.BOTTOM_LEFT);
+		createClientLayout.setSpacing(true);
+		
 
 		creationTabs.addTab(createClientLayout, "Add Client");
 
@@ -736,7 +740,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// clientGridLayout.setWidth("600px");
 		// clientGridLayout.setHeight("600px");
 		// clientGridLayout.setSizeFull();
-		clientGridLayout.setSpacing(false);
+		clientGridLayout.setSpacing(true);
 		clientGridLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 
 		midLayout.addComponent(clientGridLayout);
@@ -764,6 +768,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	 * Adds all the components related to the filter layout
 	 */
 	private void genFilterLayout() {
+		
+		filterLayout.setSpacing(true);
+		filterLayout.setMargin(false);
 		filterLayout.setColumns(8);
 		filterLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		filterLayout.addComponent(filterLabel, 0, 0);

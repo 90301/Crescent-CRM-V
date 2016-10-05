@@ -34,6 +34,9 @@ public class NavBar {
 		
 		sidebarLayout.removeAllComponents();
 		
+		sidebarLayout.setSpacing(true);
+		
+		
 		statusLabel = new Label("NavBar");
 		
 		crmButton = new Button("CRM", event -> this.crmClick() );

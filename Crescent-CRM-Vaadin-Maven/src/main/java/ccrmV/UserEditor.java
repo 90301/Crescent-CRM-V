@@ -111,6 +111,7 @@ public class UserEditor extends HorizontalLayout implements View {
 		settingsLayout = new VerticalLayout();
 		settingsLayout.setCaption("Settings");
 		((AbstractOrderedLayout) settingsLayout).setMargin(true);
+		((AbstractOrderedLayout) settingsLayout).setSpacing(true);
 	//	TODO
 		settingsDatabaseComboBox = new ComboBox("Database");
 		settingsThemeComboBox = new ComboBox ("Theme");
@@ -133,6 +134,7 @@ public class UserEditor extends HorizontalLayout implements View {
 		userCreatorLayout = new VerticalLayout();
 		
 		((AbstractOrderedLayout) userCreatorLayout).setMargin(true);
+		((AbstractOrderedLayout) userCreatorLayout).setSpacing(true);
 		
 		createUserNameTextField = new TextField("User Name");
 		createUserPassField = new PasswordField("Password");
@@ -153,6 +155,8 @@ public class UserEditor extends HorizontalLayout implements View {
 			adminLayout = new HorizontalLayout();
 			adminLayout.setCaption("Edit Users (ADMIN)");
 			((AbstractOrderedLayout) adminLayout).setMargin(true);
+			((AbstractOrderedLayout) adminLayout).setSpacing(true);
+			
 			
 			adminUserSelector = new ComboBox("User");
 			
@@ -160,15 +164,19 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminAddDatabaseButton = new Button("Add database to user");
 			
+			
 			adminAddDatabaseButton.addClickListener(click -> addDatabaseClick());
 			
 			adminUserListSelect = new ListSelect("Select User");
 			
-			adminUserListSelect.setRows(20);
-			
+			//adminUserListSelect.setRows(20);
+			adminUserListSelect.setSizeFull();
 			adminSettingsGrid = new Grid();
 			
+			//Admin Settings Layout
 			adminSettingsLayout = new VerticalLayout();
+			//((AbstractOrderedLayout) adminSettingsLayout).setMargin(true);
+			((AbstractOrderedLayout) adminSettingsLayout).setSpacing(true);
 			
 			generateSettingsGrid();
 			
