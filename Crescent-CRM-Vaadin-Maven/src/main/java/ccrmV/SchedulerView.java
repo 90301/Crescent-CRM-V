@@ -1,10 +1,13 @@
 package ccrmV;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
@@ -38,9 +41,13 @@ public class SchedulerView extends HorizontalLayout implements View {
 	private TextField createEventNameTextField;
 	private ComboBox createEventClientComboBox;
 	private DateField createEventStartDateField;
-	private ComboBox createEventDurrationField;
+	private TextField createEventDurrationTextField;
+	private ComboBox createEventDurrationComboBox;
+	
 	private Button createEventButton;
 	
+	
+	public static final ArrayList<String> baseTimeList = new ArrayList<>();
 	
 	
 	@Override
@@ -51,7 +58,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 		
 		schedulerLayout = new VerticalLayout();
 		createEventLayout = new HorizontalLayout();
-		
+		createEventLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 		/*
 		 * create components here and edit settings
 		 */
@@ -64,7 +71,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         Date startDate = new Date();
         Date endDate = new Date();
         
-        //This is pretty awful.
+        //TODO fix this code displaying 5 days
         endDate.setDate(startDate.getDate()+5);
         cal.setStartDate(new Date()); 
         cal.setEndDate(endDate);
@@ -74,13 +81,22 @@ public class SchedulerView extends HorizontalLayout implements View {
         
         createEventClientComboBox = new ComboBox("Client");
         
+        
+        //date selection
         createEventStartDateField = new PopupDateField("Event Start");
         String dateTimeFormat = "MM-dd-yyyy HH:mm aa";
 		createEventStartDateField.setDateFormat(dateTimeFormat);
         createEventStartDateField.setValue(new Date());
         createEventStartDateField.setWidth("220px");
         
-        createEventDurrationField = new ComboBox("Durration");
+         //Show the popup with minute / hour  selectors
+        createEventStartDateField.setResolution(Resolution.MINUTE);
+        
+        createEventDurrationTextField = new TextField("Durration");
+        createEventDurrationTextField.setWidth("80px");
+        
+        createEventDurrationComboBox = new ComboBox("Durration Unit");
+        createEventDurrationComboBox.setWidth("120px");
         
         createEventButton = new Button("Create Event");
         
@@ -88,7 +104,8 @@ public class SchedulerView extends HorizontalLayout implements View {
         createEventLayout.addComponent(createEventNameTextField);
         createEventLayout.addComponent(createEventClientComboBox);
         createEventLayout.addComponent(createEventStartDateField);
-        createEventLayout.addComponent(createEventDurrationField);
+        createEventLayout.addComponent(createEventDurrationTextField);
+        createEventLayout.addComponent(createEventDurrationComboBox);
         createEventLayout.addComponent(createEventButton);
         
         
@@ -114,7 +131,16 @@ public class SchedulerView extends HorizontalLayout implements View {
 	private void populateComboBoxes() {
 		
 		createEventClientComboBox.removeAllItems();
-		createEventClientComboBox.addItems(MasterUi.userDataHolder.getClientMap().keySet());		
+		createEventClientComboBox.addItems(MasterUi.userDataHolder.getClientMap().keySet());
+		
+		if (baseTimeList.size()==0) {
+		baseTimeList.add("Minutes");
+		baseTimeList.add("Hours");
+		baseTimeList.add("Days");
+		}
+		createEventDurrationComboBox.addItems(baseTimeList);
+		
+		
 	}
 
 }
