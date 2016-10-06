@@ -1,14 +1,21 @@
 package ccrmV;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -29,11 +36,17 @@ public class UserEditor extends HorizontalLayout implements View {
 	
 	Accordion userEditorAccordion;
 	
-	Layout topHorrizontal,topVertical;
+	//Layout topHorrizontal,topVertical;
 	
-	//This  --> Horrizontal --> Vertical
+	//This  --> Horizontal --> Vertical
 	
+	Layout settingsLayout;
 	
+	ComboBox settingsDatabaseComboBox, settingsThemeComboBox;
+	Button settingsChangePasswordButton;
+	
+	//TODO: Allow password changing in settings.
+	//PasswordField settingsChangePasswordField;
 	
 	Layout userCreatorLayout;
 	
@@ -48,6 +61,11 @@ public class UserEditor extends HorizontalLayout implements View {
 	ComboBox adminUserSelector, adminDatabaseSelector;
 	Button adminAddDatabaseButton;
 	//user options (select a database)
+	
+	ListSelect adminUserListSelect;
+	
+	Layout adminSettingsLayout;
+	Grid adminSettingsGrid;
 	
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
@@ -83,14 +101,40 @@ public class UserEditor extends HorizontalLayout implements View {
 			this.removeAllComponents();
 			//return;
 		}
-		
+		userEditorAccordion = new Accordion();
+		//Width to be adjusted, mobile consideration needed
+		//userEditorAccordion.setWidth("500px");
 		//initialize components
 		
+		//Settings Menu
+		
+		settingsLayout = new VerticalLayout();
+		settingsLayout.setCaption("Settings");
+		((AbstractOrderedLayout) settingsLayout).setMargin(true);
+		((AbstractOrderedLayout) settingsLayout).setSpacing(true);
+	//	TODO
+		settingsDatabaseComboBox = new ComboBox("Database");
+		settingsThemeComboBox = new ComboBox ("Theme");
+		settingsChangePasswordButton = new Button("Change Password");
+		
+		
+		
+		
+		settingsLayout.addComponent(settingsDatabaseComboBox);
+		settingsLayout.addComponent(settingsThemeComboBox);
+		settingsLayout.addComponent(settingsChangePasswordButton);
+		
+		
+		userEditorAccordion.addComponent(settingsLayout);
+		
 		//User Editor for creating new users
-		welcomeLabel = new Label("User Editor");
-		userEditorAccordion = new Accordion();
+		//welcomeLabel = new Label("User Editor");
+		
 		
 		userCreatorLayout = new VerticalLayout();
+		
+		((AbstractOrderedLayout) userCreatorLayout).setMargin(true);
+		((AbstractOrderedLayout) userCreatorLayout).setSpacing(true);
 		
 		createUserNameTextField = new TextField("User Name");
 		createUserPassField = new PasswordField("Password");
@@ -109,7 +153,10 @@ public class UserEditor extends HorizontalLayout implements View {
 		if (masterUi.user.getAdmin()) {
 			//Admin menu!
 			adminLayout = new HorizontalLayout();
-			adminLayout.setCaption("Admin");
+			adminLayout.setCaption("Edit Users (ADMIN)");
+			((AbstractOrderedLayout) adminLayout).setMargin(true);
+			((AbstractOrderedLayout) adminLayout).setSpacing(true);
+			
 			
 			adminUserSelector = new ComboBox("User");
 			
@@ -117,12 +164,39 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminAddDatabaseButton = new Button("Add database to user");
 			
+			
 			adminAddDatabaseButton.addClickListener(click -> addDatabaseClick());
 			
+			adminUserListSelect = new ListSelect("Select User");
+			
+			//adminUserListSelect.setRows(20);
+			adminUserListSelect.setSizeFull();
+			adminSettingsGrid = new Grid();
+			
+			//Admin Settings Layout
+			adminSettingsLayout = new VerticalLayout();
+			//((AbstractOrderedLayout) adminSettingsLayout).setMargin(true);
+			((AbstractOrderedLayout) adminSettingsLayout).setSpacing(true);
+			
+			generateSettingsGrid();
+			
+			
+			
+			//TODO:change the name of this caption??
+			adminSettingsGrid.setCaption("User Settings");
+			/*
 			adminLayout.addComponent(adminUserSelector);
 			adminLayout.addComponent(adminDatabaseSelector);
 			adminLayout.addComponent(adminAddDatabaseButton);
+			*/
+			adminLayout.addComponent(adminUserListSelect);
 			
+			adminSettingsLayout.addComponent(adminSettingsGrid);
+			
+			adminSettingsLayout.addComponent(adminDatabaseSelector);
+			adminSettingsLayout.addComponent(adminAddDatabaseButton);
+			
+			adminLayout.addComponent(adminSettingsLayout);
 			userEditorAccordion.addComponent(adminLayout);
 			
 		}
@@ -132,7 +206,7 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		//put them on the screen
 		
-		this.addComponent(welcomeLabel); 
+		//this.addComponent(welcomeLabel); 
 		
 		this.addComponent(navBar.sidebarLayout);
 		
@@ -141,6 +215,23 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+	private void generateSettingsGrid() {
+		
+		adminSettingsGrid.removeAllColumns();
+		adminSettingsGrid.addColumn("Setting Name", String.class).setEditable(false);
+		adminSettingsGrid.addColumn("Value", Boolean.class).setEditable(true);
+		
+		//TODO remove test code
+		adminSettingsGrid.addRow("Admin", true);
+		
+		/*
+		SortedMap<String,Object> settings = new TreeMap<String,Object>(); 
+		settings.put("ADMIN", true);
+		*/
+		
+		
+	}
+
 	//populate data!
 	
 
@@ -154,6 +245,10 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminDatabaseSelector.removeAllItems();
 			adminDatabaseSelector.addItems(DataHolder.getUserDataHolderMap().keySet());
+			
+			adminUserListSelect.removeAllItems();
+			adminUserListSelect.addItems(DataHolder.getUserMap().keySet());
+			
 		}
 	}
 

@@ -50,6 +50,19 @@ public class MasterUI extends UI {
 	public static final String LOGIN = "Login";
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
+	public static final String SCHEDULER = "scheduler";
+	
+	
+	//When DEVELOPER_MODE is set to true, developer settings will be enabled
+	//this includes auto-login, and bypassing certain aspects of the software.
+	//if something breaks because of developer mode, turn developer mode off.
+	//no error checking will be implemented for developer mode, if you don't know
+	//exactly what you are doing with a setting, ask someone who does, or don't enable it.
+	public static final Boolean DEVELOPER_MODE = true;
+	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
+	//if no such user exists, the application will crash.
+	public static final Boolean DEV_AUTO_LOGIN = true;
+	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	
 	
 	public boolean loggedIn = false;
@@ -58,7 +71,7 @@ public class MasterUI extends UI {
 	
 	Crescent_crm_vaadinUI mainApp = new Crescent_crm_vaadinUI();
 	UserEditor userEditor = new UserEditor();
-	
+	SchedulerView schedulerView = new SchedulerView();
 	User user = null;//logged in user
 	
 	
@@ -89,6 +102,8 @@ public class MasterUI extends UI {
 		userEditor.masterUi = this;
 		userEditor.navBar = navBar;
 		
+		schedulerView.MasterUi = this;
+		schedulerView.navBar = navBar;
 		
 		
 		if (authenicatedHosts.contains(userHost)) {
@@ -97,6 +112,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(LOGIN, lv);
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
+		mainNavigator.addView(SCHEDULER, schedulerView);
 		
 		enterLogin();
 		
@@ -124,6 +140,9 @@ public class MasterUI extends UI {
 	
 	public void enterLogin() {
 		mainNavigator.navigateTo(LOGIN);
+	}
+	public void enterScheduler() {
+		mainNavigator.navigateTo(SCHEDULER);
 	}
 
 }

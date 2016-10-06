@@ -76,6 +76,9 @@ public class UserDataHolder extends MaxObject {
 		tableLookup.put(Location.class, userLocationTable);
 		tableLookup.put(Status.class, userStatusTable);
 		tableLookup.put(Group.class, userGroupTable);
+		
+		
+		setupTemplate();
 
 	}
 
@@ -270,6 +273,11 @@ public class UserDataHolder extends MaxObject {
 	public ConcurrentHashMap<String, Group> getGroupMap() {
 		// TODO Auto-generated method stub
 		return userGroupMap;
+	}
+	
+	public ConcurrentHashMap<String, Client> getClientMap() {
+		// TODO Auto-generated method stub
+		return userClientMap;
 	}
 
 	@Override

@@ -26,6 +26,7 @@ public class NavBar {
 	Button schedulerButton;
 	Label statusLabel;
 	public static final String BUTTON_WIDTH = "120px";
+	public static final String BUTTON_HEIGHT = "120px";
 	
 	public Layout generateNavBar() {
 		
@@ -33,7 +34,10 @@ public class NavBar {
 		
 		sidebarLayout.removeAllComponents();
 		
-		statusLabel = new Label("Nav Bar Generated on: " + System.currentTimeMillis());
+		sidebarLayout.setSpacing(true);
+		
+		
+		statusLabel = new Label("NavBar");
 		
 		crmButton = new Button("CRM", event -> this.crmClick() );
 		
@@ -49,6 +53,13 @@ public class NavBar {
 		crmButton.setWidth(BUTTON_WIDTH);
 		userEditorButton.setWidth(BUTTON_WIDTH);
         schedulerButton.setWidth(BUTTON_WIDTH);
+        
+        crmButton.setHeight(BUTTON_HEIGHT);
+        userEditorButton.setHeight(BUTTON_HEIGHT);
+        schedulerButton.setHeight(BUTTON_HEIGHT);
+        
+        
+        
 		generatedLayout = true;
 		
 		return sidebarLayout;
@@ -56,17 +67,14 @@ public class NavBar {
 	}
 
 	private void schedulerClick() {
-		// TODO Auto-generated method stub
-		
+		masterUi.enterScheduler();
 	}
 
 	private void userEditorClick() {
-		// TODO Auto-generated method stub
 		masterUi.enterUserEditor();
 	}
 
 	private void crmClick() {
-		// TODO Auto-generated method stub
 		masterUi.enterCRM();
 	}
 

@@ -18,15 +18,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
-
 import com.vaadin.ui.*;
 import clientInfo.*;
 import dbUtils.BackupManager;
@@ -85,8 +77,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	Label versionLabel;
 
-	public static final double versionNumber = .67;
-	public static final String versionDescription = " Weekend Progress";
+	public static final double versionNumber = .68;
+	public static final String versionDescription = " AutoLogin";
 	private static final int MAX_NOTE_ROWS = 20;
 
 	public Client selectedClient;
@@ -493,7 +485,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// if found, return the object
 		return rtrn;
 	}
-	VerticalLayout layout = new VerticalLayout();
+	Layout layout = new VerticalLayout();
 	TabSheet creationTabs = new TabSheet();
 	HorizontalLayout createLocationLayout = new HorizontalLayout();
 	HorizontalLayout createStatusLayout = new HorizontalLayout();
@@ -511,7 +503,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	public void enter(ViewChangeEvent VCevent) {
 
 		
-		
+		//TODO START OF THE UI
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
@@ -550,12 +542,15 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		// Nav Bar Code
 		//NavBar navBar;
-		layout.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar.sidebarLayout);
 
-		layout.setMargin(true);
+		((AbstractOrderedLayout) layout).setMargin(true);
+		((AbstractOrderedLayout) layout).setSpacing(true);
+		
 		
 		panel.setContent(layout);
-		panel.setSizeFull();
+		//panel.setSizeFull();
+		panel.setHeight("900px");
 		panel.getContent().setSizeUndefined();
 		this.setSizeUndefined();
 		// panel.setHeight("100%");
@@ -637,6 +632,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createClientLayout.addComponent(createClientButton);
 
 		createClientLayout.setComponentAlignment(createClientButton, Alignment.BOTTOM_LEFT);
+		createClientLayout.setSpacing(true);
+		
 
 		creationTabs.addTab(createClientLayout, "Add Client");
 
@@ -743,7 +740,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// clientGridLayout.setWidth("600px");
 		// clientGridLayout.setHeight("600px");
 		// clientGridLayout.setSizeFull();
-		clientGridLayout.setSpacing(false);
+		clientGridLayout.setSpacing(true);
 		clientGridLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 
 		midLayout.addComponent(clientGridLayout);
@@ -771,6 +768,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	 * Adds all the components related to the filter layout
 	 */
 	private void genFilterLayout() {
+		
+		filterLayout.setSpacing(true);
+		filterLayout.setMargin(false);
 		filterLayout.setColumns(8);
 		filterLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		filterLayout.addComponent(filterLabel, 0, 0);
