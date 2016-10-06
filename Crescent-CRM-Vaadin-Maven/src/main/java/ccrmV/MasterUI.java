@@ -26,8 +26,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .70;
-	public static final String versionDescription = " Logout";
+	public static final double versionNumber = .71;
+	public static final String versionDescription = " Database Showing";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

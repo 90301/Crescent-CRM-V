@@ -59,7 +59,8 @@ public class InhalerUtils {
 	
 	public static Collection<String> csvToList(String csv) {
 		ArrayList<String> list= new ArrayList<String>();
-		for (String s : csv.split(DELIMITER)) {
+		for (String s : csv.split("\\"+DELIMITER)) {
+			System.out.println("CSV ITEM: " + s);
 			list.add(s);
 		}
 		

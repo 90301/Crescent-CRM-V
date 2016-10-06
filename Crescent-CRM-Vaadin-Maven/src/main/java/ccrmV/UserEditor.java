@@ -238,6 +238,10 @@ public class UserEditor extends HorizontalLayout implements View {
 
 	private void populateAllData() {
 		
+		//settings
+		settingsDatabaseComboBox.removeAllItems();
+		settingsDatabaseComboBox.addItems(masterUi.getUser().getDatabasesAccsessable());
+		
 		if (masterUi.user.getAdmin()) {
 			//populate the admin menu stuff
 			adminUserSelector.removeAllItems();
