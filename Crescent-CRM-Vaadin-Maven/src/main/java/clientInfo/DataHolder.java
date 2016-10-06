@@ -92,6 +92,7 @@ public class DataHolder {
 		loadMaxObjects(localUserMap, userTable, User.class);
 		loadMaxObjects(userDataHolderMap, userDataHolderTable, UserDataHolder.class);
 		
+		
 		// BACKUP all data to a CSV file
 		backupAllCsv();
 
@@ -303,6 +304,8 @@ public class DataHolder {
 		// get data-structure based on ref
 		@SuppressWarnings("unchecked")
 		ConcurrentHashMap<String, T> map = (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
+		
+		System.out.println("Storing in map: " + map);
 		map.put(obj.getPrimaryKey(), (T) obj);
 
 		MaxDBTable table = tableLookup.get(ref);
@@ -345,7 +348,7 @@ public class DataHolder {
 	 * @return
 	 */
 	public static UserDataHolder getUserDataHolder(String dataHolderName) {
-		// TODO Auto-generated method stub
+
 		UserDataHolder userDataHolder = userDataHolderMap.get(dataHolderName);
 		if (userDataHolder==null) {
 			//create the user data holder if it doesn't exist
@@ -362,7 +365,11 @@ public class DataHolder {
 	 * @return if it was found (true / false)
 	 */
 	public static boolean containsClass(Class ref) {
-		return tableLookup.containsKey(ref);
+		System.out.println("Table: " + tableLookup + " Contains key: " + ref);
+		boolean result = tableLookup.containsKey(ref);
+		System.out.println("Table: " + tableLookup + " Contains key: " + ref + " = " + result);
+		
+		return result;
 	}
 
 

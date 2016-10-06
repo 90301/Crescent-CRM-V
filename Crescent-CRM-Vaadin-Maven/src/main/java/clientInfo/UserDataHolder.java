@@ -116,7 +116,9 @@ public class UserDataHolder extends MaxObject {
 			c.setLocation(loc);
 			c.setStatus(status);
 			c.setNotes("");
-			DataHolder.store(c, Client.class);
+			
+			System.out.println("Template class created: " + c);
+			store(c, Client.class);
 			this.templateClient = c;
 		} else {
 			System.out.println("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c);
@@ -288,6 +290,10 @@ public class UserDataHolder extends MaxObject {
 
 	@Override
 	public void updateDBMap() {
+		
+		if (this.databasePrefix == null) {
+			this.databasePrefix = "";
+		}
 		dbMap.put(databasePrefix, this.databasePrefix);
 		
 	}

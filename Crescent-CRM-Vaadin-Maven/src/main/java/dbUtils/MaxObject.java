@@ -72,19 +72,24 @@ public abstract class MaxObject {
 	}
 
 	public void loadFromDB(ResultSet rs) {
+		
+		
 		if (dbMap.keySet().size()==0){
 			//load the db keys if not already loaded
 			//this.setupDBDatatypes();
 			this.updateDBMap();
 		}
 		
+		
 		System.out.println("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.");
 		//for (String key : dbMap.keySet()) {
-		for (String key : dbMap.keySet()) {
+		for (String key : dbDatatypes.keySet()) {
+			System.out.println("Key: " + key);
 			try {
 				Object value = rs.getObject(key);
+				System.out.println("Attempting to Load value: " + key + " , " + value);
 				dbMap.put(key, value);
-				System.out.println("Loaded value: " + key + " , " + value);
+				System.out.println("Loaded value: " + key + " , " + value + " into: " + dbMap);
 
 			} catch (SQLException e) {
 				

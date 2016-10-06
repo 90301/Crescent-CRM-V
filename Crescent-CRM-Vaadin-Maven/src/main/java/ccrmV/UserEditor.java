@@ -266,7 +266,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			nUser.setUserName(userName);
 			nUser.setPassword(pass);
 			nUser.setAdmin(false);
+			//set the database to the user name
+			nUser.setDatabaseSelected(userName);
+			nUser.addDatabaseAccsessable(userName);
+			
 			DataHolder.store(nUser, User.class);
+			
 		} else {
 			//User already exists
 			

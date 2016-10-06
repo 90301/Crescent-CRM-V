@@ -12,7 +12,12 @@ import users.User;
 public class InhalerUtils {
 	private static final String DELIMITER = "|";
 
-	public static String maxObjectListToCSV(Collection<MaxObject> items) {
+	/**
+	 * Caution: Do not use this method when dealing with maxObject database serialization (dealing with dbMap)
+	 * @param items
+	 * @return
+	 */
+	public static String maxObjectListToCSV(Collection<? extends MaxObject> items) {
 		boolean firstRun = true;
 		String csv ="";
 		for (MaxObject item : items) {
@@ -52,6 +57,38 @@ public class InhalerUtils {
 	}
 	
 	
+	public static Collection<String> csvToList(String csv) {
+		ArrayList<String> list= new ArrayList<String>();
+		for (String s : csv.split(DELIMITER)) {
+			list.add(s);
+		}
+		
+		return list;
+	}
+	
+	/**
+	 * Returns a CSV (string) from a list of strings
+	 * @param list
+	 * @return
+	 */
+	public static String listToCsv(Collection<String> list) {
+		
+		String csv = "";
+		boolean firstRun = true;
+		for (String s : list) {
+			if (!firstRun ) {
+				csv += DELIMITER;
+			} else {
+				firstRun = false;
+			}
+			
+			csv+= s;
+		}
+		return csv;
+		
+	}
+	
+	
 	/**
 	 * Returns true if the string is null/blank or "null"
 	 * 
@@ -68,4 +105,5 @@ public class InhalerUtils {
 		System.out.println("Tested: " + testingString + " Null?: " + rtrn);
 		return rtrn;
 	}
+	
 }

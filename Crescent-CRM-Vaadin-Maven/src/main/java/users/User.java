@@ -5,11 +5,15 @@ import java.security.SecureRandom;
 import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.HashMap;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import clientInfo.DataHolder;
+import clientInfo.UserDataHolder;
+import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxObject;
 import dbUtils.PasswordAuthentication;
@@ -75,12 +79,25 @@ public class User extends MaxObject {
 		
 	}
 
+
 	@Override
 	public void loadInternalFromMap() {
 		
 		this.userName = (String) dbMap.get(userNameField);
 		this.passHash = (String) dbMap.get(passHashField);
 		this.databaseSelected = (String) dbMap.get(databaseSelectedField);
+		//conversion
+		
+		//take the csv data in the dbMap convert that to a list of string refs to UserDataHolders
+
+		this.databasesAccsessable.clear();
+		this.databasesAccsessable.addAll(InhalerUtils.csvToList((String) dbMap.get(dataBasesAccsessableField)));
+		/*
+		for (MaxObject udh : InhalerUtils.maxObjectCSVToList((String) dbMap.get(dataBasesAccsessableField), null, UserDataHolder.class)) {
+			this.databasesAccsessable.add((UserDataHolder) udh);
+		}
+		*/
+		
 		this.admin = (boolean) dbMap.get(adminField);
 		
 		safetyCheck();
@@ -92,6 +109,14 @@ public class User extends MaxObject {
 		dbMap.put(userNameField, userName);
 		dbMap.put(passHashField, passHash);
 		dbMap.put(databaseSelectedField, this.databaseSelected);
+		
+		//conversion
+		//databasesAccsessable --> CSV string to be stored in the database
+		String csvDatabaseAccsessable = InhalerUtils.listToCsv(this.databasesAccsessable);
+		System.out.println("CSV output: " + csvDatabaseAccsessable);
+		dbMap.put(dataBasesAccsessableField,csvDatabaseAccsessable);
+		
+		
 		dbMap.put(adminField, admin);
 	}
 
@@ -148,7 +173,7 @@ public class User extends MaxObject {
 		//Would this work? ^^^
 		dbDatatypes.put(databaseSelectedField, String.class);
 		
-		dbDatatypes.put(dataBasesAccsessableField, String.class);//JSON converted
+		dbDatatypes.put(dataBasesAccsessableField, String.class);//CSV converted
 		
 		dbDatatypes.put(adminField, Boolean.class);
 	}
@@ -177,6 +202,14 @@ public class User extends MaxObject {
 	public void addDatabaseAccsessable(String string) {
 		this.databasesAccsessable.add(string);
 		
+	}
+	public void addDatabaseAccsessable(UserDataHolder udh) {
+		this.databasesAccsessable.add(udh.getPrimaryKey());
+		
+	}
+	
+	public Collection<String> getDatabasesAccsessable() {
+		return databasesAccsessable;
 	}
 
 	public boolean getAdmin() {
