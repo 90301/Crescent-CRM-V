@@ -144,5 +144,16 @@ public class MasterUI extends UI {
 	public void enterScheduler() {
 		mainNavigator.navigateTo(SCHEDULER);
 	}
+	
+	public void logout() {
+		loggedIn = false;
+		userDataHolder = null;
+		user = null;
+		mainNavigator.navigateTo(LOGIN);
+	}
+	
+	public User getUser() {
+		return user;
+	}
 
 }

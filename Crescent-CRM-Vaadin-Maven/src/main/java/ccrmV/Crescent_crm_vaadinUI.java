@@ -541,7 +541,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		
 
 		// Nav Bar Code
-		//NavBar navBar;
+		navBar.updateInfo();
+		
 		this.addComponent(navBar.sidebarLayout);
 
 		((AbstractOrderedLayout) layout).setMargin(true);

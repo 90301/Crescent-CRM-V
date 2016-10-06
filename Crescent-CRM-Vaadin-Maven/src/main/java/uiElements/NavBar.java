@@ -24,6 +24,7 @@ public class NavBar {
 	Button crmButton;
 	Button userEditorButton;
 	Button schedulerButton;
+	Button logoutButton;
 	Label statusLabel;
 	public static final String BUTTON_WIDTH = "120px";
 	public static final String BUTTON_HEIGHT = "120px";
@@ -45,25 +46,39 @@ public class NavBar {
 		
 		schedulerButton = new Button("Scheduler", event -> this.schedulerClick() );
 		
+		logoutButton = new Button("Log Out", event -> this.logoutClick());
+		
 		sidebarLayout.addComponent(statusLabel);
 		sidebarLayout.addComponent(crmButton);
 		sidebarLayout.addComponent(userEditorButton);
 		sidebarLayout.addComponent(schedulerButton);
+		sidebarLayout.addComponent(logoutButton);
+		
 		
 		crmButton.setWidth(BUTTON_WIDTH);
 		userEditorButton.setWidth(BUTTON_WIDTH);
         schedulerButton.setWidth(BUTTON_WIDTH);
+        logoutButton.setWidth(BUTTON_WIDTH);
         
         crmButton.setHeight(BUTTON_HEIGHT);
         userEditorButton.setHeight(BUTTON_HEIGHT);
         schedulerButton.setHeight(BUTTON_HEIGHT);
-        
+        logoutButton.setHeight(BUTTON_HEIGHT);
         
         
 		generatedLayout = true;
 		
 		return sidebarLayout;
 		
+	}
+	
+	public void updateInfo() {
+		statusLabel.setCaption("" + masterUi.getUser().getPrimaryKey());
+	}
+
+	private void logoutClick() {
+		// TODO Auto-generated method stub
+		masterUi.logout();
 	}
 
 	private void schedulerClick() {
