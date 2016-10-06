@@ -294,7 +294,7 @@ public class UserDataHolder extends MaxObject {
 		if (this.databasePrefix == null) {
 			this.databasePrefix = "";
 		}
-		dbMap.put(databasePrefix, this.databasePrefix);
+		dbMap.put(databasePrefixField, this.databasePrefix);
 		
 	}
 
