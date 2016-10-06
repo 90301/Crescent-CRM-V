@@ -77,8 +77,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	Label versionLabel;
 
-	public static final double versionNumber = .68;
-	public static final String versionDescription = " AutoLogin";
+
 	private static final int MAX_NOTE_ROWS = 20;
 
 	public Client selectedClient;
@@ -757,7 +756,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		fillAllComboBoxes();
 
 		// version label
-		versionLabel = new Label("Version: " + versionNumber + versionDescription);
+		versionLabel = new Label("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
 
 		layout.addComponent(versionLabel);
 		

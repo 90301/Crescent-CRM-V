@@ -27,39 +27,60 @@ public class LoginView extends VerticalLayout implements View {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Label welcomeLabel;
-	TextField userField;
-	PasswordField passField;
-	Button loginButton;
+	Label welcomeLabel = new Label();;
+	TextField userField = new TextField("User: ");;
+	PasswordField passField  = new PasswordField("Pass: ");
+	Button loginButton  = new Button("Login", event -> attemptLogin());
 	public String host;
-	//private static final ShortcutAction enterKeyShortcut = new ShortcutAction(null, ShortcutAction.KeyCode.ENTER, null);
 	
+	
+	Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
+	Image logo = new Image(null, res);
+	//private static final ShortcutAction enterKeyShortcut = new ShortcutAction(null, ShortcutAction.KeyCode.ENTER, null);
+	Label versionLabel = new Label();
 	
 	@Override
 	public void enter(ViewChangeEvent VCevent) {
 		//define components
-		welcomeLabel = new Label("Welcome : " + host);
-		userField = new TextField("User: ");
-		passField = new PasswordField("Pass: ");
-		loginButton = new Button("Login", event -> attemptLogin());
-		Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
+		//welcomeLabel
+		//welcomeLabel.setCaption("Welcome: " + host);
 		
-		Image image = new Image(null, res);
+		//userField 
 		
+		//passField
+		
+		//loginButton
+		
+		
+		 //logo
+		
+		versionLabel.setCaption("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
 		addEnterKeyActionToTextField(passField);
 	
 		//add components
 	    this.setMargin(true);
+	    this.setSpacing(true);
 		this.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-		this.addComponent(image);
-		this.addComponent(welcomeLabel);
+		
+		this.addComponent(logo);
+		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
 		this.addComponent(loginButton);
+		this.addComponent(versionLabel);
+		this.setComponentAlignment(versionLabel, Alignment.BOTTOM_CENTER);
+		
+		
+		
 		
 		if (MasterUI.DEV_AUTO_LOGIN && MasterUI.DEVELOPER_MODE) {
 			attemptLogin();
 		}
+	}
+	
+	public void clearFields() {
+		this.userField.clear();
+		this.passField.clear();
 	}
 	
 	

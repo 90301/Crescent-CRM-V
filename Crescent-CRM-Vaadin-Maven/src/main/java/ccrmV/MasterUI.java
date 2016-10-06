@@ -25,6 +25,9 @@ public class MasterUI extends UI {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	public static final double versionNumber = .70;
+	public static final String versionDescription = " Logout";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -72,6 +75,7 @@ public class MasterUI extends UI {
 	Crescent_crm_vaadinUI mainApp = new Crescent_crm_vaadinUI();
 	UserEditor userEditor = new UserEditor();
 	SchedulerView schedulerView = new SchedulerView();
+	LoginView loginView = new LoginView();
 	User user = null;//logged in user
 	
 	
@@ -85,9 +89,9 @@ public class MasterUI extends UI {
 		
 		userHost = request.getRemoteHost();
 		mainNavigator = new Navigator(this,this);
-		LoginView lv = new LoginView();
-		lv.host = userHost;
-		lv.masterUi = this;
+		
+		loginView.host = userHost;
+		loginView.masterUi = this;
 		//Generate the nav bar to use
 		NavBar navBar = new NavBar();
 		navBar.masterUi = this;
@@ -109,7 +113,7 @@ public class MasterUI extends UI {
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
 		}
-		mainNavigator.addView(LOGIN, lv);
+		mainNavigator.addView(LOGIN, loginView);
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		mainNavigator.addView(SCHEDULER, schedulerView);
@@ -149,6 +153,7 @@ public class MasterUI extends UI {
 		loggedIn = false;
 		userDataHolder = null;
 		user = null;
+		loginView.clearFields();
 		mainNavigator.navigateTo(LOGIN);
 	}
 	
