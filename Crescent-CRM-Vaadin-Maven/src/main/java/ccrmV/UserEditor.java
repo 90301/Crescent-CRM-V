@@ -266,6 +266,8 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		User nUser = new User();
 		//Check to see if a user already has a specific name
+		//This doesn't appear to be working. a user can be created with
+		//the same username.
 		if (DataHolder.getUser(userName) == null) {
 			nUser.setUserName(userName);
 			nUser.setPassword(pass);

@@ -15,6 +15,7 @@ import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
+import debugging.Debugging;
 import uiElements.NavBar;
 import users.User;
 
@@ -26,8 +27,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .71;
-	public static final String versionDescription = " Database Showing";
+	public static final double versionNumber = .72;
+	public static final String versionDescription = " Debugging 2.0";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -85,6 +86,8 @@ public class MasterUI extends UI {
 	
 	protected void init(VaadinRequest request) {
 		
+		
+		
 		DataHolder.initalizeDatabases();
 		
 		userHost = request.getRemoteHost();
@@ -123,6 +126,10 @@ public class MasterUI extends UI {
 		/*
 		 * Start of capstone
 		 */
+		
+		//Debug unit testing
+		Debugging.debugUnitTesting();
+		
 	}
 
 	public void startMainApp() {
