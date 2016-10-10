@@ -10,6 +10,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -255,6 +256,7 @@ public class UserEditor extends HorizontalLayout implements View {
 			//Database Creator
 			databaseCreatorLayout = new HorizontalLayout();
 			databaseCreatorLayout.setCaption("Database Creator");
+			databaseCreatorLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 			//TODO add a list of databases already in the system.
 			databaseCreatorTextField = new TextField("Database Name");
 			
@@ -558,7 +560,10 @@ public class UserEditor extends HorizontalLayout implements View {
 			//User already exists
 			
 		}
+		
+		populateAllData();
 	}
+	
 	
 	/*
 	private void addDatabaseClick() {
