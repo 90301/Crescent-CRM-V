@@ -1,8 +1,11 @@
 package ccrmV;
 
+import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -12,6 +15,7 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
+import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
@@ -60,13 +64,17 @@ public class UserEditor extends HorizontalLayout implements View {
 	//may need to change this to a grid later. needs to be improved a lot, bare
 	//bones functonality implemented 
 	ComboBox adminUserSelector, adminDatabaseSelector;
-	Button adminAddDatabaseButton;
+	Button adminAddDatabaseButton,adminUpdateSettingsButton;
 	//user options (select a database)
 	
 	ListSelect adminUserListSelect;
 	
 	Layout adminSettingsLayout;
 	Grid adminSettingsGrid;
+	
+	private static final String ADMIN_SETTING_ID = "Admin";
+	private static final String SETTING_NAME_ID = "Setting Name";
+	private static final String SETTING_VALUE_ID = "Value";
 	
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
@@ -134,7 +142,7 @@ public class UserEditor extends HorizontalLayout implements View {
 		//User Editor for creating new users
 		//welcomeLabel = new Label("User Editor");
 		
-		
+		if (masterUi.user.getAdmin()) {
 		userCreatorLayout = new VerticalLayout();
 		
 		((AbstractOrderedLayout) userCreatorLayout).setMargin(true);
@@ -154,10 +162,10 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		userEditorAccordion.addComponent(userCreatorLayout);
 		
-		if (masterUi.user.getAdmin()) {
+		
 			//Admin menu!
 			adminLayout = new HorizontalLayout();
-			adminLayout.setCaption("Edit Users (ADMIN)");
+			adminLayout.setCaption("Edit Users Permissions (ADMIN)");
 			((AbstractOrderedLayout) adminLayout).setMargin(true);
 			((AbstractOrderedLayout) adminLayout).setSpacing(true);
 			
@@ -175,7 +183,13 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			//adminUserListSelect.setRows(20);
 			adminUserListSelect.setSizeFull();
+			adminUserListSelect.setNullSelectionAllowed(false);
+			adminUserListSelect.addValueChangeListener(e -> adminSelectUser());
+			
 			adminSettingsGrid = new Grid();
+			
+			adminUpdateSettingsButton = new Button("Update Settings");
+			adminUpdateSettingsButton.addClickListener(e -> updateAdminSettings());
 			
 			//Admin Settings Layout
 			adminSettingsLayout = new VerticalLayout();
@@ -188,6 +202,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			//TODO:change the name of this caption??
 			adminSettingsGrid.setCaption("User Settings");
+			adminSettingsGrid.setEditorEnabled(true);
+			adminSettingsGrid.setResponsive(true);
+			
+			
+			//HeaderRow filterRow = adminSettingsGrid.appendHeaderRow();
+			
 			/*
 			adminLayout.addComponent(adminUserSelector);
 			adminLayout.addComponent(adminDatabaseSelector);
@@ -196,6 +216,8 @@ public class UserEditor extends HorizontalLayout implements View {
 			adminLayout.addComponent(adminUserListSelect);
 			
 			adminSettingsLayout.addComponent(adminSettingsGrid);
+			
+			adminSettingsLayout.addComponent(adminUpdateSettingsButton);
 			
 			adminSettingsLayout.addComponent(adminDatabaseSelector);
 			adminSettingsLayout.addComponent(adminAddDatabaseButton);
@@ -219,6 +241,102 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+
+	/**
+	 * Updates settings for the selected user
+	 */
+	private void updateAdminSettings() {
+		String usernameSelected = (String) adminUserListSelect.getValue();
+		if (usernameSelected==null && InhalerUtils.stringNullCheck(usernameSelected)) {
+			Debugging.output("null user selected: " + usernameSelected
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		
+		User adminEditUser = DataHolder.getUser(usernameSelected);
+		
+		if (adminEditUser==null) {
+			Debugging.output("User Note Found: " + usernameSelected + " : " + adminEditUser
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		Collection<?> items = adminSettingsGrid.getContainerDataSource().getItemIds();
+		//Loop through all settings
+		for (Object item : items) {
+			Debugging.output("Item Id: " + item
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			//get the "ITEM" (setting)
+			Item setting = adminSettingsGrid.getContainerDataSource().getItem(item);
+			Debugging.output("Attempting to update settings: " + setting
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			
+			//Get the setting name
+			String settingName = (String) setting.getItemProperty(SETTING_NAME_ID).getValue();
+			
+			Debugging.output("Setting Name: " + settingName
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			
+			Boolean settingValue = (Boolean) setting.getItemProperty(SETTING_VALUE_ID).getValue();
+			
+			Debugging.output("Setting Value: " + settingValue
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+
+			//begin the god awful case statement until we can figure out a way to map this painlessly
+			switch (settingName) {
+				case ADMIN_SETTING_ID:
+					Debugging.output("Admin: " + settingValue
+							,Debugging.USER_EDITOR_OUTPUT
+							,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+					adminEditUser.setAdmin(settingValue);
+					break;
+			}
+			
+			
+		}
+
+		//update the user
+		DataHolder.store(adminEditUser, User.class);
+		
+	}
+
+	/**
+	 * Loads information into the admin table
+	 */
+	private void adminSelectUser() {
+		
+		String usernameSelected = (String) adminUserListSelect.getValue();
+		if (usernameSelected==null && InhalerUtils.stringNullCheck(usernameSelected)) {
+			Debugging.output("null user selected: " + usernameSelected
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		
+		User adminEditUser = DataHolder.getUser(usernameSelected);
+		
+		if (adminEditUser==null) {
+			Debugging.output("User Note Found: " + usernameSelected + " : " + adminEditUser
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		
+		//adminSettingsGrid
+		adminEditAdmin = adminEditUser.getAdmin();
+		adminSettingsGrid.getContainerDataSource().removeAllItems();
+		adminSettingsGrid.addRow(ADMIN_SETTING_ID, adminEditAdmin);
+	}
+
+
+	/**
+	 * Changes the current user's database they are using.
+	 */
 	private void userChangeDatabase() {
 		String databaseName = (String) settingsDatabaseComboBox.getValue();
 		Debugging.output("Attempting to change database to: " + databaseName
@@ -234,14 +352,20 @@ public class UserEditor extends HorizontalLayout implements View {
 		masterUi.setUserDataHolder(databaseName);
 	}
 
+	Boolean adminEditAdmin;
+	/**
+	 * Generates initial settings for the grid
+	 */
 	private void generateSettingsGrid() {
 		
 		adminSettingsGrid.removeAllColumns();
-		adminSettingsGrid.addColumn("Setting Name", String.class).setEditable(false);
-		adminSettingsGrid.addColumn("Value", Boolean.class).setEditable(true);
+		adminSettingsGrid.addColumn(SETTING_NAME_ID, String.class).setEditable(false);
+		adminSettingsGrid.addColumn(SETTING_VALUE_ID, Boolean.class).setEditable(true);
 		
+		adminSettingsGrid.getContainerDataSource().removeAllItems();
 		//TODO remove test code
-		adminSettingsGrid.addRow("Admin", true);
+		adminEditAdmin = true;
+		adminSettingsGrid.addRow(ADMIN_SETTING_ID, adminEditAdmin);
 		
 		/*
 		SortedMap<String,Object> settings = new TreeMap<String,Object>(); 
