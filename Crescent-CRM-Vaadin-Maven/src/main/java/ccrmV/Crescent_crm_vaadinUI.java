@@ -171,6 +171,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			//try clearing the table if the database changes?
 		clientTable.clear();
 		cacheDatabaseName = masterUi.userDataHolder.getDatabasePrefix();
+		} else {
+			//force clear always!
+			clientTable.clear();
 		}
 		clientTable.addContainerProperty("Name", String.class, "<no name>");
 		clientTable.addContainerProperty("Location", String.class, null);
