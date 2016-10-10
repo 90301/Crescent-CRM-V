@@ -73,6 +73,9 @@ public class Debugging {
 	public static final String USER_EDITOR_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean USER_EDITOR_OUTPUT_ENABLED = true;
 
+	//CRM Debugging
+	public static final String CRM_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean CRM_OUTPUT_ENABLED = true;
 	
 	
 	

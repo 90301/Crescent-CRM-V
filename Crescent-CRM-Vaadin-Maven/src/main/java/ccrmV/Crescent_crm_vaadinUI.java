@@ -23,6 +23,7 @@ import com.vaadin.ui.*;
 import clientInfo.*;
 import dbUtils.BackupManager;
 import dbUtils.MaxObject;
+import debugging.Debugging;
 //import de.steinwedel.messagebox.MessageBox;
 import uiElements.NavBar;
 
@@ -170,10 +171,18 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		if (masterUi.userDataHolder.getDatabasePrefix()!=cacheDatabaseName) {
 			//try clearing the table if the database changes?
 		clientTable.clear();
+		clientTable.removeAllItems();
+		Debugging.output("Detected database change: " + masterUi.userDataHolder.getDatabasePrefix() + " old: " + cacheDatabaseName
+				,Debugging.CRM_OUTPUT
+				,Debugging.CRM_OUTPUT_ENABLED);
+		
+		
 		cacheDatabaseName = masterUi.userDataHolder.getDatabasePrefix();
+		
 		} else {
 			//force clear always!
 			clientTable.clear();
+			clientTable.removeAllItems();
 		}
 		clientTable.addContainerProperty("Name", String.class, "<no name>");
 		clientTable.addContainerProperty("Location", String.class, null);

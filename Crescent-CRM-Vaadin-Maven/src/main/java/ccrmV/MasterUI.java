@@ -27,8 +27,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .77;
-	public static final String versionDescription = " Individual Database Creation";
+	public static final double versionNumber = .78;
+	public static final String versionDescription = " Database Selection Fixes";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -45,9 +45,7 @@ public class MasterUI extends UI {
 	@VaadinServletConfiguration(productionMode = false, ui = MasterUI.class)
 	public static class Servlet extends VaadinServlet {
 
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 	}
@@ -85,8 +83,6 @@ public class MasterUI extends UI {
 	public UserDataHolder userDataHolder;//Set when logging in
 	
 	protected void init(VaadinRequest request) {
-		
-		
 		
 		DataHolder.initalizeDatabases();
 		
@@ -143,6 +139,7 @@ public class MasterUI extends UI {
 	public void enterCRM() {
 		
 		mainNavigator.navigateTo(MAIN_APP);
+		mainApp.updateClientTable();
 	}
 	
 	public void enterUserEditor() {
