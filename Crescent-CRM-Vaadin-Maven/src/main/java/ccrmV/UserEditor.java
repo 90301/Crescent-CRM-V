@@ -257,9 +257,58 @@ public class UserEditor extends HorizontalLayout implements View {
 	}
 	
 
-	private Object databasePermissionValueChanged() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Updates the user's accessible databases
+	 */
+	private void databasePermissionValueChanged() {
+		User adminEditUser = safeGetUser();
+		if (adminEditUser==null) {
+			return;
+		}
+		
+		Collection<String> selectedDatabases = (Collection<String>) adminDatabaseTwinColSelect.getValue();
+		
+		if (selectedDatabases.size()<1) {
+			Debugging.output("Error: Attempting to make a user have access to NO databases: " + selectedDatabases.size() + " User: " + adminEditUser + " Aborting for safety!"
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		
+		adminEditUser.setDatabaseAccessible(selectedDatabases);
+		
+		Debugging.output("Selected Databases for user: " + selectedDatabases
+				,Debugging.USER_EDITOR_OUTPUT
+				,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+		
+		DataHolder.store(adminEditUser, User.class);
+		
+	}
+	
+	/**
+	 * Attempts to get the user to edit permissions on.
+	 * Will output to USER_EDITOR_OUTPUT if something is null.
+	 * @return the user to edit or null
+	 */
+	private User safeGetUser() {
+		String usernameSelected = (String) adminUserListSelect.getValue();
+		if (usernameSelected==null && InhalerUtils.stringNullCheck(usernameSelected)) {
+			Debugging.output("null user selected: " + usernameSelected
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return null;
+		}
+		
+		User adminEditUser = DataHolder.getUser(usernameSelected);
+		
+		if (adminEditUser==null) {
+			Debugging.output("User Note Found: " + usernameSelected + " : " + adminEditUser
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return null;
+		}
+		
+		return adminEditUser;
 	}
 
 	/**

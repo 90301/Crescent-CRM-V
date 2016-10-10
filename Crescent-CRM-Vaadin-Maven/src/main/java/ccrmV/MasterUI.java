@@ -27,8 +27,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .75;
-	public static final String versionDescription = " Twin Col Select";
+	public static final double versionNumber = .76;
+	public static final String versionDescription = " Twin Col database permissions";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
