@@ -22,6 +22,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
 import dbUtils.InhalerUtils;
+import debugging.Debugging;
 import uiElements.NavBar;
 import users.User;
 
@@ -117,7 +118,10 @@ public class UserEditor extends HorizontalLayout implements View {
 		settingsThemeComboBox = new ComboBox ("Theme");
 		settingsChangePasswordButton = new Button("Change Password");
 		
-		
+		//settings action listeners
+		settingsDatabaseComboBox.setImmediate(true);
+		settingsDatabaseComboBox.setNullSelectionAllowed(false);
+		settingsDatabaseComboBox.addValueChangeListener(e -> userChangeDatabase());
 		
 		
 		settingsLayout.addComponent(settingsDatabaseComboBox);
@@ -215,6 +219,21 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+	private void userChangeDatabase() {
+		String databaseName = (String) settingsDatabaseComboBox.getValue();
+		Debugging.output("Attempting to change database to: " + databaseName
+				,Debugging.USER_EDITOR_OUTPUT
+				,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+		if (databaseName == null || !masterUi.user.getDatabasesAccsessable().contains(databaseName)) {
+			Debugging.output("Invalid value detected on database change: " + databaseName
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		
+		masterUi.setUserDataHolder(databaseName);
+	}
+
 	private void generateSettingsGrid() {
 		
 		adminSettingsGrid.removeAllColumns();
@@ -241,6 +260,8 @@ public class UserEditor extends HorizontalLayout implements View {
 		//settings
 		settingsDatabaseComboBox.removeAllItems();
 		settingsDatabaseComboBox.addItems(masterUi.getUser().getDatabasesAccsessable());
+		settingsDatabaseComboBox.setValue(masterUi.user.getDatabaseSelected());
+		
 		
 		if (masterUi.user.getAdmin()) {
 			//populate the admin menu stuff
@@ -257,7 +278,9 @@ public class UserEditor extends HorizontalLayout implements View {
 	}
 
 	/**
-	 * Creates a new user with 
+	 * Creates a new user with a username and password
+	 * by default the user is not an admin
+	 * also creates a userDataHolder with that user's name as the primary key
 	 */
 	private void createNewUserClick() {
 		String userName = createUserNameTextField.getValue();
@@ -297,7 +320,7 @@ public class UserEditor extends HorizontalLayout implements View {
 			return;
 		
 		
-		//UserDataHolder udh = ;
+		
 	}
 
 }

@@ -193,6 +193,7 @@ public class User extends MaxObject {
 	public void setDatabaseSelected(String selectedDB) {
 		//TODO: Error checking and access requirements
 		this.databaseSelected = selectedDB;
+		updateDBMap();
 	}
 	public String getDatabaseSelected() {
 		return databaseSelected;

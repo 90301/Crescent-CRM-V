@@ -27,8 +27,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .72;
-	public static final String versionDescription = " Debugging 2.0";
+	public static final double versionNumber = .73;
+	public static final String versionDescription = " Database Switching";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -166,6 +166,18 @@ public class MasterUI extends UI {
 	
 	public User getUser() {
 		return user;
+	}
+
+	/**
+	 * NO ERROR CHECKING done in this methood yet.
+	 * sets the user data holder to the given userDataHolder name.
+	 * @param databaseName - the user data holder to select
+	 */
+	public void setUserDataHolder(String databaseName) {
+		//TODO make sure user actually can access the database
+		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
+		this.user.setDatabaseSelected(databaseName);
+		DataHolder.store(this.user,User.class);
 	}
 
 }

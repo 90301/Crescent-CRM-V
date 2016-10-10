@@ -69,6 +69,9 @@ public class Debugging {
 	private static final String DEBUG_UNIT_CUSTOM_FILE_OUT = FILE_OUTPUT + HOME_DIRECTORY + "/homeOutputTest.txt";
 	private static final String DEBUG_UNIT_CUSTOM_DIRECTORY_OUT = FILE_OUTPUT + HOME_DIRECTORY + "/debugDir/debugDirOutputTest.txt";
 	
+	//USER EDITOR DEBUGGING
+	public static final String USER_EDITOR_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean USER_EDITOR_OUTPUT_ENABLED = true;
 
 	
 	
