@@ -32,7 +32,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	public MasterUI MasterUi;
 	public NavBar navBar;
 	
-	//ayy
+	
 	public HorizontalLayout createEventLayout;
 	public VerticalLayout schedulerLayout;
 	
