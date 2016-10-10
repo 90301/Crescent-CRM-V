@@ -22,6 +22,7 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
@@ -71,6 +72,8 @@ public class UserEditor extends HorizontalLayout implements View {
 	
 	Layout adminSettingsLayout;
 	Grid adminSettingsGrid;
+	
+	TwinColSelect adminDatabaseTwinColSelect;
 	
 	private static final String ADMIN_SETTING_ID = "Admin";
 	private static final String SETTING_NAME_ID = "Setting Name";
@@ -191,6 +194,15 @@ public class UserEditor extends HorizontalLayout implements View {
 			adminUpdateSettingsButton = new Button("Update Settings");
 			adminUpdateSettingsButton.addClickListener(e -> updateAdminSettings());
 			
+			//Twin Col Select
+			adminDatabaseTwinColSelect = new TwinColSelect();
+			adminDatabaseTwinColSelect.setLeftColumnCaption("Databases Avaliable");
+			//Accessible 
+			adminDatabaseTwinColSelect.setRightColumnCaption("Databases Accessible");
+			adminDatabaseTwinColSelect.setImmediate(true);
+			adminDatabaseTwinColSelect.addValueChangeListener(e -> databasePermissionValueChanged());
+			
+			
 			//Admin Settings Layout
 			adminSettingsLayout = new VerticalLayout();
 			//((AbstractOrderedLayout) adminSettingsLayout).setMargin(true);
@@ -219,9 +231,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminSettingsLayout.addComponent(adminUpdateSettingsButton);
 			
+			/*
 			adminSettingsLayout.addComponent(adminDatabaseSelector);
 			adminSettingsLayout.addComponent(adminAddDatabaseButton);
+			*/
 			
+			adminSettingsLayout.addComponent(adminDatabaseTwinColSelect);
 			adminLayout.addComponent(adminSettingsLayout);
 			userEditorAccordion.addComponent(adminLayout);
 			
@@ -241,6 +256,11 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+
+	private Object databasePermissionValueChanged() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	/**
 	 * Updates settings for the selected user
@@ -331,6 +351,13 @@ public class UserEditor extends HorizontalLayout implements View {
 		adminEditAdmin = adminEditUser.getAdmin();
 		adminSettingsGrid.getContainerDataSource().removeAllItems();
 		adminSettingsGrid.addRow(ADMIN_SETTING_ID, adminEditAdmin);
+		//database twin col select
+		
+		adminDatabaseTwinColSelect.removeAllItems();
+		//add all available databases
+		adminDatabaseTwinColSelect.addItems(DataHolder.getUserDataHolderMap().keySet());
+		adminDatabaseTwinColSelect.setValue(adminEditUser.getDatabasesAccsessable());
+		
 	}
 
 
