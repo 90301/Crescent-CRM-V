@@ -9,6 +9,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -99,7 +100,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         createEventDurrationComboBox.setWidth("120px");
         
         //createEventButton
-        
+        createEventButton.addClickListener(click -> createEventButtonClick());
         
         createEventLayout.addComponent(createEventNameTextField);
         createEventLayout.addComponent(createEventClientComboBox);
@@ -124,6 +125,14 @@ public class SchedulerView extends HorizontalLayout implements View {
 		
 		this.addComponent(schedulerLayout);
 		
+	}
+
+
+
+
+
+	private void createEventButtonClick() {
+		String eventName = createEventNameTextField.getValue();
 	}
 
 
