@@ -59,8 +59,8 @@ public class Debugging {
 	private static final String FILE_OUT_ERROR_METHOD = CONSOLE_ERROR_OUTPUT;
 	private static final Boolean FILE_OUT_ERROR_ENABLED = true;
 	//DO NOT MAKE THIS A FILE OUTPUT, it will infinite loop.
-	private static final String FILE_OUT_SUCSESS_METHOD = CONSOLE_OUTPUT;
-	private static final Boolean FILE_OUT_SUCSESS_ENABLED = true;
+	private static final String FILE_OUT_SUCCESS_METHOD = CONSOLE_OUTPUT;
+	private static final Boolean FILE_OUT_SUCCESS_ENABLED = true;
 	
 	
 	//ensure the debug functions work
@@ -116,7 +116,7 @@ public class Debugging {
 			//File createDirFile = new File(file);
 			Files.createDirectories(file.getParent());
 			Files.write(file, lines, Charset.forName("UTF-8"),StandardOpenOption.CREATE,StandardOpenOption.APPEND);
-			output("Wrote debug file: " + filePath,FILE_OUT_SUCSESS_METHOD,FILE_OUT_SUCSESS_ENABLED);
+			output("Wrote debug file: " + filePath,FILE_OUT_SUCCESS_METHOD,FILE_OUT_SUCCESS_ENABLED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			
