@@ -72,10 +72,12 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	ComboBox filterStatus  = new ComboBox("Status");
 	ComboBox filterLocation = new ComboBox("Location");
 	ComboBox filterGroup = new ComboBox("Group");
-	Button filterButton, resetFilterButton;
+	Button filterButton = new Button("Filter", event -> this.filterClick());
+	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
 	TextField filterClientTextField = new TextField(" Name ");
 	TextField filterClientNotesField = new TextField("Notes Include:");
 	Label filterLabel = new Label("Filter :");
+	CheckBox filterContactNowCheckBox = new CheckBox("Contact Now Only");
 
 	boolean alreadyGenerated = false;
 	
@@ -225,6 +227,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		System.out.println("Looking for: " + filterNameTest);
 
+		Boolean contactNowOnly = filterContactNowCheckBox.getValue();
+		
 		for (Client c : masterUi.userDataHolder.getAllClients()) {
 
 			if (clientTable.containsId(c.getPrimaryKey())) {
@@ -237,7 +241,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			if ((filterStatusTest == c.getStatus() || filterStatusTest == null)
 					&& (filterLocationTest == c.getLocation() || filterLocationTest == null)
 					&& (filterGroupTest == c.getGroup() || filterGroupTest == null)
-					&& (filterNameTest == null || c.getName().toLowerCase().contains(filterNameTest.toLowerCase()))) {
+					&& (filterNameTest == null || c.getName().toLowerCase().contains(filterNameTest.toLowerCase()))
+					&& (!contactNowOnly || c.getContactNow())) {
 
 				boolean noteQueryFound = true;
 				// Make sure the notes contain all the terms
@@ -785,8 +790,16 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		//filterLayout.setColumns(8);
 		filterLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		filterLayout.addComponent(filterLabel);
-
+		
+		filterClientTextField.addValueChangeListener(e -> updateClientTable());
+		filterStatus.addValueChangeListener(e -> updateClientTable());
+		filterLocation.addValueChangeListener(e -> updateClientTable());
+		filterGroup.addValueChangeListener(e -> updateClientTable());
+		filterClientNotesField.addValueChangeListener(e -> updateClientTable());
+		filterContactNowCheckBox.addValueChangeListener(e -> updateClientTable());
+		
 		//filterClientTextField 
+		
 		filterLayout.addComponent(filterClientTextField);
 		//filterStatus
 		filterLayout.addComponent(filterStatus);
@@ -795,12 +808,14 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		//filterGroup 
 		filterLayout.addComponent(filterGroup);
 		// filter notes
-		//filterClientNotesField 
-		filterLayout.addComponent(filterClientNotesField);
 
-		filterButton = new Button("Filter", event -> this.filterClick());
+		filterLayout.addComponent(filterClientNotesField);
+		
+		filterLayout.addComponent(filterContactNowCheckBox);
+
+		//filterButton
 		filterLayout.addComponent(filterButton);
-		resetFilterButton = new Button("Reset", event -> this.resetFilterClick());
+		//resetFilterButton 
 		filterLayout.addComponent(resetFilterButton);
 	}
 
@@ -811,6 +826,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		filterGroup.setValue(null);
 		filterClientTextField.setValue("");
 		filterClientNotesField.setValue("");
+		filterContactNowCheckBox.setValue(false);
 		updateClientTable();
 	}
 
