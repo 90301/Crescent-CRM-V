@@ -12,6 +12,7 @@ import java.util.Map;
 
 import clientInfo.Client;
 import clientInfo.UserDataHolder;
+import debugging.Debugging;
 
 /**
  * A serialization for objects SUBCLASSES MUST IMPLEMENT A NO ARGUMENT
@@ -72,12 +73,25 @@ public abstract class MaxObject {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <V> void safeLoadFromInternalMap(V item, String fieldName, V defaultValue) {
+	public <V> V safeLoadFromInternalMap(String fieldName, V defaultValue) {
+		V item;
 		if (dbMap.get(fieldName)!=null) {
+			
+			
 			item = (V) dbMap.get(fieldName);
+			Debugging.output(
+					"Found Field: " + fieldName + " = " + item
+					, Debugging.MAX_OBJECT_OUTPUT
+					, Debugging.MAX_OBJECT_OUTPUT_ENABLED);
+			
 		} else {
 			item = defaultValue;
+			Debugging.output(
+					"Failed to find Field: " + fieldName + " default value: " + item
+					, Debugging.MAX_OBJECT_OUTPUT
+					, Debugging.MAX_OBJECT_OUTPUT_ENABLED);
 		}
+		return item;
 	}
 	
 	public void loadFromDB(ResultSet rs) {

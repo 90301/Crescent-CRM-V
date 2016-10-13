@@ -63,8 +63,8 @@ public class Client extends MaxObject {
 		if (dbMap.get(lastUpdatedField)!=null)
 		this.lastUpdated = (java.util.Date) dbMap.get(lastUpdatedField);
 		*/
-		safeLoadFromInternalMap(lastUpdated, lastUpdatedField, new Date());
-		safeLoadFromInternalMap(contactNow, contactNowField, false);
+		lastUpdated = safeLoadFromInternalMap(lastUpdatedField, new Date());
+		contactNow = safeLoadFromInternalMap(contactNowField, false);
 		mutex = false;
 	}
 	

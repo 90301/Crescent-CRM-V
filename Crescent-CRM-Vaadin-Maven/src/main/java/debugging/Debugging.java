@@ -78,6 +78,10 @@ public class Debugging {
 	public static final Boolean CRM_OUTPUT_ENABLED = true;
 	
 	
+	//Max Object Debugging
+	public static final String MAX_OBJECT_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean MAX_OBJECT_OUTPUT_ENABLED = true;
+	
 	
 	
 	public static void output(String output,String method,Boolean enabled) {
