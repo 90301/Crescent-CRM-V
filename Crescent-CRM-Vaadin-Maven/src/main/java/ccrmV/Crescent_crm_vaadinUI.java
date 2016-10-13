@@ -91,7 +91,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	Link devAsciiArt = new Link("Ascii Art",
 			new ExternalResource("http://patorjk.com/software/taag/#p=display&c=c&f=Letters"));
 
-	Label versionLabel;
+	Label versionLabel = new Label("Version");
 
 
 	private static final int MAX_NOTE_ROWS = 20;
@@ -175,6 +175,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		}
 		selectedClient.setLastUpdatedToNow();
 
+		selectedClient.setContactNow(clientContactNowCheckBox.getValue());
 		masterUi.userDataHolder.store(selectedClient, Client.class);
 		updateClientTable();
 	}
@@ -376,6 +377,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		} else {
 			clientLastUpdate.setValue("Never updated");
 		}
+		
+		clientContactNowCheckBox.setValue(c.getContactNow());
 
 	}
 
@@ -510,6 +513,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		 * 
 		 * This is not desirable, but for some reason the nav bar doesn't appear if it's done a
 		 * different way.
+		 * (update) Think I Fixed it.
 		 * -Josh Benton
 		 */
 		/*
@@ -569,8 +573,6 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		/***
 		 * T A B S
 		 */
-		
-		
 
 		// add a location
 		
@@ -598,11 +600,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		// Add Group
 
-		
-		
 		//createGroupName 
-
-		
 
 		createGroupLayout.addComponent(createGroupName);
 		createGroupLayout.addComponent(createGroupButton);
@@ -610,11 +608,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createGroupLayout.setComponentAlignment(createGroupButton, Alignment.BOTTOM_LEFT);
 
 		creationTabs.addTab(createGroupLayout, "Add Group");
-		
-		
-		
 		// Add a client
-
 		
 		//createClientName 
 		createClientLayout.addComponent(createClientName);
@@ -741,7 +735,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		fillAllComboBoxes();
 
 		// version label
-		versionLabel = new Label("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
+		versionLabel.setValue("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
 
 		layout.addComponent(versionLabel);
 		
@@ -769,7 +763,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientEditorActionLayout.addComponent(clientLastUpdate);
 		clientEditorActionLayout.addComponent(clientUpdateButton);
 		clientEditorActionLayout.addComponent(clientArchiveButton);
-		
+		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
+		clientEditorActionLayout.addComponent(clientContactFrequency);
 		//holds the client editor
 		clientEditorLayout.setSpacing(true);
 		

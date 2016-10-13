@@ -71,6 +71,15 @@ public abstract class MaxObject {
 		return insertValues;
 	}
 
+	@SuppressWarnings("unchecked")
+	public <V> void safeLoadFromInternalMap(V item, String fieldName, V defaultValue) {
+		if (dbMap.get(fieldName)!=null) {
+			item = (V) dbMap.get(fieldName);
+		} else {
+			item = defaultValue;
+		}
+	}
+	
 	public void loadFromDB(ResultSet rs) {
 		
 		
