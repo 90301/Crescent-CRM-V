@@ -12967,3 +12967,8 @@ div.v-layout.v-horizontal.v-widget {
 	width: 19px;
 	overflow: hidden;
 }
+
+.mytheme .filterBorder {
+	border-style: dotted;
+	border-width: 5px;
+}

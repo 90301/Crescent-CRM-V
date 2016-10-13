@@ -34,4 +34,8 @@
 @mixin mytheme {
   @include valo;
   // Insert your own theme rules here
+  .filterBorder {
+  border-style: dotted;
+  border-width: 5px;
+  }
 }
