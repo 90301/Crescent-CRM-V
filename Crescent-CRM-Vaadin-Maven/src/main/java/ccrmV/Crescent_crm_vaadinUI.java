@@ -22,6 +22,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.*;
 import clientInfo.*;
 import dbUtils.BackupManager;
+import dbUtils.InhalerUtils;
 import dbUtils.MaxObject;
 import debugging.Debugging;
 //import de.steinwedel.messagebox.MessageBox;
@@ -80,6 +81,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 
 	private static final int MAX_NOTE_ROWS = 20;
+	private static final String PANEL_HEIGHT = "950px";
+	private static final String NOTE_WIDTH = "600px";
 
 	public Client selectedClient;
 	Boolean discard = false;
@@ -90,6 +93,22 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	HashSet<String> nullStrings = new HashSet<String>();
 	public MasterUI masterUi;
 
+	
+	Layout layout = new VerticalLayout();
+	TabSheet creationTabs = new TabSheet();
+	HorizontalLayout createLocationLayout = new HorizontalLayout();
+	HorizontalLayout createStatusLayout = new HorizontalLayout();
+	HorizontalLayout createGroupLayout = new HorizontalLayout();
+	HorizontalLayout createClientLayout = new HorizontalLayout();
+	GridLayout optionsGridLayout = new GridLayout(4, 4);
+	Button createClientButton;
+	HorizontalLayout midLayout = new HorizontalLayout();
+	GridLayout clientGridLayout = new GridLayout(4, 10);
+	Button createLocationButton = new Button("Create Location", event -> this.createLocationClick());
+	Button createStatusButton = new Button("Create Status", event -> this.createStatusClick());
+	Button createGroupButton = new Button("Create Group", event -> this.createGroupClick());
+	Panel panel = new Panel();
+	
 	/*
 	 * Draw UI elements TODO: transition more elements to their own methods
 	 * TODO: add an update all for anything that takes dynamic data
@@ -114,7 +133,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	private void restoreClick() {
 
 		String csvFileString = csvBackupSelect.getValue().toString();
-		if (stringNullCheck(csvFileString)) {
+		if (InhalerUtils.stringNullCheck(csvFileString)) {
 			return;
 		} else {
 			DataHolder.restoreFromBackup(csvFileString);
@@ -201,10 +220,10 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			filterGroupTest = masterUi.userDataHolder.getGroup(filterGroup.getValue().toString());
 
 		String filterNameTest = null;
-		if (filterClientTextField.getValue() != null && !stringNullCheck(filterClientTextField.getValue()))
+		if (filterClientTextField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientTextField.getValue()))
 			filterNameTest = filterClientTextField.getValue().toString();
 		String[] filterNotesTests = null;
-		if (filterClientNotesField.getValue() != null && !stringNullCheck(filterClientNotesField.getValue()))
+		if (filterClientNotesField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientNotesField.getValue()))
 			filterNotesTests = filterClientNotesField.getValue().toLowerCase().split("\\s+");
 
 		System.out.println("Looking for: " + filterNameTest);
@@ -306,7 +325,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// TODO: ASK before switching
 
 		// null check
-		if (clientTable.getValue() != null && !stringNullCheck((String) clientTable.getValue())) {
+		if (clientTable.getValue() != null && !InhalerUtils.stringNullCheck((String) clientTable.getValue())) {
 			localSelClient = masterUi.userDataHolder.getClient((String) clientTable.getValue());
 			if (localSelClient == null) {
 				System.out.println(
@@ -415,20 +434,20 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		String name = createClientName.getValue();
 		// Null checking
-		if (stringNullCheck(name)) {
+		if (InhalerUtils.stringNullCheck(name)) {
 			return;// Name is null
 		}
 		// The group is ok to be null.
 		// Location is a required field
 		// Status is a required field
 		try {
-			if (stringNullCheck(createClientLocation.getValue().toString())) {
+			if (InhalerUtils.stringNullCheck(createClientLocation.getValue().toString())) {
 				return;
 			}
-			if (stringNullCheck(createClientStatus.getValue().toString())) {
+			if (InhalerUtils.stringNullCheck(createClientStatus.getValue().toString())) {
 				return;
 			}
-			if (stringNullCheck(createClientGroup.getValue().toString())) {
+			if (InhalerUtils.stringNullCheck(createClientGroup.getValue().toString())) {
 				return;
 			}
 		} catch (NullPointerException e) {
@@ -467,26 +486,6 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		updateClientTable();
 	}
 
-	/*
-	 * UTILITIES
-	 */
-
-	/**
-	 * Returns true if the string is null/blank or "null"
-	 * 
-	 * @param testingString
-	 * @return true if null
-	 */
-	public static Boolean stringNullCheck(String testingString) {
-
-		Boolean rtrn = false;
-		if (testingString == null || testingString == "" || testingString == "null") {
-			rtrn = true;
-		}
-
-		System.out.println("Tested: " + testingString + " Null?: " + rtrn);
-		return rtrn;
-	}
 
 	/**
 	 * returns the object or null
@@ -500,20 +499,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// if found, return the object
 		return rtrn;
 	}
-	Layout layout = new VerticalLayout();
-	TabSheet creationTabs = new TabSheet();
-	HorizontalLayout createLocationLayout = new HorizontalLayout();
-	HorizontalLayout createStatusLayout = new HorizontalLayout();
-	HorizontalLayout createGroupLayout = new HorizontalLayout();
-	HorizontalLayout createClientLayout = new HorizontalLayout();
-	GridLayout optionsGridLayout = new GridLayout(4, 4);
-	Button createClientButton;
-	HorizontalLayout midLayout = new HorizontalLayout();
-	GridLayout clientGridLayout = new GridLayout(4, 10);
-	Button createLocationButton = new Button("Create Location", event -> this.createLocationClick());
-	Button createStatusButton = new Button("Create Status", event -> this.createStatusClick());
-	Button createGroupButton = new Button("Create Group", event -> this.createGroupClick());
-	Panel panel = new Panel();
+
 	@Override
 	public void enter(ViewChangeEvent VCevent) {
 
@@ -541,6 +527,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			createClientLayout.removeAllComponents();
 			optionsGridLayout.removeAllComponents();
 			clientGridLayout.removeAllComponents();
+			clientEditorMetaLayout.removeAllComponents();
+			clientEditorLayout.removeAllComponents();
+			clientEditorActionLayout.removeAllComponents();
 			filterLayout.removeAllComponents();
 		}
 			//return;
@@ -566,7 +555,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		
 		panel.setContent(layout);
 		//panel.setSizeFull();
-		panel.setHeight("900px");
+		panel.setHeight(PANEL_HEIGHT);
 		panel.getContent().setSizeUndefined();
 		this.setSizeUndefined();
 		// panel.setHeight("100%");
@@ -629,16 +618,22 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createClientName = new TextField("Name");
 		createClientLayout.addComponent(createClientName);
 		createClientStatus = new ComboBox("Status");
+		createClientStatus.setNullSelectionAllowed(false);
+		createClientStatus.setInvalidAllowed(false);
 		// Add all statuses
 
 		createClientLayout.addComponent(createClientStatus);
 
 		createClientLocation = new ComboBox("Location");
+		createClientLocation.setNullSelectionAllowed(false);
+		createClientLocation.setInvalidAllowed(false);
 		// Add all locations
 
 		createClientLayout.addComponent(createClientLocation);
 		// Create groups
 		createClientGroup = new ComboBox("Group");
+		createClientGroup.setNullSelectionAllowed(false);
+		createClientGroup.setInvalidAllowed(false);
 		// Add all groups
 
 		createClientLayout.addComponent(createClientGroup);
@@ -701,9 +696,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		optionsGridLayout.addComponent(linkLayout, 0, 3);
 
 		/***
-		 * FFFFFFF IIIII LL TTTTTTT EEEEEEE RRRRRR FF III LL TTT EE RR RR FFFF
-		 * III LL TTT EEEEE RRRRRR FF III LL TTT EE RR RR FF IIIII LLLLLLL TTT
-		 * EEEEEEE RR RR
+		 * 
+		 * F I L T E R
 		 * 
 		 */
 
@@ -711,10 +705,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		layout.addComponent(filterLayout);
 
 		/***
-		 * MM MM IIIII DDDDD LL AAA YY YY OOOOO UU UU TTTTTTT MMM MMM III DD DD
-		 * LL AAAAA YY YY OO OO UU UU TTT MM MM MM III DD DD _____ LL AA AA
-		 * YYYYY OO OO UU UU TTT MM MM III DD DD LL AAAAAAA YYY OO OO UU UU TTT
-		 * MM MM IIIII DDDDDD LLLLLLL AA AA YYY OOOO0 UUUUU TTT
+		 * M I D _ L A Y O U T
 		 * 
 		 */
 
@@ -729,22 +720,28 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		updateClientTable();
 
 		/***
-		 * CCCCC LL IIIII EEEEEEE NN NN TTTTTTT CC C LL III EE NNN NN TTT CC LL
-		 * III EEEEE NN N NN TTT CC C LL III EE NN NNN TTT CCCCC LLLLLLL IIIII
-		 * EEEEEEE NN NN TTT
-		 * 
-		 * EEEEEEE DDDDD IIIII TTTTTTT IIIII NN NN GGGG EE DD DD III TTT III NNN
-		 * NN GG GG EEEEE DD DD III TTT III NN N NN GG EE DD DD III TTT III NN
-		 * NNN GG GG EEEEEEE DDDDDD IIIII TTT IIIII NN NN GGGGGG
+		 * C L I E N T
+		 * E D I T I N G
 		 */
 		// CLIENT EDITING UI
 		clientNameLabel = new Label("Client Name");
 		clientNoteBox = new TextArea("Client Notes");
 		clientNoteBox.setSizeFull();
+		clientNoteBox.setWidth(NOTE_WIDTH);
 		clientNoteBox.setResponsive(true);
+		
 		clientLocation = new ComboBox("Location");
+		clientLocation.setNullSelectionAllowed(false);
+		clientLocation.setInvalidAllowed(false);
+		
 		clientGroup = new ComboBox("Group");
+		clientGroup.setNullSelectionAllowed(false);
+		clientGroup.setInvalidAllowed(false);
+		
 		clientStatus = new ComboBox("Status");
+		clientStatus.setNullSelectionAllowed(false);
+		clientStatus.setInvalidAllowed(false);
+		
 		clientUpdateButton = new Button("Update", event -> this.updateClient(event));
 		clientLastUpdate = new Label("Last Updated: --/--/----");
 		clientArchiveButton = new Button("Archive");
@@ -759,6 +756,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientGridLayout.setSpacing(true);
 		clientGridLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 
+		/*
 		midLayout.addComponent(clientGridLayout);
 		clientGridLayout.addComponent(clientNameLabel, 0, 0);
 		clientGridLayout.addComponent(clientLocation, 0, 1);
@@ -768,6 +766,33 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientGridLayout.addComponent(clientLastUpdate, 0, 9);
 		clientGridLayout.addComponent(clientUpdateButton, 1, 9);
 		clientGridLayout.addComponent(clientArchiveButton, 2, 9);
+		*/
+		//Client Editor V2
+		
+		//Editor for the client meta data (location status group)
+		clientEditorMetaLayout.setSpacing(true);
+		clientEditorMetaLayout.setSizeFull();
+
+		clientEditorMetaLayout.addComponent(clientLocation);
+		clientEditorMetaLayout.addComponent(clientStatus);
+		clientEditorMetaLayout.addComponent(clientGroup);
+		
+		//Editor actions (archive update ect)
+		clientEditorActionLayout.setSpacing(true);
+		
+		clientEditorActionLayout.addComponent(clientLastUpdate);
+		clientEditorActionLayout.addComponent(clientUpdateButton);
+		clientEditorActionLayout.addComponent(clientArchiveButton);
+		
+		//holds the client editor
+		clientEditorLayout.setSpacing(true);
+		
+		clientEditorLayout.addComponent(clientNameLabel);
+		clientEditorLayout.addComponent(clientEditorMetaLayout);
+		clientEditorLayout.addComponent(clientNoteBox);
+		clientEditorLayout.addComponent(clientEditorActionLayout);
+		
+		midLayout.addComponent(clientEditorLayout);
 
 		fillAllComboBoxes();
 
@@ -779,6 +804,10 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 
 	}
+	
+	VerticalLayout clientEditorLayout = new VerticalLayout();
+	HorizontalLayout clientEditorMetaLayout = new HorizontalLayout();
+	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
 
 	/**
 	 * Adds all the components related to the filter layout
