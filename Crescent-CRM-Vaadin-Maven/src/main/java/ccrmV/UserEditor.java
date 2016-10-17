@@ -10,6 +10,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -22,9 +23,11 @@ import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
+import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import uiElements.NavBar;
@@ -63,14 +66,25 @@ public class UserEditor extends HorizontalLayout implements View {
 	Layout adminLayout;
 	//may need to change this to a grid later. needs to be improved a lot, bare
 	//bones functonality implemented 
-	ComboBox adminUserSelector, adminDatabaseSelector;
-	Button adminAddDatabaseButton,adminUpdateSettingsButton;
+	//ComboBox adminUserSelector, adminDatabaseSelector;
+	//Button adminAddDatabaseButton;
+	
+	
+	Button adminUpdateSettingsButton;
 	//user options (select a database)
 	
 	ListSelect adminUserListSelect;
 	
 	Layout adminSettingsLayout;
 	Grid adminSettingsGrid;
+	
+	TwinColSelect adminDatabaseTwinColSelect;
+	
+	//Database Creator
+	TextField databaseCreatorTextField;
+	Button databaseCreatorButton;
+	HorizontalLayout databaseCreatorLayout;
+	
 	
 	private static final String ADMIN_SETTING_ID = "Admin";
 	private static final String SETTING_NAME_ID = "Setting Name";
@@ -169,15 +183,16 @@ public class UserEditor extends HorizontalLayout implements View {
 			((AbstractOrderedLayout) adminLayout).setMargin(true);
 			((AbstractOrderedLayout) adminLayout).setSpacing(true);
 			
-			
+			/*
+			 * Deprecated
 			adminUserSelector = new ComboBox("User");
 			
 			adminDatabaseSelector = new ComboBox("Database");
 			
 			adminAddDatabaseButton = new Button("Add database to user");
+			*/
 			
-			
-			adminAddDatabaseButton.addClickListener(click -> addDatabaseClick());
+			//adminAddDatabaseButton.addClickListener(click -> addDatabaseClick());
 			
 			adminUserListSelect = new ListSelect("Select User");
 			
@@ -190,6 +205,15 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminUpdateSettingsButton = new Button("Update Settings");
 			adminUpdateSettingsButton.addClickListener(e -> updateAdminSettings());
+			
+			//Twin Col Select
+			adminDatabaseTwinColSelect = new TwinColSelect();
+			adminDatabaseTwinColSelect.setLeftColumnCaption("Databases Avaliable");
+			//Accessible 
+			adminDatabaseTwinColSelect.setRightColumnCaption("Databases Accessible");
+			adminDatabaseTwinColSelect.setImmediate(true);
+			adminDatabaseTwinColSelect.addValueChangeListener(e -> databasePermissionValueChanged());
+			adminDatabaseTwinColSelect.setNullSelectionAllowed(false);
 			
 			//Admin Settings Layout
 			adminSettingsLayout = new VerticalLayout();
@@ -219,11 +243,31 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			adminSettingsLayout.addComponent(adminUpdateSettingsButton);
 			
+			/*
 			adminSettingsLayout.addComponent(adminDatabaseSelector);
 			adminSettingsLayout.addComponent(adminAddDatabaseButton);
+			*/
 			
+			adminSettingsLayout.addComponent(adminDatabaseTwinColSelect);
 			adminLayout.addComponent(adminSettingsLayout);
 			userEditorAccordion.addComponent(adminLayout);
+			
+			
+			//Database Creator
+			databaseCreatorLayout = new HorizontalLayout();
+			databaseCreatorLayout.setCaption("Database Creator");
+			databaseCreatorLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+			//TODO add a list of databases already in the system.
+			databaseCreatorTextField = new TextField("Database Name");
+			
+			databaseCreatorButton = new Button("Create Database");
+			databaseCreatorButton.addClickListener(click -> createDatabaseClick());
+			
+			databaseCreatorLayout.addComponent(databaseCreatorTextField);
+			databaseCreatorLayout.addComponent(databaseCreatorButton);
+			userEditorAccordion.addComponent(databaseCreatorLayout);
+			
+			
 			
 		}
 		
@@ -241,6 +285,85 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+
+	/**
+	 * Creates a new database with a given name
+	 * automatically adds it to the logged in user
+	 */
+	private void createDatabaseClick() {
+		String newDatabaseName = databaseCreatorTextField.getValue();
+		if (InhalerUtils.stringNullCheck(newDatabaseName)) {
+			Debugging.output("Null new database name: " + newDatabaseName
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		UserDataHolder udh = DataHolder.getUserDataHolder(newDatabaseName);
+		DataHolder.store(udh, UserDataHolder.class);
+		
+		User currentUser = masterUi.getUser();
+		
+		currentUser.addDatabaseAccsessable(newDatabaseName);
+		
+		DataHolder.store(currentUser, User.class);
+		populateAllData();
+		
+	}
+
+	/**
+	 * Updates the user's accessible databases
+	 */
+	private void databasePermissionValueChanged() {
+		User adminEditUser = safeGetUser();
+		if (adminEditUser==null) {
+			
+			return;
+		}
+		
+		Collection<String> selectedDatabases = (Collection<String>) adminDatabaseTwinColSelect.getValue();
+		
+		if (selectedDatabases.size()<1) {
+			Debugging.output("Error: Attempting to make a user have access to NO databases: " + selectedDatabases.size() + " User: " + adminEditUser + " Aborting for safety!"
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return;
+		}
+		
+		adminEditUser.setDatabaseAccessible(selectedDatabases);
+		
+		Debugging.output("Selected Databases for user: " + selectedDatabases
+				,Debugging.USER_EDITOR_OUTPUT
+				,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+		
+		DataHolder.store(adminEditUser, User.class);
+		
+	}
+	
+	/**
+	 * Attempts to get the user to edit permissions on.
+	 * Will output to USER_EDITOR_OUTPUT if something is null.
+	 * @return the user to edit or null
+	 */
+	private User safeGetUser() {
+		String usernameSelected = (String) adminUserListSelect.getValue();
+		if (usernameSelected==null && InhalerUtils.stringNullCheck(usernameSelected)) {
+			Debugging.output("null user selected: " + usernameSelected
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return null;
+		}
+		
+		User adminEditUser = DataHolder.getUser(usernameSelected);
+		
+		if (adminEditUser==null) {
+			Debugging.output("User Note Found: " + usernameSelected + " : " + adminEditUser
+					,Debugging.USER_EDITOR_OUTPUT
+					,Debugging.USER_EDITOR_OUTPUT_ENABLED);
+			return null;
+		}
+		
+		return adminEditUser;
+	}
 
 	/**
 	 * Updates settings for the selected user
@@ -331,6 +454,13 @@ public class UserEditor extends HorizontalLayout implements View {
 		adminEditAdmin = adminEditUser.getAdmin();
 		adminSettingsGrid.getContainerDataSource().removeAllItems();
 		adminSettingsGrid.addRow(ADMIN_SETTING_ID, adminEditAdmin);
+		//database twin col select
+		
+		adminDatabaseTwinColSelect.removeAllItems();
+		//add all available databases
+		adminDatabaseTwinColSelect.addItems(DataHolder.getUserDataHolderMap().keySet());
+		adminDatabaseTwinColSelect.setValue(adminEditUser.getDatabasesAccsessable());
+		
 	}
 
 
@@ -389,12 +519,13 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		if (masterUi.user.getAdmin()) {
 			//populate the admin menu stuff
+			/*
 			adminUserSelector.removeAllItems();
 			adminUserSelector.addItems(DataHolder.getUserMap().keySet());
 			
 			adminDatabaseSelector.removeAllItems();
 			adminDatabaseSelector.addItems(DataHolder.getUserDataHolderMap().keySet());
-			
+			*/
 			adminUserListSelect.removeAllItems();
 			adminUserListSelect.addItems(DataHolder.getUserMap().keySet());
 			
@@ -429,8 +560,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			//User already exists
 			
 		}
+		
+		populateAllData();
 	}
 	
+	
+	/*
 	private void addDatabaseClick() {
 		//initial null value checking
 		String userName = (String) adminUserSelector.getValue();
@@ -446,5 +581,6 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		
 	}
+	*/
 
 }

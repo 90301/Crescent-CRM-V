@@ -218,4 +218,17 @@ public class User extends MaxObject {
 		return admin;
 	}
 
+	/**
+	 * This SETS the databases that are accessible to a user.
+	 * @param databases a list of the databases the user will be able to use
+	 */
+	public void setDatabaseAccessible(Collection<String> databases) {
+		this.databasesAccsessable.clear();
+		for (String database : databases) {
+			this.databasesAccsessable.add(database);
+		}
+		updateDBMap();
+		
+	}
+
 }

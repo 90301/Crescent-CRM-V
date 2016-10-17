@@ -73,7 +73,14 @@ public class Debugging {
 	public static final String USER_EDITOR_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean USER_EDITOR_OUTPUT_ENABLED = true;
 
+	//CRM Debugging
+	public static final String CRM_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean CRM_OUTPUT_ENABLED = true;
 	
+	
+	//Max Object Debugging
+	public static final String MAX_OBJECT_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean MAX_OBJECT_OUTPUT_ENABLED = true;
 	
 	
 	

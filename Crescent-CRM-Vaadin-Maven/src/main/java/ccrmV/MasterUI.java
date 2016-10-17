@@ -27,8 +27,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .74;
-	public static final String versionDescription = " Permissions";
+	public static final double versionNumber = .80;
+	public static final String versionDescription = " Filter Improved";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -45,9 +45,7 @@ public class MasterUI extends UI {
 	@VaadinServletConfiguration(productionMode = false, ui = MasterUI.class)
 	public static class Servlet extends VaadinServlet {
 
-		/**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 
 	}
@@ -65,7 +63,7 @@ public class MasterUI extends UI {
 	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
-	public static final Boolean DEV_AUTO_LOGIN = false;
+	public static final Boolean DEV_AUTO_LOGIN = true;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	
 	
@@ -85,8 +83,6 @@ public class MasterUI extends UI {
 	public UserDataHolder userDataHolder;//Set when logging in
 	
 	protected void init(VaadinRequest request) {
-		
-		
 		
 		DataHolder.initalizeDatabases();
 		
@@ -143,6 +139,7 @@ public class MasterUI extends UI {
 	public void enterCRM() {
 		
 		mainNavigator.navigateTo(MAIN_APP);
+		mainApp.updateClientTable();
 	}
 	
 	public void enterUserEditor() {

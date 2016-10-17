@@ -14,6 +14,7 @@ public class Client extends MaxObject {
 	private Group group; public static final String groupField = "groupName";
 	private String name; public static final String nameField = "name";
 	private String notes; public static final String notesField = "notes";
+	private Boolean contactNow = false; public static final String contactNowField = "contactNow";
 	//The ID for the map that will hold all this information (or the id for the item in the database)
 	private String id; public static final String idField = "id";
 	private Boolean mutex = false;//Do not update internal db if true
@@ -57,12 +58,17 @@ public class Client extends MaxObject {
 		this.name = (String) dbMap.get(nameField);
 		this.notes = (String) dbMap.get(notesField);
 		this.id = (String) dbMap.get(idField);
-		
 		//null check everything
+		/*
 		if (dbMap.get(lastUpdatedField)!=null)
 		this.lastUpdated = (java.util.Date) dbMap.get(lastUpdatedField);
+		*/
+		lastUpdated = safeLoadFromInternalMap(lastUpdatedField, new Date());
+		contactNow = safeLoadFromInternalMap(contactNowField, false);
 		mutex = false;
 	}
+	
+
 	
 	/**
 	 * UPDATE ON ADDING FIELDS
@@ -77,6 +83,7 @@ public class Client extends MaxObject {
 			this.dbMap.put(notesField, this.notes);
 			this.dbMap.put(idField,this.id);
 			this.dbMap.put(lastUpdatedField, this.lastUpdated);
+			this.dbMap.put(contactNowField, this.contactNow);
 		}
 		
 	}
@@ -102,7 +109,7 @@ public class Client extends MaxObject {
 			dbDatatypes.put(notesField, String.class);
 			dbDatatypes.put(idField, String.class);
 			dbDatatypes.put(lastUpdatedField, java.util.Date.class);
-			
+			dbDatatypes.put(contactNowField, Boolean.class);
 		
 	}
 	
@@ -115,6 +122,7 @@ public class Client extends MaxObject {
 		table.addDatatype(statusField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
 		table.addDatatype(locationField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
 		table.addDatatype(lastUpdatedField, MaxDBTable.DATA_MYSQL_TYPE_DATE_TIME);
+		table.addDatatype(contactNowField, MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN);
 		table.setPrimaryKeyName(nameField);
 		table.createTable();
 	}
@@ -206,8 +214,10 @@ public class Client extends MaxObject {
 		this.id = id;
 		updateDBMap();
 	}
-
-
+	public void setContactNow(Boolean contactNow) {
+		this.contactNow = contactNow;
+		updateDBMap();
+	}
 
 
 
@@ -255,15 +265,11 @@ public class Client extends MaxObject {
 			String strLastUpdated = SIMPLE_DATE_FORMAT.format(lastUpdated);
 			return strLastUpdated;
 	}
-
-	/*
-	public UserDataHolder getUserDataHolder() {
-		return userDataHolder;
+	
+	public Boolean getContactNow() {
+		return contactNow;
 	}
 
-	public void setUserDataHolder(UserDataHolder userDataHolder) {
-		this.userDataHolder = userDataHolder;
-	}
-	*/
+	
 
 }

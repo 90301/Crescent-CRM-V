@@ -74,6 +74,7 @@ public class NavBar {
 	
 	public void updateInfo() {
 		statusLabel.setCaption("" + masterUi.getUser().getPrimaryKey());
+		statusLabel.setValue(masterUi.getUser().getDatabaseSelected());
 	}
 
 	private void logoutClick() {
