@@ -30,12 +30,12 @@ public class Status extends MaxObject {
 	
 	@Override
 	public void setupDBDatatypes() {
-		if (dbDatatypes.isEmpty()) {
+		//if (dbDatatypes.isEmpty()) {
 			
 			dbDatatypes.put(statusNameField, String.class);
 			dbDatatypes.put(statusColorField, Integer.class);			
 			
-		}
+		//}
 		
 	}
 

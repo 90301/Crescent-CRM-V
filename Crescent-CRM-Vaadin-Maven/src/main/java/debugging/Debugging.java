@@ -82,6 +82,10 @@ public class Debugging {
 	public static final String MAX_OBJECT_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean MAX_OBJECT_OUTPUT_ENABLED = true;
 	
+	//Schedule Event Debugging
+	public static final String SCHEDULE_EVENT_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean SCHEDULE_EVENT_OUTPUT_ENABLED = true;
+	
 	
 	
 	public static void output(String output,String method,Boolean enabled) {

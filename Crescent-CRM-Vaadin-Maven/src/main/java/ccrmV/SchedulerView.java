@@ -16,6 +16,10 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
+
+import clientInfo.DataHolder;
+import clientInfo.ScheduleEvent;
+
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
@@ -199,8 +203,15 @@ public class SchedulerView extends HorizontalLayout implements View {
 		Date eventStart = createEventStartDateField.getValue();
 		Date eventEnd =  createEventEndDateField.getValue();
 		
-		BasicEvent event = new BasicEvent(eventName, client, eventStart, eventEnd);
-		cal.addEvent(event);
+		ScheduleEvent event = new ScheduleEvent();
+		event.setEventName(eventName);
+		event.setEventDescription(client);
+		event.setStart(eventStart);
+		event.setEnd(eventEnd);
+		event.genKey();
+		DataHolder.store(event, ScheduleEvent.class);
+		//BasicEvent event = new BasicEvent(eventName, client, eventStart, eventEnd);
+		cal.addEvent(event.genBasicEvent());
 	}
 
 
