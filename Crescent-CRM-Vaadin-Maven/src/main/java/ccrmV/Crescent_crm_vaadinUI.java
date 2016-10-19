@@ -56,7 +56,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	ComboBox createClientGroup = new ComboBox("Group");
 	
 	//ListBox is containing current statuses...
+	ListSelect createLocationListSelect = new ListSelect();
 	ListSelect createStatusListSelect = new ListSelect();
+	ListSelect createGroupListSelect = new ListSelect();
  
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
