@@ -125,6 +125,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	Button createClientButton = new Button("Create Client", event -> this.createClientClick());
 	HorizontalLayout midLayout = new HorizontalLayout();
 	GridLayout clientGridLayout = new GridLayout(4, 10);
+	//TODO
 	Button createLocationButton = new Button("Create Location", event -> this.createLocationClick());
 	Button createStatusButton = new Button("Create Status", event -> this.createStatusClick());
 	Button createGroupButton = new Button("Create Group", event -> this.createGroupClick());
@@ -590,14 +591,13 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// add a location
 		
 		//createLocationName 
-		//TODO
-		//createLocationListSelect.setNullSelectionAllowed(false);
+	
+		createLocationListSelect.setNullSelectionAllowed(false);
 		
 		createLocationLayout.addComponent(createLocationName);
-		
-
 		createLocationLayout.addComponent(createLocationButton);
-
+		createLocationLayout.addComponent(createLocationListSelect);
+		
 		createLocationLayout.setComponentAlignment(createLocationButton, Alignment.TOP_CENTER);
 
 		creationTabs.addTab(createLocationLayout, "Add Location");
@@ -622,12 +622,11 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// Add Group
 
 		//createGroupName 
-		//TODO
-		//createGroupListSelect.setNullSelectionAllowed(false);
+		createGroupListSelect.setNullSelectionAllowed(false);
 
 		createGroupLayout.addComponent(createGroupName);
 		createGroupLayout.addComponent(createGroupButton);
-
+		createGroupLayout.addComponent(createGroupListSelect);
 		createGroupLayout.setComponentAlignment(createGroupButton, Alignment.TOP_CENTER);
 
 		creationTabs.addTab(createGroupLayout, "Add Group");
@@ -778,6 +777,10 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// TODO Auto-generated method stub
 		createStatusListSelect.removeAllItems();
 		createStatusListSelect.addItems(masterUi.userDataHolder.getAllStatus());
+		createLocationListSelect.removeAllItems();
+		createLocationListSelect.addItems(masterUi.userDataHolder.getAllLocations());
+		createGroupListSelect.removeAllItems();
+		createGroupListSelect.addItems(masterUi.userDataHolder.getAllGroups());
 	}
 
 	/**
@@ -827,7 +830,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		filterGroup.addValueChangeListener(e -> updateClientTable());
 		filterClientNotesField.addValueChangeListener(e -> updateClientTable());
 		filterContactNowCheckBox.addValueChangeListener(e -> updateClientTable());
-		
+
 		//filterClientTextField 
 		
 		filterLayout.addComponent(filterClientTextField);
