@@ -46,9 +46,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	/*
 	 * UI elements (accessible)
 	 */
-	TextField createLocationName = new TextField("Location Name");
-	TextField createStatusName  = new TextField("Status Name");
-	TextField createGroupName = new TextField("Group Name");
+	TextField createLocationName = new TextField();//"Location Name");
+	TextField createStatusName  = new TextField();//"Status Name");
+	TextField createGroupName = new TextField();//"Group Name");
 	TextField createClientName = new TextField("Name");
 	
 	ComboBox createClientStatus = new ComboBox("Status");
@@ -59,6 +59,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	ListSelect createLocationListSelect = new ListSelect();
 	ListSelect createStatusListSelect = new ListSelect();
 	ListSelect createGroupListSelect = new ListSelect();
+	public static final int CREATE_LIST_SELECT_ROWS = 4;
  
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
@@ -104,6 +105,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	private static final int MAX_NOTE_ROWS = 20;
 	private static final String PANEL_HEIGHT = "950px";
 	private static final String NOTE_WIDTH = "600px";
+	
+	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 
 	public Client selectedClient;
 	Boolean discard = false;
@@ -317,16 +320,17 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	// temp value to set the current client to
 
-	/***
-	 * CCCCC LL IIIII CCCCC KK KK CC C LL III CC C KK KK CC LL III CC KKKK CC C
-	 * LL III CC C KK KK CCCCC LLLLLLL IIIII CCCCC KK KK
+	/*
+	 * C L I C K
 	 * 
-	 * EEEEEEE VV VV EEEEEEE NN NN TTTTTTT SSSSS EE VV VV EE NNN NN TTT SS EEEEE
-	 * VV VV EEEEE NN N NN TTT SSSSS EE VV VV EE NN NNN TTT SS EEEEEEE VVV
-	 * EEEEEEE NN NN TTT SSSSS
-	 * 
+	 * E V E N T S
 	 */
 
+	/**
+	 * Selection event for selecting a client in the client table
+	 * (this method can be called with null selection safely)
+	 * @param event
+	 */
 	public void selectItem(ValueChangeEvent event) {
 
 		System.out.println("SELECTED AN ITEM." + clientTable.getValue());
@@ -359,6 +363,10 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	}
 
+	/**
+	 * Populates comboboxes/note fields ect when selecting a client from the table.
+	 * @param c
+	 */
 	public void selectClient(Client c) {
 		if (c != null) {
 
@@ -395,64 +403,76 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	public void createLocationClick() {
 		String text = this.createLocationName.getValue();
-		String nullValue = this.createLocationName.getNullRepresentation();
-		// Check for valid input
-		if (text != nullValue && text.compareTo("") != 0) {
-			Location location = new Location();
-			location.setLocationName(text);
-			masterUi.userDataHolder.store(location, Location.class);
-		}
-		fillAllComboBoxes();
-		updateCreationLists();
+		createLocation(text);
 	}
 
 	public void createStatusClick() {
 		String text = this.createStatusName.getValue();
-		String nullValue = this.createStatusName.getNullRepresentation();
-		// Check for valid input
-		if (text != nullValue && text.compareTo("") != 0) {
-			Status s = new Status();
-			s.setStatusName(text);
-			masterUi.userDataHolder.store(s, Status.class);
-		}
-		fillAllComboBoxes();
-		updateCreationLists();
+		createStatus(text);
 	}
 
 	public void createGroupClick() {
 		String text = this.createGroupName.getValue();
-		String nullValue = this.createGroupName.getNullRepresentation();
+		createGroup(text);
+		
+	}
+	
+	
+	//TODO implement a method to allow this to be one method
+	//and make any class that extends max object
+	
+	
+	public Status createStatus(String statusName) {
+		Status s = null;
 		// Check for valid input
-		if (text != nullValue && text.compareTo("") != 0) {
-			Group g = new Group();
-			g.setGroupName(text);
+		if (!InhalerUtils.stringNullCheck(statusName)) {
+			s = new Status();
+			s.setStatusName(statusName);
+			masterUi.userDataHolder.store(s, Status.class);
+		}
+		fillAllComboBoxes();
+		updateCreationLists();
+		return s;
+	}
+	
+	public Location createLocation(String locationName) {
+		Location l = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(locationName)) {
+			l = new Location();
+			l.setLocationName(locationName);
+			masterUi.userDataHolder.store(l, Location.class);
+		}
+		fillAllComboBoxes();
+		updateCreationLists();
+		return l;
+	}
+	
+	public Group createGroup(String groupName) {
+		Group g = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(groupName)) {
+			g = new Group();
+			g.setGroupName(groupName);
 			masterUi.userDataHolder.store(g, Group.class);
 		}
 		fillAllComboBoxes();
 		updateCreationLists();
+		return g;
 	}
 
-	/***
-	 * CCCCC LL IIIII EEEEEEE NN NN TTTTTTT CC C LL III EE NNN NN TTT CC LL III
-	 * EEEEE NN N NN TTT CC C LL III EE NN NNN TTT CCCCC LLLLLLL IIIII EEEEEEE
-	 * NN NN TTT
+	/*
+	 * C L I E N T
 	 * 
-	 * CCCCC RRRRRR EEEEEEE AAA TTTTTTT IIIII OOOOO NN NN CC C RR RR EE AAAAA
-	 * TTT III OO OO NNN NN CC RRRRRR EEEEE AA AA TTT III OO OO NN N NN CC C RR
-	 * RR EE AAAAAAA TTT III OO OO NN NNN CCCCC RR RR EEEEEEE AA AA TTT IIIII
-	 * OOOO0 NN NN
+	 * C R E A T I O N
 	 * 
 	 */
+	
+	/**
+	 * Click event to create a new client
+	 */
 	public void createClientClick() {
-
-		String name = createClientName.getValue();
 		// Null checking
-		if (InhalerUtils.stringNullCheck(name)) {
-			return;// Name is null
-		}
-		// The group is ok to be null.
-		// Location is a required field
-		// Status is a required field
 		try {
 			if (InhalerUtils.stringNullCheck(createClientLocation.getValue().toString())) {
 				return;
@@ -467,12 +487,52 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			System.err.println("Null value was entered: " + e.getMessage());
 			return; // a null value was found
 		}
+		
+		//TODO: debugging
+		String locationName = createClientLocation.getValue().toString();
+		String statusName = createClientStatus.getValue().toString();
+		String groupName =  createClientGroup.getValue().toString();
+		//Create new values if one the value is not already selected.
+		if (CREATION_ALLOW_NEW_VALUES) {
+			//TODO implement something to check for similar names, maybe prompt user to select that value?
+			
+			
+			Location l = masterUi.userDataHolder.getLocationMap().get(locationName);
+			Status s = masterUi.userDataHolder.getStatusMap().get(statusName);
+			Group g = masterUi.userDataHolder.getGroupMap().get(groupName);
+			
+			if (l==null) {
+				createLocation(locationName);
+			}
+			
+			if (s==null) {
+				createStatus(statusName);
+			}
+			
+			if (g==null) {
+				createGroup(groupName);
+			}
+			
+			
+		}
+		
+		
+		
+		String name = createClientName.getValue();
+		
+		if (InhalerUtils.stringNullCheck(name)) {
+			return;// Name is null
+		}
+		// The group is ok to be null.
+		// Location is a required field
+		// Status is a required field
+		
 
 		Client c = new Client();
 		// make sure the location and status are valid
-		Location l = masterUi.userDataHolder.getLocationMap().get(createClientLocation.getValue().toString());
-		Status s = masterUi.userDataHolder.getStatusMap().get(createClientStatus.getValue().toString());
-		Group g = masterUi.userDataHolder.getGroupMap().get(createClientGroup.getValue().toString());
+		Location l = masterUi.userDataHolder.getLocationMap().get(locationName);
+		Status s = masterUi.userDataHolder.getStatusMap().get(statusName);
+		Group g = masterUi.userDataHolder.getGroupMap().get(groupName);
 		if (l != null && s != null && g != null) {
 			c.setLocation(l);
 			c.setStatus(s);
@@ -593,13 +653,17 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		//createLocationName 
 	
 		createLocationListSelect.setNullSelectionAllowed(false);
+		createLocationListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createLocationLayout.addComponent(createLocationName);
 		createLocationLayout.addComponent(createLocationButton);
 		createLocationLayout.addComponent(createLocationListSelect);
 		
 		createLocationLayout.setComponentAlignment(createLocationButton, Alignment.TOP_CENTER);
+		createLocationLayout.setMargin(true);
+		createLocationLayout.setSpacing(true);
 
+		
 		creationTabs.addTab(createLocationLayout, "Add Location");
 
 		// Add status
@@ -607,14 +671,18 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		//createStatusName
 
 		createStatusListSelect.setNullSelectionAllowed(false);
+		createStatusListSelect.setRows(CREATE_LIST_SELECT_ROWS);
+		
+		//createStatusButton.setHeight("100%");
+		
 		
 		createStatusLayout.addComponent(createStatusName);
 		createStatusLayout.addComponent(createStatusButton);
 		createStatusLayout.addComponent(createStatusListSelect);
 		
 		createStatusLayout.setComponentAlignment(createStatusButton, Alignment.TOP_CENTER);
-		
-		
+		createStatusLayout.setMargin(true);
+		createStatusLayout.setSpacing(true);
 		
 		creationTabs.addTab(createStatusLayout, "Add Status");
 
@@ -623,35 +691,70 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		//createGroupName 
 		createGroupListSelect.setNullSelectionAllowed(false);
+		createGroupListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 
 		createGroupLayout.addComponent(createGroupName);
 		createGroupLayout.addComponent(createGroupButton);
 		createGroupLayout.addComponent(createGroupListSelect);
 		createGroupLayout.setComponentAlignment(createGroupButton, Alignment.TOP_CENTER);
-
+		createGroupLayout.setMargin(true);
+		createGroupLayout.setSpacing(true);
+		
+		
 		creationTabs.addTab(createGroupLayout, "Add Group");
 		// Add a client
+		
+		if (CREATION_ALLOW_NEW_VALUES) {
+			
+			createClientStatus.setInvalidAllowed(true);
+			createClientLocation.setInvalidAllowed(true);
+			createClientGroup.setInvalidAllowed(true);
+			
+			createClientStatus.setTextInputAllowed(true);
+			createClientStatus.setNewItemsAllowed(true);
+			createClientStatus.setNullSelectionAllowed(true);
+			
+			
+			createClientLocation.setTextInputAllowed(true);
+			createClientLocation.setNewItemsAllowed(true);
+			createClientLocation.setNullSelectionAllowed(true);
+			
+			createClientGroup.setTextInputAllowed(true);
+			createClientGroup.setNewItemsAllowed(true);
+			createClientGroup.setNullSelectionAllowed(true);
+			
+		} else {
+			createClientStatus.setInvalidAllowed(false);
+			createClientLocation.setInvalidAllowed(false);
+			createClientGroup.setInvalidAllowed(false);
+			
+			createClientStatus.setNullSelectionAllowed(false);
+			createClientLocation.setNullSelectionAllowed(false);
+			createClientGroup.setNullSelectionAllowed(false);
+		}
+		
 		
 		//createClientName 
 		createClientLayout.addComponent(createClientName);
 		
 		//createClientStatus 
-		createClientStatus.setNullSelectionAllowed(false);
-		createClientStatus.setInvalidAllowed(false);
+		
+		
+				
 		// Add all statuses
 
 		createClientLayout.addComponent(createClientStatus);
 
 		//createClientLocation 
-		createClientLocation.setNullSelectionAllowed(false);
-		createClientLocation.setInvalidAllowed(false);
+		
+		
 		// Add all locations
 
 		createClientLayout.addComponent(createClientLocation);
 		// Create groups
 		//createClientGroup 
-		createClientGroup.setNullSelectionAllowed(false);
-		createClientGroup.setInvalidAllowed(false);
+		
+		
 		// Add all groups
 
 		createClientLayout.addComponent(createClientGroup);
@@ -668,9 +771,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// add the client tab
 		// END CLIENT
 		/***
-		 * OOOOO PPPPPP TTTTTTT IIIII OOOOO NN NN SSSSS OO OO PP PP TTT III OO
-		 * OO NNN NN SS OO OO PPPPPP TTT III OO OO NN N NN SSSSS OO OO PP TTT
-		 * III OO OO NN NNN SS OOOO0 PP TTT IIIII OOOO0 NN NN SSSSS
+		 *O P T I O N S
 		 */
 		// options menu
 		// OPTIONS TAB---------------------------------------------------------
