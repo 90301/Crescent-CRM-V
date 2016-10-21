@@ -54,6 +54,11 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	ComboBox createClientStatus = new ComboBox("Status");
 	ComboBox createClientLocation = new ComboBox("Location");
 	ComboBox createClientGroup = new ComboBox("Group");
+	
+	//ListBox is containing current statuses...
+	ListSelect createLocationListSelect = new ListSelect();
+	ListSelect createStatusListSelect = new ListSelect();
+	ListSelect createGroupListSelect = new ListSelect();
  
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
@@ -120,6 +125,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	Button createClientButton = new Button("Create Client", event -> this.createClientClick());
 	HorizontalLayout midLayout = new HorizontalLayout();
 	GridLayout clientGridLayout = new GridLayout(4, 10);
+	//TODO
 	Button createLocationButton = new Button("Create Location", event -> this.createLocationClick());
 	Button createStatusButton = new Button("Create Status", event -> this.createStatusClick());
 	Button createGroupButton = new Button("Create Group", event -> this.createGroupClick());
@@ -397,6 +403,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			masterUi.userDataHolder.store(location, Location.class);
 		}
 		fillAllComboBoxes();
+		updateCreationLists();
 	}
 
 	public void createStatusClick() {
@@ -409,6 +416,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			masterUi.userDataHolder.store(s, Status.class);
 		}
 		fillAllComboBoxes();
+		updateCreationLists();
 	}
 
 	public void createGroupClick() {
@@ -421,6 +429,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			masterUi.userDataHolder.store(g, Group.class);
 		}
 		fillAllComboBoxes();
+		updateCreationLists();
 	}
 
 	/***
@@ -582,12 +591,14 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// add a location
 		
 		//createLocationName 
-		createLocationLayout.addComponent(createLocationName);
+	
+		createLocationListSelect.setNullSelectionAllowed(false);
 		
-
+		createLocationLayout.addComponent(createLocationName);
 		createLocationLayout.addComponent(createLocationButton);
-
-		createLocationLayout.setComponentAlignment(createLocationButton, Alignment.BOTTOM_LEFT);
+		createLocationLayout.addComponent(createLocationListSelect);
+		
+		createLocationLayout.setComponentAlignment(createLocationButton, Alignment.TOP_CENTER);
 
 		creationTabs.addTab(createLocationLayout, "Add Location");
 
@@ -595,22 +606,28 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		
 		//createStatusName
 
-
+		createStatusListSelect.setNullSelectionAllowed(false);
+		
 		createStatusLayout.addComponent(createStatusName);
 		createStatusLayout.addComponent(createStatusButton);
-
-		createStatusLayout.setComponentAlignment(createStatusButton, Alignment.BOTTOM_LEFT);
-
+		createStatusLayout.addComponent(createStatusListSelect);
+		
+		createStatusLayout.setComponentAlignment(createStatusButton, Alignment.TOP_CENTER);
+		
+		
+		
 		creationTabs.addTab(createStatusLayout, "Add Status");
 
+		
 		// Add Group
 
 		//createGroupName 
+		createGroupListSelect.setNullSelectionAllowed(false);
 
 		createGroupLayout.addComponent(createGroupName);
 		createGroupLayout.addComponent(createGroupButton);
-
-		createGroupLayout.setComponentAlignment(createGroupButton, Alignment.BOTTOM_LEFT);
+		createGroupLayout.addComponent(createGroupListSelect);
+		createGroupLayout.setComponentAlignment(createGroupButton, Alignment.TOP_CENTER);
 
 		creationTabs.addTab(createGroupLayout, "Add Group");
 		// Add a client
@@ -672,7 +689,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		//optionsGridLayout.addComponent(linkLayout, 0, 3);
 
 		
-		layout.addComponent(creationTabs);
+		//layout.addComponent(creationTabs);
 		
 		/***
 		 * 
@@ -698,6 +715,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		updateClientTable();
 
+		//Populating all Status, Location, and Group Lists
+		updateCreationLists();
+		
 		/***
 		 * C L I E N T
 		 * E D I T I N G
@@ -738,10 +758,13 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		midLayout.addComponent(clientEditorLayout);
 
 		fillAllComboBoxes();
-
+		
+		//Adding creation tab
+		layout.addComponent(creationTabs);
+		
 		// version label
 		versionLabel.setValue("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
-
+		
 		layout.addComponent(versionLabel);
 		
 		this.alreadyGenerated = true;
@@ -749,6 +772,16 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	}
 	
 
+
+	public void updateCreationLists() {
+		// TODO Auto-generated method stub
+		createStatusListSelect.removeAllItems();
+		createStatusListSelect.addItems(masterUi.userDataHolder.getAllStatus());
+		createLocationListSelect.removeAllItems();
+		createLocationListSelect.addItems(masterUi.userDataHolder.getAllLocations());
+		createGroupListSelect.removeAllItems();
+		createGroupListSelect.addItems(masterUi.userDataHolder.getAllGroups());
+	}
 
 	/**
 	 * Adds all the components for the clientEditor
@@ -797,7 +830,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		filterGroup.addValueChangeListener(e -> updateClientTable());
 		filterClientNotesField.addValueChangeListener(e -> updateClientTable());
 		filterContactNowCheckBox.addValueChangeListener(e -> updateClientTable());
-		
+
 		//filterClientTextField 
 		
 		filterLayout.addComponent(filterClientTextField);
