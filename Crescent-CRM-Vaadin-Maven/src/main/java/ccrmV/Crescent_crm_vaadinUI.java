@@ -189,6 +189,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		selectedClient.setContactNow(clientContactNowCheckBox.getValue());
 		masterUi.userDataHolder.store(selectedClient, Client.class);
 		updateClientTable();
+		selectClient(selectedClient);
 	}
 	
 	/**
@@ -275,7 +276,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	/*
 	 * Fill combo boxes
 	 */
-	public void fillAllComboBoxes() {
+	public void updateAllComboBoxes() {
 		// clear all combo boxes
 		createClientStatus.clear();
 		createClientLocation.clear();
@@ -372,9 +373,11 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		} else {
 			System.out.println("Null value made it to selectClient: " + c);
+			clientEditorLayout.setVisible(false);
 			return;
 		}
-
+		clientEditorLayout.setVisible(true);
+		clientTable.select(c.getName());
 		this.selectedClient = c;
 
 		System.out.println("showing client information for: " + c);
@@ -386,7 +389,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientGroup.setValue(c.getGroupName());
 
 		clientNoteBox.setValue(c.getNotes());
-		clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length+2,MAX_NOTE_ROWS));
+		//clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length+2,MAX_NOTE_ROWS));
+		clientNoteBox.setRows(MAX_NOTE_ROWS);
 		// set last updated
 		if (c.getLastUpdated() != null) {
 			SimpleDateFormat sdf = new SimpleDateFormat("MMMM-dd-yy h:mm a");
@@ -430,7 +434,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			s.setStatusName(statusName);
 			masterUi.userDataHolder.store(s, Status.class);
 		}
-		fillAllComboBoxes();
+		updateAllComboBoxes();
 		updateCreationLists();
 		return s;
 	}
@@ -443,7 +447,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			l.setLocationName(locationName);
 			masterUi.userDataHolder.store(l, Location.class);
 		}
-		fillAllComboBoxes();
+		updateAllComboBoxes();
 		updateCreationLists();
 		return l;
 	}
@@ -456,7 +460,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			g.setGroupName(groupName);
 			masterUi.userDataHolder.store(g, Group.class);
 		}
-		fillAllComboBoxes();
+		updateAllComboBoxes();
 		updateCreationLists();
 		return g;
 	}
@@ -557,6 +561,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		masterUi.userDataHolder.store(c, Client.class);
 		updateClientTable();
+		
+		selectClient(c);
 	}
 
 
@@ -856,9 +862,11 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		
 		genClientEditor();
 		
+		clientEditorLayout.setVisible(false);
+		
 		midLayout.addComponent(clientEditorLayout);
 
-		fillAllComboBoxes();
+		updateAllComboBoxes();
 		
 		//Adding creation tab
 		layout.addComponent(creationTabs);

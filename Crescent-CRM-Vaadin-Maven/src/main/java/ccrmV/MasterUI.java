@@ -27,8 +27,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .83;
-	public static final String versionDescription = " Client Creation Improved";
+	public static final double versionNumber = .84;
+	public static final String versionDescription = " Auto-select";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -141,6 +141,7 @@ public class MasterUI extends UI {
 		mainNavigator.navigateTo(MAIN_APP);
 		mainApp.updateClientTable();
 		mainApp.updateCreationLists();
+		mainApp.updateAllComboBoxes();
 	}
 	
 	public void enterUserEditor() {
