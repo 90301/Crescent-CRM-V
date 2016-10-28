@@ -1,3 +1,6 @@
+/*
+ * (c) 2016 Josh Benton. All Rights Reserved.
+ */
 package uiElements;
 
 import com.vaadin.ui.Button;

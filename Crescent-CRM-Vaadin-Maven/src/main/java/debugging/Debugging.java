@@ -1,3 +1,6 @@
+/*
+ * (c) 2016 Josh Benton. All Rights Reserved.
+ */
 package debugging;
 
 import java.io.File;
