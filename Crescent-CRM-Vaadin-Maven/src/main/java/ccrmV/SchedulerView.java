@@ -104,7 +104,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         //date selection
         //createEventStartDateField = ;
         //createEventEndDateField = ;
-        String dateTimeFormat = "MM-dd-yyyy HH:mm aa";
+        String dateTimeFormat = "MM-dd-yyyy h:mm aa";
 		createEventStartDateField.setDateFormat(dateTimeFormat);
         createEventStartDateField.setValue(new Date());
         createEventStartDateField.setWidth("220px");
