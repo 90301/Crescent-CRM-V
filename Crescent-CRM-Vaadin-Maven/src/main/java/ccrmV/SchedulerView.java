@@ -88,7 +88,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         //cal.setSizeFull();
         
         Date startDate = new Date();
-        Date endDate = new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1));
+        Date endDate = new Date(startDate.getTime() + TimeUnit.HOURS.toMillis(1));
         
         /*TODO fix this code displaying 5 days  -- not needed due to the implementation of weekly view below
         endDate.setDate(startDate.getDate()+5);
@@ -108,14 +108,17 @@ public class SchedulerView extends HorizontalLayout implements View {
 		createEventStartDateField.setDateFormat(dateTimeFormat);
         createEventStartDateField.setValue(new Date());
         createEventStartDateField.setWidth("220px");
+        createEventStartDateField.addValueChangeListener(e -> updateEndDate());
         
+        Date endDate2 = new Date(startDate.getTime() + TimeUnit.HOURS.toMillis(1));
         createEventEndDateField.setDateFormat(dateTimeFormat);
-        createEventEndDateField.setValue(endDate);
+        createEventEndDateField.setValue(endDate2);
         createEventEndDateField.setWidth("220px");
         
          //Show the popup with minute / hour  selectors
         createEventStartDateField.setResolution(Resolution.MINUTE);
         createEventEndDateField.setResolution(Resolution.MINUTE);
+       
 
         //Used for weekly view
         cal.setHandler(new BasicDateClickHandler() 
@@ -195,7 +198,16 @@ public class SchedulerView extends HorizontalLayout implements View {
 
 
 
-    //adds the event using the fields when clicked
+    public void updateEndDate() {
+    	
+		Date endDate3 = new Date(createEventStartDateField.getValue().getTime() + TimeUnit.HOURS.toMillis(1));
+		createEventEndDateField.setValue(endDate3);
+	}
+
+
+
+
+	//adds the event using the fields when clicked
 	private void createEventButtonClick() {
 		
 		String eventName = createEventNameTextField.getValue();
