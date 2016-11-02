@@ -22,6 +22,7 @@ import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 
 import clientInfo.DataHolder;
 import clientInfo.ScheduleEvent;
+import clientInfo.UserDataHolder;
 
 import com.vaadin.ui.Calendar;
 import com.vaadin.ui.ComboBox;
@@ -58,6 +59,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	private ComboBox createEventClientComboBox =  new ComboBox("Client");
 	private DateField createEventStartDateField = new PopupDateField("Event Start");
 	private DateField createEventEndDateField = new PopupDateField("Event End");
+	private ComboBox repeatComboBox = new ComboBox("Repeat");
 	
 	/* replaced by createEventEndDateField
 	private TextField createEventDurationTextField  = new TextField("Duration");
@@ -175,9 +177,9 @@ public class SchedulerView extends HorizontalLayout implements View {
         createEventLayout.addComponent(createEventClientComboBox);
         createEventLayout.addComponent(createEventStartDateField);
         createEventLayout.addComponent(createEventEndDateField);
+     //   createEventLayout.addComponent(repeatComboBox);
         createEventLayout.addComponent(createEventButton);
- //     createEventLayout.addComponent(createEventDurationTextField);
- //     createEventLayout.addComponent(createEventDurationComboBox);
+        
         
         
         
@@ -215,6 +217,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 		
 		String eventName = createEventNameTextField.getValue();
 		String client = (String) createEventClientComboBox.getValue();
+		String currentUser = MasterUi.user.getPrimaryKey();
 		Date eventStart = createEventStartDateField.getValue();
 		Date eventEnd =  createEventEndDateField.getValue();
 		
@@ -223,6 +226,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 		event.setEventDescription(client);
 		event.setStart(eventStart);
 		event.setEnd(eventEnd);
+		event.setUser(currentUser);
 		event.genKey();
 		DataHolder.store(event, ScheduleEvent.class);
 		//BasicEvent event = new BasicEvent(eventName, client, eventStart, eventEnd);
