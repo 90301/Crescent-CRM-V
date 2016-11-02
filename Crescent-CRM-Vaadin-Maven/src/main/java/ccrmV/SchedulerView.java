@@ -177,7 +177,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         createEventLayout.addComponent(createEventClientComboBox);
         createEventLayout.addComponent(createEventStartDateField);
         createEventLayout.addComponent(createEventEndDateField);
-     //   createEventLayout.addComponent(repeatComboBox);
+        createEventLayout.addComponent(repeatComboBox);
         createEventLayout.addComponent(createEventButton);
         
         
