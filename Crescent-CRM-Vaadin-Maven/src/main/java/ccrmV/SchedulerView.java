@@ -43,7 +43,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	 * 
 	 */
 	private static final long serialVersionUID = -5854568268650533061L;
-	public MasterUI MasterUi;
+	public MasterUI masterUi;
 	public NavBar navBar;
 	
 	
@@ -73,8 +73,8 @@ public class SchedulerView extends HorizontalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO 
-		if (!MasterUi.loggedIn || MasterUi.user == null)
-			MasterUi.enterLogin();
+		if (!masterUi.loggedIn || masterUi.user == null)
+			masterUi.enterLogin();
 		
 		schedulerLayout = new VerticalLayout();
 		createEventLayout = new HorizontalLayout();
@@ -234,7 +234,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	private void populateComboBoxes() {
 		
 		createEventClientComboBox.removeAllItems();
-		createEventClientComboBox.addItems(MasterUi.userDataHolder.getClientMap().keySet());
+		createEventClientComboBox.addItems(masterUi.userDataHolder.getClientMap().keySet());
 		
 		if (baseTimeList.size()==0) {
 		baseTimeList.add("Minutes");

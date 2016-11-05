@@ -57,7 +57,7 @@ public class MasterUI extends UI {
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
 	public static final String SCHEDULER = "scheduler";
-	
+	public static final String INVENTORY = "inventory";
 	
 	//When DEVELOPER_MODE is set to true, developer settings will be enabled
 	//this includes auto-login, and bypassing certain aspects of the software.
@@ -69,6 +69,8 @@ public class MasterUI extends UI {
 	//if no such user exists, the application will crash.
 	public static final Boolean DEV_AUTO_LOGIN = true;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
+
+	
 	
 	
 	public boolean loggedIn = false;
@@ -79,6 +81,7 @@ public class MasterUI extends UI {
 	UserEditor userEditor = new UserEditor();
 	SchedulerView schedulerView = new SchedulerView();
 	LoginView loginView = new LoginView();
+	InventoryView inventoryView = new InventoryView();
 	User user = null;//logged in user
 	
 	
@@ -109,8 +112,11 @@ public class MasterUI extends UI {
 		userEditor.masterUi = this;
 		userEditor.navBar = navBar;
 		
-		schedulerView.MasterUi = this;
+		schedulerView.masterUi = this;
 		schedulerView.navBar = navBar;
+		
+		inventoryView.masterUi = this;
+		inventoryView.navBar = navBar;
 		
 		
 		if (authenicatedHosts.contains(userHost)) {
@@ -120,6 +126,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		mainNavigator.addView(SCHEDULER, schedulerView);
+		mainNavigator.addView(INVENTORY, inventoryView);
 		
 		enterLogin();
 		
@@ -181,6 +188,11 @@ public class MasterUI extends UI {
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
 		DataHolder.store(this.user,User.class);
+	}
+
+	public void enterInventory() {
+		mainNavigator.navigateTo(INVENTORY);
+		
 	}
 
 }
