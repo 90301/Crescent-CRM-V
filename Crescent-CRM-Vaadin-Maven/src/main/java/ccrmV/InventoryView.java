@@ -2,7 +2,11 @@ package ccrmV;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 
 import uiElements.NavBar;
 
@@ -11,6 +15,19 @@ public class InventoryView extends HorizontalLayout implements View {
 	public MasterUI masterUi;
 	public NavBar navBar;
 	private boolean alreadyGenerated;
+	
+	Accordion inventoryAccordion = new Accordion();
+	
+	//adding new items
+	HorizontalLayout createInventoryItemLayout = new HorizontalLayout();
+	TextField createInventoryName = new TextField("Item Name");
+	
+	ComboBox createInventoryCategory = new ComboBox("Category");
+	
+	TextField createInventoryBarcode = new TextField("Barcode");
+	
+	Button createInventoryButton = new Button("Create Item",e -> createNewItemClick());
+	
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -21,9 +38,42 @@ public class InventoryView extends HorizontalLayout implements View {
 			this.removeAllComponents();
 			//return;
 		}
+		
+		createInventoryItemLayout.setCaption("Create Items");
+		
+		createInventoryItemLayout.addComponent(createInventoryName);
+		
+		createInventoryItemLayout.addComponent(createInventoryCategory);
+		
+		createInventoryItemLayout.addComponent(createInventoryBarcode);
+		
+		createInventoryItemLayout.addComponent(createInventoryButton);
+		
+		inventoryAccordion.addComponent(createInventoryItemLayout);
+		
+		
+		
+		
+		
+		
+		
 		this.addComponent(navBar.sidebarLayout);
 		
+		this.addComponent(inventoryAccordion);
+		
 		this.alreadyGenerated = true;
+	}
+
+
+	private void createNewItemClick() {
+		// TODO Auto-generated method stub
+		createNewItem((String) createInventoryName.getData(),(String) createInventoryCategory.getData(), (String) createInventoryBarcode.getData());
+	}
+
+
+	public void createNewItem(String name, String category, String barcode) {
+		
+		
 	}
 
 }
