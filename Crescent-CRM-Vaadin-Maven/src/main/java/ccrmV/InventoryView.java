@@ -8,6 +8,7 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
 
+import inventory.InventoryCategory;
 import uiElements.NavBar;
 
 public class InventoryView extends HorizontalLayout implements View {
@@ -38,12 +39,18 @@ public class InventoryView extends HorizontalLayout implements View {
 			this.removeAllComponents();
 			//return;
 		}
+		//Test categories
+		InventoryCategory ic1 = new InventoryCategory("Dye");
+		InventoryCategory ic2 = new InventoryCategory("Shampoo");
 		
 		createInventoryItemLayout.setCaption("Create Items");
 		
 		createInventoryItemLayout.addComponent(createInventoryName);
 		
 		createInventoryItemLayout.addComponent(createInventoryCategory);
+		
+		createInventoryCategory.addItem(ic1);
+		createInventoryCategory.addItem(ic2);
 		
 		createInventoryItemLayout.addComponent(createInventoryBarcode);
 		
@@ -67,12 +74,12 @@ public class InventoryView extends HorizontalLayout implements View {
 
 	private void createNewItemClick() {
 		// TODO Auto-generated method stub
-		createNewItem((String) createInventoryName.getData(),(String) createInventoryCategory.getData(), (String) createInventoryBarcode.getData());
+		createNewItem((String) createInventoryName.getValue(),(InventoryCategory) createInventoryCategory.getValue(), (String) createInventoryBarcode.getValue());
 	}
 
 
-	public void createNewItem(String name, String category, String barcode) {
-		
+	public void createNewItem(String name, InventoryCategory category, String barcode) {
+		System.out.println("ID: " + category.id);
 		
 	}
 
