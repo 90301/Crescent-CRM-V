@@ -3,6 +3,7 @@ package inventory;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
+import debugging.Debugging;
 
 public class InventoryItem extends MaxObject {
 
@@ -78,7 +79,11 @@ public class InventoryItem extends MaxObject {
 
 	@Override
 	public String getPrimaryKey() {
-		return itemKey.getFieldValue();
+		String pKey = itemKey.getFieldValue();
+		Debugging.output("Inventory Primary key: " + pKey
+				, Debugging.INVENTORY_OUTPUT
+				, Debugging.INVENTORY_OUTPUT_ENABLED);
+		return pKey;
 	}
 
 	@Override

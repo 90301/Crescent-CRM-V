@@ -216,6 +216,7 @@ public class MasterUI extends UI {
 			
 			UserDataHolder udhTest = new UserDataHolder();
 			udhTest.setDatabasePrefix("test");
+			udhTest.initalizeDatabases();
 			DataHolder.store(udhTest, UserDataHolder.class);
 			
 			InventoryItem invItem = new InventoryItem();
@@ -227,10 +228,14 @@ public class MasterUI extends UI {
 			invItem.setItemStock(12);
 			invItem.setItemReorderPoint(6);
 			
+			Debugging.output("Created Inventory Item: " + invItem
+					, Debugging.MASTER_UI_TESTING_OUTPUT
+					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
 			udhTest.store(invItem, InventoryItem.class);
 			
 			
-			Debugging.output("Inventory Item. " + invItem.debugOutput()
+			Debugging.output("Stored Inventory Item. " + invItem.debugOutput()
 					, Debugging.MASTER_UI_TESTING_OUTPUT
 					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
 		}

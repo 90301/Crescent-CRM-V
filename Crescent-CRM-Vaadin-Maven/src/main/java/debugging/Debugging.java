@@ -93,6 +93,9 @@ public class Debugging {
 	public static final String MASTER_UI_TESTING_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean MASTER_UI_TESTING_OUTPUT_ENABLED = true;
 	
+	//Inventory Item Debug
+		public static final String INVENTORY_OUTPUT = CONSOLE_OUTPUT;
+		public static final Boolean INVENTORY_OUTPUT_ENABLED = true;
 	
 	public static void output(String output,String method,Boolean enabled) {
 		if (DEV_MODE) {
