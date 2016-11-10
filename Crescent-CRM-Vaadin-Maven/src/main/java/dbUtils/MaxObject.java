@@ -252,6 +252,12 @@ public abstract class MaxObject {
 	 * Experimental CODE
 	 * relating to MaxFields
 	 */
+	
+	/**
+	 * A list that contains all the MaxFields to be passed into functions.
+	 */
+	ArrayList<MaxField<?>> autoGenList = new ArrayList<MaxField<?>>();
+	
 	/**
 	 * Automatically sets up db datatypes based on a collection
 	 * of maxFields
@@ -282,22 +288,37 @@ public abstract class MaxObject {
 	}
 	
 	/**
-	 * WARNING< DOES NOT currently work
-	 * @param maxFields
+	 * Loads the information from the internal map into the MaxFields
+	 * 
+	 * @param maxFields - collection to load from
 	 * @return
 	 */
-	public Collection<MaxField<?>> autoGenLoadFromInernalMap(Collection<MaxField<?>> maxFields) {
+	public Collection<MaxField<?>> autoGenLoadInternalFromMap(Collection<MaxField<?>> maxFields) {
 		
 		for (MaxField<?> m : maxFields) {
-			
-			
-			//Object fieldValue = safeLoadFromInternalMap(m.getFieldName(), m.getDefaultFieldValue());
-			//m.setFieldValue(fieldValue);
+
 			m.safeLoadValue(this);
-			//m.setFieldValue(dbMap.get(m.getFieldName()));
+			
 		}
 		
 		return maxFields;
+	}
+	
+	/**
+	 * Generates the table for the class from the new collection of fields
+	 * @param maxFields
+	 * @param primaryKey - maxField to be used as the primary key
+	 * @param table - the table to generate
+	 * @return the table
+	 */
+	public MaxDBTable autoGenCreateTableForClass(Collection<MaxField<?>> maxFields,MaxField<?> primaryKey, MaxDBTable table) {
+		
+		for (MaxField<?> m : maxFields) {
+			table.addDatatype(m.getFieldName(), m.getFieldDBType());
+		}
+		table.setPrimaryKeyName(primaryKey.getFieldName());
+		table.createTable();
+		return table;
 	}
 
 }
