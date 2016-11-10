@@ -99,7 +99,7 @@ public class UserDataHolder extends MaxObject {
 		setupTable(userGroupMap,userGroupTable,GROUP_TABLE_TITLE,Group.class);
 		setupTable(userStatusMap,userStatusTable,STATUS_TABLE_TITLE,Status.class);
 		setupTable(userLocationMap,userLocationTable,LOCATION_TABLE_TITLE,Location.class);
-		//setupTable(userInventoryMap,userInventoryTable,INVENTORY_TABLE_TITLE,InventoryItem.class);
+		setupTable(userInventoryMap,userInventoryTable,INVENTORY_TABLE_TITLE,InventoryItem.class);
 		setupTable(userClientMap,userClientTable,CLIENT_TABLE_TITLE,Client.class); // must be added last
 		
 		setupTemplate();

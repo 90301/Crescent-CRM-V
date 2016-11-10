@@ -214,6 +214,10 @@ public class MasterUI extends UI {
 			
 			//inventory unit testing
 			
+			UserDataHolder udhTest = new UserDataHolder();
+			udhTest.setDatabasePrefix("test");
+			DataHolder.store(udhTest, UserDataHolder.class);
+			
 			InventoryItem invItem = new InventoryItem();
 			invItem.setItemKey("RR2016");
 			invItem.setItemName("7RR red dye");
@@ -222,6 +226,9 @@ public class MasterUI extends UI {
 			invItem.setItemURL("www.google.com");
 			invItem.setItemStock(12);
 			invItem.setItemReorderPoint(6);
+			
+			udhTest.store(invItem, InventoryItem.class);
+			
 			
 			Debugging.output("Inventory Item. " + invItem.debugOutput()
 					, Debugging.MASTER_UI_TESTING_OUTPUT
