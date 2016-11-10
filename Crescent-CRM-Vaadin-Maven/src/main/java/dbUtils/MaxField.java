@@ -4,6 +4,8 @@
 
 package dbUtils;
 
+import inventory.InventoryItem;
+
 /**
  * This is an <b>experimental</b> class that will hold everything
  * required for a MaxObject field (aka piece of data stored in a Max Object)
@@ -15,11 +17,12 @@ package dbUtils;
  */
 public class MaxField<T> {
 	
+	private static final boolean FULL_DEBUG_TOSTRING = false;
 	String fieldName;
 	String fieldDBType;
 	T fieldValue;
 	T defaultFieldValue;
-	
+	MaxObject refClass;
 	
 	
 	/**
@@ -28,14 +31,15 @@ public class MaxField<T> {
 	 * @param fieldName - the name of the field (used in a MaxObject's DbMap)
 	 * @param fieldDBType - The database type
 	 * @param fieldValue - The value of the field (subject to change over time)
+	 * @param refClass 
 	 */
-	public MaxField(String fieldName, String fieldDBType, T fieldValue, T defaultFieldValue) {
+	public MaxField(String fieldName, String fieldDBType, T fieldValue, T defaultFieldValue, MaxObject refClass) {
 		super();
 		this.fieldName = fieldName;
 		this.fieldDBType = fieldDBType;
 		this.fieldValue = fieldValue;
 		this.defaultFieldValue = defaultFieldValue;
-		
+		this.refClass = refClass;
 	}
 
 	/*
@@ -62,14 +66,29 @@ public class MaxField<T> {
 	 */
 	public void safeLoadValue(MaxObject maxObject) {
 		T loadedValue = maxObject.safeLoadFromInternalMap(this.fieldName, this.defaultFieldValue);
+		
+		
+		//NOTE: this may cause a bug if the internal map is updated
 		this.setFieldValue(loadedValue);
+		
 	}
 	
-	
+	@Override
+	public String toString() {
+		if (FULL_DEBUG_TOSTRING) {
+		return "MaxField [fieldName=" + fieldName + ", fieldDBType=" + fieldDBType + ", fieldValue=" + fieldValue
+				+ ", defaultFieldValue=" + defaultFieldValue + ", refClass=" + refClass + "]";
+		} else {
+			return fieldValue.toString();
+		}
+		
+	}
 	
 	/*
 	 * Getters / Setters
 	 */
+
+
 
 	public String getFieldName() {
 		return fieldName;
@@ -83,8 +102,14 @@ public class MaxField<T> {
 		return fieldDBType;
 	}
 
+	/**
+	 * sets the new value of the field
+	 * TODO make the database calls more efficient.
+	 * @param fieldDBType
+	 */
 	public void setFieldDBType(String fieldDBType) {
 		this.fieldDBType = fieldDBType;
+		refClass.updateDBMap();
 	}
 
 	public T getFieldValue() {

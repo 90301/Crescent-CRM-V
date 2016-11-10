@@ -23,6 +23,7 @@ import dbUtils.MaxDB;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import debugging.Debugging;
+import inventory.InventoryItem;
 import uiElements.NavBar;
 import users.User;
 
@@ -205,12 +206,26 @@ public class MasterUI extends UI {
 	 */
 	public void devTestCode() {
 		
-		if (DEV_AUTO_LOGIN && DEV_TEST_CODE) {
-		String mfValueTest = "Test1";
-		MaxField<String> mfTest = new MaxField<String>("FieldName1", MaxDBTable.DATA_MYSQL_TYPE_STRING, mfValueTest, "default");
-		
-		
-		
+		if (DEVELOPER_MODE && DEV_TEST_CODE) {
+			
+			Debugging.output("BEGIN DevTestCode. "
+					, Debugging.MASTER_UI_TESTING_OUTPUT
+					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
+			//inventory unit testing
+			
+			InventoryItem invItem = new InventoryItem();
+			invItem.setItemKey("RR2016");
+			invItem.setItemName("7RR red dye");
+			invItem.setItemCategory("Dye");
+			invItem.setItemBarcode("0000001");
+			invItem.setItemURL("www.google.com");
+			invItem.setItemStock(12);
+			invItem.setItemReorderPoint(6);
+			
+			Debugging.output("Inventory Item. " + invItem.debugOutput()
+					, Debugging.MASTER_UI_TESTING_OUTPUT
+					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
 		}
 	}
 

@@ -89,6 +89,9 @@ public class Debugging {
 	public static final String SCHEDULE_EVENT_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean SCHEDULE_EVENT_OUTPUT_ENABLED = true;
 	
+	//MASTER UI TESTING
+	public static final String MASTER_UI_TESTING_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean MASTER_UI_TESTING_OUTPUT_ENABLED = true;
 	
 	
 	public static void output(String output,String method,Boolean enabled) {
