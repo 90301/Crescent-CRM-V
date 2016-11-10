@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Generated;
+
 //import com.google.gwt.thirdparty.javascript.jscomp.FunctionInformationMap.Entry;
 
 import clientInfo.Client;
@@ -75,6 +77,15 @@ public abstract class MaxObject {
 		return insertValues;
 	}
 
+	/**
+	 * Attempts to load a value from the internal map, 
+	 * if not found, use a specified default value
+	 * 
+	 * Useful when adding a new field to a class
+	 * @param fieldName
+	 * @param defaultValue
+	 * @return (the field)
+	 */
 	@SuppressWarnings("unchecked")
 	public <V> V safeLoadFromInternalMap(String fieldName, V defaultValue) {
 		V item;
@@ -234,6 +245,59 @@ public abstract class MaxObject {
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/*
+	 * Experimental CODE
+	 * relating to MaxFields
+	 */
+	/**
+	 * Automatically sets up db datatypes based on a collection
+	 * of maxFields
+	 * @param maxFields
+	 */
+	public void autoGenSetupDBTypes(Collection<MaxField<?>> maxFields) {
+		if (dbDatatypes ==null) {
+			dbDatatypes = new HashMap<String, Class<?>>();
+		}
+
+		//This automates setting up dbDatatypes 
+		
+		for (MaxField<?> m : maxFields) {
+			dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
+		}
+	}
+	
+	/**
+	 * This will automatically update the DB Map based on values provided
+	 * within the collection of MaxFields
+	 * @param maxFields that provide actual data
+	 */
+	public void autoGenUpdateDBMap(Collection<MaxField<?>> maxFields) {
+		
+		for (MaxField<?> m : maxFields) {
+			dbMap.put(m.getFieldName(), m.getFieldValue());
+		}
+	}
+	
+	/**
+	 * WARNING< DOES NOT currently work
+	 * @param maxFields
+	 * @return
+	 */
+	public Collection<MaxField<?>> autoGenLoadFromInernalMap(Collection<MaxField<?>> maxFields) {
+		
+		for (MaxField<?> m : maxFields) {
+			
+			
+			//Object fieldValue = safeLoadFromInternalMap(m.getFieldName(), m.getDefaultFieldValue());
+			//m.setFieldValue(fieldValue);
+			m.safeLoadValue(this);
+			//m.setFieldValue(dbMap.get(m.getFieldName()));
+		}
+		
+		return maxFields;
 	}
 
 }

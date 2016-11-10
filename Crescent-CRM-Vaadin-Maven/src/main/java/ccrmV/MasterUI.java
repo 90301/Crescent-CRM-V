@@ -19,6 +19,9 @@ import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
+import dbUtils.MaxDB;
+import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import debugging.Debugging;
 import uiElements.NavBar;
 import users.User;
@@ -67,9 +70,9 @@ public class MasterUI extends UI {
 	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
-	public static final Boolean DEV_AUTO_LOGIN = true;
+	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
-
+	public static final Boolean DEV_TEST_CODE = true;
 	
 	
 	
@@ -136,6 +139,7 @@ public class MasterUI extends UI {
 		
 		//Debug unit testing
 		Debugging.debugUnitTesting();
+		devTestCode();
 		
 	}
 
@@ -193,6 +197,21 @@ public class MasterUI extends UI {
 	public void enterInventory() {
 		mainNavigator.navigateTo(INVENTORY);
 		
+	}
+	
+	/**
+	 * This method can be used to test things when in developer mode and dev test code
+	 * are set to true
+	 */
+	public void devTestCode() {
+		
+		if (DEV_AUTO_LOGIN && DEV_TEST_CODE) {
+		String mfValueTest = "Test1";
+		MaxField<String> mfTest = new MaxField<String>("FieldName1", MaxDBTable.DATA_MYSQL_TYPE_STRING, mfValueTest, "default");
+		
+		
+		
+		}
 	}
 
 }

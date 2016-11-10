@@ -31,7 +31,7 @@ public class NavBar {
 	Button logoutButton;
 	Label statusLabel;
 	public static final String BUTTON_WIDTH = "120px";
-	public static final String BUTTON_HEIGHT = "120px";
+	public static final String BUTTON_HEIGHT = "60px";
 	
 	public Layout generateNavBar() {
 		

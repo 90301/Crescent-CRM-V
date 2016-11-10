@@ -27,8 +27,7 @@ public class InventoryItem extends MaxObject {
 
 	@Override
 	public String getPrimaryKey() {
-		// TODO Auto-generated method stub
-		return null;
+		return itemKey;
 	}
 
 	@Override
