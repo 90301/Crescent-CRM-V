@@ -590,38 +590,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
-		/*
-		 * This is a bug fix which removes all the layout information
-		 * which means everything has to be regenerated when entering the URL again.
-		 * 
-		 * This is not desirable, but for some reason the nav bar doesn't appear if it's done a
-		 * different way.
-		 * (update) Think I Fixed it.
-		 * -Josh Benton
-		 */
-		/*
-		if (this.alreadyGenerated) {
-			//layout.addComponent(navBar.sidebarLayout);
-			//return;
-			layout.removeAllComponents();
-			creationTabs.removeAllComponents();
-			createLocationLayout.removeAllComponents();
-			createGroupLayout.removeAllComponents();
-			createStatusLayout.removeAllComponents();
-			createClientLayout.removeAllComponents();
-			optionsGridLayout.removeAllComponents();
-			clientGridLayout.removeAllComponents();
-			clientEditorMetaLayout.removeAllComponents();
-			clientEditorLayout.removeAllComponents();
-			clientEditorActionLayout.removeAllComponents();
-			filterLayout.removeAllComponents();
-		}
-		*/
-			//return;
-		// This may not need to run every time
 
-		// but a better fix may be to just do a test, instead of running the
-		// whole process.
 		masterUi.userDataHolder.initalizeDatabases();
 
 		// This is the top level layout (for now)

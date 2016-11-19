@@ -21,6 +21,7 @@ public class InventoryItem extends MaxObject {
 	//the new way
 	//Note that special things must be done for the primary key
 	//working on trying to make that a thing of the past
+	
 	private MaxField<String> itemKey = 
 			new MaxField<String>("itemKey", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	

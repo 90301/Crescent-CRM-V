@@ -15,6 +15,9 @@ public class InventoryCategory extends MaxObject {
 	{
 		this.autoGenList.add(categoryName);
 	}
+	public InventoryCategory() {
+		
+	}
 	
 	public InventoryCategory(String categoryName) {
 		// TODO Auto-generated constructor stub
