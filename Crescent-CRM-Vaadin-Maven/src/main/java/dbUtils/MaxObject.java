@@ -258,6 +258,9 @@ public abstract class MaxObject {
 	 */
 	public ArrayList<MaxField<?>> autoGenList = new ArrayList<MaxField<?>>();
 	
+	public Collection<MaxField<?>> getAutoGenList() {
+		return autoGenList;
+	}
 	
 	/**
 	 * Automatically sets up db datatypes based on a collection

@@ -12,7 +12,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
 
+import clientInfo.UserDataHolder;
+import dbUtils.MaxField;
 import inventory.InventoryCategory;
+import inventory.InventoryItem;
 import uiElements.NavBar;
 
 public class InventoryView extends HorizontalLayout implements View {
@@ -109,8 +112,20 @@ public class InventoryView extends HorizontalLayout implements View {
 	 */
 	public void populateData() {
 		
+		InventoryItem exampleii = new InventoryItem();
+		
 		inventoryItems = new IndexedContainer(masterUi.userDataHolder.getMap(InventoryCategory.class).values());
 		
+		for (MaxField<?> field : exampleii.getAutoGenList()) {
+			inventoryItems.addContainerProperty(field.getFieldName(), field.getExtendedClass(), field.getDefaultFieldValue());
+		}
+		
+		for (InventoryItem ii : masterUi.userDataHolder.getMap(InventoryItem.class).values()) {
+			//RESUME WORKING HERE
+			
+			
+			//RESUME WORKING HERE
+		}
 		//inventoryItems.addP
 		
 		inventoryCategoryListSelect.removeAllItems();
@@ -125,9 +140,14 @@ public class InventoryView extends HorizontalLayout implements View {
 		
 		//editInventoryGrid.addColumn("ItemName", String.class);
 		
+		
+		
 		editInventoryGrid.removeAllColumns();
 		
 		editInventoryGrid.setContainerDataSource(inventoryItems);
+		
+		
+		
 		
 	}
 
@@ -156,7 +176,18 @@ public class InventoryView extends HorizontalLayout implements View {
 	}
 	
 	public void createNewItem(String name, InventoryCategory category, String barcode) {
-		//System.out.println("ID: " + category.id);
+		
+		if (name==null||category==null||barcode==null)
+			return;
+		
+		InventoryItem ii = new InventoryItem();
+		
+		ii.setItemName(name);
+		ii.setItemCategory(category.getPrimaryKey());
+		ii.setItemBarcode(barcode);
+		masterUi.userDataHolder.store(ii, InventoryItem.class);
+
+		populateData();
 		
 	}
 
