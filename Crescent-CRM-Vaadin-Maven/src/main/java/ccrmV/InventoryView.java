@@ -1,10 +1,13 @@
 package ccrmV;
 
+import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TextField;
@@ -35,6 +38,11 @@ public class InventoryView extends HorizontalLayout implements View {
 	TextField createInventoryCategoryName = new TextField("Category Name");
 	Button createInventoryCategoryButton = new Button("Create Category",e -> createNewItemCategoryClick());
 	ListSelect inventoryCategoryListSelect = new ListSelect("Categories");
+	
+	//Edit inventory items
+	HorizontalLayout editInventoryLayout = new HorizontalLayout();
+	
+	Grid editInventoryGrid = new Grid();
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
@@ -73,6 +81,17 @@ public class InventoryView extends HorizontalLayout implements View {
 		
 		inventoryAccordion.addComponent(createInventoryItemLayout);
 		
+		//edit item grid
+		
+		editInventoryLayout.setCaption("Edit Inventory Items");
+		
+		editInventoryGrid.setCaption("Inventory Grid");
+		
+		editInventoryLayout.addComponent(editInventoryGrid);
+		
+		inventoryAccordion.addComponent(editInventoryLayout);
+
+		
 		
 		populateData();
 		
@@ -84,20 +103,31 @@ public class InventoryView extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 
-
+	IndexedContainer inventoryItems;// = new IndexedContainer(masterUi.userDataHolder.getMap(InventoryCategory.class).values());
 	/**
 	 * Populates various UI elements.
 	 */
 	public void populateData() {
 		
+		inventoryItems = new IndexedContainer(masterUi.userDataHolder.getMap(InventoryCategory.class).values());
+		
+		//inventoryItems.addP
+		
 		inventoryCategoryListSelect.removeAllItems();
 		
 		createInventoryCategory.removeAllItems();
+		
+		editInventoryGrid.removeAllColumns();
 		
 		inventoryCategoryListSelect.addItems(masterUi.userDataHolder.getMaxObjects(InventoryCategory.class));
 		
 		createInventoryCategory.addItems(masterUi.userDataHolder.getMaxObjects(InventoryCategory.class));
 		
+		//editInventoryGrid.addColumn("ItemName", String.class);
+		
+		editInventoryGrid.removeAllColumns();
+		
+		editInventoryGrid.setContainerDataSource(inventoryItems);
 		
 	}
 

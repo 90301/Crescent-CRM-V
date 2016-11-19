@@ -1,11 +1,20 @@
 package inventory;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.AbstractProperty;
+import com.vaadin.data.util.ObjectProperty;
+
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import debugging.Debugging;
 
-public class InventoryItem extends MaxObject {
+public class InventoryItem extends MaxObject implements Item {
 
 	//the old way
 	/*
@@ -22,6 +31,11 @@ public class InventoryItem extends MaxObject {
 	//Note that special things must be done for the primary key
 	//working on trying to make that a thing of the past
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private MaxField<String> itemKey = 
 			new MaxField<String>("itemKey", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	
@@ -158,6 +172,49 @@ public class InventoryItem extends MaxObject {
 
 	public void setItemReorderPoint(Integer itemReorderPoint) {
 		this.itemReorderPoint.setFieldValue(itemReorderPoint);
+	}
+
+
+	@Override
+	public Property getItemProperty(Object id) {
+		// TODO Improve this by using a map
+		HashMap<String,MaxField<?>> fields = new HashMap<String,MaxField<?>>();
+		for (MaxField<?> mf : this.autoGenList) {
+			fields.put(mf.getFieldName(), mf);
+		}
+		
+		MaxField<?> f = fields.get(id);
+		
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		ObjectProperty prop = new ObjectProperty(f.getFieldValue(),f.getExtendedClass());
+		//prop.setValue(f.getFieldValue());
+		
+		return prop;
+	}
+
+
+	@Override
+	public Collection<?> getItemPropertyIds() {
+		Collection<String> ids = new ArrayList<String>();
+		for (MaxField<?> mf : this.autoGenList) {
+			ids.add(mf.getFieldName());
+		}
+		
+		return ids;
+	}
+
+
+	@Override
+	public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 	
