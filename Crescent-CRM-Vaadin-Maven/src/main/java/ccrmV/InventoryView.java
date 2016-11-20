@@ -1,6 +1,8 @@
 package ccrmV;
 
 import com.vaadin.data.Container.Indexed;
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -114,15 +116,17 @@ public class InventoryView extends HorizontalLayout implements View {
 		
 		InventoryItem exampleii = new InventoryItem();
 		
-		inventoryItems = new IndexedContainer(masterUi.userDataHolder.getMap(InventoryCategory.class).values());
+		inventoryItems = new IndexedContainer();//masterUi.userDataHolder.getMap(InventoryCategory.class).values());
 		
-		for (MaxField<?> field : exampleii.getAutoGenList()) {
-			inventoryItems.addContainerProperty(field.getFieldName(), field.getExtendedClass(), field.getDefaultFieldValue());
-		}
+		exampleii.populateContainer(inventoryItems);
 		
 		for (InventoryItem ii : masterUi.userDataHolder.getMap(InventoryItem.class).values()) {
 			//RESUME WORKING HERE
 			
+			inventoryItems.addItem(ii);
+			
+			Item item = inventoryItems.getItem(ii);
+			ii.genItem(item);
 			
 			//RESUME WORKING HERE
 		}
@@ -185,8 +189,9 @@ public class InventoryView extends HorizontalLayout implements View {
 		ii.setItemName(name);
 		ii.setItemCategory(category.getPrimaryKey());
 		ii.setItemBarcode(barcode);
+		ii.genKey();
 		masterUi.userDataHolder.store(ii, InventoryItem.class);
-
+		
 		populateData();
 		
 	}

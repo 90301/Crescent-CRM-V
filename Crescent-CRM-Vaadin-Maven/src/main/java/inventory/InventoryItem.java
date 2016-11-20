@@ -3,10 +3,12 @@ package inventory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.UUID;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.util.AbstractProperty;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 
 import dbUtils.MaxDBTable;
@@ -16,50 +18,48 @@ import debugging.Debugging;
 
 public class InventoryItem extends MaxObject implements Item {
 
-	//the old way
+	// the old way
 	/*
-	private String itemKey;
-	private String itemName;
-	private String itemCategory;
-	private String itemBarcode;
-	private String itemURL;
-	private Integer itemStock;
-	private Integer itemReorderPoint;
-	*/
-	
-	//the new way
-	//Note that special things must be done for the primary key
-	//working on trying to make that a thing of the past
-	
+	 * private String itemKey; private String itemName; private String
+	 * itemCategory; private String itemBarcode; private String itemURL; private
+	 * Integer itemStock; private Integer itemReorderPoint;
+	 */
+
+	// the new way
+	// Note that special things must be done for the primary key
+	// working on trying to make that a thing of the past
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private MaxField<String> itemKey = 
-			new MaxField<String>("itemKey", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
-	
-	private MaxField<String> itemName = 
-			new MaxField<String>("itemName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
+	private MaxField<String> itemKey = new MaxField<String>("itemKey", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
+			this);
 
-	private MaxField<String> itemCategory = 
-			new MaxField<String>("itemCategory", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
-	
-	private MaxField<String> itemBarcode = 
-			new	MaxField<String>("itemBarcode", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
+	private MaxField<String> itemName = new MaxField<String>("itemName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
+			this);
 
-	private MaxField<String> itemURL = 
-			new MaxField<String>("itemURL", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
+	private MaxField<String> itemCategory = new MaxField<String>("itemCategory", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,
+			"", "", this);
 
-	private MaxField<Integer> itemStock = 
-			new MaxField<Integer>("itemStock", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0, this);
+	private MaxField<String> itemBarcode = new MaxField<String>("itemBarcode", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,
+			"", "", this);
 
-	private MaxField<Integer> itemReorderPoint = 
-			new MaxField<Integer>("itemStock", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0, this);
+	private MaxField<String> itemURL = new MaxField<String>("itemURL", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
+			this);
+
+	private MaxField<Integer> itemStock = new MaxField<Integer>("itemStock", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0,
+			this);
+
+	private MaxField<Integer> itemReorderPoint = new MaxField<Integer>("itemStock", MaxDBTable.DATA_MYSQL_TYPE_INT, 0,
+			0, this);
 
 	{
-		//A list that contains all the datatypes/field info/default values
+		itemKey.setShowField(false);
+		// A list that contains all the datatypes/field info/default values
 		this.autoGenList.add(itemKey);
+
 		this.autoGenList.add(itemName);
 		this.autoGenList.add(itemCategory);
 		this.autoGenList.add(itemBarcode);
@@ -67,15 +67,13 @@ public class InventoryItem extends MaxObject implements Item {
 		this.autoGenList.add(itemStock);
 		this.autoGenList.add(itemReorderPoint);
 	}
-	
-		
+
 	public String debugOutput() {
 		return "InventoryItem [itemKey=" + itemKey + ", itemName=" + itemName + ", itemCategory=" + itemCategory
 				+ ", itemBarcode=" + itemBarcode + ", itemURL=" + itemURL + ", itemStock=" + itemStock
 				+ ", itemReorderPoint=" + itemReorderPoint + "]";
 	}
 
-	
 	/*
 	 * Max Object overrides
 	 */
@@ -83,39 +81,43 @@ public class InventoryItem extends MaxObject implements Item {
 	@Override
 	public void loadInternalFromMap() {
 		this.autoGenLoadInternalFromMap(this.autoGenList);
-		
+
 	}
 
 	@Override
 	public void updateDBMap() {
 		this.autoGenUpdateDBMap(this.autoGenList);
-		
+
 	}
 
 	@Override
 	public String getPrimaryKey() {
 		String pKey = itemKey.getFieldValue();
-		Debugging.output("Inventory Primary key: " + pKey
-				, Debugging.INVENTORY_OUTPUT
-				, Debugging.INVENTORY_OUTPUT_ENABLED);
+		Debugging.output("Inventory Primary key: " + pKey, Debugging.INVENTORY_OUTPUT,
+				Debugging.INVENTORY_OUTPUT_ENABLED);
 		return pKey;
 	}
 
 	@Override
 	public void createTableForClass(MaxDBTable table) {
 		this.autoGenCreateTableForClass(this.autoGenList, this.itemKey, table);
-		
+
 	}
 
 	@Override
 	public void setupDBDatatypes() {
 		this.autoGenSetupDBTypes(this.autoGenList);
-		
+
 	}
-	
+
+	// Generate a key
+	public void genKey() {
+		UUID uid = UUID.randomUUID();
+		this.setItemKey(uid.toString());
+	}
+
 	/*
-	 * Getters / setters
-	 * NOTE how they are different.
+	 * Getters / setters NOTE how they are different.
 	 */
 
 	public String getItemKey() {
@@ -174,24 +176,56 @@ public class InventoryItem extends MaxObject implements Item {
 		this.itemReorderPoint.setFieldValue(itemReorderPoint);
 	}
 
+	/**
+	 * Generates an indexed container
+	 * 
+	 * @param indexedContainer
+	 * @return
+	 */
+	public IndexedContainer populateContainer(IndexedContainer indexedContainer) {
+		for (MaxField<?> field : this.getAutoGenList()) {
+			if (field.getShowField())
+				indexedContainer.addContainerProperty(field.getFieldName(), field.getExtendedClass(),
+						field.getDefaultFieldValue());
+		}
+		return indexedContainer;
+	}
+
+	/**
+	 * Generates an item that can be added to a grid.
+	 * 
+	 * @param item
+	 *            the item to generate data into
+	 * @return the item with data generated
+	 */
+	public Item genItem(Item item) {
+
+		for (MaxField<?> mf : this.getAutoGenList()) {
+			if (mf.getShowField()) {
+				Property p = item.getItemProperty(mf.getFieldName());
+				p.setValue(mf.getFieldValue());
+			}
+		}
+		return item;
+	}
 
 	@Override
 	public Property getItemProperty(Object id) {
 		// TODO Improve this by using a map
-		HashMap<String,MaxField<?>> fields = new HashMap<String,MaxField<?>>();
+		HashMap<String, MaxField<?>> fields = new HashMap<String, MaxField<?>>();
 		for (MaxField<?> mf : this.autoGenList) {
-			fields.put(mf.getFieldName(), mf);
+			if (mf.getShowField())
+				fields.put(mf.getFieldName(), mf);
 		}
-		
+
 		MaxField<?> f = fields.get(id);
-		
+
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		ObjectProperty prop = new ObjectProperty(f.getFieldValue(),f.getExtendedClass());
-		//prop.setValue(f.getFieldValue());
-		
+		ObjectProperty prop = new ObjectProperty(f.getFieldValue(), f.getExtendedClass());
+		// prop.setValue(f.getFieldValue());
+
 		return prop;
 	}
-
 
 	@Override
 	public Collection<?> getItemPropertyIds() {
@@ -199,10 +233,9 @@ public class InventoryItem extends MaxObject implements Item {
 		for (MaxField<?> mf : this.autoGenList) {
 			ids.add(mf.getFieldName());
 		}
-		
+
 		return ids;
 	}
-
 
 	@Override
 	public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
@@ -210,13 +243,10 @@ public class InventoryItem extends MaxObject implements Item {
 		return false;
 	}
 
-
 	@Override
 	public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
-	
 
 }

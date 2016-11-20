@@ -23,6 +23,7 @@ public class MaxField<T> {
 	T fieldValue;
 	T defaultFieldValue;
 	MaxObject refClass;
+	Boolean showField = true;
 	
 	
 	/**
@@ -126,6 +127,14 @@ public class MaxField<T> {
 
 	public void setDefaultFieldValue(T defaultFieldValue) {
 		this.defaultFieldValue = defaultFieldValue;
+	}
+
+	public Boolean getShowField() {
+		return showField;
+	}
+
+	public void setShowField(Boolean showField) {
+		this.showField = showField;
 	}
 
 
