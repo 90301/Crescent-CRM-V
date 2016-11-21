@@ -190,8 +190,7 @@ public class InventoryItem extends MaxObject implements Item {
 		}
 		return indexedContainer;
 	}
-	
-	
+
 	/**
 	 * Generates an item that can be added to a grid.
 	 * 
@@ -232,7 +231,8 @@ public class InventoryItem extends MaxObject implements Item {
 	public Collection<?> getItemPropertyIds() {
 		Collection<String> ids = new ArrayList<String>();
 		for (MaxField<?> mf : this.autoGenList) {
-			ids.add(mf.getFieldName());
+			if (mf.getShowField())
+				ids.add(mf.getFieldName());
 		}
 
 		return ids;
