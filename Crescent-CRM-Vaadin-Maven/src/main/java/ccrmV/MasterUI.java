@@ -35,8 +35,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .85;
-	public static final String versionDescription = " Merge scheduler auto end-date";
+	public static final double versionNumber = .90;
+	public static final String versionDescription = " Inventory";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
