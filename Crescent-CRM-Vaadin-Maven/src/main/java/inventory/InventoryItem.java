@@ -52,7 +52,7 @@ public class InventoryItem extends MaxObject implements Item {
 	private MaxField<Integer> itemStock = new MaxField<Integer>("itemStock", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0,
 			this);
 
-	private MaxField<Integer> itemReorderPoint = new MaxField<Integer>("itemStock", MaxDBTable.DATA_MYSQL_TYPE_INT, 0,
+	private MaxField<Integer> itemReorderPoint = new MaxField<Integer>("itemReorder", MaxDBTable.DATA_MYSQL_TYPE_INT, 0,
 			0, this);
 
 	{
