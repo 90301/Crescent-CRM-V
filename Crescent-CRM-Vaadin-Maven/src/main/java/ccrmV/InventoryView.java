@@ -112,6 +112,9 @@ public class InventoryView extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 
+	/**
+	 * Event for clicking the "update" button
+	 */
 	private void editInventoryUpdateClick() {
 		// TODO Finish this
 		for (InventoryItem ii : masterUi.userDataHolder.getMap(InventoryItem.class).values()) {
