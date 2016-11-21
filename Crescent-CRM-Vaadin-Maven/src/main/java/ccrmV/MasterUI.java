@@ -71,9 +71,14 @@ public class MasterUI extends UI {
 	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
-	public static final Boolean DEV_AUTO_LOGIN = false;
+	public static final Boolean DEV_AUTO_LOGIN = true;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
+	
+	//Automatically navigate to a specific page.
+	//This could cause issues when dealing with database initialization
+	public static final Boolean DEV_AUTO_NAVIGATE = true;
+	public static final String DEV_AUTO_NAVIGATE_PAGE = INVENTORY;
 	
 	
 	
@@ -142,6 +147,11 @@ public class MasterUI extends UI {
 		Debugging.debugUnitTesting();
 		devTestCode();
 		
+		//dev switch page
+		if (DEVELOPER_MODE && DEV_AUTO_NAVIGATE) {
+			mainNavigator.navigateTo(DEV_AUTO_NAVIGATE_PAGE);
+		}
+		
 	}
 
 	public void startMainApp() {
@@ -184,7 +194,7 @@ public class MasterUI extends UI {
 	}
 
 	/**
-	 * NO ERROR CHECKING done in this methood yet.
+	 * NO ERROR CHECKING done in this method yet.
 	 * sets the user data holder to the given userDataHolder name.
 	 * @param databaseName - the user data holder to select
 	 */

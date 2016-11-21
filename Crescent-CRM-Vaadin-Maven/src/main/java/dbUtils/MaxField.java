@@ -137,6 +137,15 @@ public class MaxField<T> {
 		this.showField = showField;
 	}
 
+	/**
+	 * The more dangerous way of setting the field value
+	 * @param value
+	 */
+	public void setFieldValueUnsafe(Object value) {
+		this.setFieldValue((T) value); 
+		
+	}
+
 
 
 	

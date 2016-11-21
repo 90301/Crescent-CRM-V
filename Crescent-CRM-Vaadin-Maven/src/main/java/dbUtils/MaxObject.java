@@ -257,6 +257,25 @@ public abstract class MaxObject {
 	 * A list that contains all the MaxFields to be passed into functions.
 	 */
 	public ArrayList<MaxField<?>> autoGenList = new ArrayList<MaxField<?>>();
+	public Map<String,MaxField<?>> autoGenMap = new HashMap<String,MaxField<?>>();
+	
+	/**
+	 * Adds a max field to the relevant data structures
+	 * @param mf the Max Field to add.
+	 */
+	public void addMaxField(MaxField<?> mf) {
+		autoGenList.add(mf);
+		autoGenMap.put(mf.getFieldName(), mf);
+	}
+	
+	public MaxField<?> getField(String fieldName) {
+		
+		return autoGenMap.get(fieldName);
+	}
+	
+	public <T> void setFieldValue(String fieldName,T value) {
+		autoGenMap.get(fieldName).setFieldValueUnsafe(value);
+	}
 	
 	public Collection<MaxField<?>> getAutoGenList() {
 		return autoGenList;

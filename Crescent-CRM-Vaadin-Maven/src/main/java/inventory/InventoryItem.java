@@ -58,14 +58,14 @@ public class InventoryItem extends MaxObject implements Item {
 	{
 		itemKey.setShowField(false);
 		// A list that contains all the datatypes/field info/default values
-		this.autoGenList.add(itemKey);
+		this.addMaxField(itemKey);
 
-		this.autoGenList.add(itemName);
-		this.autoGenList.add(itemCategory);
-		this.autoGenList.add(itemBarcode);
-		this.autoGenList.add(itemURL);
-		this.autoGenList.add(itemStock);
-		this.autoGenList.add(itemReorderPoint);
+		this.addMaxField(itemName);
+		this.addMaxField(itemCategory);
+		this.addMaxField(itemBarcode);
+		this.addMaxField(itemURL);
+		this.addMaxField(itemStock);
+		this.addMaxField(itemReorderPoint);
 	}
 
 	public String debugOutput() {
@@ -190,7 +190,8 @@ public class InventoryItem extends MaxObject implements Item {
 		}
 		return indexedContainer;
 	}
-
+	
+	
 	/**
 	 * Generates an item that can be added to a grid.
 	 * 

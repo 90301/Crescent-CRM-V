@@ -96,6 +96,10 @@ public class Debugging {
 	//Inventory Item Debug
 		public static final String INVENTORY_OUTPUT = CONSOLE_OUTPUT;
 		public static final Boolean INVENTORY_OUTPUT_ENABLED = true;
+		
+		//Inventory View Debugging
+		public static final String INVENTORY_VIEW_OUTPUT = CONSOLE_OUTPUT;
+		public static final Boolean INVENTORY_VIEW_OUTPUT_ENABLED = true;
 	
 	public static void output(String output,String method,Boolean enabled) {
 		if (DEV_MODE) {

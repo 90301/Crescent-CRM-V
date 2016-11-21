@@ -13,7 +13,7 @@ public class InventoryCategory extends MaxObject {
 	MaxField<String> categoryName = new MaxField<String>("categoryName",MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,"","",this);
 	
 	{
-		this.autoGenList.add(categoryName);
+		this.addMaxField(categoryName);
 	}
 	public InventoryCategory() {
 		
