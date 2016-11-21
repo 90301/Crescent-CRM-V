@@ -27,6 +27,7 @@ import dbUtils.MaxObject;
 import debugging.Debugging;
 //import de.steinwedel.messagebox.MessageBox;
 import uiElements.NavBar;
+import uiElements.TemplateEditor;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
@@ -59,6 +60,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	ComboBox createClientStatus = new ComboBox("Status");
 	ComboBox createClientLocation = new ComboBox("Location");
 	ComboBox createClientGroup = new ComboBox("Group");
+	
+	TemplateEditor Template = new TemplateEditor();
 	
 	//ListBox is containing current statuses...
 	ListSelect createLocationListSelect = new ListSelect();
@@ -165,7 +168,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			selectedClient.setGroup(tGroup);
 			selectedClient.setLocation(tLocation);
 			selectedClient.setStatus(tStatus);
-
+			
 		} else {
 			// normal client creation
 			// if valid, set the field
@@ -218,7 +221,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientTable.addContainerProperty("Location", String.class, null);
 		clientTable.addContainerProperty("Status", String.class, null);
 		clientTable.addContainerProperty("Groups", String.class, "<no group>");
-
+		
 		// set up filter comparison objects
 		Status filterStatusTest = null;
 		if (filterStatus.getValue() != null)
@@ -274,7 +277,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		}
 
 	}
-
+	
 	/*
 	 * Fill combo boxes
 	 */
@@ -332,12 +335,12 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	 * EEEEEEE NN NN TTT SSSSS
 	 * 
 	 */
-
+	
 	public void selectItem(ValueChangeEvent event) {
 
 		System.out.println("SELECTED AN ITEM." + clientTable.getValue());
 		// TODO: ASK before switching
-
+		
 		// null check
 		if (clientTable.getValue() != null && !InhalerUtils.stringNullCheck((String) clientTable.getValue())) {
 			localSelClient = masterUi.userDataHolder.getClient((String) clientTable.getValue());
@@ -364,7 +367,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		}
 
 	}
-
+	
 	public void selectClient(Client c) {
 		if (c != null) {
 
@@ -789,7 +792,19 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createGroupListSelect.removeAllItems();
 		createGroupListSelect.addItems(masterUi.userDataHolder.getAllGroups());
 	}
-
+	
+	//TODO
+	/**
+	 * Adds all the Fields for the Template (URL, Dates, etc.)
+	 */
+	private void genTemplateEditor() {
+		//Check if Template is selected
+		//Have a combo box, textfield and button in horizontal layout
+		//Below that, there needs to be an add button to create a new line
+		//to customize. 
+		
+	}
+	
 	/**
 	 * Adds all the components for the clientEditor
 	 */
@@ -813,10 +828,12 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientEditorActionLayout.addComponent(urlTextField);
 		
 		//holds the client editor
+		//TODO
 		clientEditorLayout.setSpacing(true);
 		
 		clientEditorLayout.addComponent(clientNameLabel);
 		clientEditorLayout.addComponent(clientEditorMetaLayout);
+		clientEditorLayout.addComponent(Template);
 		clientEditorLayout.addComponent(clientNoteBox);
 		clientEditorLayout.addComponent(clientEditorActionLayout);
 	}
