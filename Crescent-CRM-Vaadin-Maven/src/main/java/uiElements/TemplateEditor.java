@@ -17,6 +17,9 @@ import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import clientInfo.TemplateField;
+import clientInfo.UserDataHolder;
+
 public class TemplateEditor extends VerticalLayout{
 	
 	
@@ -27,7 +30,7 @@ public class TemplateEditor extends VerticalLayout{
 	
 	//Use this for date selection in Vaadin
 	// new PopupDateField("");
-	ArrayList<HorizontalLayout> fieldArrayList = new ArrayList<HorizontalLayout>();
+	ArrayList<TemplateRowUI> fieldArrayList = new ArrayList<TemplateRowUI>();
 	//HorizontalLayout x = new HorizontalLayout();
 	
 	//Need to make a list of all Field Types: Numbers, Dates, URLs, etc.
@@ -91,6 +94,15 @@ public class TemplateEditor extends VerticalLayout{
 		// TODO Auto-generated method stub
 		fieldArrayList.remove(templateRowUI);
 		updateUI();
+	}
+
+	public void updateTemplates(UserDataHolder userDataHolder) {
+		// TODO Auto-generated method stub
+		for(TemplateRowUI row :fieldArrayList){
+			
+			TemplateField tF = row.genTemplateField();
+			userDataHolder.store(tF, TemplateField.class);
+		}
 	}
 	
 	//TODO

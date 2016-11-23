@@ -14,14 +14,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
+import clientInfo.TemplateField;
+
 public class TemplateRowUI extends HorizontalLayout{
 
-	//Constants
-	public static final String DATA_TYPE_NUMBER = "Number";
-	public static final String DATA_TYPE_DATE = "Date";
-	public static final String DATA_TYPE_TEXT = "Text";
-	public static final String[] DataTypes = {DATA_TYPE_NUMBER,DATA_TYPE_DATE, DATA_TYPE_TEXT};
-	
 	int removeFlag = 0;
 	Label Warning= new Label("Are you sure? (Press remove again if you are)");
 	TemplateEditor templateEditor;
@@ -55,10 +51,10 @@ public class TemplateRowUI extends HorizontalLayout{
 	
 	public void populateComboBoxes(){
 		
-		for(String DataType:DataTypes){
+		for(String DataType:TemplateField.DataTypes){
 			fieldType.addItem(DataType);
 		}
-		fieldType.select(DATA_TYPE_TEXT);
+		fieldType.select(TemplateField.DATA_TYPE_TEXT);
 	}
 	
 	private void removeRowClick() {
@@ -73,6 +69,16 @@ public class TemplateRowUI extends HorizontalLayout{
 			this.templateEditor.removeRow(this);
 			removeFlag = 0;
 		}
+		
+	}
+
+	public TemplateField genTemplateField() {
+		// TODO Auto-generated method stub
+		TemplateField tF = new TemplateField();
+		tF.setDataType(fieldType.getValue().toString());
+		tF.setFieldName(fieldNameTextField.getValue());
+		tF.genDefaultValue();
+		return tF;
 		
 	}
 }

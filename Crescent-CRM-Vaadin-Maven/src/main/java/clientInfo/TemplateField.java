@@ -6,6 +6,14 @@ import dbUtils.MaxObject;
 import debugging.Debugging;
 
 public class TemplateField extends MaxObject{
+	
+
+	//Constants
+	public static final String DATA_TYPE_NUMBER = "Number";
+	public static final String DATA_TYPE_DATE = "Date";
+	public static final String DATA_TYPE_TEXT = "Text";
+	public static final String[] DataTypes = {DATA_TYPE_NUMBER,DATA_TYPE_DATE, DATA_TYPE_TEXT};
+	
 
 	MaxField<String> fieldName = new MaxField<String>("fieldName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	MaxField<String> dataType = new MaxField<String>("dataType", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
@@ -77,6 +85,21 @@ public class TemplateField extends MaxObject{
 
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue.setFieldValue(defaultValue);
+	}
+
+	public void genDefaultValue() {
+		// TODO Auto-generated method stub
+		//Edit if you need to add more default values
+		if(this.getDataType() == DATA_TYPE_DATE){
+			
+		} else if(this.getDataType() == DATA_TYPE_NUMBER){
+			
+			this.setDefaultValue("0");
+			
+		}  else if(this.getDataType() == DATA_TYPE_TEXT){
+			
+			this.setDefaultValue("");
+		}
 	}
 
 

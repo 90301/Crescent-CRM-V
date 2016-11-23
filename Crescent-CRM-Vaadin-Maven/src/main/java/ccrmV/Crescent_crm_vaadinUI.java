@@ -164,6 +164,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			selectedClient.setGroup(tGroup);
 			selectedClient.setLocation(tLocation);
 			selectedClient.setStatus(tStatus);
+			
+			Template.updateTemplates(masterUi.userDataHolder);
 
 		} else {
 			// normal client creation
