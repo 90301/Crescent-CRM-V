@@ -68,7 +68,7 @@ public class MasterUI extends UI {
 	//if something breaks because of developer mode, turn developer mode off.
 	//no error checking will be implemented for developer mode, if you don't know
 	//exactly what you are doing with a setting, ask someone who does, or don't enable it.
-	public static final Boolean DEVELOPER_MODE = false;
+	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
 	public static final Boolean DEV_AUTO_LOGIN = true;

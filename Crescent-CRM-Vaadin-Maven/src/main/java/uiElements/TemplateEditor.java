@@ -1,6 +1,6 @@
 /*
  * Author: Andrew Dorsett
- * Last Edited: 11/22/2016
+ * Last Edited: 11/23/2016
  */
 
 package uiElements;
@@ -19,26 +19,37 @@ import com.vaadin.ui.VerticalLayout;
 
 public class TemplateEditor extends VerticalLayout{
 	
+	
 	//TODO
+	//Flags
+	int removeFlag = 0;
 	//Dates, Text, Numbers
 	
 	//Use this for date selection in Vaadin
 	// new PopupDateField("");
-	ArrayList<HorizontalLayout> z = new ArrayList<HorizontalLayout>();
+	ArrayList<HorizontalLayout> fieldArrayList = new ArrayList<HorizontalLayout>();
 	//HorizontalLayout x = new HorizontalLayout();
-	VerticalLayout y = new VerticalLayout();
 	
 	//Need to make a list of all Field Types: Numbers, Dates, URLs, etc.
-	ComboBox FieldType = new ComboBox("Field Type");    
-	TextField TF = new TextField("Text Field");
-	Button Add = new Button("Add New Line", event -> this.addRowClick());
-	Button Remove = new Button("Remove", event -> this.removeRowClick());
-	Label Warning= new Label("Are you sure you would like to remove this row? (Press again to remove the row)");
 	
+	Button Add = new Button("Add New Field", event -> this.addRowClick());
+	
+	
+	
+	public TemplateEditor() {
+		
+		updateUI();
+	}
+
 	//Make an ArrayList to keep it all organized and ordered :D
 	public Layout generateTemplateRow(){
+		//fieldArrayList.addComponent(TemplateRowUI());
+		/*
+		ComboBox FieldType = new ComboBox("Field Type");    
+		TextField TF = new TextField("Text Field");
+		Button Remove = new Button("Remove", event -> this.removeRowClick());
 		HorizontalLayout x = new HorizontalLayout();
-		z.add(x);
+		
 		//Need to make sure this method creates a new horizontal layout every time it is called
 		//and that it doesn't add onto 
 		x.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
@@ -47,33 +58,39 @@ public class TemplateEditor extends VerticalLayout{
 		x.addComponent(TF);
 		//Possibly make red :D and also warning when selecting	
 		x.addComponent(Remove);
-		return x;
+		*/
+		return null;
+		
 	}
 	
-	public Layout addNewField(){
-		
-		generateTemplateRow();
-		y.removeAllComponents();
-		for(HorizontalLayout h:z){
-			y.addComponent(h);
+	public void updateUI(){
+		this.removeAllComponents();
+		for(HorizontalLayout h:fieldArrayList){
+			this.addComponent(h);
 		}
-		y.addComponent(Add);
+		this.addComponent(Add);
+	}
+	
+	public void addNewField(){
+		//Call TemplateRowUI
+		TemplateRowUI newRow = new TemplateRowUI(this);
+		fieldArrayList.add(newRow);
+		updateUI();
 		
-		
-		return y;
 	}
 	
 	private void addRowClick(){
 		// TODO Auto-generated method stub
-		
+		//Add new instance of TemplateRowUI here
 		addNewField();
-		
 	}
 	
-	private void removeRowClick() {
+
+
+	public void removeRow(TemplateRowUI templateRowUI) {
 		// TODO Auto-generated method stub
-		//eventually add Warning Label to this
-		
+		fieldArrayList.remove(templateRowUI);
+		updateUI();
 	}
 	
 	//TODO
