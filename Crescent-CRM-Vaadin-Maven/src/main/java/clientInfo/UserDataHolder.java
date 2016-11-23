@@ -30,7 +30,8 @@ public class UserDataHolder extends MaxObject {
 	private ConcurrentHashMap<String, Group> userGroupMap = new ConcurrentHashMap<String, Group>();
 	private ConcurrentHashMap<String, InventoryItem> userInventoryMap = new ConcurrentHashMap<String, InventoryItem>();
 	private ConcurrentHashMap<String, InventoryCategory> userInventoryCategoryMap = new ConcurrentHashMap<String, InventoryCategory>();
-
+	private ConcurrentHashMap<String, TemplateField> userTemplateFieldMap = new ConcurrentHashMap<String, TemplateField>();
+	
 	MaxDBTable userStatusTable;
 	public String STATUS_TABLE_TITLE = "statusTable";
 	MaxDBTable userLocationTable;
@@ -43,6 +44,8 @@ public class UserDataHolder extends MaxObject {
 	public String INVENTORY_TABLE_TITLE = "inventoryTable";
 	MaxDBTable userInventoryCategoryTable;
 	public String INVENTORY_CATEGORY_TABLE_TITLE = "inventoryCategoryTable";
+	MaxDBTable userTemplateFieldTable;
+	public String TEMPLATE_FIELD_TABLE_TITLE = "templateFieldTable";
 
 	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
 	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
@@ -60,13 +63,14 @@ public class UserDataHolder extends MaxObject {
 	public void initalizeDatabases() {
 		// setup the tables
 		
-		
+		setupTable(userTemplateFieldMap,userTemplateFieldTable,TEMPLATE_FIELD_TABLE_TITLE,TemplateField.class);
 		setupTable(userGroupMap,userGroupTable,GROUP_TABLE_TITLE,Group.class);
 		setupTable(userStatusMap,userStatusTable,STATUS_TABLE_TITLE,Status.class);
 		setupTable(userLocationMap,userLocationTable,LOCATION_TABLE_TITLE,Location.class);
 		setupTable(userInventoryCategoryMap,userInventoryCategoryTable,INVENTORY_CATEGORY_TABLE_TITLE,InventoryCategory.class);
 		setupTable(userInventoryMap,userInventoryTable,INVENTORY_TABLE_TITLE,InventoryItem.class);
 		setupTable(userClientMap,userClientTable,CLIENT_TABLE_TITLE,Client.class); // must be added last
+		
 		
 		setupTemplate();
 
