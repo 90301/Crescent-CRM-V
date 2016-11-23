@@ -1,3 +1,6 @@
+/*
+ * (c) 2016 Josh Benton. All Rights Reserved.
+ */
 package clientInfo;
 
 import java.sql.ResultSet;
@@ -10,6 +13,9 @@ import java.util.concurrent.ConcurrentMap;
 
 import dbUtils.MaxDBTable;
 import dbUtils.MaxObject;
+import debugging.Debugging;
+import inventory.InventoryCategory;
+import inventory.InventoryItem;
 
 //TODO: make this extend max object, and have a table of available databases
 public class UserDataHolder extends MaxObject {
@@ -22,6 +28,8 @@ public class UserDataHolder extends MaxObject {
 	private ConcurrentHashMap<String, Location> userLocationMap = new ConcurrentHashMap<String, Location>();
 	private ConcurrentHashMap<String, Status> userStatusMap = new ConcurrentHashMap<String, Status>();
 	private ConcurrentHashMap<String, Group> userGroupMap = new ConcurrentHashMap<String, Group>();
+	private ConcurrentHashMap<String, InventoryItem> userInventoryMap = new ConcurrentHashMap<String, InventoryItem>();
+	private ConcurrentHashMap<String, InventoryCategory> userInventoryCategoryMap = new ConcurrentHashMap<String, InventoryCategory>();
 
 	MaxDBTable userStatusTable;
 	public String STATUS_TABLE_TITLE = "statusTable";
@@ -31,9 +39,13 @@ public class UserDataHolder extends MaxObject {
 	public String GROUP_TABLE_TITLE = "groupsTable";
 	MaxDBTable userClientTable;
 	public String CLIENT_TABLE_TITLE = "clientsTable";
+	MaxDBTable userInventoryTable;
+	public String INVENTORY_TABLE_TITLE = "inventoryTable";
+	MaxDBTable userInventoryCategoryTable;
+	public String INVENTORY_CATEGORY_TABLE_TITLE = "inventoryCategoryTable";
 
-	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup;
-	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup;
+	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
+	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 
 	public Client templateClient;
 
@@ -47,39 +59,34 @@ public class UserDataHolder extends MaxObject {
 
 	public void initalizeDatabases() {
 		// setup the tables
-		userGroupTable = DataHolder.setupDatabaseTable(userGroupTable, databasePrefix + GROUP_TABLE_TITLE,
-				DataHolder.mysqlDatabase, Group.class);
-		userStatusTable = DataHolder.setupDatabaseTable(userStatusTable, databasePrefix + STATUS_TABLE_TITLE,
-				DataHolder.mysqlDatabase, Status.class);
-		userLocationTable = DataHolder.setupDatabaseTable(userLocationTable, databasePrefix + LOCATION_TABLE_TITLE,
-				DataHolder.mysqlDatabase, Location.class);
-		userClientTable = DataHolder.setupDatabaseTable(userClientTable, databasePrefix + CLIENT_TABLE_TITLE,
-				DataHolder.mysqlDatabase, Client.class);
-
-		// load the data
-		loadMaxObjects(userStatusMap, userStatusTable, Status.class);
-		loadMaxObjects(userGroupMap, userGroupTable, Group.class);
-		loadMaxObjects(userLocationMap, userLocationTable, Location.class);
-		loadMaxObjects(userClientMap, userClientTable, Client.class);
-
-		/*
-		 * User Database lookup tables
-		 */
-		localMapLookup = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
-		localMapLookup.put(Client.class, userClientMap);
-		localMapLookup.put(Location.class, userLocationMap);
-		localMapLookup.put(Status.class, userStatusMap);
-		localMapLookup.put(Group.class, userGroupMap);
-
-		tableLookup = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
-		tableLookup.put(Client.class, userClientTable);
-		tableLookup.put(Location.class, userLocationTable);
-		tableLookup.put(Status.class, userStatusTable);
-		tableLookup.put(Group.class, userGroupTable);
 		
+		
+		setupTable(userGroupMap,userGroupTable,GROUP_TABLE_TITLE,Group.class);
+		setupTable(userStatusMap,userStatusTable,STATUS_TABLE_TITLE,Status.class);
+		setupTable(userLocationMap,userLocationTable,LOCATION_TABLE_TITLE,Location.class);
+		setupTable(userInventoryCategoryMap,userInventoryCategoryTable,INVENTORY_CATEGORY_TABLE_TITLE,InventoryCategory.class);
+		setupTable(userInventoryMap,userInventoryTable,INVENTORY_TABLE_TITLE,InventoryItem.class);
+		setupTable(userClientMap,userClientTable,CLIENT_TABLE_TITLE,Client.class); // must be added last
 		
 		setupTemplate();
 
+	}
+	
+	@SuppressWarnings("unchecked")
+	public MaxDBTable setupTable(ConcurrentHashMap<String,? extends MaxObject> userMap, MaxDBTable table, String tableTitle, Class c) {
+		//DEBUG THIS
+		Debugging.output("Setting up table: " + table + " " + tableTitle, Debugging.USER_EDITOR_OUTPUT, Debugging.USER_EDITOR_OUTPUT_ENABLED);
+		
+		
+		table = DataHolder.setupDatabaseTable(table, databasePrefix + tableTitle,
+				DataHolder.mysqlDatabase, c);
+		
+		loadMaxObjects(userMap, table, c);
+		
+		tableLookup.put(c, table);
+		localMapLookup.put(c, userMap);
+		
+		return table;
 	}
 
 	public void setupTemplate() {
@@ -204,6 +211,20 @@ public class UserDataHolder extends MaxObject {
 			}
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends MaxObject> ConcurrentHashMap<String, T> getMap (Class<T> ref) {
+		return (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends MaxObject> Collection<T> getMaxObjects (Class<T> ref) {
+		return (Collection<T>) localMapLookup.get(ref).values();
+		
+	}
+	
+
 
 	/*
 	 * Getters and Setters

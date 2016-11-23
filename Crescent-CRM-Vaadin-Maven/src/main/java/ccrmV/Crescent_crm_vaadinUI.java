@@ -79,7 +79,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	Label clientLastUpdate = new Label("Last Updated: --/--/----");
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
 	ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
-	TextField urlTextField = new TextField("URL: ");
+	//TextField urlTextField = new TextField("URL: ");
 	
 	// filtering
 	HorizontalLayout filterLayout = new HorizontalLayout();
@@ -793,18 +793,6 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createGroupListSelect.addItems(masterUi.userDataHolder.getAllGroups());
 	}
 	
-	//TODO
-	/**
-	 * Adds all the Fields for the Template (URL, Dates, etc.)
-	 */
-	private void genTemplateEditor() {
-		//Check if Template is selected
-		//Have a combo box, textfield and button in horizontal layout
-		//Below that, there needs to be an add button to create a new line
-		//to customize. 
-		
-	}
-	
 	/**
 	 * Adds all the components for the clientEditor
 	 */
@@ -825,7 +813,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientEditorActionLayout.addComponent(clientArchiveButton);
 		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
 		clientEditorActionLayout.addComponent(clientContactFrequency);
-		clientEditorActionLayout.addComponent(urlTextField);
+		//clientEditorActionLayout.addComponent(urlTextField);
 		
 		//holds the client editor
 		//TODO
@@ -833,7 +821,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		
 		clientEditorLayout.addComponent(clientNameLabel);
 		clientEditorLayout.addComponent(clientEditorMetaLayout);
-		clientEditorLayout.addComponent(Template);
+		clientEditorLayout.addComponent(Template.addNewField());
 		clientEditorLayout.addComponent(clientNoteBox);
 		clientEditorLayout.addComponent(clientEditorActionLayout);
 	}

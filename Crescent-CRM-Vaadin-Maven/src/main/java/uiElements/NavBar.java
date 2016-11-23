@@ -1,3 +1,6 @@
+/*
+ * (c) 2016 Josh Benton. All Rights Reserved.
+ */
 package uiElements;
 
 import com.vaadin.ui.Button;
@@ -24,10 +27,11 @@ public class NavBar {
 	Button crmButton;
 	Button userEditorButton;
 	Button schedulerButton;
+	Button inventoryButton;
 	Button logoutButton;
 	Label statusLabel;
 	public static final String BUTTON_WIDTH = "120px";
-	public static final String BUTTON_HEIGHT = "120px";
+	public static final String BUTTON_HEIGHT = "60px";
 	
 	public Layout generateNavBar() {
 		
@@ -46,15 +50,18 @@ public class NavBar {
 		
 		schedulerButton = new Button("Scheduler", event -> this.schedulerClick() );
 		
+		inventoryButton = new Button("Inventory", event -> this.inventoryClick() );
+		
 		logoutButton = new Button("Log Out", event -> this.logoutClick());
 		
 		sidebarLayout.addComponent(statusLabel);
 		sidebarLayout.addComponent(crmButton);
 		sidebarLayout.addComponent(userEditorButton);
 		sidebarLayout.addComponent(schedulerButton);
+		sidebarLayout.addComponent(inventoryButton);
 		sidebarLayout.addComponent(logoutButton);
 		
-		
+		/*
 		crmButton.setWidth(BUTTON_WIDTH);
 		userEditorButton.setWidth(BUTTON_WIDTH);
         schedulerButton.setWidth(BUTTON_WIDTH);
@@ -64,7 +71,12 @@ public class NavBar {
         userEditorButton.setHeight(BUTTON_HEIGHT);
         schedulerButton.setHeight(BUTTON_HEIGHT);
         logoutButton.setHeight(BUTTON_HEIGHT);
-        
+        */
+		setupButton(crmButton);
+		setupButton(userEditorButton);
+		setupButton(schedulerButton);
+		setupButton(inventoryButton);
+		setupButton(logoutButton);
         
 		generatedLayout = true;
 		
@@ -72,6 +84,15 @@ public class NavBar {
 		
 	}
 	
+	public void setupButton(Button b) {
+		b.setWidth(BUTTON_WIDTH);
+        b.setHeight(BUTTON_HEIGHT);
+	}
+	
+	private void inventoryClick() {
+		masterUi.enterInventory();
+	}
+
 	public void updateInfo() {
 		statusLabel.setCaption("" + masterUi.getUser().getPrimaryKey());
 		statusLabel.setValue(masterUi.getUser().getDatabaseSelected());

@@ -1,3 +1,7 @@
+/*
+ * (c) 2016 Josh Benton. All Rights Reserved.
+ */
+
 package ccrmV;
 
 
@@ -15,7 +19,11 @@ import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
+import dbUtils.MaxDB;
+import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import debugging.Debugging;
+import inventory.InventoryItem;
 import uiElements.NavBar;
 import users.User;
 
@@ -27,8 +35,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .81;
-	public static final String versionDescription = " Calender Event Example";
+	public static final double versionNumber = .90;
+	public static final String versionDescription = " Inventory";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -53,18 +61,25 @@ public class MasterUI extends UI {
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
 	public static final String SCHEDULER = "scheduler";
-	
+	public static final String INVENTORY = "inventory";
 	
 	//When DEVELOPER_MODE is set to true, developer settings will be enabled
 	//this includes auto-login, and bypassing certain aspects of the software.
 	//if something breaks because of developer mode, turn developer mode off.
 	//no error checking will be implemented for developer mode, if you don't know
 	//exactly what you are doing with a setting, ask someone who does, or don't enable it.
-	public static final Boolean DEVELOPER_MODE = true;
+	public static final Boolean DEVELOPER_MODE = false;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
 	public static final Boolean DEV_AUTO_LOGIN = true;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
+	public static final Boolean DEV_TEST_CODE = true;
+	
+	//Automatically navigate to a specific page.
+	//This could cause issues when dealing with database initialization
+	public static final Boolean DEV_AUTO_NAVIGATE = false;
+	public static final String DEV_AUTO_NAVIGATE_PAGE = INVENTORY;
+	
 	
 	
 	public boolean loggedIn = false;
@@ -75,6 +90,7 @@ public class MasterUI extends UI {
 	UserEditor userEditor = new UserEditor();
 	SchedulerView schedulerView = new SchedulerView();
 	LoginView loginView = new LoginView();
+	InventoryView inventoryView = new InventoryView();
 	User user = null;//logged in user
 	
 	
@@ -105,8 +121,11 @@ public class MasterUI extends UI {
 		userEditor.masterUi = this;
 		userEditor.navBar = navBar;
 		
-		schedulerView.MasterUi = this;
+		schedulerView.masterUi = this;
 		schedulerView.navBar = navBar;
+		
+		inventoryView.masterUi = this;
+		inventoryView.navBar = navBar;
 		
 		
 		if (authenicatedHosts.contains(userHost)) {
@@ -116,6 +135,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		mainNavigator.addView(SCHEDULER, schedulerView);
+		mainNavigator.addView(INVENTORY, inventoryView);
 		
 		enterLogin();
 		
@@ -125,6 +145,12 @@ public class MasterUI extends UI {
 		
 		//Debug unit testing
 		Debugging.debugUnitTesting();
+		devTestCode();
+		
+		//dev switch page
+		if (DEVELOPER_MODE && DEV_AUTO_NAVIGATE) {
+			mainNavigator.navigateTo(DEV_AUTO_NAVIGATE_PAGE);
+		}
 		
 	}
 
@@ -141,6 +167,7 @@ public class MasterUI extends UI {
 		mainNavigator.navigateTo(MAIN_APP);
 		mainApp.updateClientTable();
 		mainApp.updateCreationLists();
+		mainApp.fillAllComboBoxes();
 	}
 	
 	public void enterUserEditor() {
@@ -167,7 +194,7 @@ public class MasterUI extends UI {
 	}
 
 	/**
-	 * NO ERROR CHECKING done in this methood yet.
+	 * NO ERROR CHECKING done in this method yet.
 	 * sets the user data holder to the given userDataHolder name.
 	 * @param databaseName - the user data holder to select
 	 */
@@ -176,6 +203,52 @@ public class MasterUI extends UI {
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
 		DataHolder.store(this.user,User.class);
+	}
+
+	public void enterInventory() {
+		mainNavigator.navigateTo(INVENTORY);
+		
+	}
+	
+	/**
+	 * This method can be used to test things when in developer mode and dev test code
+	 * are set to true
+	 */
+	public void devTestCode() {
+		
+		if (DEVELOPER_MODE && DEV_TEST_CODE) {
+			
+			Debugging.output("BEGIN DevTestCode. "
+					, Debugging.MASTER_UI_TESTING_OUTPUT
+					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
+			//inventory unit testing
+			
+			UserDataHolder udhTest = new UserDataHolder();
+			udhTest.setDatabasePrefix("test");
+			udhTest.initalizeDatabases();
+			DataHolder.store(udhTest, UserDataHolder.class);
+			
+			InventoryItem invItem = new InventoryItem();
+			invItem.setItemKey("RR2016");
+			invItem.setItemName("7RR red dye");
+			invItem.setItemCategory("Dye");
+			invItem.setItemBarcode("0000001");
+			invItem.setItemURL("www.google.com");
+			invItem.setItemStock(12);
+			invItem.setItemReorderPoint(6);
+			
+			Debugging.output("Created Inventory Item: " + invItem
+					, Debugging.MASTER_UI_TESTING_OUTPUT
+					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
+			udhTest.store(invItem, InventoryItem.class);
+			
+			
+			Debugging.output("Stored Inventory Item. " + invItem.debugOutput()
+					, Debugging.MASTER_UI_TESTING_OUTPUT
+					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+		}
 	}
 
 }

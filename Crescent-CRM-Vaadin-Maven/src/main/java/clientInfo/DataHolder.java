@@ -1,3 +1,6 @@
+/*
+ * (c) 2016 Josh Benton. All Rights Reserved.
+ */
 package clientInfo;
 
 import java.sql.ResultSet;
@@ -36,6 +39,8 @@ public class DataHolder {
 	private static ConcurrentHashMap<String, User> localUserMap = new ConcurrentHashMap<String, User>();
 	private static ConcurrentHashMap<String, UserDataHolder> userDataHolderMap = new ConcurrentHashMap<String,UserDataHolder>();
 	
+	private static ConcurrentHashMap<String, ScheduleEvent> localScheduleEventMap = new ConcurrentHashMap<String, ScheduleEvent>();
+	
 	
 	static final boolean writeCredentials = false;
 	static final String credentialsFile = "credentials.dat";
@@ -52,10 +57,10 @@ public class DataHolder {
 	static MaxDB mysqlDatabase;
 
 	//Persistant (user table)
-	static MaxDBTable userTable,userDataHolderTable;
+	static MaxDBTable userTable,userDataHolderTable, scheduleEventTable;
 	public static String USER_TABLE_TITLE = "usersTable";
 	public static String USER_DATA_HOLDER_TABLE_TITLE = "userDataHolderTable";
-	
+	public static String SCHEDULE_EVENT_TABLE_TITLE = "scheduleEventTable";
 	
 	static ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup;
 	static ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup;
@@ -87,11 +92,12 @@ public class DataHolder {
 
 		userTable = setupDatabaseTable(userTable, USER_TABLE_TITLE, mysqlDatabase, User.class);
 		userDataHolderTable = setupDatabaseTable(userDataHolderTable, USER_DATA_HOLDER_TABLE_TITLE, mysqlDatabase, UserDataHolder.class);
+		scheduleEventTable = setupDatabaseTable(scheduleEventTable, SCHEDULE_EVENT_TABLE_TITLE, mysqlDatabase, ScheduleEvent.class);
 		
 
 		loadMaxObjects(localUserMap, userTable, User.class);
 		loadMaxObjects(userDataHolderMap, userDataHolderTable, UserDataHolder.class);
-		
+		loadMaxObjects(localScheduleEventMap , scheduleEventTable, ScheduleEvent.class);
 		
 		// BACKUP all data to a CSV file
 		backupAllCsv();
@@ -103,11 +109,13 @@ public class DataHolder {
 
 		localMapLookup.put(User.class, localUserMap);
 		localMapLookup.put(UserDataHolder.class, userDataHolderMap);
+		localMapLookup.put(ScheduleEvent.class, localScheduleEventMap);
 
 		tableLookup = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 
 		tableLookup.put(User.class, userTable);
 		tableLookup.put(UserDataHolder.class, userDataHolderTable);
+		tableLookup.put(ScheduleEvent.class, scheduleEventTable);
 		// OUTPUT GENERIC Maps
 
 		System.out.println("CREATED LOCAL LOOKUPS" + "\n" + localMapLookup + "\n" + tableLookup);
