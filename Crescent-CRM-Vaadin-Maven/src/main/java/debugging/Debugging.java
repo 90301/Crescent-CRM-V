@@ -106,9 +106,13 @@ public class Debugging {
 	public static final String INVENTORY_VIEW_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean INVENTORY_VIEW_OUTPUT_ENABLED = true;
 
-	// Inventory View Debugging
+	// Inhaler Utils Debugging
 	public static final String INHALER_UTILS_DEBUG = CONSOLE_OUTPUT;
 	public static final Boolean INHALER_UTILS_DEBUG_ENABLED = true;
+
+	//Client Field Debuggin
+	public static final String CLIENT_FIELD_DEBUGGING = CONSOLE_ERROR_OUTPUT;
+	public static final Boolean CLIENT_FIELD_DEBUGGING_ENABLED = true;
 
 	public static void output(String output, String method, Boolean enabled) {
 		if (DEV_MODE) {

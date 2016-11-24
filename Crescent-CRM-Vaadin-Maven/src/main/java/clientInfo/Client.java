@@ -3,6 +3,7 @@
  */
 package clientInfo;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +24,10 @@ public class Client extends MaxObject {
 	private Boolean mutex = false;//Do not update internal db if true
 	//Dates
 	private java.util.Date lastUpdated = new Date(); public static final String lastUpdatedField = "lastUpdated";
+	//CUSTOM FIELDS
+	private Map<String,ClientField> clientFields = new HashMap<String,ClientField>();
+	
+	
 	
 	//private UserDataHolder userDataHolder;
 	/*
@@ -272,7 +277,6 @@ public class Client extends MaxObject {
 	public Boolean getContactNow() {
 		return contactNow;
 	}
-
 	
 
 }
