@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxObject;
 
@@ -25,6 +26,7 @@ public class Client extends MaxObject {
 	//Dates
 	private java.util.Date lastUpdated = new Date(); public static final String lastUpdatedField = "lastUpdated";
 	//CUSTOM FIELDS
+	
 	private Map<String,ClientField> clientFields = new HashMap<String,ClientField>();
 	
 	
@@ -135,8 +137,43 @@ public class Client extends MaxObject {
 		table.createTable();
 	}
 	
+	//----[ Custom Fields ] -------------------------------------------------------------------
 	
+	/**
+	 * Generates xml to serialize the custom fields
+	 * 
+	 * @return
+	 */
+	public String genFieldXml() {
+		String xml = "";
+		
+		//Convert to a map of strings
+		HashMap<String,String> tempMap = new HashMap<String,String>();
+		
+		for (ClientField cf : clientFields.values()) {
+			tempMap.put(cf.getFieldName(), cf.getStringFieldValue());
+		}
+		
+		xml = InhalerUtils.mapToXML(tempMap);
+				
+		return xml;
+	}
 	
+	/**
+	 * Loads custom fields from the xml data.
+	 * @param xml
+	 */
+	public void loadCustomFields(String xml) {
+		
+		HashMap<String,String> tempMap = new HashMap<String,String>();
+		
+		tempMap = InhalerUtils.xmlToMap(xml);
+		//TODO finish this method
+		
+		
+		
+		
+	}
 	
 	public Location getLocation() {
 		return location;
@@ -158,12 +195,7 @@ public class Client extends MaxObject {
 		updateDBMap();
 		System.out.println("Last updated: " + lastUpdated);
 	}
-	/*
-	public long getUsableLastUpdated() {
-		return this.lastUpdated * DATE_MULTIPLIER;
-	}
-	*/
-	//public static final Long DATE_MULTIPLIER = 100000L;
+
 	
 	public String getLocationName() {
 		String locName = null; 

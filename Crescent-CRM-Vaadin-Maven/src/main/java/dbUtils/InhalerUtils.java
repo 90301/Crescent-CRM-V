@@ -195,6 +195,17 @@ public class InhalerUtils {
 	}
 	
 	/**
+	 * Converts xml to a simple map
+	 * to be used in conjection with mapToXML
+	 * @param xml- the xml to convert
+	 * @return
+	 */
+	public static HashMap<String, String> xmlToMap(String xml) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	/**
 	 * Converts a map into a serial map
 	 * using the toString function of each object
 	 * @param inputMap
@@ -228,5 +239,8 @@ public class InhalerUtils {
 		System.out.println("Tested: " + testingString + " Null?: " + rtrn);
 		return rtrn;
 	}
+
+
+
 	
 }

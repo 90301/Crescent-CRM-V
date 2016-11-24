@@ -97,6 +97,17 @@ public class ClientField {
 		typeCheck();
 		return fieldValue;
 	}
+	
+	/**
+	 * String representation return of the data.
+	 * Special cases for data not yet implemented.
+	 * @return
+	 */
+	public String getStringFieldValue() {
+		//TODO date support
+		return fieldValue.toString();
+		
+	}
 
 	@SuppressWarnings("unused")
 	public void setFieldValue(Object fieldValue) {

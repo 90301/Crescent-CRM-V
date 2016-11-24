@@ -18,15 +18,35 @@ public class TemplateField extends MaxObject{
 	MaxField<String> fieldName = new MaxField<String>("fieldName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	MaxField<String> dataType = new MaxField<String>("dataType", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	MaxField<String> defaultValue = new MaxField<String>("defaultValue", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
+	MaxField<Integer> fieldPosition = new MaxField<Integer>("defaultValue", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0, this);
 	
+	
+
+
 	{
 		this.addMaxField(fieldName);
 		this.addMaxField(dataType);
 		this.addMaxField(defaultValue);
+		this.addMaxField(fieldPosition);
 	}
 	
 	public TemplateField() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public void genDefaultValue() {
+		// TODO Auto-generated method stub
+		//Edit if you need to add more default values
+		if (this.getDataType() == DATA_TYPE_DATE){
+			
+		} else if(this.getDataType() == DATA_TYPE_NUMBER){
+			
+			this.setDefaultValue("0");
+			
+		}  else if(this.getDataType() == DATA_TYPE_TEXT){
+			
+			this.setDefaultValue("");
+		}
 	}
 
 	@Override
@@ -86,21 +106,16 @@ public class TemplateField extends MaxObject{
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue.setFieldValue(defaultValue);
 	}
-
-	public void genDefaultValue() {
-		// TODO Auto-generated method stub
-		//Edit if you need to add more default values
-		if(this.getDataType() == DATA_TYPE_DATE){
-			
-		} else if(this.getDataType() == DATA_TYPE_NUMBER){
-			
-			this.setDefaultValue("0");
-			
-		}  else if(this.getDataType() == DATA_TYPE_TEXT){
-			
-			this.setDefaultValue("");
-		}
+	
+	public Integer getFieldPosition() {
+		return fieldPosition.getFieldValue();
 	}
+
+	public void setFieldPosition(Integer fieldPosition) {
+		this.fieldPosition.setFieldValue(fieldPosition);
+	}
+
+
 
 
 }
