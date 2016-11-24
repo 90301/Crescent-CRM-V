@@ -133,7 +133,13 @@ public class InhalerUtils {
 	}
 	*/
 	
-	
+	/**
+	 * Converts a simple map into an xml document.
+	 * For more complicated data-structures this can be used as a guide
+	 * for writing the XML document.
+	 * @param map
+	 * @return
+	 */
 	public static String mapToXML(Map<String,String> map) {
 		String xml = "";
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -154,6 +160,9 @@ public class InhalerUtils {
 			
 		}
 		
+		/*
+		 * Convert the XML class into a String
+		 */
 		
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
