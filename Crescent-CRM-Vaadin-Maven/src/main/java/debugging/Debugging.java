@@ -13,95 +13,104 @@ import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
 
-
 import ccrmV.MasterUI;
 
 /**
  * This class is how we will handle debugging.
  * 
- * It will contain various methods / constants
- * that are intended to help with debugging and
- * reduce the amount of console spam.
+ * It will contain various methods / constants that are intended to help with
+ * debugging and reduce the amount of console spam.
  * 
- * toggle debug info by switching constants on and off.
- * Write to special log files if that is helpful.
+ * toggle debug info by switching constants on and off. Write to special log
+ * files if that is helpful.
+ * 
  * @author Josh Benton
  *
  */
 public class Debugging {
-	
+
 	/*
 	 * ALL DEBUGGING IS TURNED OFF WHEN NOT IN DEV MODE
 	 */
 	public static final Boolean DEV_MODE = MasterUI.DEVELOPER_MODE;
 	public static final boolean OUTPUT_EVERYTHING = false;
-	public static final Boolean ENABLE_GUI_DEBUGGING = false; //hard switch for GUI debugging
-	
-	
-	//Output forms
-	public static final String CONSOLE_OUTPUT = "Console";//simple console output
+	public static final Boolean ENABLE_GUI_DEBUGGING = false; // hard switch for
+																// GUI debugging
+
+	// Output forms
+	public static final String CONSOLE_OUTPUT = "Console";// simple console
+															// output
 	public static final String CONSOLE_ERROR_OUTPUT = "Error";
-		
-	public static final String FILE_OUTPUT = "FILE:";//<< Expecting a file path after this, if none found, default to DEFAULT_FILE_LOCATION 
-	
+
+	public static final String FILE_OUTPUT = "FILE:";// << Expecting a file path
+														// after this, if none
+														// found, default to
+														// DEFAULT_FILE_LOCATION
+
 	public static final String DEFAULT_FILE_LOCATION = "./defaultOutput.txt";
 	public static final String HOME_DIRECTORY = System.getProperty("user.home");
-	//important paths
-	//System.getProperty("user.home")
-	
-	
-	
-	public static final String GUI_OUTPUT = "GUI:";//May Require additional arguments, GUI DEBUGGING NOT IMPLEMENTED YET
-	
-	public static final String VAADIN_OUTPUT = "Vaadin:";//may require additional arguments NOT IMPLEMENTED YET
+	// important paths
+	// System.getProperty("user.home")
 
-	
-	//output variables
-	
-	//output errors related to writing debug files
+	public static final String GUI_OUTPUT = "GUI:";// May Require additional
+													// arguments, GUI DEBUGGING
+													// NOT IMPLEMENTED YET
+
+	public static final String VAADIN_OUTPUT = "Vaadin:";// may require
+															// additional
+															// arguments NOT
+															// IMPLEMENTED YET
+
+	// output variables
+
+	// output errors related to writing debug files
 	private static final String FILE_OUT_ERROR_METHOD = CONSOLE_ERROR_OUTPUT;
 	private static final Boolean FILE_OUT_ERROR_ENABLED = true;
-	//DO NOT MAKE THIS A FILE OUTPUT, it will infinite loop.
+	// DO NOT MAKE THIS A FILE OUTPUT, it will infinite loop.
 	private static final String FILE_OUT_SUCCESS_METHOD = CONSOLE_OUTPUT;
 	private static final Boolean FILE_OUT_SUCCESS_ENABLED = true;
-	
-	
-	//ensure the debug functions work
-	//the static method must be called to actually test, this just suppresses output.
+
+	// ensure the debug functions work
+	// the static method must be called to actually test, this just suppresses
+	// output.
 	private static final Boolean DEBUG_UNIT_TESTING = false;
 	private static final String DEBUG_UNIT_CUSTOM_FILE_OUT = FILE_OUTPUT + HOME_DIRECTORY + "/homeOutputTest.txt";
-	private static final String DEBUG_UNIT_CUSTOM_DIRECTORY_OUT = FILE_OUTPUT + HOME_DIRECTORY + "/debugDir/debugDirOutputTest.txt";
-	
-	//USER EDITOR DEBUGGING
+	private static final String DEBUG_UNIT_CUSTOM_DIRECTORY_OUT = FILE_OUTPUT + HOME_DIRECTORY
+			+ "/debugDir/debugDirOutputTest.txt";
+
+	// USER EDITOR DEBUGGING
 	public static final String USER_EDITOR_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean USER_EDITOR_OUTPUT_ENABLED = true;
 
-	//CRM Debugging
+	// CRM Debugging
 	public static final String CRM_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean CRM_OUTPUT_ENABLED = true;
-	
-	
-	//Max Object Debugging
+
+	// Max Object Debugging
 	public static final String MAX_OBJECT_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean MAX_OBJECT_OUTPUT_ENABLED = true;
-	
-	//Schedule Event Debugging
+
+	// Schedule Event Debugging
 	public static final String SCHEDULE_EVENT_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean SCHEDULE_EVENT_OUTPUT_ENABLED = true;
-	
-	//MASTER UI TESTING
+
+	// MASTER UI TESTING
 	public static final String MASTER_UI_TESTING_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean MASTER_UI_TESTING_OUTPUT_ENABLED = true;
-	
-	//Inventory Item Debug
-		public static final String INVENTORY_OUTPUT = CONSOLE_OUTPUT;
-		public static final Boolean INVENTORY_OUTPUT_ENABLED = true;
-		
-		//Inventory View Debugging
-		public static final String INVENTORY_VIEW_OUTPUT = CONSOLE_OUTPUT;
-		public static final Boolean INVENTORY_VIEW_OUTPUT_ENABLED = true;
-	
-	public static void output(String output,String method,Boolean enabled) {
+
+	// Inventory Item Debug
+	public static final String INVENTORY_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean INVENTORY_OUTPUT_ENABLED = true;
+
+	// Inventory View Debugging
+	public static final String INVENTORY_VIEW_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean INVENTORY_VIEW_OUTPUT_ENABLED = true;
+
+	// Inventory View Debugging
+	public static final String INHALER_UTILS_DEBUG = CONSOLE_OUTPUT;
+	public static final Boolean INHALER_UTILS_DEBUG_ENABLED = true;
+
+	public static void output(String output, String method, Boolean enabled) {
 		if (DEV_MODE) {
 			if (OUTPUT_EVERYTHING || enabled) {
 				if (method.equals(CONSOLE_OUTPUT)) {
@@ -109,61 +118,60 @@ public class Debugging {
 				} else if (method.equals(CONSOLE_ERROR_OUTPUT)) {
 					System.err.println(output);
 				} else if (method.contains(FILE_OUTPUT)) {
-					//file output
-					
-					//parse the file location
+					// file output
+
+					// parse the file location
 					String fileLocation = method.replace(FILE_OUTPUT, "");
-					
-					//if no file is specified, use the default file
+
+					// if no file is specified, use the default file
 					if (fileLocation.equals("")) {
 						fileLocation = DEFAULT_FILE_LOCATION;
 					}
-					
-					
-					fileOutput(output,fileLocation);
-					
-					
+
+					fileOutput(output, fileLocation);
+
 				} else if (method.contains(GUI_OUTPUT)) {
-					
+
 				} else if (method.contains(VAADIN_OUTPUT)) {
-					
+
 				}
 			}
-		}//end dev mode check
+		} // end dev mode check
 	}
-	
-	public static void fileOutput(String output,String filePath) {
+
+	public static void fileOutput(String output, String filePath) {
 		Path file = Paths.get(filePath);
-		
-		List<String> lines =  Arrays.asList(output.split("\n"));
+
+		List<String> lines = Arrays.asList(output.split("\n"));
 		try {
-			//File createDirFile = new File(file);
+			// File createDirFile = new File(file);
 			Files.createDirectories(file.getParent());
-			Files.write(file, lines, Charset.forName("UTF-8"),StandardOpenOption.CREATE,StandardOpenOption.APPEND);
-			output("Wrote debug file: " + filePath,FILE_OUT_SUCCESS_METHOD,FILE_OUT_SUCCESS_ENABLED);
+			Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+			output("Wrote debug file: " + filePath, FILE_OUT_SUCCESS_METHOD, FILE_OUT_SUCCESS_ENABLED);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			
-			output("Failed to write file: " + filePath,FILE_OUT_ERROR_METHOD,FILE_OUT_ERROR_ENABLED);
+
+			output("Failed to write file: " + filePath, FILE_OUT_ERROR_METHOD, FILE_OUT_ERROR_ENABLED);
 			e.printStackTrace();
 		}
-		//Files.write(file, lines, Charset.forName("UTF-8"), StandardOpenOption.APPEND);
+		// Files.write(file, lines, Charset.forName("UTF-8"),
+		// StandardOpenOption.APPEND);
 	}
-	
+
 	/**
 	 * Tests the debug methods to ensure they will work
 	 */
 	public static void debugUnitTesting() {
-		//Test console output
-		output("Console out test",CONSOLE_OUTPUT,DEBUG_UNIT_TESTING);
-		output("Console error test",CONSOLE_ERROR_OUTPUT,DEBUG_UNIT_TESTING);
-		//default file output
+		// Test console output
+		output("Console out test", CONSOLE_OUTPUT, DEBUG_UNIT_TESTING);
+		output("Console error test", CONSOLE_ERROR_OUTPUT, DEBUG_UNIT_TESTING);
+		// default file output
 		output("Test File Output", FILE_OUTPUT, DEBUG_UNIT_TESTING);
-		//append file output test
+		// append file output test
 		output("Appending to a file", FILE_OUTPUT, DEBUG_UNIT_TESTING);
-		//create a file in the users home directory
+		// create a file in the users home directory
 		output("Created a file in the users directory", DEBUG_UNIT_CUSTOM_FILE_OUT, DEBUG_UNIT_TESTING);
-		//try creating a directory
+		// try creating a directory
 		output("Created a file in the users custom directory", DEBUG_UNIT_CUSTOM_DIRECTORY_OUT, DEBUG_UNIT_TESTING);
 	}
 }

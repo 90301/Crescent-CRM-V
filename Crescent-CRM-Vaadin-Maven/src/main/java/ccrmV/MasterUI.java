@@ -6,6 +6,7 @@ package ccrmV;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -19,6 +20,7 @@ import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
+import dbUtils.InhalerUtils;
 import dbUtils.MaxDB;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
@@ -35,8 +37,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .90;
-	public static final String versionDescription = " Inventory";
+	public static final double versionNumber = .91;
+	public static final String versionDescription = " Custom Field Storage";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -248,6 +250,16 @@ public class MasterUI extends UI {
 			Debugging.output("Stored Inventory Item. " + invItem.debugOutput()
 					, Debugging.MASTER_UI_TESTING_OUTPUT
 					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
+			
+			//TESTING INHALER UTILS
+			
+			HashMap<String,String> map = new HashMap<String,String>();
+			map.put("Key1", "value1");
+			map.put("KEY2", "Value2");
+			
+			String xml= InhalerUtils.mapToXML(map);
+			
 		}
 	}
 
