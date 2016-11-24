@@ -3,6 +3,7 @@
  */
 package dbUtils;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -116,7 +118,7 @@ public class InhalerUtils {
 		return csv;
 		
 	}
-	
+	/*
 	public static Map<String,String>csvToMap(String csv) {
 		HashMap<String,String> map = new HashMap<String,String>();
 		//TODO IMPLEMENT THIS
@@ -129,6 +131,8 @@ public class InhalerUtils {
 		
 		return csv;
 	}
+	*/
+	
 	
 	public static String mapToXML(Map<String,String> map) {
 		String xml = "";
@@ -142,9 +146,9 @@ public class InhalerUtils {
 		doc.appendChild(rootElement);
 		
 		for (String key : map.keySet()) {
-			//Element child = doc.createElement(key);
-			Attr child = doc.createAttribute(key);
-			child.setNodeValue(map.get(key));
+			Element child = doc.createElement(key);
+			//Attr child = doc.createAttribute(key);
+			child.appendChild(doc.createTextNode(map.get(key)));
 			
 			rootElement.appendChild(child);
 			
@@ -154,26 +158,30 @@ public class InhalerUtils {
 		
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
+		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        
 		DOMSource source = new DOMSource(doc);
 		
-		StreamResult result = new StreamResult(xml);
-
+		StringWriter sw = new StringWriter();
+		StreamResult result = new StreamResult(sw);
+		
 
 		transformer.transform(source, result);
-
+		
+		xml = sw.toString();
 		Debugging.output("Created XML: " + xml, Debugging.INHALER_UTILS_DEBUG, Debugging.INHALER_UTILS_DEBUG_ENABLED);
 
 		
 			} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
+		} catch (TransformerException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			}
 		return xml;
 	}
 	
