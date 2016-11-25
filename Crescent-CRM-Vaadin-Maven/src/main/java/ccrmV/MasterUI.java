@@ -18,7 +18,9 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
+import clientInfo.Client;
 import clientInfo.DataHolder;
+import clientInfo.TemplateField;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxDB;
@@ -261,6 +263,21 @@ public class MasterUI extends UI {
 			String xml= InhalerUtils.mapToXML(map);
 			
 			HashMap<String, String> map2 = InhalerUtils.xmlToMap(xml);
+			
+			TemplateField tf = new TemplateField();
+			tf.setDataType(TemplateField.DATA_TYPE_TEXT);
+			tf.setDefaultValue("Default");
+			tf.setFieldName("Custom-Field1");
+			tf.setUserDataHolder(udhTest);
+			udhTest.store(tf, TemplateField.class);
+			
+			Client testClient1 = new Client();
+			testClient1.setUserDataHolder(udhTest);
+			
+			testClient1.setName("robot9000");
+			testClient1.setupCustomFieldsFromTemplate();
+			
+			udhTest.store(testClient1, Client.class);
 		}
 	}
 

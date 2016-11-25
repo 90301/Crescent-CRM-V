@@ -28,7 +28,7 @@ public class Client extends MaxObject {
 	//CUSTOM FIELDS
 	
 	private Map<String,ClientField> clientFields = new HashMap<String,ClientField>();
-	
+	public static final String clientFieldsField = "clientFields";
 	
 	
 	//private UserDataHolder userDataHolder;
@@ -75,6 +75,11 @@ public class Client extends MaxObject {
 		*/
 		lastUpdated = safeLoadFromInternalMap(lastUpdatedField, new Date());
 		contactNow = safeLoadFromInternalMap(contactNowField, false);
+		
+		String clientXML = safeLoadFromInternalMap(clientFieldsField, "");
+		loadCustomFields(clientXML);
+		
+		
 		mutex = false;
 	}
 	
@@ -94,6 +99,8 @@ public class Client extends MaxObject {
 			this.dbMap.put(idField,this.id);
 			this.dbMap.put(lastUpdatedField, this.lastUpdated);
 			this.dbMap.put(contactNowField, this.contactNow);
+			
+			this.dbMap.put(clientFieldsField, this.genFieldXml());
 		}
 		
 	}
@@ -120,6 +127,8 @@ public class Client extends MaxObject {
 			dbDatatypes.put(idField, String.class);
 			dbDatatypes.put(lastUpdatedField, java.util.Date.class);
 			dbDatatypes.put(contactNowField, Boolean.class);
+			
+			dbDatatypes.put(clientFieldsField, String.class);
 		
 	}
 	
@@ -133,6 +142,9 @@ public class Client extends MaxObject {
 		table.addDatatype(locationField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
 		table.addDatatype(lastUpdatedField, MaxDBTable.DATA_MYSQL_TYPE_DATE_TIME);
 		table.addDatatype(contactNowField, MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN);
+		
+		table.addDatatype(clientFieldsField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
+		
 		table.setPrimaryKeyName(nameField);
 		table.createTable();
 	}
@@ -169,10 +181,61 @@ public class Client extends MaxObject {
 		
 		tempMap = InhalerUtils.xmlToMap(xml);
 		//TODO finish this method
-		
-		
-		
-		
+		for (String key : tempMap.keySet()) {
+			
+			String value = tempMap.get(key);
+			//create a new client field
+			ClientField cf = new ClientField();
+			cf.setUserDataHolder(userDataHolder);
+			
+			//Check to see if a template field of the same name exists
+			
+			TemplateField tf = userDataHolder.getMap(TemplateField.class).get(key);
+			
+			if (tf!=null) {
+				cf.setCurrentDataType(tf.getDataType());
+				cf.setFieldName(key);
+				cf.setFieldValue(value);
+				
+				clientFields.put(key, cf);
+			}
+
+		}
+	
+	}
+	
+	public void setupCustomFieldsFromTemplate() {
+		for (String key : userDataHolder.getMap(TemplateField.class).keySet()) {
+			
+			
+			
+			if (clientFields.containsKey(key)) {
+				ClientField cf = this.clientFields.get(key);
+				
+				cf.setUserDataHolder(userDataHolder);
+				
+				cf.typeCheck();
+				
+			} else {
+				//add the field if it doesn't exist
+				
+				ClientField cf = new ClientField();
+				cf.setUserDataHolder(userDataHolder);
+				
+				//Check to see if a template field of the same name exists
+				
+				TemplateField tf = userDataHolder.getMap(TemplateField.class).get(key);
+				
+				if (tf!=null) {
+					cf.setCurrentDataType(tf.getDataType());
+					cf.setFieldName(key);
+					cf.setFieldValue(tf.getDefaultValue());
+					
+					clientFields.put(key, cf);
+				}
+
+			}
+		}
 	}
 	
 	public Location getLocation() {

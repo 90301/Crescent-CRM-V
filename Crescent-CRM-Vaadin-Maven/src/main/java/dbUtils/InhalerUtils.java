@@ -158,6 +158,13 @@ public class InhalerUtils {
 			doc.appendChild(rootElement);
 
 			for (String key : map.keySet()) {
+				
+				Debugging.output("Writing (key): " + key, Debugging.INHALER_UTILS_DEBUG,
+						Debugging.INHALER_UTILS_DEBUG_ENABLED);
+				
+				Debugging.output("Writing (Value): " + map.get(key), Debugging.INHALER_UTILS_DEBUG,
+						Debugging.INHALER_UTILS_DEBUG_ENABLED);
+				
 				Element child = doc.createElement(key);
 				// Attr child = doc.createAttribute(key);
 				child.appendChild(doc.createTextNode(map.get(key)));

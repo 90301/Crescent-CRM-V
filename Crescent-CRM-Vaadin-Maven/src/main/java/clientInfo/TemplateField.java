@@ -18,7 +18,7 @@ public class TemplateField extends MaxObject{
 	MaxField<String> fieldName = new MaxField<String>("fieldName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	MaxField<String> dataType = new MaxField<String>("dataType", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
 	MaxField<String> defaultValue = new MaxField<String>("defaultValue", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
-	MaxField<Integer> fieldPosition = new MaxField<Integer>("defaultValue", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0, this);
+	MaxField<Integer> fieldPosition = new MaxField<Integer>("fieldPos", MaxDBTable.DATA_MYSQL_TYPE_INT, 0, 0, this);
 	
 	
 

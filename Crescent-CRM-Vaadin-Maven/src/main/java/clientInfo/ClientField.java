@@ -21,7 +21,8 @@ public class ClientField {
 	 */
 	
 	//fieldName, Value
-	public MasterUI masterUi;
+	//public MasterUI masterUi;
+	UserDataHolder userDataHolder;
 	private String fieldName = "";
 	private String currentDataType = "";
 	//To be used for the purpose of determining if the datatype changed
@@ -40,11 +41,11 @@ public class ClientField {
 	 */
 	public void typeCheck() {
 		//ensures the master ui and field names are set up.
-		if (this.masterUi != null && fieldName !="") {
+		if (this.userDataHolder != null && fieldName !="") {
 			//Ensure there is a template field with the same name as this field
-			if (masterUi.userDataHolder.getMap(TemplateField.class).contains(fieldName)) {
+			if (userDataHolder.getMap(TemplateField.class).contains(fieldName)) {
 			
-			TemplateField masterTemplateField = masterUi.userDataHolder.getMap(TemplateField.class).get(fieldName);
+			TemplateField masterTemplateField = userDataHolder.getMap(TemplateField.class).get(fieldName);
 			
 			if (this.currentDataType != masterTemplateField.getDataType()) {
 				String oldDataType = this.currentDataType;
@@ -59,7 +60,7 @@ public class ClientField {
 			}
 			
 		} else {
-			Debugging.output("Client Field improperly initalized: MasterUI: " + masterUi + " fieldName: " + this.fieldName,
+			Debugging.output("Client Field improperly initalized: user data holder: " + userDataHolder + " fieldName: " + this.fieldName,
 					Debugging.CLIENT_FIELD_DEBUGGING, Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
 		}
 	}
@@ -130,13 +131,15 @@ public class ClientField {
 		
 		this.fieldValue = fieldValue;
 	}
+	
+	
 
-	public MasterUI getMasterUi() {
-		return masterUi;
+	public UserDataHolder getUserDataHolder() {
+		return userDataHolder;
 	}
 
-	public void setMasterUi(MasterUI masterUi) {
-		this.masterUi = masterUi;
+	public void setUserDataHolder(UserDataHolder userDataHolder) {
+		this.userDataHolder = userDataHolder;
 	}
 
 	public String getFieldName() {
