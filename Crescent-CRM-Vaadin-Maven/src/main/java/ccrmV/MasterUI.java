@@ -260,6 +260,7 @@ public class MasterUI extends UI {
 			
 			String xml= InhalerUtils.mapToXML(map);
 			
+			HashMap<String, String> map2 = InhalerUtils.xmlToMap(xml);
 		}
 	}
 
