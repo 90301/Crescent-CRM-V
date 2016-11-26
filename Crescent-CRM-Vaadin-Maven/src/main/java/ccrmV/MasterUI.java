@@ -282,6 +282,13 @@ public class MasterUI extends UI {
 			testClient1.setCustomFieldValue(customField1, "Grimes!");
 			
 			udhTest.store(testClient1, Client.class);
+			
+			String customField1Output = (String) testClient1.getCustomFieldValue(customField1);
+			
+			Debugging.output("Custom Field Output: " + customField1Output
+			, Debugging.MASTER_UI_TESTING_OUTPUT
+			, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
 		}
 	}
 
