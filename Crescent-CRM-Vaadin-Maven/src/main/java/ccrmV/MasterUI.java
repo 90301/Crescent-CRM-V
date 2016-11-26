@@ -262,12 +262,14 @@ public class MasterUI extends UI {
 			
 			String xml= InhalerUtils.mapToXML(map);
 			
+			String customField1 = "Custom-Field1";
+			
 			HashMap<String, String> map2 = InhalerUtils.xmlToMap(xml);
 			
 			TemplateField tf = new TemplateField();
 			tf.setDataType(TemplateField.DATA_TYPE_TEXT);
 			tf.setDefaultValue("Default");
-			tf.setFieldName("Custom-Field1");
+			tf.setFieldName(customField1);
 			tf.setUserDataHolder(udhTest);
 			udhTest.store(tf, TemplateField.class);
 			
@@ -276,6 +278,8 @@ public class MasterUI extends UI {
 			
 			testClient1.setName("robot9000");
 			testClient1.setupCustomFieldsFromTemplate();
+			
+			testClient1.setCustomFieldValue(customField1, "Grimes!");
 			
 			udhTest.store(testClient1, Client.class);
 		}

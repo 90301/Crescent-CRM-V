@@ -11,6 +11,7 @@ import java.util.Map;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxObject;
+import debugging.Debugging;
 
 public class Client extends MaxObject {
 
@@ -245,21 +246,34 @@ public class Client extends MaxObject {
 	}
 
 	public void setCustomFieldValue(String fieldName, Object fieldValue) {
+
+		Debugging.output("Setting custom field: " + fieldName + " TO: " + fieldValue, Debugging.CLIENT_FIELD_DEBUGGING,
+				Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
+
 		// if the field isn't found, setup the fields from a template
 
 		// this assumes the field would be included in the template
 		if (!clientFields.containsKey(fieldName)) {
 			setupCustomFieldsFromTemplate();
+			Debugging.output("Field Not found in client: " + fieldName + " setup custom fields starting", Debugging.CLIENT_FIELD_DEBUGGING,
+					Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
 
 		}
-		if (!userDataHolder.getMap(TemplateField.class).contains(fieldName)) {
+		if (!userDataHolder.getMap(TemplateField.class).containsKey(fieldName)) {
 			// ERROR CONDITION!
 			// field not found in the template fields
+			Debugging.output("ERROR: Field not found in template " + fieldName, Debugging.CLIENT_FIELD_DEBUGGING,
+					Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
 
 			return;
 		}
 
 		clientFields.get(fieldName).setFieldValue(fieldValue);
+		
+		Debugging.output("New custom Field: " + fieldName + " Value: " + clientFields.get(fieldName).getFieldValue(), Debugging.CLIENT_FIELD_DEBUGGING,
+				Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
+		
+		this.updateDBMap();
 	}
 
 	public Object getCustomFieldValue(String fieldName) {
@@ -270,7 +284,7 @@ public class Client extends MaxObject {
 			setupCustomFieldsFromTemplate();
 
 		}
-		if (!userDataHolder.getMap(TemplateField.class).contains(fieldName)) {
+		if (!userDataHolder.getMap(TemplateField.class).containsKey(fieldName)) {
 			// ERROR CONDITION!
 			// field not found in the template fields
 
