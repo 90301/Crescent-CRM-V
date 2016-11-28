@@ -143,6 +143,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	/**
 	 * Updates the current client with the information entered
+	 * Fires when update button is clicked.
 	 * 
 	 * @param event
 	 */
@@ -150,7 +151,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// TODO Auto-generated method stub
 
 		// UPDATE fields in client
-
+		
 		selectedClient.setNotes(clientNoteBox.getValue());
 
 		// Resolve field
@@ -337,7 +338,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		System.out.println("SELECTED AN ITEM." + clientTable.getValue());
 		// TODO: ASK before switching
-
+		
+		
+		
 		// null check
 		if (clientTable.getValue() != null && !InhalerUtils.stringNullCheck((String) clientTable.getValue())) {
 			localSelClient = masterUi.userDataHolder.getClient((String) clientTable.getValue());
@@ -367,6 +370,12 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	}
 
+	
+	/***
+	 * This runs when you select a client.
+	 * 
+	 * @param c
+	 */
 	public void selectClient(Client c) {
 		if (c != null) {
 
@@ -384,7 +393,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientStatus.setValue(c.getStatusName());
 		clientLocation.setValue(c.getLocationName());
 		clientGroup.setValue(c.getGroupName());
-
+		
 		clientNoteBox.setValue(c.getNotes());
 		clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length + 2, MAX_NOTE_ROWS));
 		// set last updated

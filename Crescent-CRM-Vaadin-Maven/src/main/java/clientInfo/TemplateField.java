@@ -37,7 +37,7 @@ public class TemplateField extends MaxObject{
 	public void genDefaultValue() {
 		// TODO Auto-generated method stub
 		//Edit if you need to add more default values
-		if (this.getDataType() == DATA_TYPE_DATE){
+		if(this.getDataType() == DATA_TYPE_DATE){
 			
 		} else if(this.getDataType() == DATA_TYPE_NUMBER){
 			
