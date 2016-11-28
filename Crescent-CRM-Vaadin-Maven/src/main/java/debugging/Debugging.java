@@ -110,9 +110,13 @@ public class Debugging {
 	public static final String INHALER_UTILS_DEBUG = CONSOLE_OUTPUT;
 	public static final Boolean INHALER_UTILS_DEBUG_ENABLED = true;
 
-	//Client Field Debuggin
+	// Client Field Debuggin
 	public static final String CLIENT_FIELD_DEBUGGING = CONSOLE_OUTPUT;
 	public static final Boolean CLIENT_FIELD_DEBUGGING_ENABLED = true;
+
+	// O-auth2 Debugging
+	public static final String OAUTH_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean OAUTH_OUTPUT_ENABLED = true;
 
 	public static void output(String output, String method, Boolean enabled) {
 		if (DEV_MODE) {

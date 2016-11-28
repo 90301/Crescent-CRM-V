@@ -27,6 +27,7 @@ import dbUtils.MaxDB;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import debugging.Debugging;
+import integrations.OauthUtils;
 import inventory.InventoryItem;
 import uiElements.NavBar;
 import users.User;
@@ -75,7 +76,7 @@ public class MasterUI extends UI {
 	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
-	public static final Boolean DEV_AUTO_LOGIN = true;
+	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
 	
@@ -256,6 +257,7 @@ public class MasterUI extends UI {
 					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
 			
 			
+
 			//TESTING INHALER UTILS
 			
 			HashMap<String,String> map = new HashMap<String,String>();
@@ -290,7 +292,10 @@ public class MasterUI extends UI {
 			Debugging.output("Custom Field Output: " + customField1Output
 			, Debugging.MASTER_UI_TESTING_OUTPUT
 			, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+						
+			//OAUTH2 Testing
 			
+			OauthUtils.genGoogleLink();
 		}
 	}
 
