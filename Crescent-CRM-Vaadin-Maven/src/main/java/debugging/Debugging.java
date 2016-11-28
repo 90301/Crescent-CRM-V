@@ -100,6 +100,10 @@ public class Debugging {
 		//Inventory View Debugging
 		public static final String INVENTORY_VIEW_OUTPUT = CONSOLE_OUTPUT;
 		public static final Boolean INVENTORY_VIEW_OUTPUT_ENABLED = true;
+		
+		//O-auth2 Debugging
+				public static final String OAUTH_OUTPUT = CONSOLE_OUTPUT;
+				public static final Boolean OAUTH_OUTPUT_ENABLED = true;
 	
 	public static void output(String output,String method,Boolean enabled) {
 		if (DEV_MODE) {
