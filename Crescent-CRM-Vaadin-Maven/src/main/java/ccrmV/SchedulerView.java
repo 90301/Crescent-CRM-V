@@ -349,7 +349,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 		
 		String eventName = createEventNameTextField.getValue();
 		String client = (String) createEventClientComboBox.getValue();
-		String currentUser = MasterUi.user.getPrimaryKey();
+		String currentUser = masterUi.user.getPrimaryKey();
 		Date eventStart = createEventStartDateField.getValue();
 		Date eventEnd =  createEventEndDateField.getValue();
 		
