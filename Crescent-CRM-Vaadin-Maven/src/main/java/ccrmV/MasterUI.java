@@ -73,7 +73,7 @@ public class MasterUI extends UI {
 	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
-	public static final Boolean DEV_AUTO_LOGIN = false;
+	public static final Boolean DEV_AUTO_LOGIN = true; //TODO
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
 	
@@ -101,6 +101,8 @@ public class MasterUI extends UI {
 	public UserDataHolder userDataHolder;//Set when logging in
 	
 	protected void init(VaadinRequest request) {
+		
+		this.setTheme("darkTheme");
 		
 		DataHolder.initalizeDatabases();
 		
