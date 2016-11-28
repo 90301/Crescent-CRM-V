@@ -22,6 +22,13 @@ import clientInfo.UserDataHolder;
 
 public class TemplateEditor extends VerticalLayout{
 	
+	/* Use for replacing space with hyphen in Inhaler.utils
+	 * 
+	 * String replaceText = "AT AT";
+	 * replaceText = replaceText.replace(' ', '-');
+	 *
+	 */
+	
 	
 	//TODO
 	//Flags
@@ -42,28 +49,6 @@ public class TemplateEditor extends VerticalLayout{
 	public TemplateEditor() {
 		
 		updateUI();
-	}
-
-	//Make an ArrayList to keep it all organized and ordered :D
-	public Layout generateTemplateRow(){
-		//fieldArrayList.addComponent(TemplateRowUI());
-		/*
-		ComboBox FieldType = new ComboBox("Field Type");    
-		TextField TF = new TextField("Text Field");
-		Button Remove = new Button("Remove", event -> this.removeRowClick());
-		HorizontalLayout x = new HorizontalLayout();
-		
-		//Need to make sure this method creates a new horizontal layout every time it is called
-		//and that it doesn't add onto 
-		x.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
-		//If FieldType is null or a type that we don't have, then do not allow them to add it.
-		x.addComponent(FieldType);
-		x.addComponent(TF);
-		//Possibly make red :D and also warning when selecting	
-		x.addComponent(Remove);
-		*/
-		return null;
-		
 	}
 	
 	public void updateUI(){
@@ -89,7 +74,7 @@ public class TemplateEditor extends VerticalLayout{
 	}
 	
 
-
+	
 	public void removeRow(TemplateRowUI templateRowUI) {
 		// TODO Auto-generated method stub
 		fieldArrayList.remove(templateRowUI);
