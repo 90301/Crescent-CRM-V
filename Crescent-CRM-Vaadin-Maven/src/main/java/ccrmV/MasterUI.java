@@ -39,8 +39,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .91;
-	public static final String versionDescription = " Custom Field Storage";
+	public static final double versionNumber = .92;
+	public static final String versionDescription = " Great Merge November";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -75,7 +75,7 @@ public class MasterUI extends UI {
 	public static final Boolean DEVELOPER_MODE = true;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
-	public static final Boolean DEV_AUTO_LOGIN = true; //TODO
+	public static final Boolean DEV_AUTO_LOGIN = true;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
 	
