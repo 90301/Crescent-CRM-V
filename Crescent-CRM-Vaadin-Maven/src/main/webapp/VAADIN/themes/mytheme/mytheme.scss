@@ -1,3 +1,6 @@
+$v-app-loading-text: "my theme Updated3";
+
+
 // If you edit this file you need to compile the theme. See README.md for details.
 
 // Global variable overrides. Must be declared before importing Valo.
@@ -29,7 +32,7 @@
 // For more information, see: https://vaadin.com/book/-/page/themes.valo.html
 // Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
 
-@import "../valo/valo.scss";
+@import "../valo/valo";
 
 @mixin mytheme {
   @include valo;
