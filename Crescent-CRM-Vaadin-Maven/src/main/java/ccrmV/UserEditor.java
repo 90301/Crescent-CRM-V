@@ -23,6 +23,7 @@ import com.vaadin.ui.Grid.HeaderRow;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
@@ -33,6 +34,7 @@ import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
+import integrations.OauthUtils;
 import uiElements.NavBar;
 import users.User;
 
@@ -87,6 +89,9 @@ public class UserEditor extends HorizontalLayout implements View {
 	TextField databaseCreatorTextField;
 	Button databaseCreatorButton;
 	HorizontalLayout databaseCreatorLayout;
+	
+	//oauth2
+	HorizontalLayout oauthLayout = new HorizontalLayout();
 	
 	
 	private static final String ADMIN_SETTING_ID = "Admin";
@@ -270,7 +275,11 @@ public class UserEditor extends HorizontalLayout implements View {
 			databaseCreatorLayout.addComponent(databaseCreatorButton);
 			userEditorAccordion.addComponent(databaseCreatorLayout);
 			
-			
+			//oauth
+			oauthLayout.setCaption("oauth");
+			Link googleLink= OauthUtils.genGoogleLink();
+			oauthLayout.addComponent(googleLink);
+			userEditorAccordion.addComponent(oauthLayout);
 			
 		}
 		

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Link;
 
@@ -25,20 +26,12 @@ public class OauthUtils {
 	  String stateString = new BigInteger(130, new SecureRandom()).toString(32);
 	  
 	  
-	 //Object state = null;
-	//convert this to vaadin 
+	  //Object state = null;
+	  //convert this to vaadin 
 	  request.getWrappedSession().setAttribute("state", stateString);
 	  // Read index.html into memory, and set the client ID,
 	  // token state, and application name in the HTML before serving it.
-	  /*
-	  return new Scanner(new File("index.html"), "UTF-8")
-	      .useDelimiter("\\A").next()
-	      .replaceAll("[{]{2}\\s*CLIENT_ID\\s*[}]{2}", CLIENT_ID)
-	      .replaceAll("[{]{2}\\s*STATE\\s*[}]{2}", state)
-	      .replaceAll("[{]{2}\\s*APPLICATION_NAME\\s*[}]{2}",
-	                  APPLICATION_NAME);
-	                  */
-	  
+	
 	  
 	}
 	
@@ -75,16 +68,21 @@ public class OauthUtils {
 			googleParameterMap.put(key, value);
 			
 		}
+		
+	
 	public static Link genGoogleLink() {
+		
 		
 		//this keeps the keys in the correct order
 		//in the event that order matters: use the keyList instead of the map's keyset
+		clearGoogleParameters();
 		addGoogleParameter(googleClientID_Name, googleClientID);
 		addGoogleParameter(googleResponseType_Name, googleResponseType);
 		addGoogleParameter(googleScope_Name, googleScope);
 		addGoogleParameter(googleRedirect_Name, googleRedirect);
 		addGoogleParameter(googleState_Name, googleState);
 		addGoogleParameter(googleHd_Name, googleHd);
+		
 		
 		String parameterLink = "";
 		Boolean firstRun = true;
@@ -107,7 +105,8 @@ public class OauthUtils {
 		
 		Debugging.output("Full URL: " + fullUrl,Debugging.OAUTH_OUTPUT , Debugging.OAUTH_OUTPUT_ENABLED);
 		
-		Link googleLink = new Link("Connect to Google",new ExternalResource(fullUrl));
+		Link googleLink = new Link(null, new ExternalResource(fullUrl));
+		googleLink.setIcon(new ThemeResource("https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"));
 		return googleLink;
 		
 	}
@@ -122,4 +121,8 @@ redirect_uri=https://localhost:8080
 state=stateString&
 hd=trkla@email.sc.edu"));
 */
+	private static void clearGoogleParameters() {
+		googleParameterKeyList.clear();
+		googleParameterMap.clear();
+	}
 }

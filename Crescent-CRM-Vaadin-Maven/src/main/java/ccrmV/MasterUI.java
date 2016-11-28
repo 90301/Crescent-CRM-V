@@ -78,7 +78,7 @@ public class MasterUI extends UI {
 	
 	//Automatically navigate to a specific page.
 	//This could cause issues when dealing with database initialization
-	public static final Boolean DEV_AUTO_NAVIGATE = true;
+	public static final Boolean DEV_AUTO_NAVIGATE = false;
 	public static final String DEV_AUTO_NAVIGATE_PAGE = INVENTORY;
 	
 	
