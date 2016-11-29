@@ -50,6 +50,7 @@ public class ClientEditor extends VerticalLayout {
 	
 	//Custom Fields
 	TemplateEditor templateEditor = new TemplateEditor();
+	CustomFieldEditor customFieldEditor = new CustomFieldEditor();
 	
 	public ClientEditor(CrmUI crmUi) {
 		this.crmUi = crmUi;
@@ -103,6 +104,9 @@ public class ClientEditor extends VerticalLayout {
 		templateEditor.updateUI();
 		templateEditor.setVisible(false);
 		
+		//Custom Field Editor
+		//This is buggy and has been replaced
+		//customFieldEditor.setUserDataHolder(crmUi.masterUi.userDataHolder);
 		
 		//holds the client editor
 		this.setSpacing(true);
@@ -111,6 +115,7 @@ public class ClientEditor extends VerticalLayout {
 		this.addComponent(clientEditorMetaLayout);
 		
 		this.addComponent(templateEditor);
+		this.addComponent(customFieldEditor);
 		
 		this.addComponent(clientNoteBox);
 		this.addComponent(clientEditorActionLayout);
@@ -137,6 +142,8 @@ public class ClientEditor extends VerticalLayout {
 			crmUi.selectedClient.setGroup(tGroup);
 			crmUi.selectedClient.setLocation(tLocation);
 			crmUi.selectedClient.setStatus(tStatus);
+			//Update the fields
+			templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
 
 		} else {
 			// normal client creation
@@ -192,8 +199,11 @@ public class ClientEditor extends VerticalLayout {
 		//Show template editor
 		if (c.getName().contains(DataHolder.TEMPLATE_STRING)) {
 			templateEditor.setVisible(true);
+			customFieldEditor.setVisible(false);
 		} else {
 			templateEditor.setVisible(false);
+			customFieldEditor.loadCustomFields(c,crmUi.masterUi.userDataHolder);
+			customFieldEditor.setVisible(true);
 		}
 
 		System.out.println("showing client information for: " + c);

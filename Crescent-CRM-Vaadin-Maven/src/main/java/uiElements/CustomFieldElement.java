@@ -16,18 +16,30 @@ public class CustomFieldElement extends HorizontalLayout{
 	UserDataHolder userDataHolder;
 	String fieldName = "";
 		
+	//Different UI elements
+	TextField textF;
+	
 	public void createField(){
+		
+		this.setSpacing(true);
+		
 		TemplateField tF = userDataHolder.getMap(TemplateField.class).get(fieldName);
 		String dataType = tF.getDataType();
+		//fieldNameLabel.setCaption(fieldName);
 		
-		if(dataType == TemplateField.DATA_TYPE_TEXT){
-			TextField textF = new TextField(dataType);
+		if(dataType.contains(TemplateField.DATA_TYPE_TEXT)){
+			textF = new TextField();
 			fieldComponent = textF;
-		} else if(dataType == TemplateField.DATA_TYPE_NUMBER){
+		} else if(dataType.contains(TemplateField.DATA_TYPE_NUMBER)){
 			
-		} else if(dataType == TemplateField.DATA_TYPE_DATE){
+		} else if(dataType.contains(TemplateField.DATA_TYPE_DATE)){
 			
 		}
+		
+		this.removeAllComponents();
+		this.addComponent(fieldNameLabel);
+		if (fieldComponent != null) 
+			this.addComponent(fieldComponent);
 	}
 
 	public void setFieldName(String fieldName) {
