@@ -44,7 +44,7 @@ public class TemplateEditor extends VerticalLayout{
 	
 	Button Add = new Button("Add New Field", event -> this.addRowClick());
 	
-	
+	//UserDataHolder userDataHolder;
 	
 	public TemplateEditor() {
 		
@@ -52,7 +52,11 @@ public class TemplateEditor extends VerticalLayout{
 	}
 	
 	public void updateUI(){
+		
+		this.setSpacing(true);
+		
 		this.removeAllComponents();
+		
 		for(HorizontalLayout h:fieldArrayList){
 			this.addComponent(h);
 		}
@@ -68,7 +72,6 @@ public class TemplateEditor extends VerticalLayout{
 	}
 	
 	private void addRowClick(){
-		// TODO Auto-generated method stub
 		//Add new instance of TemplateRowUI here
 		addNewField();
 	}
@@ -82,15 +85,11 @@ public class TemplateEditor extends VerticalLayout{
 	}
 
 	public void updateTemplates(UserDataHolder userDataHolder) {
-		// TODO Auto-generated method stub
 		for(TemplateRowUI row :fieldArrayList){
 			
 			TemplateField tF = row.genTemplateField();
 			userDataHolder.store(tF, TemplateField.class);
 		}
 	}
-	
-	//TODO
-	//Need to add click event on the add new line button which will generate a new row.
 	
 }

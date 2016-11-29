@@ -63,9 +63,13 @@ public class CrmUI extends HorizontalLayout implements View {
 	ListSelect createLocationListSelect = new ListSelect();
 	ListSelect createStatusListSelect = new ListSelect();
 	ListSelect createGroupListSelect = new ListSelect();
+	
 	public static final int CREATE_LIST_SELECT_ROWS = 4;
- 
-
+ 	private static final int MAX_NOTE_ROWS = 20;
+	private static final String PANEL_HEIGHT = "950px";
+	private static final String NOTE_WIDTH = "600px";
+	private static final boolean PANNEL_ENABLED = false;
+	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
 	// filtering
 	HorizontalLayout filterLayout = new HorizontalLayout();
@@ -96,12 +100,9 @@ public class CrmUI extends HorizontalLayout implements View {
 	Label versionLabel = new Label("Version");
 
 
-	private static final int MAX_NOTE_ROWS = 20;
-	private static final String PANEL_HEIGHT = "950px";
-	private static final String NOTE_WIDTH = "600px";
-	private static final boolean PANNEL_ENABLED = false;
+
 	
-	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
+
 
 	public Client selectedClient;
 	Boolean discard = false;
@@ -224,7 +225,7 @@ public class CrmUI extends HorizontalLayout implements View {
 
 	}
 
-	/*
+	/**
 	 * Fill combo boxes
 	 */
 	public void updateAllComboBoxes() {
@@ -345,8 +346,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	}
 	
 	
-	//TODO implement a method to allow this to be one method
-	//and make any class that extends max object
+	//TODO MIGRATE these methods to user data holder
 	
 	
 	public Status createStatus(String statusName) {

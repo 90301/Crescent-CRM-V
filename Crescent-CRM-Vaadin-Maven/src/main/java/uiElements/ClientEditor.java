@@ -48,6 +48,9 @@ public class ClientEditor extends VerticalLayout {
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
 	ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
 	
+	//Custom Fields
+	TemplateEditor templateEditor = new TemplateEditor();
+	
 	public ClientEditor(CrmUI crmUi) {
 		this.crmUi = crmUi;
 		genClientEditor();
@@ -95,11 +98,20 @@ public class ClientEditor extends VerticalLayout {
 		clientEditorActionLayout.addComponent(clientArchiveButton);
 		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
 		clientEditorActionLayout.addComponent(clientContactFrequency);
+		
+		//Template editor
+		templateEditor.updateUI();
+		templateEditor.setVisible(false);
+		
+		
 		//holds the client editor
 		this.setSpacing(true);
 		
 		this.addComponent(clientNameLabel);
 		this.addComponent(clientEditorMetaLayout);
+		
+		this.addComponent(templateEditor);
+		
 		this.addComponent(clientNoteBox);
 		this.addComponent(clientEditorActionLayout);
 	}
@@ -177,6 +189,12 @@ public class ClientEditor extends VerticalLayout {
 		}
 		//clientTable.select(c.getName());
 		crmUi.selectedClient = c;
+		//Show template editor
+		if (c.getName().contains(DataHolder.TEMPLATE_STRING)) {
+			templateEditor.setVisible(true);
+		} else {
+			templateEditor.setVisible(false);
+		}
 
 		System.out.println("showing client information for: " + c);
 		// TODO: load information into the ui.
