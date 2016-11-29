@@ -43,6 +43,15 @@ public class InhalerUtils {
 	private static final String DELIMITER = "|";
 	private static final String ROOT_DOC_STRING = "root";
 
+	
+	/**
+	 * This method will replace any and all spaces in a given string with hyphens
+	 */
+	public static String replaceStringSpaces(String string){
+		string = string.replace(" ", "-");
+		return string;
+	}
+	
 	/**
 	 * Caution: Do not use this method when dealing with maxObject database
 	 * serialization (dealing with dbMap)
