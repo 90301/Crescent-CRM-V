@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.mysql.jdbc.PreparedStatement;
+
 /**
  * This is a class that handle a specific table If this is the only table in the
  * program the entire database connection needs to be set up here
@@ -179,11 +181,31 @@ public class MaxDBTable extends MaxDB {
 		System.out.println("Adding: " + obj + " TO: " + this);
 
 		Boolean sucsess = false;
-
+		
+		//PREPARED STATEMENT
+		
+		String replaceString = "REPLACE INTO " + tableName + obj.getPreparedValues() + ";";
+		try {
+			java.sql.PreparedStatement updateStatement = dbConnection.prepareStatement(replaceString);
+			
+			updateStatement = obj.setPreparedValues(updateStatement);
+			
+			updateStatement.executeQuery();
+			sucsess = true;
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		/*
 		String insertString = "REPLACE INTO " + tableName;
 		insertString += obj.getInsertValues();
 		insertString += ";";
+		
 
+		
 		System.out.println(insertString);
 		Statement insertStatement = null;
 		try {
@@ -203,6 +225,7 @@ public class MaxDBTable extends MaxDB {
 				e.printStackTrace();
 			}
 		}
+		*/
 
 		return sucsess;
 

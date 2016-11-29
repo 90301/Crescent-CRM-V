@@ -3,6 +3,7 @@
  */
 package dbUtils;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -94,6 +95,95 @@ public abstract class MaxObject {
 		values += ")";
 		insertValues += keys + " VALUES " + values;
 		return insertValues;
+	}
+	
+	ArrayList<String> preparedListOrder = new ArrayList<String>();
+	/**
+	 * PREPARED statement version of insertion
+	 * @return
+	 */
+	public String getPreparedValues() {
+		// TODO: update this to use a custom SQL object class
+		// with a special variables and a special function to get the key and
+		// value
+		// SQL representation
+		//TODO: escape  commas in notes to prevent issues
+		preparedListOrder.clear();
+		
+		this.updateDBMap();
+		String insertValues = " ";
+		String keys = "(";
+		String values = "(";
+		
+		Boolean firstLoop = true;
+		System.out.println("Generating insert values for: " + this + " " + dbMap.size());
+		for (String key : dbMap.keySet()) {
+			Object value = dbMap.get(key);
+			// special case for first loop (doesn't have a comma)
+			if (!firstLoop) {
+				keys += ", ";
+				values += ", ";
+			} else {
+				firstLoop = false;
+			}
+			keys += key;
+			//adds a question mark for each value
+			//To be used for prepared statements
+			values += "?";
+			preparedListOrder.add(key);
+
+		}
+		keys += ")";
+		values += ")";
+		insertValues += keys + " VALUES " + values;
+		
+		return insertValues;
+	}
+	
+	public PreparedStatement setPreparedValues(PreparedStatement updateStatement) {
+		// TODO: update this to use a custom SQL object class
+		// with a special variables and a special function to get the key and
+		// value
+		// SQL representation
+		//TODO: escape  commas in notes to prevent issues
+		//this.updateDBMap();
+		System.out.println("Generating insert values for: " + this + " " + dbMap.size());
+		
+		//Loops through the DB map in the order the statement was prepared.
+		int currentValue = 1;
+		for (String key : preparedListOrder) {
+			Object value = dbMap.get(key);
+
+			try {
+			if (value instanceof Date) {
+				//special case for dates
+				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String modValue = sdf.format(value);
+				System.out.println("date: " + modValue);
+				//values += "'" + modValue + "'";
+				//Experimental Date Storage
+				//updateStatement.setDate(currentValue, (Date) value);
+				updateStatement.setString(currentValue, modValue);
+				
+			} else if (value instanceof Boolean) {
+				//MYSQL requires no quotes for a true/false value
+					//values +=  ""+value;
+				updateStatement.setBoolean(currentValue, (boolean) value);
+			} else if (value instanceof Integer) {
+				updateStatement.setInt(currentValue, (Integer) value);
+			
+			} else {
+				//values += "'" + value + "'";
+				updateStatement.setString(currentValue, (String) value);
+			}
+			} catch (Exception e) {
+				
+			}
+			
+			currentValue ++;
+		}
+
+		return updateStatement;
 	}
 
 	/**

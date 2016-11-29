@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .95;
-	public static final String versionDescription = " Custom Fields Showing";
+	public static final double versionNumber = .96;
+	public static final String versionDescription = " Prepared Statements";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
