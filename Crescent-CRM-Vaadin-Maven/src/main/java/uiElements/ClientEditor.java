@@ -23,7 +23,7 @@ public class ClientEditor extends VerticalLayout {
 	public static final int MAX_NOTE_ROWS = 15;
 
 
-	public static final String NOTE_WIDTH = "100%";
+	public static final String NOTE_WIDTH = "650px";
 
 
 	//A reference to the CRM UI, useful to calling methods in the parent UI

@@ -715,7 +715,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		 * E D I T I N G
 		 */
 		// CLIENT EDITING UI
-		
+		clientEditor.setVisible(false);
 		
 		midLayout.addComponent(clientEditor);
 
