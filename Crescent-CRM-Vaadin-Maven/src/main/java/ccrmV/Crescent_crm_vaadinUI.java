@@ -47,7 +47,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	/*
 	 * UI elements (accessible)
 	 */
-	
+
 	// TODO
 	// Add textfield and label only to the vertical layouts
 	TextField createLocationName = new TextField();
@@ -142,8 +142,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
 
 	/**
-	 * Updates the current client with the information entered
-	 * Fires when update button is clicked.
+	 * Updates the current client with the information entered Fires when update
+	 * button is clicked.
 	 * 
 	 * @param event
 	 */
@@ -151,7 +151,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// TODO Auto-generated method stub
 
 		// UPDATE fields in client
-		
+
 		selectedClient.setNotes(clientNoteBox.getValue());
 
 		// Resolve field
@@ -165,7 +165,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			selectedClient.setGroup(tGroup);
 			selectedClient.setLocation(tLocation);
 			selectedClient.setStatus(tStatus);
-			
+
 			Template.updateTemplates(masterUi.userDataHolder);
 
 		} else {
@@ -338,9 +338,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		System.out.println("SELECTED AN ITEM." + clientTable.getValue());
 		// TODO: ASK before switching
-		
-		
-		
+
 		// null check
 		if (clientTable.getValue() != null && !InhalerUtils.stringNullCheck((String) clientTable.getValue())) {
 			localSelClient = masterUi.userDataHolder.getClient((String) clientTable.getValue());
@@ -370,7 +368,6 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	}
 
-	
 	/***
 	 * This runs when you select a client.
 	 * 
@@ -393,7 +390,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		clientStatus.setValue(c.getStatusName());
 		clientLocation.setValue(c.getLocationName());
 		clientGroup.setValue(c.getGroupName());
-		
+
 		clientNoteBox.setValue(c.getNotes());
 		clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length + 2, MAX_NOTE_ROWS));
 		// set last updated
@@ -458,29 +455,47 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		updateCreationLists();
 	}
 
-	/***
-	 * CCCCC LL IIIII EEEEEEE NN NN TTTTTTT CC C LL III EE NNN NN TTT CC LL III
-	 * EEEEE NN N NN TTT CC C LL III EE NN NNN TTT CCCCC LLLLLLL IIIII EEEEEEE
-	 * NN NN TTT
-	 * 
-	 * CCCCC RRRRRR EEEEEEE AAA TTTTTTT IIIII OOOOO NN NN CC C RR RR EE AAAAA
-	 * TTT III OO OO NNN NN CC RRRRRR EEEEE AA AA TTT III OO OO NN N NN CC C RR
-	 * RR EE AAAAAAA TTT III OO OO NN NNN CCCCC RR RR EEEEEEE AA AA TTT IIIII
-	 * OOOO0 NN NN
-	 * 
-	 */
-	public void createClientClick() {
-
-		//Fucked up code
-		/*
-		String name = createClientName.getValue();
-		// Null checking
-		if (InhalerUtils.stringNullCheck(name)) {
-			return;// Name is null
+	public Status createStatus(String statusName) {
+		Status s = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(statusName)) {
+			s = new Status();
+			s.setStatusName(statusName);
+			masterUi.userDataHolder.store(s, Status.class);
 		}
-		// The group is ok to be null.
-		// Location is a required field
-		// Status is a required field
+		updateAllComboBoxes();
+		updateCreationLists();
+		return s;
+	}
+	
+	public Location createLocation(String locationName) {
+		Location l = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(locationName)) {
+			l = new Location();
+			l.setLocationName(locationName);
+			masterUi.userDataHolder.store(l, Location.class);
+		}
+		updateAllComboBoxes();
+		updateCreationLists();
+		return l;
+	}
+	
+	public Group createGroup(String groupName) {
+		Group g = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(groupName)) {
+			g = new Group();
+			g.setGroupName(groupName);
+			masterUi.userDataHolder.store(g, Group.class);
+		}
+		updateAllComboBoxes();
+		updateCreationLists();
+		return g;
+	}
+	
+	public void createClientClick() {
+		// Null checking
 		try {
 			if (InhalerUtils.stringNullCheck(createClientLocation.getValue().toString())) {
 				return;
@@ -496,76 +511,41 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 			return; // a null value was found
 		}
 
-		Client c = new Client();
-		// make sure the location and status are valid
-		Location l = masterUi.userDataHolder.getLocationMap().get(createClientLocation.getValue().toString());
-		Status s = masterUi.userDataHolder.getStatusMap().get(createClientStatus.getValue().toString());
-		Group g = masterUi.userDataHolder.getGroupMap().get(createClientGroup.getValue().toString());
-		if (l != null && s != null && g != null) {
-			c.setLocation(l);
-			c.setStatus(s);
-			c.setGroup(g);
-		} else {
-			return;// Either the location or status or group is null
-		}
-
-		c.setLastUpdatedToNow();
-
-		c.setName(name);
-
-		c.setId(Client.genId());
-		// set notes to template client
-		if (masterUi.userDataHolder.templateClient != null) {
-			c.setNotes(masterUi.userDataHolder.templateClient.getNotes());
-		} else {
-			c.setNotes("Notes:");
-		}
-
-		System.out.println("Created Client: " + c);
-
-		masterUi.userDataHolder.store(c, Client.class);
-		updateClientTable();
-		*/
-		//correct code
-		
+		// TODO: debugging
 		String locationName = createClientLocation.getValue().toString();
 		String statusName = createClientStatus.getValue().toString();
-		String groupName =  createClientGroup.getValue().toString();
-		//Create new values if one the value is not already selected.
+		String groupName = createClientGroup.getValue().toString();
+		// Create new values if one the value is not already selected.
 		if (CREATION_ALLOW_NEW_VALUES) {
-			//TODO implement something to check for similar names, maybe prompt user to select that value?
-			
-			
+			// TODO implement something to check for similar names, maybe prompt
+			// user to select that value?
+
 			Location l = masterUi.userDataHolder.getLocationMap().get(locationName);
 			Status s = masterUi.userDataHolder.getStatusMap().get(statusName);
 			Group g = masterUi.userDataHolder.getGroupMap().get(groupName);
-			
-			if (l==null) {
+
+			if (l == null) {
 				createLocation(locationName);
 			}
-			
-			if (s==null) {
+
+			if (s == null) {
 				createStatus(statusName);
 			}
-			
-			if (g==null) {
+
+			if (g == null) {
 				createGroup(groupName);
 			}
-			
-			
+
 		}
-		
-		
-		
+
 		String name = createClientName.getValue();
-		
+
 		if (InhalerUtils.stringNullCheck(name)) {
 			return;// Name is null
 		}
 		// The group is ok to be null.
 		// Location is a required field
 		// Status is a required field
-		
 
 		Client c = new Client();
 		// make sure the location and status are valid
@@ -596,7 +576,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		masterUi.userDataHolder.store(c, Client.class);
 		updateClientTable();
-		
+
 		selectClient(c);
 	}
 
@@ -620,33 +600,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 
-		/*
-		 * This is a bug fix which removes all the layout information which
-		 * means everything has to be regenerated when entering the URL again.
-		 * 
-		 * This is not desirable, but for some reason the nav bar doesn't appear
-		 * if it's done a different way. (update) Think I Fixed it. -Josh Benton
-		 */
-		/*
-		 * if (this.alreadyGenerated) {
-		 * //layout.addComponent(navBar.sidebarLayout); //return;
-		 * layout.removeAllComponents(); creationTabs.removeAllComponents();
-		 * createLocationLayout.removeAllComponents();
-		 * createGroupLayout.removeAllComponents();
-		 * createStatusLayout.removeAllComponents();
-		 * createClientLayout.removeAllComponents();
-		 * optionsGridLayout.removeAllComponents();
-		 * clientGridLayout.removeAllComponents();
-		 * clientEditorMetaLayout.removeAllComponents();
-		 * clientEditorLayout.removeAllComponents();
-		 * clientEditorActionLayout.removeAllComponents();
-		 * filterLayout.removeAllComponents(); }
-		 */
-		// return;
-		// This may not need to run every time
-
-		// but a better fix may be to just do a test, instead of running the
-		// whole process.
+		
 		masterUi.userDataHolder.initalizeDatabases();
 
 		// This is the top level layout (for now)
@@ -891,7 +845,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		// TODO
 		clientEditorLayout.setSpacing(true);
 		Template.setVisible(false);
-		
+
 		clientEditorLayout.addComponent(clientNameLabel);
 		clientEditorLayout.addComponent(clientEditorMetaLayout);
 		clientEditorLayout.addComponent(Template);
