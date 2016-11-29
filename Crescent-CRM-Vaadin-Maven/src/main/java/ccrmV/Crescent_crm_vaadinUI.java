@@ -471,6 +471,8 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	 */
 	public void createClientClick() {
 
+		//Fucked up code
+		/*
 		String name = createClientName.getValue();
 		// Null checking
 		if (InhalerUtils.stringNullCheck(name)) {
@@ -523,6 +525,79 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		masterUi.userDataHolder.store(c, Client.class);
 		updateClientTable();
+		*/
+		//correct code
+		
+		String locationName = createClientLocation.getValue().toString();
+		String statusName = createClientStatus.getValue().toString();
+		String groupName =  createClientGroup.getValue().toString();
+		//Create new values if one the value is not already selected.
+		if (CREATION_ALLOW_NEW_VALUES) {
+			//TODO implement something to check for similar names, maybe prompt user to select that value?
+			
+			
+			Location l = masterUi.userDataHolder.getLocationMap().get(locationName);
+			Status s = masterUi.userDataHolder.getStatusMap().get(statusName);
+			Group g = masterUi.userDataHolder.getGroupMap().get(groupName);
+			
+			if (l==null) {
+				createLocation(locationName);
+			}
+			
+			if (s==null) {
+				createStatus(statusName);
+			}
+			
+			if (g==null) {
+				createGroup(groupName);
+			}
+			
+			
+		}
+		
+		
+		
+		String name = createClientName.getValue();
+		
+		if (InhalerUtils.stringNullCheck(name)) {
+			return;// Name is null
+		}
+		// The group is ok to be null.
+		// Location is a required field
+		// Status is a required field
+		
+
+		Client c = new Client();
+		// make sure the location and status are valid
+		Location l = masterUi.userDataHolder.getLocationMap().get(locationName);
+		Status s = masterUi.userDataHolder.getStatusMap().get(statusName);
+		Group g = masterUi.userDataHolder.getGroupMap().get(groupName);
+		if (l != null && s != null && g != null) {
+			c.setLocation(l);
+			c.setStatus(s);
+			c.setGroup(g);
+		} else {
+			return;// Either the location or status or group is null
+		}
+
+		c.setLastUpdatedToNow();
+
+		c.setName(name);
+
+		c.setId(Client.genId());
+		// set notes to template client
+		if (masterUi.userDataHolder.templateClient != null) {
+			c.setNotes(masterUi.userDataHolder.templateClient.getNotes());
+		} else {
+			c.setNotes("Notes:");
+		}
+
+		System.out.println("Created Client: " + c);
+
+		masterUi.userDataHolder.store(c, Client.class);
+		updateClientTable();
+		
+		selectClient(c);
 	}
 
 	/**
