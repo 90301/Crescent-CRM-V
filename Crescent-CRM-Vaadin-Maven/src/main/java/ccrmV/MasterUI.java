@@ -296,6 +296,9 @@ public class MasterUI extends UI {
 			//OAUTH2 Testing
 			
 			OauthUtils.genGoogleLink();
+			
+			//deletion testing
+			
 		}
 	}
 

@@ -44,7 +44,7 @@ public class MaxDBTable extends MaxDB {
 	public static final String DATA_MYSQL_TYPE_HUGE_KEY_STRING = "varchar(255)";
 	private static final String PRIMARY_KEY = " NOT NULL PRIMARY KEY";
 	private static final String BASE_TABLE_UPGRADE = "ALTER TABLE ";
-	
+
 	// TODO: create a class to handle database datatypes.
 
 	public MaxDBTable() {
@@ -57,9 +57,8 @@ public class MaxDBTable extends MaxDB {
 	}
 
 	/**
-	 * @deprecated
-	 * A safer (but slower) way of adding a datatype.
-	 * UPDATE: Just called add datatype
+	 * @deprecated A safer (but slower) way of adding a datatype. UPDATE: Just
+	 *             called add datatype
 	 * @param name
 	 * @param datatype
 	 */
@@ -110,7 +109,7 @@ public class MaxDBTable extends MaxDB {
 		Boolean sucsess = false;
 		String tableCreateString = BASE_CREATE_TABLE + tableName + " (";
 		List<String> tableUpgradeStrings = new ArrayList<String>();
-		
+
 		Boolean firstRun = true;
 		for (String name : dataTypes.keySet()) {
 			String datatype = dataTypes.get(name);
@@ -123,10 +122,9 @@ public class MaxDBTable extends MaxDB {
 			if (name.equals(primaryKeyName)) {
 				tableCreateString += PRIMARY_KEY;
 			}
-			//TABLE UPGRADE
+			// TABLE UPGRADE
 			tableUpgradeStrings.add(BASE_TABLE_UPGRADE + tableName + " ADD " + name + " " + datatype + ";");
-			
-			
+
 		}
 		tableCreateString += ");";
 
@@ -144,25 +142,26 @@ public class MaxDBTable extends MaxDB {
 				e.printStackTrace();
 			}
 		}
-		//Database Upgrade
-		
-		//loop through attempting to add any field not found. try catch must be inside loop
-		for(String upgradeQuery : tableUpgradeStrings) {
+		// Database Upgrade
+
+		// loop through attempting to add any field not found. try catch must be
+		// inside loop
+		for (String upgradeQuery : tableUpgradeStrings) {
 			try {
-				
+
 				System.out.println("Executing SQL Query: " + upgradeQuery);
 				Statement createTableStatement = dbConnection.createStatement();
 				createTableStatement.execute(upgradeQuery);
 				sucsess = true;
 			} catch (SQLException e) {
-				if (e.getMessage().toLowerCase().contains("exists") || e.getMessage().toLowerCase().contains("duplicate")) {
+				if (e.getMessage().toLowerCase().contains("exists")
+						|| e.getMessage().toLowerCase().contains("duplicate")) {
 
 				} else {
 					e.printStackTrace();
 				}
 			}
 		}
-		
 
 		return sucsess;
 	}
@@ -181,64 +180,50 @@ public class MaxDBTable extends MaxDB {
 		System.out.println("Adding: " + obj + " TO: " + this);
 
 		Boolean sucsess = false;
-		
-		//PREPARED STATEMENT
-		
+
+		// PREPARED STATEMENT
+
 		String replaceString = "REPLACE INTO " + tableName + obj.getPreparedValues() + ";";
 		try {
 			java.sql.PreparedStatement updateStatement = dbConnection.prepareStatement(replaceString);
-			
+
 			updateStatement = obj.setPreparedValues(updateStatement);
-			
+
 			updateStatement.executeQuery();
 			sucsess = true;
-			
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
 		/*
-		String insertString = "REPLACE INTO " + tableName;
-		insertString += obj.getInsertValues();
-		insertString += ";";
-		
-
-		
-		System.out.println(insertString);
-		Statement insertStatement = null;
-		try {
-			insertStatement = dbConnection.createStatement();
-
-			insertStatement.execute(insertString);
-
-			sucsess = true;
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				insertStatement.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		*/
+		 * String insertString = "REPLACE INTO " + tableName; insertString +=
+		 * obj.getInsertValues(); insertString += ";";
+		 * 
+		 * 
+		 * 
+		 * System.out.println(insertString); Statement insertStatement = null;
+		 * try { insertStatement = dbConnection.createStatement();
+		 * 
+		 * insertStatement.execute(insertString);
+		 * 
+		 * sucsess = true; } catch (SQLException e) { // TODO Auto-generated
+		 * catch block e.printStackTrace(); } finally { try {
+		 * insertStatement.close(); } catch (SQLException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); } }
+		 */
 
 		return sucsess;
 
 	}
-	
-	public Boolean addTableColumn(String tableColmnName,String dataType) {
+
+	@Deprecated
+	public Boolean addTableColumn(String tableColmnName, String dataType) {
 		Boolean sucsess = false;
-		
+
 		checkOrEstablishConnection();
-		
-		
-		
-		
+
 		return sucsess;
 	}
 
@@ -249,7 +234,7 @@ public class MaxDBTable extends MaxDB {
 	 */
 	public ResultSet getAllRows() {
 		ResultSet rs = null;
-		
+
 		System.out.println("Getting all rows for : " + this);
 		// TODO: check if connection is alive, if not create connection.
 		checkOrEstablishConnection();
@@ -264,20 +249,30 @@ public class MaxDBTable extends MaxDB {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
-		/*
-		finally {
-			try {
-				queryStatement.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
-		*/
+		/*
+		 * finally { try { queryStatement.close(); } catch (SQLException e) { //
+		 * TODO Auto-generated catch block e.printStackTrace(); } }
+		 */
 
 		return rs;
 
+	}
+
+	public void deleteRow(MaxObject obj) {
+		checkOrEstablishConnection();
+		
+		try {
+		String deleteString = "Delete from " + tableName + " where ";
+		
+		deleteString += obj.getDeleteString() + ";";
+		
+		java.sql.PreparedStatement deleteStatement = dbConnection.prepareStatement(deleteString);
+		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	public MaxDB getParentDB() {

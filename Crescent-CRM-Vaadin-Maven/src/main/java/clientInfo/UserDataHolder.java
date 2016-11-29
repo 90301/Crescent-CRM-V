@@ -148,6 +148,10 @@ public class UserDataHolder extends MaxObject {
 		table.insertInTable(obj);
 	}
 	
+	public <T extends MaxObject> void delete(T obj, Class<T> ref) {
+		
+	}
+	
 
 	/**
 	 * Retrieves an item based on a class ref.

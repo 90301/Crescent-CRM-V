@@ -468,4 +468,43 @@ public abstract class MaxObject {
 		return table;
 	}
 
+	/**
+	 * Gets a delete string for a Prepared Statement Query
+	 * This method only works with classes upgraded to
+	 * use MaxFields
+	 * @return the prepared statement string
+	 */
+	public String getDeleteString() {
+		if (keyField!=null){
+			String deleteString = keyField.getFieldName()+ "= ? ";
+			
+			return deleteString;
+		} else {
+			return null;
+		}
+	}
+	
+	/**
+	 * Sets the prepared statement paramters to delete
+	 * the entitiy with this primary key.
+	 * @param deletestatement
+	 * @return
+	 */
+	public PreparedStatement setPreparedDeleteValues(PreparedStatement deletestatement) {
+		
+		if (keyField==null) {
+			return null;
+		}
+		try {
+			//TODO move this code to max field? 
+			deletestatement.setString(1, (String) keyField.getFieldValue());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return deletestatement;
+	}
+
 }
