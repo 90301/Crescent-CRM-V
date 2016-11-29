@@ -174,7 +174,7 @@ public class MasterUI extends UI {
 		mainNavigator.navigateTo(MAIN_APP);
 		mainApp.updateClientTable();
 		mainApp.updateCreationLists();
-		mainApp.fillAllComboBoxes();
+		mainApp.updateAllComboBoxes();
 	}
 	
 	public void enterUserEditor() {
