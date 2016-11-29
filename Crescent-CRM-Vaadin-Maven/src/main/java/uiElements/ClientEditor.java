@@ -200,6 +200,7 @@ public class ClientEditor extends VerticalLayout {
 		if (c.getName().contains(DataHolder.TEMPLATE_STRING)) {
 			templateEditor.setVisible(true);
 			customFieldEditor.setVisible(false);
+			templateEditor.loadTemplateRows(crmUi.masterUi.userDataHolder);
 		} else {
 			templateEditor.setVisible(false);
 			customFieldEditor.loadCustomFields(c,crmUi.masterUi.userDataHolder);

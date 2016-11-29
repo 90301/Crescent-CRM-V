@@ -92,4 +92,16 @@ public class TemplateEditor extends VerticalLayout{
 		}
 	}
 	
+	public void loadTemplateRows(UserDataHolder userDataHolder) {
+		//this.removeAllComponents();
+		fieldArrayList.clear();
+		
+		for (TemplateField tf : userDataHolder.getMap(TemplateField.class).values()) {
+			TemplateRowUI loadedRow = new TemplateRowUI(this);
+			loadedRow.load(tf);
+			fieldArrayList.add(loadedRow);
+		}
+		updateUI();
+	}
+	
 }

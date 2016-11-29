@@ -81,4 +81,12 @@ public class TemplateRowUI extends HorizontalLayout{
 		return tF;
 		
 	}
+
+	public void load(TemplateField tf) {
+		this.initializeUI();
+		
+		fieldNameTextField.setValue(tf.getFieldName());
+		fieldType.setValue(tf.getDataType());
+		
+	}
 }
