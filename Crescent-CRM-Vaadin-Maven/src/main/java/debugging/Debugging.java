@@ -117,6 +117,19 @@ public class Debugging {
 	// O-auth2 Debugging
 	public static final String OAUTH_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean OAUTH_OUTPUT_ENABLED = true;
+	
+	//Josh's Debugging Variables
+	public static final String DELETE_OUTPUT = CONSOLE_OUTPUT;
+	public static final Boolean DELETE_OUTPUT_ENABLED = true;
+	
+	//Andrews Debugging Variables
+	
+	
+	//Troy's Debugging Variables
+	
+	
+	//Tony's Debugging Variables
+	
 
 	public static void output(String output, String method, Boolean enabled) {
 		if (DEV_MODE) {

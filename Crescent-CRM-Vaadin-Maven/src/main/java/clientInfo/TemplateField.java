@@ -24,6 +24,8 @@ public class TemplateField extends MaxObject{
 
 
 	{
+		this.setKeyField(fieldName);
+		
 		this.addMaxField(fieldName);
 		this.addMaxField(dataType);
 		this.addMaxField(defaultValue);

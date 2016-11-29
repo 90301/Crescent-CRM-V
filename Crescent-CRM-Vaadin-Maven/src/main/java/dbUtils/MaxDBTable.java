@@ -14,6 +14,8 @@ import java.util.List;
 
 import com.mysql.jdbc.PreparedStatement;
 
+import debugging.Debugging;
+
 /**
  * This is a class that handle a specific table If this is the only table in the
  * program the entire database connection needs to be set up here
@@ -260,6 +262,9 @@ public class MaxDBTable extends MaxDB {
 	}
 
 	public void deleteRow(MaxObject obj) {
+		Debugging.output("Attempting to remove: " + obj,
+				Debugging.DELETE_OUTPUT, Debugging.DELETE_OUTPUT_ENABLED);
+		
 		checkOrEstablishConnection();
 		
 		try {
@@ -268,6 +273,10 @@ public class MaxDBTable extends MaxDB {
 		deleteString += obj.getDeleteString() + ";";
 		
 		java.sql.PreparedStatement deleteStatement = dbConnection.prepareStatement(deleteString);
+		
+		deleteStatement = obj.setPreparedDeleteValues(deleteStatement);
+		
+		deleteStatement.execute();
 		
 		} catch (Exception e) {
 			e.printStackTrace();

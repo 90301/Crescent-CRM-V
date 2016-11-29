@@ -298,6 +298,8 @@ public class MasterUI extends UI {
 			OauthUtils.genGoogleLink();
 			
 			//deletion testing
+			udhTest.delete(tf, TemplateField.class);
+			
 			
 		}
 	}

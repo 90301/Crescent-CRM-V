@@ -148,7 +148,17 @@ public class UserDataHolder extends MaxObject {
 		table.insertInTable(obj);
 	}
 	
+	/**
+	 * Attempts to delete Object from the database and the local map
+	 * @param obj
+	 * @param ref
+	 */
 	public <T extends MaxObject> void delete(T obj, Class<T> ref) {
+		MaxDBTable table = tableLookup.get(ref);
+		ConcurrentHashMap<String, T> map = (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
+		
+		table.deleteRow(obj);
+		map.remove(obj.getPrimaryKey());
 		
 	}
 	
