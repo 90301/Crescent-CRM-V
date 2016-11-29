@@ -64,7 +64,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 	TemplateEditor Template = new TemplateEditor();
 
-	// ListBox is containing current statuses...
+	// ListBoxs containing current statuses, locations, groups
 	ListSelect createLocationListSelect = new ListSelect();
 	ListSelect createStatusListSelect = new ListSelect();
 	ListSelect createGroupListSelect = new ListSelect();
