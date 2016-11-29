@@ -99,6 +99,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final int MAX_NOTE_ROWS = 20;
 	private static final String PANEL_HEIGHT = "950px";
 	private static final String NOTE_WIDTH = "600px";
+	private static final boolean PANNEL_ENABLED = false;
 	
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 
@@ -519,7 +520,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		((AbstractOrderedLayout) layout).setMargin(true);
 		((AbstractOrderedLayout) layout).setSpacing(true);
 		
-		
+		if (PANNEL_ENABLED) {
 		panel.setContent(layout);
 		//panel.setSizeFull();
 		panel.setHeight(PANEL_HEIGHT);
@@ -533,6 +534,9 @@ public class CrmUI extends HorizontalLayout implements View {
 		// this.setHeight("100%");
 		// this.setWidth("100%");
 		this.addComponent(panel);
+		} else {
+			this.addComponent(layout);
+		}
 		// setContent(layout);
 
 		/***
@@ -553,19 +557,13 @@ public class CrmUI extends HorizontalLayout implements View {
 		createLocationLayout.setComponentAlignment(createLocationButton, Alignment.TOP_CENTER);
 		createLocationLayout.setMargin(true);
 		createLocationLayout.setSpacing(true);
-
 		
 		creationTabs.addTab(createLocationLayout, "Add Location");
 
 		// Add status
-		
-		//createStatusName
 
 		createStatusListSelect.setNullSelectionAllowed(false);
 		createStatusListSelect.setRows(CREATE_LIST_SELECT_ROWS);
-		
-		//createStatusButton.setHeight("100%");
-		
 		
 		createStatusLayout.addComponent(createStatusName);
 		createStatusLayout.addComponent(createStatusButton);
@@ -576,7 +574,6 @@ public class CrmUI extends HorizontalLayout implements View {
 		createStatusLayout.setSpacing(true);
 		
 		creationTabs.addTab(createStatusLayout, "Add Status");
-
 		
 		// Add Group
 
@@ -627,20 +624,9 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		//createClientName 
 		createClientLayout.addComponent(createClientName);
-		
-		//createClientStatus 
-		
-		
-				
-		// Add all statuses
 
 		createClientLayout.addComponent(createClientStatus);
-
-		//createClientLocation 
 		
-		
-		// Add all locations
-
 		createClientLayout.addComponent(createClientLocation);
 		// Create groups
 		//createClientGroup 

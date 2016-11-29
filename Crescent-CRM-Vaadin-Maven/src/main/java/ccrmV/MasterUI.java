@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .93;
-	public static final String versionDescription = " MaxField Migration In Progress";
+	public static final double versionNumber = .94;
+	public static final String versionDescription = " Client Editor UI Component";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
