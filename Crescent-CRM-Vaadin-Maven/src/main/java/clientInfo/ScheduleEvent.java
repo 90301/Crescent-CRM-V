@@ -10,6 +10,7 @@ import debugging.Debugging;
 
 public class ScheduleEvent extends MaxObject {
 
+	
 	private Date start = new Date();
 	public static final String START_FIELD = "startDate";
 	
@@ -30,6 +31,10 @@ public class ScheduleEvent extends MaxObject {
 	
 	private String repeat = "";
 	public static final String REPEAT_FIELD = "eventRepeat";
+	
+	
+	
+	
 	
 	public void genKey()
 	{

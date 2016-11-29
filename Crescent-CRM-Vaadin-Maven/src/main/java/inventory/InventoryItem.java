@@ -57,6 +57,8 @@ public class InventoryItem extends MaxObject implements Item {
 
 	{
 		itemKey.setShowField(false);
+		
+		this.setKeyField(this.itemKey);
 		// A list that contains all the datatypes/field info/default values
 		this.addMaxField(itemKey);
 
@@ -78,6 +80,7 @@ public class InventoryItem extends MaxObject implements Item {
 	 * Max Object overrides
 	 */
 
+	/*
 	@Override
 	public void loadInternalFromMap() {
 		this.autoGenLoadInternalFromMap(this.autoGenList);
@@ -89,6 +92,7 @@ public class InventoryItem extends MaxObject implements Item {
 		this.autoGenUpdateDBMap(this.autoGenList);
 
 	}
+	*/
 
 	@Override
 	public String getPrimaryKey() {
@@ -98,6 +102,7 @@ public class InventoryItem extends MaxObject implements Item {
 		return pKey;
 	}
 
+	/*
 	@Override
 	public void createTableForClass(MaxDBTable table) {
 		this.autoGenCreateTableForClass(this.autoGenList, this.itemKey, table);
@@ -109,6 +114,7 @@ public class InventoryItem extends MaxObject implements Item {
 		this.autoGenSetupDBTypes(this.autoGenList);
 
 	}
+	*/
 
 	// Generate a key
 	public void genKey() {

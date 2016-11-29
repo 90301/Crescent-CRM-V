@@ -27,7 +27,26 @@ import debugging.Debugging;
  *
  */
 public abstract class MaxObject {
+	/*
+	 * All variables and data structures
+	 */
+	public Map<String, Object> dbMap = new HashMap<String, Object>();
+	public static Map<String, Class<?>> dbDatatypes = null;
 	
+	
+	/**
+	 * A list that contains all the MaxFields to be passed into functions.
+	 */
+	public ArrayList<MaxField<?>> autoGenList = new ArrayList<MaxField<?>>();
+	public Map<String,MaxField<?>> autoGenMap = new HashMap<String,MaxField<?>>();
+	
+	public MaxField<?> keyField;
+	
+	
+	
+	/*
+	 * End variables and data structures
+	 */
 	
 	/**
 	 * Creates a sql statement to insert a MaxObject into a database.
@@ -146,29 +165,43 @@ public abstract class MaxObject {
 
 	}
 
-	public abstract void loadInternalFromMap();
-
-	public abstract void updateDBMap();
 
 	public abstract String getPrimaryKey();
 
-	public Map<String, Object> dbMap = new HashMap<String, Object>();
-	// TODO: translation table for databases
-	// TODO: add dbDatatypes support to all max objects
-	public static Map<String, Class<?>> dbDatatypes = null;
 
+	
+
+	public void loadInternalFromMap() {
+		this.autoGenLoadInternalFromMap(this.autoGenList);
+	}
+
+	public void updateDBMap() {
+		this.autoGenUpdateDBMap(this.autoGenList);
+	}
+
+	
 	/**
-	 * MUST BE OVERRIDEN TO CREATE A TABLE FOR THE SUBCLASS
+	 * MaxField default version
+	 * creates the MaxDBTable that holds the data for this
+	 * class and instances of the class. modifies an existing table
+	 * to the new schema.
 	 * 
-	 * @param table
+	 * @param table- the table to set up.
 	 */
-	public abstract void createTableForClass(MaxDBTable table);
-
+	public void createTableForClass(MaxDBTable table) {
+		this.autoGenCreateTableForClass(this.autoGenList, this.keyField, table);
+	}
+		public void setupDBDatatypes() {
+		this.autoGenSetupDBTypes(this.autoGenList);
+	}
+	/**
+	 * Gets all the dbMap Fields
+	 * Please not these are NOT the MaxFields
+	 * @return- the dbMap Keyset.
+	 */
 	public Collection<String> getFields() {
 		return dbMap.keySet();
 	}
-
-	public abstract void setupDBDatatypes();
 
 	public UserDataHolder userDataHolder;
 	/**
@@ -249,15 +282,12 @@ public abstract class MaxObject {
 	
 	
 	/*
+	 * ------------------------------------------------------------------------------------------------------------------
 	 * Experimental CODE
 	 * relating to MaxFields
 	 */
 	
-	/**
-	 * A list that contains all the MaxFields to be passed into functions.
-	 */
-	public ArrayList<MaxField<?>> autoGenList = new ArrayList<MaxField<?>>();
-	public Map<String,MaxField<?>> autoGenMap = new HashMap<String,MaxField<?>>();
+
 	
 	/**
 	 * Adds a max field to the relevant data structures
@@ -275,6 +305,10 @@ public abstract class MaxObject {
 	
 	public <T> void setFieldValue(String fieldName,T value) {
 		autoGenMap.get(fieldName).setFieldValueUnsafe(value);
+	}
+	
+	public void setKeyField(MaxField<?> key) {
+		this.keyField=key;
 	}
 	
 	public Collection<MaxField<?>> getAutoGenList() {
