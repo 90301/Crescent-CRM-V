@@ -12,6 +12,7 @@ import dbUtils.MaxObject;
 
 public class Location extends MaxObject {
 
+	
 	private String locationName;
 	public static final String locationNameField = "locationName";
 	
