@@ -15,6 +15,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 
 import clientInfo.TemplateField;
+import dbUtils.InhalerUtils;
 
 public class TemplateRowUI extends HorizontalLayout{
 
@@ -73,10 +74,15 @@ public class TemplateRowUI extends HorizontalLayout{
 	}
 
 	public TemplateField genTemplateField() {
+		
+		String fieldName = fieldNameTextField.getValue();
+		String modFieldName = InhalerUtils.replaceStringSpaces(fieldName);
+		fieldNameTextField.setValue(modFieldName);
+		
 		// TODO Auto-generated method stub
 		TemplateField tF = new TemplateField();
 		tF.setDataType(fieldType.getValue().toString());
-		tF.setFieldName(fieldNameTextField.getValue());
+		tF.setFieldName(modFieldName);
 		tF.genDefaultValue();
 		return tF;
 		
