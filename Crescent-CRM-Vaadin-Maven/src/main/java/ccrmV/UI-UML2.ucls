@@ -38,9 +38,8 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <class id="5" language="java" name="ccrmV.Crescent_crm_vaadinUI" project="Crescent-CRM-Vaadin-Maven" 
-    file="/Crescent-CRM-Vaadin-Maven/src/main/java/ccrmV/Crescent_crm_vaadinUI.java" binary="false" 
-    corner="BOTTOM_RIGHT">    
+  <class id="5" language="java" name="ccrmV.CrmUI" project="Crescent-CRM-Vaadin-Maven" 
+    file="/Crescent-CRM-Vaadin-Maven/src/main/java/ccrmV/CrmUI.java" binary="false" corner="BOTTOM_RIGHT">    
     <position height="1413" width="353" x="583" y="37"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
@@ -67,58 +66,57 @@
     </display>  
   </class>  
   <association id="8">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="9" name="loginView">        
-        <position height="18" width="58" x="323" y="2446"/>      
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="9" name="masterUi">        
+        <position height="18" width="52" x="472" y="2430"/>      
       </attribute>      
       <multiplicity id="10" minimum="0" maximum="1">        
-        <position height="16" width="23" x="479" y="2444"/>      
+        <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="11">    
-    <bendpoint x="451" y="1490"/>    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="12" name="masterUi">        
-        <position height="18" width="52" x="386" y="1827"/>      
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="12" name="navBar">        
+        <position height="18" width="45" x="189" y="1313"/>      
       </attribute>      
       <multiplicity id="13" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <nesting id="14">    
-    <end type="SOURCE" refId="2"/>    
-    <end type="TARGET" refId="1"/>  
-  </nesting>  
-  <association id="15">    
+  <association id="14">    
     <bendpoint x="7" y="1598"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="16" name="masterUi">        
+      <attribute id="15" name="masterUi">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="17" minimum="0" maximum="1">        
+      <multiplicity id="16" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <nesting id="17">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </nesting>  
   <association id="18">    
-    <bendpoint x="332" y="1490"/>    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="19" name="masterUi">        
-        <position height="18" width="52" x="325" y="1818"/>      
+    <bendpoint x="353" y="1490"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="19" name="schedulerView">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="20" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="21">    
@@ -134,28 +132,28 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="24">    
-    <end type="SOURCE" refId="7" navigable="false">      
-      <attribute id="25" name="masterUi">        
+    <bendpoint x="32" y="1599"/>    
+    <end type="SOURCE" refId="2" navigable="false">      
+      <attribute id="25" name="userEditor">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="26" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="27">    
-    <bendpoint x="353" y="1490"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="28" name="schedulerView">        
-        <position height="0" width="0" x="0" y="0"/>      
+      <attribute id="28" name="loginView">        
+        <position height="18" width="58" x="323" y="2446"/>      
       </attribute>      
       <multiplicity id="29" minimum="0" maximum="1">        
-        <position height="0" width="0" x="0" y="0"/>      
+        <position height="16" width="23" x="479" y="2444"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="30">    
@@ -171,9 +169,10 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="33">    
-    <end type="SOURCE" refId="4" navigable="false">      
+    <bendpoint x="332" y="1490"/>    
+    <end type="SOURCE" refId="3" navigable="false">      
       <attribute id="34" name="masterUi">        
-        <position height="18" width="52" x="472" y="2430"/>      
+        <position height="18" width="52" x="325" y="1818"/>      
       </attribute>      
       <multiplicity id="35" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
@@ -183,41 +182,41 @@
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="36">    
-    <bendpoint x="472" y="1490"/>    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="37" name="mainApp">        
-        <position height="0" width="0" x="0" y="0"/>      
+    <bendpoint x="451" y="1490"/>    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="37" name="masterUi">        
+        <position height="18" width="52" x="386" y="1827"/>      
       </attribute>      
       <multiplicity id="38" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="39">    
-    <bendpoint x="32" y="1599"/>    
+    <bendpoint x="472" y="1490"/>    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="40" name="userEditor">        
+      <attribute id="40" name="mainApp">        
         <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="41" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="42">    
-    <end type="SOURCE" refId="3" navigable="false">      
-      <attribute id="43" name="navBar">        
-        <position height="18" width="45" x="189" y="1313"/>      
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="43" name="masterUi">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
       <multiplicity id="44" minimum="0" maximum="1">        
         <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

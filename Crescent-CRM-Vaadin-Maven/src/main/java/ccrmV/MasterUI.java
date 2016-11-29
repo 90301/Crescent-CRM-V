@@ -91,7 +91,7 @@ public class MasterUI extends UI {
 	public static ArrayList<String> authenicatedHosts = new ArrayList<String>();
 	String userHost = "";
 	
-	Crescent_crm_vaadinUI mainApp = new Crescent_crm_vaadinUI();
+	CrmUI mainApp = new CrmUI();
 	UserEditor userEditor = new UserEditor();
 	SchedulerView schedulerView = new SchedulerView();
 	LoginView loginView = new LoginView();

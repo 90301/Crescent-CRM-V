@@ -28,12 +28,13 @@ import dbUtils.BackupManager;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxObject;
 import debugging.Debugging;
+import uiElements.ClientEditor;
 //import de.steinwedel.messagebox.MessageBox;
 import uiElements.NavBar;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
-public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
+public class CrmUI extends HorizontalLayout implements View {
 
 	/*
 	 * in order for databases to work, The driver must be added to the server.
@@ -64,17 +65,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	ListSelect createGroupListSelect = new ListSelect();
 	public static final int CREATE_LIST_SELECT_ROWS = 4;
  
-	// Current Client Editing
-	TextArea clientNoteBox  = new TextArea("Client Notes");
-	ComboBox clientStatus = new ComboBox("Status"); 
-	ComboBox clientLocation = new ComboBox("Location");;
-	ComboBox clientGroup = new ComboBox("Group");;
-	Button clientUpdateButton = new Button("Update", event -> this.updateClient(event));
-	Button clientArchiveButton = new Button("Archive");
-	Label clientNameLabel = new Label("Client Name");
-	Label clientLastUpdate = new Label("Last Updated: --/--/----");
-	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
-	ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
+
 	
 	// filtering
 	HorizontalLayout filterLayout = new HorizontalLayout();
@@ -130,69 +121,25 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	//GridLayout optionsGridLayout = new GridLayout(4, 4);
 	Button createClientButton = new Button("Create Client", event -> this.createClientClick());
 	HorizontalLayout midLayout = new HorizontalLayout();
-	GridLayout clientGridLayout = new GridLayout(4, 10);
+	//GridLayout clientGridLayout = new GridLayout(4, 10);
 	//TODO
 	Button createLocationButton = new Button("Create Location", event -> this.createLocationClick());
 	Button createStatusButton = new Button("Create Status", event -> this.createStatusClick());
 	Button createGroupButton = new Button("Create Group", event -> this.createGroupClick());
 	Panel panel = new Panel();
-	VerticalLayout clientEditorLayout = new VerticalLayout();
-	HorizontalLayout clientEditorMetaLayout = new HorizontalLayout();
-	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
 	
-	
+	//Client Editing
+	ClientEditor clientEditor = new ClientEditor(this);
 	
 
 	/**
 	 * Updates the current client with the information entered
 	 * @param event
 	 */
-	private void updateClient(ClickEvent event) {
+	private void updateClient() {
 		// TODO Auto-generated method stub
 
-		// UPDATE fields in client
 
-		selectedClient.setNotes(clientNoteBox.getValue());
-
-		// Resolve field
-
-		// Template code
-		if (selectedClient.getName().contains(DataHolder.TEMPLATE_STRING)) {
-
-			Group tGroup = masterUi.userDataHolder.getGroup(DataHolder.TEMPLATE_STRING);
-			Location tLocation = masterUi.userDataHolder.getLocation(DataHolder.TEMPLATE_STRING);
-			Status tStatus = masterUi.userDataHolder.getStatus(DataHolder.TEMPLATE_STRING);
-			selectedClient.setGroup(tGroup);
-			selectedClient.setLocation(tLocation);
-			selectedClient.setStatus(tStatus);
-
-		} else {
-			// normal client creation
-			// if valid, set the field
-			Group cGroup = masterUi.userDataHolder.getGroup((String) clientGroup.getValue());
-			if (cGroup != null) {
-				selectedClient.setGroup(cGroup);
-			}
-			// Resolve field
-			Location cLocation = masterUi.userDataHolder.getLocation((String) clientLocation.getValue());
-			// if valid, set the field
-			if (cLocation != null) {
-				selectedClient.setLocation(cLocation);
-			}
-			// Resolve field
-			Status cStatus = masterUi.userDataHolder.getStatus((String) clientStatus.getValue());
-			// if valid, set the field
-			if (cStatus != null) {
-				selectedClient.setStatus(cStatus);
-			}
-
-		}
-		selectedClient.setLastUpdatedToNow();
-
-		selectedClient.setContactNow(clientContactNowCheckBox.getValue());
-		masterUi.userDataHolder.store(selectedClient, Client.class);
-		updateClientTable();
-		selectClient(selectedClient);
 	}
 	
 	/**
@@ -285,10 +232,6 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createClientLocation.clear();
 		createClientGroup.clear();
 
-		clientStatus.clear();
-		clientLocation.clear();
-		clientGroup.clear();
-
 		filterStatus.clear();
 		filterLocation.clear();
 		filterGroup.clear();
@@ -300,16 +243,13 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		fillComboBox(createClientLocation, masterUi.userDataHolder.getAllLocations());
 		fillComboBox(createClientGroup, masterUi.userDataHolder.getAllGroups());
 
-		// Client editor
-		fillComboBox(clientStatus, masterUi.userDataHolder.getAllStatus());
-		fillComboBox(clientLocation, masterUi.userDataHolder.getAllLocations());
-		fillComboBox(clientGroup, masterUi.userDataHolder.getAllGroups());
-
 		// filter
 		fillComboBox(filterStatus, masterUi.userDataHolder.getAllStatus());
 		fillComboBox(filterLocation, masterUi.userDataHolder.getAllLocations());
 		fillComboBox(filterGroup, masterUi.userDataHolder.getAllGroups());
 
+		clientEditor.updateAllComboBoxes();
+		
 		//fillComboBox(csvBackupSelect, BackupManager.getCsvBackups());
 	}
 
@@ -376,35 +316,14 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 
 		} else {
 			System.out.println("Null value made it to selectClient: " + c);
-			clientEditorLayout.setVisible(false);
+			clientEditor.setVisible(false);
 			return;
 		}
-		clientEditorLayout.setVisible(true);
+		clientEditor.setVisible(true);
 		clientTable.select(c.getName());
 		this.selectedClient = c;
+		clientEditor.selectClient(c);
 
-		System.out.println("showing client information for: " + c);
-		// TODO: load information into the ui.
-		// LOAD INFORMATION
-		clientNameLabel.setValue(c.getName());
-		clientStatus.setValue(c.getStatusName());
-		clientLocation.setValue(c.getLocationName());
-		clientGroup.setValue(c.getGroupName());
-
-		clientNoteBox.setValue(c.getNotes());
-		//clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length+2,MAX_NOTE_ROWS));
-		clientNoteBox.setRows(MAX_NOTE_ROWS);
-		// set last updated
-		if (c.getLastUpdated() != null) {
-			SimpleDateFormat sdf = new SimpleDateFormat("MMMM-dd-yy h:mm a");
-			Date resultdate = c.getLastUpdated();
-
-			clientLastUpdate.setValue(sdf.format(resultdate));
-		} else {
-			clientLastUpdate.setValue("Never updated");
-		}
-		
-		clientContactNowCheckBox.setValue(c.getContactNow());
 
 	}
 
@@ -585,18 +504,12 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent VCevent) {
 
-		
 		//TODO START OF THE UI
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
 
 		masterUi.userDataHolder.initalizeDatabases();
-
-		// This is the top level layout (for now)
-		// hopefully this can be changed later.
-
-		
 
 		// Nav Bar Code
 		navBar.updateInfo();
@@ -802,41 +715,9 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		 * E D I T I N G
 		 */
 		// CLIENT EDITING UI
-		//clientNameLabel 
 		
-		//clientNoteBox
-		clientNoteBox.setSizeFull();
-		clientNoteBox.setWidth(NOTE_WIDTH);
-		clientNoteBox.setResponsive(true);
 		
-		//clientLocation 
-		clientLocation.setNullSelectionAllowed(false);
-		clientLocation.setInvalidAllowed(false);
-		
-		//clientGroup 
-		clientGroup.setNullSelectionAllowed(false);
-		clientGroup.setInvalidAllowed(false);
-		
-		//clientStatus 
-		clientStatus.setNullSelectionAllowed(false);
-		clientStatus.setInvalidAllowed(false);
-		
-		//clientUpdateButton 
-		
-		//clientLastUpdate 
-		
-		//clientArchiveButton 
-
-		clientLastUpdate.setSizeFull();
-		// client editing events
-
-		//Client Editor V2
-		
-		genClientEditor();
-		
-		clientEditorLayout.setVisible(false);
-		
-		midLayout.addComponent(clientEditorLayout);
+		midLayout.addComponent(clientEditor);
 
 		updateAllComboBoxes();
 		
@@ -864,34 +745,7 @@ public class Crescent_crm_vaadinUI extends HorizontalLayout implements View {
 		createGroupListSelect.addItems(masterUi.userDataHolder.getAllGroups());
 	}
 
-	/**
-	 * Adds all the components for the clientEditor
-	 */
-	private void genClientEditor() {
-		//Editor for the client meta data (location status group)
-		clientEditorMetaLayout.setSpacing(true);
-		clientEditorMetaLayout.setSizeFull();
 
-		clientEditorMetaLayout.addComponent(clientLocation);
-		clientEditorMetaLayout.addComponent(clientStatus);
-		clientEditorMetaLayout.addComponent(clientGroup);
-		
-		//Editor actions (archive update ect)
-		clientEditorActionLayout.setSpacing(true);
-		
-		clientEditorActionLayout.addComponent(clientLastUpdate);
-		clientEditorActionLayout.addComponent(clientUpdateButton);
-		clientEditorActionLayout.addComponent(clientArchiveButton);
-		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
-		clientEditorActionLayout.addComponent(clientContactFrequency);
-		//holds the client editor
-		clientEditorLayout.setSpacing(true);
-		
-		clientEditorLayout.addComponent(clientNameLabel);
-		clientEditorLayout.addComponent(clientEditorMetaLayout);
-		clientEditorLayout.addComponent(clientNoteBox);
-		clientEditorLayout.addComponent(clientEditorActionLayout);
-	}
 
 	/**
 	 * Adds all the components related to the filter layout
