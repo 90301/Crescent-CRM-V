@@ -302,6 +302,7 @@ public abstract class MaxObject {
 		this.userDataHolder = udh;
 	}
 	/**
+	 * @deprecated
 	 * Loads data into dbMap from a csv file map.
 	 * 
 	 * @param entity
@@ -418,7 +419,11 @@ public abstract class MaxObject {
 		//This automates setting up dbDatatypes 
 		
 		for (MaxField<?> m : maxFields) {
-			dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
+			if (m.conversion==null) {
+				dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
+			} else {
+				dbDatatypes.put(m.getFieldName(), m.getConversionExtendedClass());
+			}
 		}
 	}
 	
@@ -430,7 +435,12 @@ public abstract class MaxObject {
 	public void autoGenUpdateDBMap(Collection<MaxField<?>> maxFields) {
 		
 		for (MaxField<?> m : maxFields) {
+			if (m.conversion==null) {
 			dbMap.put(m.getFieldName(), m.getFieldValue());
+			} else {
+				//load the converted value
+				dbMap.put(m.getFieldName(), m.getConvertedFieldValue());
+			}
 		}
 	}
 	
@@ -443,8 +453,12 @@ public abstract class MaxObject {
 	public Collection<MaxField<?>> autoGenLoadInternalFromMap(Collection<MaxField<?>> maxFields) {
 		
 		for (MaxField<?> m : maxFields) {
-
-			m.safeLoadValue(this);
+			if (m.getConversion()==null) {
+				m.safeLoadValue(this);
+			} else {
+				//if a conversion is available, use it
+				m.safeConversionLoad(this);
+			}
 			
 		}
 		

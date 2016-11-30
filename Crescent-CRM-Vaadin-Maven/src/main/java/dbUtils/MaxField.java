@@ -4,6 +4,7 @@
 
 package dbUtils;
 
+import dbUtils.Conversions.MaxConversion;
 import inventory.InventoryItem;
 
 /**
@@ -24,6 +25,8 @@ public class MaxField<T> {
 	T defaultFieldValue;
 	MaxObject refClass;
 	Boolean showField = true;
+	
+	MaxConversion<?,?> conversion;
 	
 	
 	/**
@@ -66,12 +69,28 @@ public class MaxField<T> {
 	 * @param maxObject - the max object to pull the value from
 	 */
 	public void safeLoadValue(MaxObject maxObject) {
+		
 		T loadedValue = maxObject.safeLoadFromInternalMap(this.fieldName, this.defaultFieldValue);
+		
 		
 		
 		//NOTE: this may cause a bug if the internal map is updated
 		this.setFieldValue(loadedValue);
 		
+	}
+
+	/**
+	 * Load the value from the database, then convert it to
+	 * the expected datatype
+	 * @param maxObject
+	 */
+	@SuppressWarnings("unchecked")
+	public <STORE> void safeConversionLoad(MaxObject maxObject) {
+		STORE databaseLoadedValue = (STORE) maxObject.safeLoadFromInternalMap(this.fieldName, this.defaultFieldValue);
+		
+		T convertedValue = (T) ((MaxConversion<T,STORE>) this.conversion).convertToUse(databaseLoadedValue);
+		
+		this.setFieldValue(convertedValue);
 	}
 	
 	@Override
@@ -85,15 +104,41 @@ public class MaxField<T> {
 		
 	}
 	
+
+	public <STORE> Object getConvertedFieldValue() {
+		@SuppressWarnings("unchecked")
+		Object convertedObject = ((MaxConversion<T,STORE>) this.conversion).convertToStore(this.getFieldValue());
+		return convertedObject;
+	}
+
+
+	public Class<?> getConversionExtendedClass() {
+		if (fieldValue != null) {
+			
+			return conversion.getStoreClass();
+			} else {
+				return null;
+			}
+	}
+	
 	/*
 	 * Getters / Setters
 	 */
+	
+	
+	public MaxConversion<?, ?> getConversion() {
+		return conversion;
+	}
 
-
+	public void setConversion(MaxConversion<?, ?> conversion) {
+		this.conversion = conversion;
+	}
 
 	public String getFieldName() {
 		return fieldName;
 	}
+
+
 
 	public void setFieldName(String fieldName) {
 		this.fieldName = fieldName;
@@ -145,6 +190,8 @@ public class MaxField<T> {
 		this.setFieldValue((T) value); 
 		
 	}
+
+
 
 
 

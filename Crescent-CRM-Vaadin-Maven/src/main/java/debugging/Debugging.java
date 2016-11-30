@@ -110,7 +110,7 @@ public class Debugging {
 	public static final String INHALER_UTILS_DEBUG = CONSOLE_OUTPUT;
 	public static final Boolean INHALER_UTILS_DEBUG_ENABLED = true;
 
-	// Client Field Debuggin
+	// Client Field Debugging
 	public static final String CLIENT_FIELD_DEBUGGING = CONSOLE_OUTPUT;
 	public static final Boolean CLIENT_FIELD_DEBUGGING_ENABLED = true;
 
@@ -122,6 +122,8 @@ public class Debugging {
 	public static final String DELETE_OUTPUT = CONSOLE_OUTPUT;
 	public static final Boolean DELETE_OUTPUT_ENABLED = true;
 	
+	public static final String CONVERSION_DEBUG = CONSOLE_OUTPUT;
+	public static final Boolean CONVERSION_DEBUG_ENABLED = true;
 	//Andrews Debugging Variables
 	
 	
