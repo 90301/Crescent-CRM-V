@@ -38,7 +38,8 @@ public class LoginView extends VerticalLayout implements View {
 	
 	
 	Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
-	Image logo = new Image(null, res);
+	Resource res2 = new ThemeResource("images/StyleC_Logo_Dark_Theme_Login_11-30-16.svg");
+	Image logo = new Image(null, res2);
 	//private static final ShortcutAction enterKeyShortcut = new ShortcutAction(null, ShortcutAction.KeyCode.ENTER, null);
 	Label versionLabel = new Label();
 	
