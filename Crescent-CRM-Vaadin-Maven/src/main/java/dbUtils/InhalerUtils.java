@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 //XML IMPORTS
 import javax.xml.parsers.DocumentBuilder;
@@ -300,6 +301,12 @@ public class InhalerUtils {
 
 		System.out.println("Tested: " + testingString + " Null?: " + rtrn);
 		return rtrn;
+	}
+	
+	public static String genRandomKey() {
+		UUID uid = UUID.randomUUID();
+		
+		return uid.toString();
 	}
 
 }

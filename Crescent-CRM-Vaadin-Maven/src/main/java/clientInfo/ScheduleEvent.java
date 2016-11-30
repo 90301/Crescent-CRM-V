@@ -1,16 +1,21 @@
 package clientInfo;
 
 import java.util.Date;
+import java.util.UUID;
 
 import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEvent.EventChangeNotifier;
 
+import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import debugging.Debugging;
 
-public class ScheduleEvent extends MaxObject {
+public class ScheduleEvent extends MaxObject implements CalendarEvent, EventChangeNotifier {
 
-	
+	/*
 	private Date start = new Date();
 	public static final String START_FIELD = "startDate";
 	
@@ -31,23 +36,56 @@ public class ScheduleEvent extends MaxObject {
 	
 	private String repeat = "";
 	public static final String REPEAT_FIELD = "eventRepeat";
+	*/
+	MaxField<Date> start = new MaxField<Date>("startDate",MaxDBTable.DATA_MYSQL_TYPE_DATE_TIME,new Date(),new Date(),this);
+	MaxField<Date> end = new MaxField<Date>("endDate",MaxDBTable.DATA_MYSQL_TYPE_DATE_TIME,new Date(),new Date(),this);
 	
+	MaxField<String> eventName = new MaxField<String>("eventName",MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,"","",this);
+	MaxField<String> eventDescription = new MaxField<String>("eventDescription",MaxDBTable.DATA_MYSQL_TYPE_STRING,"","",this);
+	MaxField<String> user = new MaxField<String>("eventUser",MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,"","",this);
+	MaxField<String> key = new MaxField<String>("eventKey",MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,"","",this);
+	MaxField<String> repeat = new MaxField<String>("eventRepeat",MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,"","",this);
 	
+	{
+		this.setKeyField(key);
+		
+		this.addMaxField(start);
+		this.addMaxField(end);
+		this.addMaxField(eventName);
+		this.addMaxField(eventDescription);
+		this.addMaxField(user);
+		this.addMaxField(key);
+		this.addMaxField(repeat);
+	}
 	
-	
-	
+	/**
+	 * Generates a random key and sets the key to that random key
+	 */
 	public void genKey()
 	{
-		key = this.user + this.eventName + this.start.toString();
+		this.setKey(InhalerUtils.genRandomKey());
+		//key = this.user + this.eventName + this.start.toString();
 		Debugging.output("key: " + key, Debugging.SCHEDULE_EVENT_OUTPUT, Debugging.SCHEDULE_EVENT_OUTPUT_ENABLED);
 	}
 	
+	/**
+	 * Creates a vaadin basic event from the data in
+	 * this object. Please note this is likely to change
+	 * @return a basic event
+	 */
 	public BasicEvent genBasicEvent()
 	{
-		BasicEvent event = new BasicEvent(eventName, eventDescription, start, end);
+		BasicEvent event = new BasicEvent(getEventName(), getEventDescription(), getStart(), getEnd());
+		
 		return event;
 	}
 	
+	@Override
+	public String getPrimaryKey() {
+		
+		return getKey();
+	}
+	/*
 	@Override
 	public void loadInternalFromMap() {
 		key = (String) dbMap.get(KEY_FIELD);
@@ -70,11 +108,7 @@ public class ScheduleEvent extends MaxObject {
 		dbMap.put(REPEAT_FIELD, repeat);
 	}
 
-	@Override
-	public String getPrimaryKey() {
-		
-		return key;
-	}
+	
 
 	@Override
 	public void createTableForClass(MaxDBTable table) {
@@ -100,68 +134,111 @@ public class ScheduleEvent extends MaxObject {
 		dbDatatypes.put(USER_FIELD, String.class);
 		dbDatatypes.put(REPEAT_FIELD, String.class);
 	}
-	
+	*/
 	public Date getStart() {
-		return start;
+		return start.getFieldValue();
 	}
 
 	public void setStart(Date start) {
-		this.start = start;
+		this.start.setFieldValue(start);
 		updateDBMap();
 	}
 
 	public Date getEnd() {
-		return end;
+		return end.getFieldValue();
 	}
 
 	public void setEnd(Date end) {
-		this.end = end;
+		this.end.setFieldValue(end);
 		updateDBMap();
 	}
 
 	public String getEventName() {
-		return eventName;
+		return eventName.getFieldValue();
 	}
 
 	public void setEventName(String eventName) {
-		this.eventName = eventName;
+		this.eventName.setFieldValue(eventName);
 		updateDBMap();
 	}
 
 	public String getEventDescription() {
-		return eventDescription;
+		return eventDescription.getFieldValue();
 	}
 
 	public void setEventDescription(String eventDescription) {
-		this.eventDescription = eventDescription;
+		this.eventDescription.setFieldValue(eventDescription);
 		updateDBMap();
 	}
 
 	public String getUser() {
-		return user;
+		return user.getFieldValue();
 	}
 
 	public void setUser(String user) {
-		this.user = user;
+		this.user.setFieldValue(user);
 		updateDBMap();
 	}
 
 	public String getKey() {
-		return key;
+		return key.getFieldValue();
 	}
 
 	public void setKey(String key) {
-		this.key = key;
+		this.key.setFieldValue(key);
 		updateDBMap();
 	}
 
 	public String getRepeat() {
-		return repeat;
+		return repeat.getFieldValue();
 	}
 
 	public void setRepeat(String repeat) {
-		this.repeat = repeat;
+		this.repeat.setFieldValue(repeat);
 		updateDBMap();
+	}
+
+	
+	/*
+	 * TONY, let's walk through implementing these methods:
+	 * -Josh
+	 * https://vaadin.com/docs/-/part/framework/components/components-calendar.html
+	 * 
+	 */
+	@Override
+	public void addEventChangeListener(EventChangeListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeEventChangeListener(EventChangeListener listener) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getCaption() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getDescription() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStyleName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAllDay() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
