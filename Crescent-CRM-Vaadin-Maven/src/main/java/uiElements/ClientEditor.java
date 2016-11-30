@@ -17,6 +17,7 @@ import clientInfo.DataHolder;
 import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
+import clientInfo.UserDataHolder;
 
 public class ClientEditor extends VerticalLayout {
 	
@@ -61,6 +62,8 @@ public class ClientEditor extends VerticalLayout {
 	 * Adds all the components for the clientEditor
 	 */
 	private void genClientEditor() {
+		
+	
 		//clientNameLabel 
 		
 		//clientNoteBox
@@ -103,6 +106,8 @@ public class ClientEditor extends VerticalLayout {
 		//Template editor
 		templateEditor.updateUI();
 		templateEditor.setVisible(false);
+		
+		//templateEditor.setUdh(crmUi.masterUi.userDataHolder);
 		
 		//Custom Field Editor
 		//This is buggy and has been replaced
