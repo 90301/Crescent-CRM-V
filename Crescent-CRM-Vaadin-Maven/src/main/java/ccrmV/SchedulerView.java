@@ -98,6 +98,11 @@ public class SchedulerView extends HorizontalLayout implements View {
 		stylist2Layout = new VerticalLayout();
 		stylist3Layout = new VerticalLayout();
 		createEventLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		frontDeskLayout.setVisible(false);
+		stylist1Layout.setVisible(false);
+		stylist2Layout.setVisible(false);
+		stylist3Layout.setVisible(false);
+		
 		/*
 		 * create components here and edit settings
 		 * added width setting to allow forward advancing
