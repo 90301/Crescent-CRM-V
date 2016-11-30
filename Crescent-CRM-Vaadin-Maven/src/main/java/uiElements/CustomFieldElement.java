@@ -20,6 +20,20 @@ public class CustomFieldElement extends HorizontalLayout{
 	UserDataHolder userDataHolder;
 	String fieldName = "";
 
+	public String getFieldName() {
+		return fieldName;
+	}
+	
+	public Object getFieldValue(){
+		
+		if(fieldComponent instanceof TextField){
+			return ((TextField)fieldComponent).getValue();
+		}
+		
+		
+		return null;
+	}
+
 	//Different UI elements
 	TextField textF;
 	PopupDateField dateF;

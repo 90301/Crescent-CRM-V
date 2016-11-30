@@ -172,6 +172,8 @@ public class ClientEditor extends VerticalLayout {
 
 		}
 		crmUi.selectedClient.setLastUpdatedToNow();
+		
+		customFieldEditor.updateClient(crmUi.selectedClient);
 
 		crmUi.selectedClient.setContactNow(clientContactNowCheckBox.getValue());
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
