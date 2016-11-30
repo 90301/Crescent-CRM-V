@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = .98;
-	public static final String versionDescription = " Spaces to Dashes Tempalte Field";
+	public static final double versionNumber = .99;
+	public static final String versionDescription = " Template Field Deleting";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
