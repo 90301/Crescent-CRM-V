@@ -33,18 +33,24 @@ public class TemplateEditor extends VerticalLayout{
 	//TODO
 	//Flags
 	int removeFlag = 0;
-	//Dates, Text, Numbers
-	
-	//Use this for date selection in Vaadin
-	// new PopupDateField("");
+	//Build an ArrayList of TemplateRowUI's
 	ArrayList<TemplateRowUI> fieldArrayList = new ArrayList<TemplateRowUI>();
-	//HorizontalLayout x = new HorizontalLayout();
 	
-	//Need to make a list of all Field Types: Numbers, Dates, URLs, etc.
+	//Create an instance of udh
+	/*
+	UserDataHolder udh;
+	
+	public UserDataHolder getUdh() {
+		return this.udh;
+	}
+
+	public void setUdh(UserDataHolder udh) {
+		this.udh = udh;
+	}
+	*/
 	
 	Button Add = new Button("Add New Field", event -> this.addRowClick());
 	
-	//UserDataHolder userDataHolder;
 	
 	public TemplateEditor() {
 		
@@ -81,14 +87,41 @@ public class TemplateEditor extends VerticalLayout{
 	public void removeRow(TemplateRowUI templateRowUI) {
 		// TODO Auto-generated method stub
 		fieldArrayList.remove(templateRowUI);
+		//udh.remove(udh.getMap(TemplateField.class).get(templateRowUI.getTemplateFieldName()), TemplateEditor.class);
+		
 		updateUI();
 	}
 
 	public void updateTemplates(UserDataHolder userDataHolder) {
+		
+		//for efficieny, lets store a cache and fill it up
+		ArrayList<String> fieldNameCache = new ArrayList<String>();
 		for(TemplateRowUI row :fieldArrayList){
 			
 			TemplateField tF = row.genTemplateField();
+			
+			fieldNameCache.add(tF.getFieldName());
+			
 			userDataHolder.store(tF, TemplateField.class);
+		}
+		
+		ArrayList<TemplateField> removeList = new ArrayList<TemplateField>();
+		//Remove items no longer in the fieldArrayList (utilizing the cache)
+		for (TemplateField tf : userDataHolder.getMap(TemplateField.class).values()) {
+			
+			//check to see if the template field is in the cached arraylist
+			if (!fieldNameCache.contains(tf.getFieldName())) {
+				removeList.add(tf);
+			}
+			
+		}
+		
+		//loop through the remove list, and remove it from the user data holder
+		for (TemplateField tf : removeList) {
+			//maybe I should have called it remove
+			//either that or make it deleteList 
+			//remind me to refactor  later
+			userDataHolder.delete(tf, TemplateField.class);
 		}
 	}
 	
