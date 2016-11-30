@@ -60,6 +60,15 @@ public class MaxField<T> {
 		}
 	}
 	
+	public Class<?> getConversionExtendedClass() {
+		if (fieldValue != null) {
+			
+			return conversion.getStoreClass();
+			} else {
+				return null;
+			}
+	}
+	
 	/**
 	 * Loads a value from a Max Object's internal map
 	 * 
@@ -112,14 +121,7 @@ public class MaxField<T> {
 	}
 
 
-	public Class<?> getConversionExtendedClass() {
-		if (fieldValue != null) {
-			
-			return conversion.getStoreClass();
-			} else {
-				return null;
-			}
-	}
+	
 	
 	/*
 	 * Getters / Setters

@@ -28,19 +28,23 @@ public class Location extends MaxObject {
 	MaxField<String> locationName = new MaxField<String>("locationName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
 			this);
 
+	
 	MaxConversion<HashSet<Location>, String> closeLocationsConversion = new HashSetToString();
 
 	MaxField<HashSet<Location>> closeLocations = new MaxField<HashSet<Location>>("closeLocations",
 			MaxDBTable.DATA_MYSQL_TYPE_STRING, dHashSet, dHashSet, this);
-
+			
 	{
+		
 		closeLocationsConversion.setUserDataHolder(userDataHolder);
 		closeLocationsConversion.setStoreRef(String.class);
 		closeLocations.setConversion(closeLocationsConversion);
+		
+		
 		this.setKeyField(locationName);
 
 		this.addMaxField(locationName);
-		this.addMaxField(closeLocations);
+		//this.addMaxField(closeLocations);
 	}
 
 	public Location() {
@@ -95,6 +99,7 @@ public class Location extends MaxObject {
 		return locationName.getFieldValue();
 	}
 
+	
 	public HashSet<Location> getCloseLocations() {
 		return closeLocations.getFieldValue();
 	}
@@ -102,7 +107,8 @@ public class Location extends MaxObject {
 	public void setCloseLocations(HashSet<Location> closeLocations) {
 		this.closeLocations.setFieldValue(closeLocations);
 	}
-
+	
+	
 	@Override
 	public String getPrimaryKey() {
 		// TODO Auto-generated method stub

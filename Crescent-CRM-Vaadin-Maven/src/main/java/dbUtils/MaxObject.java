@@ -419,11 +419,9 @@ public abstract class MaxObject {
 		//This automates setting up dbDatatypes 
 		
 		for (MaxField<?> m : maxFields) {
-			if (m.conversion==null) {
+			
 				dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
-			} else {
-				dbDatatypes.put(m.getFieldName(), m.getConversionExtendedClass());
-			}
+			 
 		}
 	}
 	

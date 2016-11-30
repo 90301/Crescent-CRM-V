@@ -18,7 +18,7 @@ public class HashSetToString extends MaxConversion<HashSet<Location>, String> {
 			} else {
 				firstRun = false;
 			}
-			csv += l.getLocationName();
+			csv += l.getPrimaryKey();
 		}
 		return csv;
 	}
