@@ -19,6 +19,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
 import com.vaadin.ui.components.calendar.event.BasicEvent;
+import com.vaadin.ui.components.calendar.event.CalendarEvent;
 import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
 
 import clientInfo.DataHolder;
@@ -304,7 +305,7 @@ public class SchedulerView extends HorizontalLayout implements View {
  //       fdHLayout.addComponent(cal5);
         
         populateComboBoxes();
-        
+        updateScheduler();
 		/*
 		 * Add components here
 		 */
@@ -362,10 +363,27 @@ public class SchedulerView extends HorizontalLayout implements View {
 		event.genKey();
 		DataHolder.store(event, ScheduleEvent.class);
 		//BasicEvent event = new BasicEvent(eventName, client, eventStart, eventEnd);
-		cal.addEvent(event.genBasicEvent());
+		addEvent(event);
+		updateScheduler();
 	}
 
 
+	ArrayList<CalendarEvent> calendarEvents = new ArrayList<CalendarEvent>();
+	
+	public void addEvent(ScheduleEvent se){
+		calendarEvents.add(se);
+		cal.addEvent(se);
+	}
+	public void updateScheduler(){
+		for (CalendarEvent ce:calendarEvents){
+			cal.removeEvent(ce);
+		}
+		calendarEvents.clear();
+		for (ScheduleEvent se:DataHolder.getMap(ScheduleEvent.class).values()) {
+			addEvent(se);
+		}
+	}
+	
 	private void switchToFrontDeskModeClick(){
 		/**
 		frontDeskLayout.addComponent(createEventNameTextField);
