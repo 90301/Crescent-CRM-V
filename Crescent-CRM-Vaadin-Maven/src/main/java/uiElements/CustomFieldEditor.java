@@ -69,4 +69,13 @@ public class CustomFieldEditor extends VerticalLayout {
 
 	}
 
+	public void updateClient(Client selectedClient) {
+		// TODO Auto-generated method stub
+
+		for(CustomFieldElement cF : customFieldElements){
+			
+			selectedClient.setCustomFieldValue(cF.getFieldName(), cF.getFieldValue());
+		}
+	}
+
 }
