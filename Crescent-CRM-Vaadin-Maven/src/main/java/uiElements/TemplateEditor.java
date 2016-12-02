@@ -94,7 +94,7 @@ public class TemplateEditor extends VerticalLayout{
 
 	public void updateTemplates(UserDataHolder userDataHolder) {
 		
-		//for efficieny, lets store a cache and fill it up
+		//for efficiency, lets store a cache and fill it up
 		ArrayList<String> fieldNameCache = new ArrayList<String>();
 		for(TemplateRowUI row :fieldArrayList){
 			

@@ -150,7 +150,7 @@ public class ClientEditor extends VerticalLayout {
 			crmUi.selectedClient.setLocation(tLocation);
 			crmUi.selectedClient.setStatus(tStatus);
 			//Update the fields
-			//templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
+			templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
 
 		} else {
 			// normal client creation
