@@ -50,9 +50,10 @@ public class SchedulerView extends HorizontalLayout implements View {
 	public MasterUI masterUi;
 	public NavBar navBar;
 		
-	public HorizontalLayout createEventLayout;
-	public VerticalLayout schedulerLayout;
-	public VerticalLayout frontDeskLayout;	
+	public HorizontalLayout createEventLayout = new HorizontalLayout();
+	public VerticalLayout schedulerLayout = new VerticalLayout();
+	public HorizontalLayout frontDeskLayout = new HorizontalLayout();
+	public HorizontalLayout singleUserLayout = new HorizontalLayout();
 	
 	/*
 	 * UI Components
@@ -64,6 +65,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	private DateField createEventEndDateField = new PopupDateField("Event End");
 	private ComboBox repeatComboBox = new ComboBox("Repeat");
 	private Button switchToFrontDeskMode = new Button("Front Desk Mode");
+	private Button switchToSingleMode = new Button("Single Mode");
 	
 	/* replaced by createEventEndDateField
 	private TextField createEventDurationTextField  = new TextField("Duration");
@@ -74,23 +76,29 @@ public class SchedulerView extends HorizontalLayout implements View {
 	
 	public static final ArrayList<String> baseTimeList = new ArrayList<>();
 	
-	public SchedulerModule smTest = new SchedulerModule(this);
+	//public SchedulerModule smTest = new SchedulerModule(this);
+	public ArrayList<SchedulerModule> schedulerModules = new ArrayList<SchedulerModule>();
+	public Integer frontDeskModeStylists = 3;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		this.setSpacing(true);
 		// TODO 
 		if (!masterUi.loggedIn || masterUi.user == null)
 			masterUi.enterLogin();
-		
-		schedulerLayout = new VerticalLayout();
-		createEventLayout = new HorizontalLayout();
-		frontDeskLayout = new VerticalLayout();
 
 		createEventLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 		frontDeskLayout.setVisible(false);
 		
-		smTest.genSchedulerModule();
-		frontDeskLayout.addComponent(smTest);
+		for (int i=0;i<frontDeskModeStylists;i++) {
+			SchedulerModule sm = new SchedulerModule(this);
+			sm.genSchedulerModule();
+			sm.navigateToDay(new Date());
+			frontDeskLayout.addComponent(sm);
+		}
+		
+		//smTest.genSchedulerModule();
+		//frontDeskLayout.addComponent(smTest);
 		
 		/*
 		 * create components here and edit settings
@@ -165,6 +173,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         //createEventButton
         createEventButton.addClickListener(click -> createEventButtonClick());
         switchToFrontDeskMode.addClickListener(click -> switchToFrontDeskModeClick());
+        switchToSingleMode.addClickListener(click -> switchToSingleModeClick());
         
         createEventLayout.addComponent(createEventNameTextField);
         createEventLayout.addComponent(createEventClientComboBox);
@@ -173,6 +182,7 @@ public class SchedulerView extends HorizontalLayout implements View {
         createEventLayout.addComponent(repeatComboBox);
         createEventLayout.addComponent(createEventButton);
         createEventLayout.addComponent(switchToFrontDeskMode);
+        createEventLayout.addComponent(switchToSingleMode);
         
         populateComboBoxes();
         updateScheduler();
@@ -184,16 +194,25 @@ public class SchedulerView extends HorizontalLayout implements View {
 		//this.addComponent(new Label("Scheduler"));
 		
 		//this.addComponent(cal);
+		
+		switchToSingleModeClick();
+		
+		
+		singleUserLayout.addComponent(cal);
+		
 		schedulerLayout.addComponent(createEventLayout);
-		schedulerLayout.addComponent(cal);
-
+		
+		schedulerLayout.addComponent(singleUserLayout);
+		schedulerLayout.addComponent(frontDeskLayout);
 		
 		this.addComponent(schedulerLayout);
-		this.addComponent(frontDeskLayout);
+		
 		
 	}
 	
-    public void updateEndDate() {
+
+
+	public void updateEndDate() {
     	
 		Date endDate3 = new Date(createEventStartDateField.getValue().getTime() + TimeUnit.HOURS.toMillis(1));
 		createEventEndDateField.setValue(endDate3);
@@ -239,22 +258,35 @@ public class SchedulerView extends HorizontalLayout implements View {
 	}
 	
 	private void switchToFrontDeskModeClick(){
-		/**
-		frontDeskLayout.addComponent(createEventNameTextField);
-		frontDeskLayout.addComponent(createEventClientComboBox);
-        frontDeskLayout.addComponent(createEventStartDateField);
-        frontDeskLayout.addComponent(createEventEndDateField);
-        frontDeskLayout.addComponent(repeatComboBox);
-        frontDeskLayout.addComponent(createEventButton);
-        frontDeskLayout.addComponent(switchToFrontDeskMode);
-        **/
-		
+
 		//frontDeskLayout.addComponent(cal);
-		createEventLayout.setVisible(false);
-		schedulerLayout.setVisible(false);
+		//createEventLayout.setVisible(true);
+		//TODO modify this to show user selection when in front desk mode
+		//TODO change the button to go back to single scheulder mode
+		/*
+		singleUserLayout.setVisible(false);
 		frontDeskLayout.setVisible(true);
+		switchToSingleMode.setVisible(true);
+		*/
+		setFrontDeskMode(true);
 	}
-	
+    private void switchToSingleModeClick() {
+    	
+    	/*
+    	singleUserLayout.setVisible(true);
+		frontDeskLayout.setVisible(false);
+		switchToSingleMode.setVisible(false);
+		*/
+    	setFrontDeskMode(false);
+	}
+    
+    private void setFrontDeskMode(Boolean frontDeskMode) {
+    	
+    	singleUserLayout.setVisible(!frontDeskMode);
+		frontDeskLayout.setVisible(frontDeskMode);
+		switchToSingleMode.setVisible(frontDeskMode);
+		switchToFrontDeskMode.setVisible(!frontDeskMode);
+    }
 
 	private void populateComboBoxes() {
 		
