@@ -150,7 +150,6 @@ public class ScheduleEvent extends MaxObject implements CalendarEvent, EventChan
 
 	public void setEnd(Date end) {
 		this.end.setFieldValue(end);
-		updateDBMap();
 	}
 
 	public String getEventName() {
@@ -219,14 +218,13 @@ public class ScheduleEvent extends MaxObject implements CalendarEvent, EventChan
 
 	@Override
 	public String getCaption() {
-		// TODO Auto-generated method stub
-		return null;
+		return getEventName();
+		
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return getEventDescription();
 	}
 
 	@Override

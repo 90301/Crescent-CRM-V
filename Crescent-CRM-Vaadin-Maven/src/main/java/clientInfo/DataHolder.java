@@ -167,6 +167,10 @@ public class DataHolder {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static <T extends MaxObject> ConcurrentHashMap<String, T> getMap (Class<T> ref) {
+		return (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
+	}
 
 	// BACKUPS
 
