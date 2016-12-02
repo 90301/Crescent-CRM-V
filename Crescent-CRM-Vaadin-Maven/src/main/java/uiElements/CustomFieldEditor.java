@@ -52,6 +52,7 @@ public class CustomFieldEditor extends VerticalLayout {
 		// clears all fields
 		// TODO remove this code and improve caching (ANDREW)
 		this.removeAllComponents();
+		customFieldElements.clear();
 
 		// Load all the template fields from the user data holder
 		ConcurrentHashMap<String, TemplateField> templateFieldMap = userDataHolder.getMap(TemplateField.class);
@@ -65,17 +66,21 @@ public class CustomFieldEditor extends VerticalLayout {
 			customFieldElement.createField();
 			
 			this.addComponent(customFieldElement);
+			customFieldElements.add(customFieldElement);
 		}
 
 	}
 
-	public void updateClient(Client selectedClient) {
-		// TODO Auto-generated method stub
+	public Client updateClient(Client selectedClient) {
+		
+		Debugging.output("Attempting to store custom fields for client: " + selectedClient, Debugging.CUSTOM_FIELD, Debugging.CUSTOM_FIELD_ENABLED);
 
 		for(CustomFieldElement cF : customFieldElements){
 			
 			selectedClient.setCustomFieldValue(cF.getFieldName(), cF.getFieldValue());
 		}
+		
+		return selectedClient;
 	}
 
 }

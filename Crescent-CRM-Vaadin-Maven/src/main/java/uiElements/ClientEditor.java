@@ -40,8 +40,8 @@ public class ClientEditor extends VerticalLayout {
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
 	ComboBox clientStatus = new ComboBox("Status"); 
-	ComboBox clientLocation = new ComboBox("Location");;
-	ComboBox clientGroup = new ComboBox("Group");;
+	ComboBox clientLocation = new ComboBox("Location");
+	ComboBox clientGroup = new ComboBox("Group");
 	Button clientUpdateButton = new Button("Update", event -> this.updateClientClick());
 	Button clientArchiveButton = new Button("Archive");
 	Label clientNameLabel = new Label("Client Name");
@@ -132,6 +132,8 @@ public class ClientEditor extends VerticalLayout {
 	 */
 	private void updateClientClick() {
 		
+		
+		
 		// UPDATE fields in client
 
 		crmUi.selectedClient.setNotes(clientNoteBox.getValue());
@@ -148,7 +150,7 @@ public class ClientEditor extends VerticalLayout {
 			crmUi.selectedClient.setLocation(tLocation);
 			crmUi.selectedClient.setStatus(tStatus);
 			//Update the fields
-			templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
+			//templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
 
 		} else {
 			// normal client creation
@@ -173,7 +175,7 @@ public class ClientEditor extends VerticalLayout {
 		}
 		crmUi.selectedClient.setLastUpdatedToNow();
 		
-		customFieldEditor.updateClient(crmUi.selectedClient);
+		crmUi.selectedClient = customFieldEditor.updateClient(crmUi.selectedClient);
 
 		crmUi.selectedClient.setContactNow(clientContactNowCheckBox.getValue());
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);

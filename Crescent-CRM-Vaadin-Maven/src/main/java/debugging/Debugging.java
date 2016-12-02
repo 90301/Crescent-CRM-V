@@ -124,7 +124,13 @@ public class Debugging {
 	
 	public static final String CONVERSION_DEBUG = CONSOLE_OUTPUT;
 	public static final Boolean CONVERSION_DEBUG_ENABLED = true;
+	
+	public static final String CUSTOM_FIELD = CONSOLE_OUTPUT;
+	public static final Boolean CUSTOM_FIELD_ENABLED = true;
+	
+	
 	//Andrews Debugging Variables
+	
 	
 	
 	//Troy's Debugging Variables
