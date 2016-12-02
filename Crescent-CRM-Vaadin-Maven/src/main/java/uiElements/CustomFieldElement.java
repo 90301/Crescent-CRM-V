@@ -19,6 +19,7 @@ public class CustomFieldElement extends HorizontalLayout{
 	Component fieldComponent;
 	UserDataHolder userDataHolder;
 	String fieldName = "";
+	String dataType;
 
 	public String getFieldName() {
 		return fieldName;
@@ -42,7 +43,7 @@ public class CustomFieldElement extends HorizontalLayout{
 		this.setSpacing(true);
 
 		TemplateField tF = userDataHolder.getMap(TemplateField.class).get(fieldName);
-		String dataType = tF.getDataType();
+		dataType = tF.getDataType();
 		//fieldNameLabel.setCaption(fieldName);
 
 		if(dataType.contains(TemplateField.DATA_TYPE_TEXT)){
@@ -75,5 +76,18 @@ public class CustomFieldElement extends HorizontalLayout{
 		// TODO Auto-generated method stub
 		this.userDataHolder = userDataHolder;
 
+	}
+
+	/**
+	 * Loads the custom field value
+	 * TODO extend functionality to other datatypes
+	 * @param customFieldValue
+	 */
+	public void setFieldValue(Object customFieldValue) {
+		
+	if (fieldComponent instanceof TextField) {
+			TextField textField = (TextField) fieldComponent;
+			textField.setValue((String)customFieldValue);
+		}
 	}
 }

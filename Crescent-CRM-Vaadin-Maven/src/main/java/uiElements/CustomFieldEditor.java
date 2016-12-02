@@ -41,7 +41,10 @@ public class CustomFieldEditor extends VerticalLayout {
 	 * @param c
 	 */
 	public void loadCustomFields(Client c, UserDataHolder userDataHolder) {
-
+		Debugging.output(
+				"Attempting to load custom fields for Client: " + c + " From userDataHolder: " + userDataHolder,
+				Debugging.CUSTOM_FIELD, Debugging.CUSTOM_FIELD_ENABLED);
+		
 		if (userDataHolder == null) {
 			// ERROR CONDITION
 			Debugging.output(
@@ -59,11 +62,15 @@ public class CustomFieldEditor extends VerticalLayout {
 
 		// Add a field element for every field in the user data holder
 		for (String key : templateFieldMap.keySet()) {
-
+			
 			CustomFieldElement customFieldElement = new CustomFieldElement();
 			customFieldElement.setUserDataHolder(userDataHolder);
 			customFieldElement.setFieldName(templateFieldMap.get(key).getFieldName());
 			customFieldElement.createField();
+			
+			//Test to see if the Client has the data, if it does, load the data
+			
+			customFieldElement.setFieldValue(c.getCustomFieldValue(key));
 			
 			this.addComponent(customFieldElement);
 			customFieldElements.add(customFieldElement);
