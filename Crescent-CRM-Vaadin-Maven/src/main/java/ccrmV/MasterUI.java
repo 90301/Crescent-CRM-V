@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.0;
-	public static final String versionDescription = " Front Desk Mode Improved";
+	public static final double versionNumber = 1.01;
+	public static final String versionDescription = " Client Selection Fix";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

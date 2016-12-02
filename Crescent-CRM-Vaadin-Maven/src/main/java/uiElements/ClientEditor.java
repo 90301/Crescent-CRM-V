@@ -197,12 +197,15 @@ public class ClientEditor extends VerticalLayout {
 	}
 	
 	public void selectClient(Client c) {
+		
 		if (c != null) {
 
 		} else {
 			System.out.println("Null value made it to selectClient: " + c);
 			return;
 		}
+		//Set the user data holder
+		c.setUserDataHolder(crmUi.masterUi.userDataHolder);
 		//clientTable.select(c.getName());
 		crmUi.selectedClient = c;
 		//Show template editor
