@@ -128,6 +128,8 @@ public class Debugging {
 	public static final String CUSTOM_FIELD = CONSOLE_OUTPUT;
 	public static final Boolean CUSTOM_FIELD_ENABLED = true;
 	
+	//Version 2 of debugging variables
+	public static final DebugObject FRONT_DESK_DEBUGGING = new DebugObject(CONSOLE_OUTPUT, true, true);
 	
 	//Andrews Debugging Variables
 	
@@ -168,6 +170,11 @@ public class Debugging {
 		} // end dev mode check
 	}
 
+	
+	public static void output(String output, DebugObject debugObject) {
+		debugObject.output(output);
+	}
+	
 	public static void fileOutput(String output, String filePath) {
 		Path file = Paths.get(filePath);
 

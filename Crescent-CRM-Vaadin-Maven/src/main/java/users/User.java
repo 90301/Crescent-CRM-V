@@ -81,6 +81,11 @@ public class User extends MaxObject {
 	public void init() {
 		
 	}
+	
+	@Override
+	public String toString() {
+		return this.getPrimaryKey();
+	}
 
 
 	@Override
