@@ -7,6 +7,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Accordion;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Grid;
@@ -23,6 +24,7 @@ import uiElements.NavBar;
 
 public class InventoryView extends HorizontalLayout implements View {
 
+	private static final int MAX_CATEGORY_ROWS = 5;
 	public MasterUI masterUi;
 	public NavBar navBar;
 	private boolean alreadyGenerated;
@@ -63,8 +65,12 @@ public class InventoryView extends HorizontalLayout implements View {
 		}
 
 		// create item categories
+		inventoryCategoryListSelect.setNullSelectionAllowed(false);
 
 		createInventoryCategoryLayout.setCaption("Create Categories");
+		createInventoryCategoryLayout.setSpacing(true);
+		
+		createInventoryCategoryLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 
 		createInventoryCategoryLayout.addComponent(createInventoryCategoryName);
 
@@ -76,6 +82,9 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		// Create item ui
 		createInventoryItemLayout.setCaption("Create Items");
+		
+		createInventoryItemLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		createInventoryItemLayout.setSpacing(true);
 
 		createInventoryItemLayout.addComponent(createInventoryName);
 
@@ -90,6 +99,7 @@ public class InventoryView extends HorizontalLayout implements View {
 		// edit item grid
 
 		editInventoryLayout.setCaption("Edit Inventory Items");
+		editInventoryLayout.setSpacing(true);
 
 		editInventoryGrid.setCaption("Inventory Grid");
 
@@ -193,8 +203,14 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		editInventoryGrid.removeAllColumns();
 
-		inventoryCategoryListSelect.addItems(masterUi.userDataHolder.getMaxObjects(InventoryCategory.class));
+		inventoryCategoryListSelect.addItems(masterUi.userDataHolder.getMap(InventoryCategory.class).keySet());
 
+		int categoryRows = masterUi.userDataHolder.getMap(InventoryCategory.class).keySet().size() + 1;
+		if (categoryRows > MAX_CATEGORY_ROWS) {
+			categoryRows = MAX_CATEGORY_ROWS;
+		}
+		inventoryCategoryListSelect.setRows(categoryRows);
+		
 		createInventoryCategory.addItems(masterUi.userDataHolder.getMaxObjects(InventoryCategory.class));
 
 		// editInventoryGrid.addColumn("ItemName", String.class);
@@ -210,6 +226,7 @@ public class InventoryView extends HorizontalLayout implements View {
 	 */
 	private void createNewItemCategoryClick() {
 		createNewItemCategory(createInventoryCategoryName.getValue());
+		createInventoryCategoryName.clear();
 	}
 
 	private void createNewItemClick() {
@@ -226,6 +243,9 @@ public class InventoryView extends HorizontalLayout implements View {
 		masterUi.userDataHolder.store(ic, InventoryCategory.class);
 
 		populateData();
+		
+		inventoryCategoryListSelect.select(categoryName);
+		
 	}
 
 	public void createNewItem(String name, InventoryCategory category, String barcode) {

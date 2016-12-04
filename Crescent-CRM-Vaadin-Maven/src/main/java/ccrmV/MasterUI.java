@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.05;
-	public static final String versionDescription = " User Editor Caching";
+	public static final double versionNumber = 1.06;
+	public static final String versionDescription = " Inventory UI Improvements";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
