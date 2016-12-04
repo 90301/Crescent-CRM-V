@@ -100,6 +100,7 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		editInventoryLayout.setCaption("Edit Inventory Items");
 		editInventoryLayout.setSpacing(true);
+		editInventoryLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 
 		editInventoryGrid.setCaption("Inventory Grid");
 

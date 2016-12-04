@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.06;
-	public static final String versionDescription = " Inventory UI Improvements";
+	public static final double versionNumber = 1.07;
+	public static final String versionDescription = " CRM Combo Box Item Removal";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -55,7 +55,7 @@ public class MasterUI extends UI {
 	Navigator mainNavigator;
 	
 	@WebServlet(value = "/*", asyncSupported = true)
-	@VaadinServletConfiguration(productionMode = false, ui = MasterUI.class)
+	@VaadinServletConfiguration(productionMode = true, ui = MasterUI.class)
 	public static class Servlet extends VaadinServlet {
 
 

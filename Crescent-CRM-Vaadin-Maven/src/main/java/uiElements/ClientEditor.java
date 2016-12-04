@@ -189,6 +189,10 @@ public class ClientEditor extends VerticalLayout {
 		clientLocation.clear();
 		clientGroup.clear();
 		
+		clientStatus.removeAllItems();
+		clientLocation.removeAllItems();
+		clientGroup.removeAllItems();
+		
 		// Client editor
 		crmUi.fillComboBox(clientStatus, crmUi.masterUi.userDataHolder.getAllStatus());
 		crmUi.fillComboBox(clientLocation, crmUi.masterUi.userDataHolder.getAllLocations());

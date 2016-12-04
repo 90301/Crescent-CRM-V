@@ -260,6 +260,14 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterStatus.clear();
 		filterLocation.clear();
 		filterGroup.clear();
+		
+		createClientStatus.removeAllItems();
+		createClientLocation.removeAllItems();
+		createClientGroup.removeAllItems();
+		
+		filterStatus.removeAllItems();
+		filterLocation.removeAllItems();
+		filterGroup.removeAllItems();
 
 		//csvBackupSelect.clear();
 
@@ -748,6 +756,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		layout.addComponent(versionLabel);
 		
 		this.alreadyGenerated = true;
+		
 
 	}
 	
