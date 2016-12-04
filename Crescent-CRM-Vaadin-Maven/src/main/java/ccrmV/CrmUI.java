@@ -69,10 +69,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final String PANEL_HEIGHT = "950px";
 	private static final String NOTE_WIDTH = "600px";
 	private static final boolean PANNEL_ENABLED = false;
+	private static final boolean DEFAULT_FILTER_SHOW = false;
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
 	// filtering
 	HorizontalLayout filterLayout = new HorizontalLayout();
+	Button filterShowFilter = new Button(">>",e -> showFilterClick());
+	Button filterHideFilter = new Button("<<", e -> hideFilterClick());
+	Boolean filterShowing = false;
+	
 	ComboBox filterStatus  = new ComboBox("Status");
 	ComboBox filterLocation = new ComboBox("Location");
 	ComboBox filterGroup = new ComboBox("Group");
@@ -134,16 +139,31 @@ public class CrmUI extends HorizontalLayout implements View {
 	ClientEditor clientEditor = new ClientEditor(this);
 	
 
-	/**
-	 * Updates the current client with the information entered
-	 * @param event
-	 */
-	private void updateClient() {
-		// TODO Auto-generated method stub
 
-
+	private void hideFilterClick() {
+		setFilterShow(false);
 	}
-	
+
+	private void showFilterClick() {
+		setFilterShow(true);
+	}
+
+	public void setFilterShow(boolean showFilter) {
+		this.filterShowing = showFilter;
+		
+		filterStatus.setVisible(showFilter);
+		filterLocation.setVisible(showFilter);
+		filterGroup.setVisible(showFilter);
+		filterButton.setVisible(showFilter);
+		resetFilterButton.setVisible(showFilter);
+		filterClientTextField.setVisible(showFilter);
+		filterClientNotesField.setVisible(showFilter);
+		filterContactNowCheckBox.setVisible(showFilter);
+		
+		filterShowFilter.setVisible(!showFilter);
+		filterHideFilter.setVisible(showFilter);
+	}
+
 	/**
 	 * Updates the client table with the list of filtered clients.
 	 */
@@ -753,6 +773,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterContactNowCheckBox.addValueChangeListener(e -> updateClientTable());
 
 		//filterClientTextField 
+		filterLayout.addComponent(filterShowFilter);
 		
 		filterLayout.addComponent(filterClientTextField);
 		//filterStatus
@@ -771,6 +792,11 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterLayout.addComponent(filterButton);
 		//resetFilterButton 
 		filterLayout.addComponent(resetFilterButton);
+		
+		filterLayout.addComponent(filterHideFilter);
+		
+		setFilterShow(DEFAULT_FILTER_SHOW);
+		
 	}
 
 	private void resetFilterClick() {
