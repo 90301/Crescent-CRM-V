@@ -47,52 +47,67 @@ public class UserEditor extends HorizontalLayout implements View {
 	public NavBar navBar;
 	private boolean alreadyGenerated = false;
 	
-	Accordion userEditorAccordion;
+	Accordion userEditorAccordion  = new Accordion();
 	
 	//Layout topHorrizontal,topVertical;
 	
 	//This  --> Horizontal --> Vertical
 	
-	Layout settingsLayout;
+	Layout settingsLayout = new VerticalLayout();
 	
-	ComboBox settingsDatabaseComboBox, settingsThemeComboBox;
-	Button settingsChangePasswordButton;
+	ComboBox settingsDatabaseComboBox  = new ComboBox("Database");
+	ComboBox settingsThemeComboBox  = new ComboBox ("Theme");
+	Button settingsChangePasswordButton  = new Button("Change Password");
 	
 	//TODO: Allow password changing in settings.
 	//PasswordField settingsChangePasswordField;
 	
-	Layout userCreatorLayout;
+	Layout userCreatorLayout  = new VerticalLayout();;
 	
-	TextField createUserNameTextField;
-	PasswordField createUserPassField;
-	Button createUserButton;
+	TextField createUserNameTextField = new TextField("User Name");
+	PasswordField createUserPassField  = new PasswordField("Password");
+	Button createUserButton = new Button("Create New User");
 	
 	//Admin menu
-	Layout adminLayout;
+	Layout adminLayout = new HorizontalLayout();;
 	//may need to change this to a grid later. needs to be improved a lot, bare
 	//bones functonality implemented 
 	//ComboBox adminUserSelector, adminDatabaseSelector;
 	//Button adminAddDatabaseButton;
 	
 	
-	Button adminUpdateSettingsButton;
+	Button adminUpdateSettingsButton = new Button("Update Settings");
 	//user options (select a database)
 	
-	ListSelect adminUserListSelect;
+	ListSelect adminUserListSelect  = new ListSelect("Select User");
 	
-	Layout adminSettingsLayout;
-	Grid adminSettingsGrid;
+	Layout adminSettingsLayout  = new VerticalLayout();
+	Grid adminSettingsGrid  = new Grid();
 	
-	TwinColSelect adminDatabaseTwinColSelect;
+	TwinColSelect adminDatabaseTwinColSelect  = new TwinColSelect();
 	
 	//Database Creator
-	TextField databaseCreatorTextField;
-	Button databaseCreatorButton;
-	HorizontalLayout databaseCreatorLayout;
+	TextField databaseCreatorTextField  = new TextField("Database Name");
+	Button databaseCreatorButton  = new Button("Create Database");
+	HorizontalLayout databaseCreatorLayout  = new HorizontalLayout();
 	
 	//oauth2
 	HorizontalLayout oauthLayout = new HorizontalLayout();
+	Link googleLink= OauthUtils.genGoogleLink();
 	
+	{
+		settingsDatabaseComboBox.addValueChangeListener(e -> userChangeDatabase());
+		
+		createUserButton.addClickListener(click -> createNewUserClick());
+		
+		adminUserListSelect.addValueChangeListener(e -> adminSelectUser());
+		
+		adminUpdateSettingsButton.addClickListener(e -> updateAdminSettings());
+		
+		adminDatabaseTwinColSelect.addValueChangeListener(e -> databasePermissionValueChanged());
+		
+		databaseCreatorButton.addClickListener(click -> createDatabaseClick());
+	}
 	
 	private static final String ADMIN_SETTING_ID = "Admin";
 	private static final String SETTING_NAME_ID = "Setting Name";
@@ -132,26 +147,27 @@ public class UserEditor extends HorizontalLayout implements View {
 			this.removeAllComponents();
 			//return;
 		}
-		userEditorAccordion = new Accordion();
+		//userEditorAccordion
 		//Width to be adjusted, mobile consideration needed
 		//userEditorAccordion.setWidth("500px");
 		//initialize components
 		
 		//Settings Menu
 		
-		settingsLayout = new VerticalLayout();
+		//settingsLayout
+		
 		settingsLayout.setCaption("Settings");
 		((AbstractOrderedLayout) settingsLayout).setMargin(true);
 		((AbstractOrderedLayout) settingsLayout).setSpacing(true);
 	//	TODO
-		settingsDatabaseComboBox = new ComboBox("Database");
-		settingsThemeComboBox = new ComboBox ("Theme");
-		settingsChangePasswordButton = new Button("Change Password");
+		//settingsDatabaseComboBox
+		//settingsThemeComboBox
+		//settingsChangePasswordButton
 		
 		//settings action listeners
 		settingsDatabaseComboBox.setImmediate(true);
 		settingsDatabaseComboBox.setNullSelectionAllowed(false);
-		settingsDatabaseComboBox.addValueChangeListener(e -> userChangeDatabase());
+
 		
 		
 		settingsLayout.addComponent(settingsDatabaseComboBox);
@@ -165,17 +181,15 @@ public class UserEditor extends HorizontalLayout implements View {
 		//welcomeLabel = new Label("User Editor");
 		
 		if (masterUi.user.getAdmin()) {
-		userCreatorLayout = new VerticalLayout();
+		//userCreatorLayout
 		
 		((AbstractOrderedLayout) userCreatorLayout).setMargin(true);
 		((AbstractOrderedLayout) userCreatorLayout).setSpacing(true);
 		
-		createUserNameTextField = new TextField("User Name");
-		createUserPassField = new PasswordField("Password");
-		createUserButton = new Button("Create New User");
+		//createUserNameTextField
+		//createUserPassField
+		//createUserButton
 		
-		//Listeners
-		createUserButton.addClickListener(click -> createNewUserClick());
 		
 		userCreatorLayout.setCaption("Create Users");
 		userCreatorLayout.addComponent(createUserNameTextField);
@@ -186,45 +200,35 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		
 			//Admin menu!
-			adminLayout = new HorizontalLayout();
+			//adminLayout 
 			adminLayout.setCaption("Edit Users Permissions (ADMIN)");
 			((AbstractOrderedLayout) adminLayout).setMargin(true);
 			((AbstractOrderedLayout) adminLayout).setSpacing(true);
 			
-			/*
-			 * Deprecated
-			adminUserSelector = new ComboBox("User");
-			
-			adminDatabaseSelector = new ComboBox("Database");
-			
-			adminAddDatabaseButton = new Button("Add database to user");
-			*/
-			
-			//adminAddDatabaseButton.addClickListener(click -> addDatabaseClick());
-			
-			adminUserListSelect = new ListSelect("Select User");
+
+			//adminUserListSelect
 			
 			//adminUserListSelect.setRows(20);
 			adminUserListSelect.setSizeFull();
 			adminUserListSelect.setNullSelectionAllowed(false);
-			adminUserListSelect.addValueChangeListener(e -> adminSelectUser());
 			
-			adminSettingsGrid = new Grid();
 			
-			adminUpdateSettingsButton = new Button("Update Settings");
-			adminUpdateSettingsButton.addClickListener(e -> updateAdminSettings());
+			//adminSettingsGrid
+			
+			//adminUpdateSettingsButton 
+			
 			
 			//Twin Col Select
-			adminDatabaseTwinColSelect = new TwinColSelect();
+			//adminDatabaseTwinColSelect
 			adminDatabaseTwinColSelect.setLeftColumnCaption("Databases Avaliable");
 			//Accessible 
 			adminDatabaseTwinColSelect.setRightColumnCaption("Databases Accessible");
 			adminDatabaseTwinColSelect.setImmediate(true);
-			adminDatabaseTwinColSelect.addValueChangeListener(e -> databasePermissionValueChanged());
+			
 			adminDatabaseTwinColSelect.setNullSelectionAllowed(false);
 			
 			//Admin Settings Layout
-			adminSettingsLayout = new VerticalLayout();
+			//adminSettingsLayout
 			//((AbstractOrderedLayout) adminSettingsLayout).setMargin(true);
 			((AbstractOrderedLayout) adminSettingsLayout).setSpacing(true);
 			
@@ -262,14 +266,14 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			
 			//Database Creator
-			databaseCreatorLayout = new HorizontalLayout();
+			//databaseCreatorLayout
 			databaseCreatorLayout.setCaption("Database Creator");
 			databaseCreatorLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 			//TODO add a list of databases already in the system.
-			databaseCreatorTextField = new TextField("Database Name");
+			//databaseCreatorTextField
 			
-			databaseCreatorButton = new Button("Create Database");
-			databaseCreatorButton.addClickListener(click -> createDatabaseClick());
+			//databaseCreatorButton
+			
 			
 			databaseCreatorLayout.addComponent(databaseCreatorTextField);
 			databaseCreatorLayout.addComponent(databaseCreatorButton);
@@ -277,10 +281,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			//oauth
 			oauthLayout.setCaption("oauth");
-			Link googleLink= OauthUtils.genGoogleLink();
+			
 			oauthLayout.addComponent(googleLink);
 			userEditorAccordion.addComponent(oauthLayout);
 			
+			
+			checkAdmin();
 		}
 		
 		//Data in itmes
@@ -297,6 +303,12 @@ public class UserEditor extends HorizontalLayout implements View {
 		this.alreadyGenerated = true;
 	}
 	
+
+	private void checkAdmin() {
+		Boolean isAdmin = masterUi.getUser().getAdmin();
+		
+		
+	}
 
 	/**
 	 * Creates a new database with a given name
@@ -349,6 +361,9 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		DataHolder.store(adminEditUser, User.class);
 		
+		//Experimental
+		//DO NOT DO THIS
+		//populateAllData();
 	}
 	
 	/**
@@ -433,10 +448,12 @@ public class UserEditor extends HorizontalLayout implements View {
 			}
 			
 			
+			
 		}
 
 		//update the user
 		DataHolder.store(adminEditUser, User.class);
+		populateAllData();
 		
 	}
 
