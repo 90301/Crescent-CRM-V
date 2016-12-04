@@ -31,7 +31,7 @@ public class SchedulerModule extends VerticalLayout{
 	//lazy to give us this list directly.
 	ArrayList<ScheduleEvent> scheduleEventList = new ArrayList<ScheduleEvent>();
 	public SchedulerModule(SchedulerView schedulerView) {
-		this.schedulerView = schedulerView;
+		this.setSchedulerView(schedulerView);
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class SchedulerModule extends VerticalLayout{
 	 */
 	public void genSchedulerModule(){
 		
-		
+		cal.setCaption("----");
         cal.setHeight(CAL_HEIGHT);
 		cal.setWidth(CAL_WIDTH);
 		cal.setCaption("Current Month");
@@ -62,6 +62,8 @@ public class SchedulerModule extends VerticalLayout{
         this.addComponent(cal);
         
 		populateComboBoxes();
+		
+		
 	}
 
 	private void stylistSelectedClicked() {
@@ -82,12 +84,13 @@ public class SchedulerModule extends VerticalLayout{
 	/**
 	 * Attempts to fill the calendar with events for the selected user
 	 */
-	private void fillCalender() {
+	public void fillCalender() {
 		Debugging.output("Front Desk Mode: Filling Calendar." , Debugging.FRONT_DESK_DEBUGGING);
 		if (this.selectedUser==null) {
+			Debugging.output("Front Desk Mode: null user selected." , Debugging.FRONT_DESK_DEBUGGING);
 			return;
 		}
-			
+		clearAllEvents();
 		//loop through all calendar events
 		//display only those that have the same user as the selected user
 		for (ScheduleEvent se : DataHolder.getMap(ScheduleEvent.class).values()) {
@@ -106,7 +109,10 @@ public class SchedulerModule extends VerticalLayout{
 	}
 	
 	public void clearAllEvents() {
-		
+		for (ScheduleEvent se : scheduleEventList) {
+			cal.removeEvent(se);
+		}
+		scheduleEventList.clear();
 	}
 
 	private void populateComboBoxes() {
@@ -121,6 +127,14 @@ public class SchedulerModule extends VerticalLayout{
 	public void navigateToDay(Date date) {
 		cal.setStartDate(date);
 		cal.setEndDate(date);
+	}
+
+	public SchedulerView getSchedulerView() {
+		return schedulerView;
+	}
+
+	public void setSchedulerView(SchedulerView schedulerView) {
+		this.schedulerView = schedulerView;
 	}
 	
 	
