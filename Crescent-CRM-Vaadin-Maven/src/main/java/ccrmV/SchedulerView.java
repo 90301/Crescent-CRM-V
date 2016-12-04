@@ -181,6 +181,9 @@ public class SchedulerView extends HorizontalLayout implements View {
         switchToFrontDeskMode.addClickListener(click -> switchToFrontDeskModeClick());
         switchToSingleMode.addClickListener(click -> switchToSingleModeClick());
         
+        createEventLayout.setSpacing(true);
+        schedulerLayout.setSpacing(true);
+        
         createEventLayout.addComponent(createEventNameTextField);
         createEventLayout.addComponent(createEventClientComboBox);
         
@@ -216,9 +219,21 @@ public class SchedulerView extends HorizontalLayout implements View {
 		
 		this.addComponent(schedulerLayout);
 		
-		
+		hideUnimplemented();
 	}
 	
+
+	/**
+	 * A method for hiding ui elements that are not currently fully implemented
+	 * for the purposes of demoing
+	 */
+	private void hideUnimplemented() {
+		if (!MasterUI.DEVELOPER_MODE) {
+			repeatComboBox.setVisible(false);
+		}
+		
+	}
+
 
 
 	public void updateEndDate() {

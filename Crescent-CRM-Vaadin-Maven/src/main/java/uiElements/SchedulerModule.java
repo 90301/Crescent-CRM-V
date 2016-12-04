@@ -19,6 +19,8 @@ public class SchedulerModule extends VerticalLayout{
 	
 	private static final String CAL_HEIGHT = "750px";
 	private static final String CAL_WIDTH = "280px";
+	private static final int FIRST_HOUR = 6;
+	private static final int LAST_HOUR = 20;
 	
 	private SchedulerView schedulerView;
 	private ComboBox stylistSelectionComboBox =  new ComboBox("Stylist");
@@ -45,6 +47,9 @@ public class SchedulerModule extends VerticalLayout{
 		cal.setCaption("Current Month");
 		cal.setLocale(Locale.getDefault());
         cal.setImmediate(true);
+        
+        cal.setFirstVisibleHourOfDay(FIRST_HOUR);
+        cal.setLastVisibleHourOfDay(LAST_HOUR);
         
         /*
         cal.setFirstVisibleDayOfWeek(2);
