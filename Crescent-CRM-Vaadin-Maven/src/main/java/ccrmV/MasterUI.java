@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.03;
-	public static final String versionDescription = " Filter Hiding";
+	public static final double versionNumber = 1.04;
+	public static final String versionDescription = " Clear On Create Client";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

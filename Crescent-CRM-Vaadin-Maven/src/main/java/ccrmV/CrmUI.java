@@ -70,6 +70,9 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final String NOTE_WIDTH = "600px";
 	private static final boolean PANNEL_ENABLED = false;
 	private static final boolean DEFAULT_FILTER_SHOW = false;
+	
+	//Clears textboxes and combo boxes upon creating a client
+	private static final boolean CLEAR_ON_CREATE = true;
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
 	// filtering
@@ -506,6 +509,15 @@ public class CrmUI extends HorizontalLayout implements View {
 		updateClientTable();
 		
 		selectClient(c);
+		
+		if (CLEAR_ON_CREATE) {
+			createClientLocation.clear();
+			createClientStatus.clear();
+			createClientGroup.clear();
+			createClientName.clear();
+			createClientName.setValue("");
+		}
+		
 	}
 
 
