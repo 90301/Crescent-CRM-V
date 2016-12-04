@@ -270,6 +270,12 @@ public class SchedulerView extends HorizontalLayout implements View {
 		// eventEnd);
 		addEvent(event);
 		updateScheduler();
+		
+		//Clear boxes
+		
+		createEventNameTextField.clear();
+		createEventClientComboBox.clear();
+		createEventUserComboBox.clear();
 	}
 
 	ArrayList<CalendarEvent> calendarEvents = new ArrayList<CalendarEvent>();
