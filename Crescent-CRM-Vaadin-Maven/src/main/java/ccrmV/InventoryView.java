@@ -106,7 +106,8 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		editInventoryGrid.setEditorEnabled(true);
 
-		editInventoryGrid.setWidth("800px");
+		editInventoryGrid.setWidth("900px");
+		//editInventoryGrid.setSizeFull();
 
 		editInventoryLayout.addComponent(editInventoryGrid);
 

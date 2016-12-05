@@ -32,7 +32,7 @@ import inventory.InventoryItem;
 import uiElements.NavBar;
 import users.User;
 
-@Theme("mytheme")
+@Theme("darkTheme")
 public class MasterUI extends UI {
 
 	/**
