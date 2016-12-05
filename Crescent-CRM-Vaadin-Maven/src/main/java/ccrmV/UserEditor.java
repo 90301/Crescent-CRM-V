@@ -56,7 +56,13 @@ public class UserEditor extends HorizontalLayout implements View {
 
 	ComboBox settingsDatabaseComboBox = new ComboBox("Database");
 	ComboBox settingsThemeComboBox = new ComboBox("Theme");
-	Button settingsChangePasswordButton = new Button("Change Password");
+	Button settingsChangePasswordButton = new Button("Change Password", e -> settingsChangePasswordClick());
+	
+	PasswordField settingsOldPassword = new PasswordField("Old Password");
+	PasswordField settingsNewPassword = new PasswordField("New Password");
+	PasswordField settingsNewConfirmPassword = new PasswordField("Confirm New Password");
+	Label settingsStatusLabel = new Label();
+	
 	
 	Boolean themeMutex = false;
 
@@ -120,6 +126,74 @@ public class UserEditor extends HorizontalLayout implements View {
 		// TODO Auto-generated constructor stub
 	}
 
+	private void settingsChangePasswordClick() {
+		//Attempts to change password if everything is showing
+		
+		//if not, show the fields
+		if (settingsOldPassword.isVisible()) {
+			//attempt changing password
+			
+			//get the values in the text boxes
+			String old = settingsOldPassword.getValue();
+			String newPass = settingsNewPassword.getValue();
+			String newConfirm = settingsNewConfirmPassword.getValue();
+			
+			if (newPass.equals(newConfirm)) {
+				Boolean sucsess = attemptPasswordChange(masterUi.user,old,newPass);
+				if (sucsess) {
+					settingsStatusLabel.setCaption("Password Updated");
+				} else {
+					settingsStatusLabel.setCaption("Password Update Failed");
+				}
+			} else {
+				//the passwords are not the same
+				settingsStatusLabel.setCaption("Passwords are not the same");
+			}
+			
+			
+		} else {
+			//show the fields
+			showSettingsChangePassword();
+		}
+		settingsStatusLabel.setVisible(true);
+		settingsOldPassword.clear();
+		settingsNewPassword.clear();
+		settingsNewConfirmPassword.clear();
+		
+		
+	}
+	/**
+	 * Attemtps to change a user's password
+	 * @param user - the user to change password
+	 * @param old - the old password
+	 * @param newPass - the new password
+	 * @return - if it worked
+	 */
+	public Boolean attemptPasswordChange(User user, String old, String newPass) {
+		//ensure the new password isn't blank
+		if (newPass.equals("")) {
+			return false;
+		}
+		if (user.checkPassword(old)) {
+			user.setPassword(newPass);
+			DataHolder.store(user, User.class);
+			return true;
+		}
+		
+		return false;
+		
+	}
+
+	public void showSettingsChangePassword() {
+		settingsOldPassword.setVisible(true);
+		settingsNewPassword.setVisible(true);
+		settingsNewConfirmPassword.setVisible(true);
+		
+		settingsOldPassword.clear();
+		settingsNewPassword.clear();
+		settingsNewConfirmPassword.clear();
+	}
+
 	private void selectThemeChange() {
 		if (themeMutex) {
 			return;
@@ -176,10 +250,23 @@ public class UserEditor extends HorizontalLayout implements View {
 		// settings action listeners
 		settingsDatabaseComboBox.setImmediate(true);
 		settingsDatabaseComboBox.setNullSelectionAllowed(false);
+		
+		settingsOldPassword.setVisible(false);
+		settingsNewPassword.setVisible(false);
+		settingsNewConfirmPassword.setVisible(false);
+		
+		settingsStatusLabel.setVisible(false);
 
 		settingsLayout.addComponent(settingsDatabaseComboBox);
 		settingsLayout.addComponent(settingsThemeComboBox);
+		
+		settingsLayout.addComponent(settingsOldPassword);
+		settingsLayout.addComponent(settingsNewPassword);
+		settingsLayout.addComponent(settingsNewConfirmPassword);
+		
 		settingsLayout.addComponent(settingsChangePasswordButton);
+		
+		settingsLayout.addComponent(settingsStatusLabel);
 
 		// User Editor for creating new users
 		// welcomeLabel = new Label("User Editor");

@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.09;
-	public static final String versionDescription = " Theme Selection";
+	public static final double versionNumber = 1.10;
+	public static final String versionDescription = " User Password Changing";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
