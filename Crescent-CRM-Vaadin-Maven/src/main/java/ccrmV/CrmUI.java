@@ -549,15 +549,18 @@ public class CrmUI extends HorizontalLayout implements View {
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
-
+		
+		this.setSpacing(true);
+		
 		masterUi.userDataHolder.initalizeDatabases();
 
 		// Nav Bar Code
 		navBar.updateInfo();
 		
 		this.addComponent(navBar.sidebarLayout);
+		
 
-		((AbstractOrderedLayout) layout).setMargin(true);
+		((AbstractOrderedLayout) layout).setMargin(false);
 		((AbstractOrderedLayout) layout).setSpacing(true);
 		
 		if (PANNEL_ENABLED) {
