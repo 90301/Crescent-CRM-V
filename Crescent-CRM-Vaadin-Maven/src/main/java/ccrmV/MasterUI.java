@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.07;
-	public static final String versionDescription = " CRM Combo Box Item Removal";
+	public static final double versionNumber = 1.08;
+	public static final String versionDescription = " Personal Scheduler";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

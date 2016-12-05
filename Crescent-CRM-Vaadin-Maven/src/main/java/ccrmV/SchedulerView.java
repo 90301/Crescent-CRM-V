@@ -286,12 +286,18 @@ public class SchedulerView extends HorizontalLayout implements View {
 	}
 
 	public void updateScheduler() {
+		
 		for (CalendarEvent ce : calendarEvents) {
 			cal.removeEvent(ce);
 		}
 		calendarEvents.clear();
+		
+		String currentUserName = masterUi.user.getPrimaryKey();
+		
 		for (ScheduleEvent se : DataHolder.getMap(ScheduleEvent.class).values()) {
-			addEvent(se);
+			if (currentUserName.equals(se.getUser())) {
+				addEvent(se);
+			}
 		}
 
 		for (SchedulerModule sm : schedulerModules) {
@@ -329,6 +335,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 		createEventClientComboBox.removeAllItems();
 		createEventClientComboBox.addItems(masterUi.userDataHolder.getClientMap().keySet());
 
+		createEventUserComboBox.removeAllItems();
 		createEventUserComboBox.addItems(DataHolder.getMap(User.class).keySet());
 
 		if (baseTimeList.size() == 0) {
