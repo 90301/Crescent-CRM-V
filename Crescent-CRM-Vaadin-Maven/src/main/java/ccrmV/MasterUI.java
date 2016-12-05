@@ -40,8 +40,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.08;
-	public static final String versionDescription = " Personal Scheduler";
+	public static final double versionNumber = 1.09;
+	public static final String versionDescription = " Theme Selection";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -103,9 +103,13 @@ public class MasterUI extends UI {
 	//everywhere dataholder used to be called.
 	public UserDataHolder userDataHolder;//Set when logging in
 	
+	public static final String[] avaliableThemes = {"mytheme","darkTheme"};
+	
+	public String currentTheme = avaliableThemes[1];
+	
 	protected void init(VaadinRequest request) {
 		
-		this.setTheme("darkTheme");
+		this.setTheme(currentTheme);
 		
 		DataHolder.initalizeDatabases();
 		
@@ -302,6 +306,23 @@ public class MasterUI extends UI {
 			
 			
 		}
+	}
+
+	public void changeTheme(String themeSelected) {
+		
+		//do nothing if the current theme is already this theme
+		if (this.currentTheme.equals(themeSelected)) {
+			return;
+		}
+		//ensure the theme is in the list of available themes
+		for (String s : avaliableThemes) {
+			if (s.equals(themeSelected)) {
+				this.currentTheme = themeSelected;
+				this.setTheme(this.currentTheme);
+			}
+		}
+		
+		
 	}
 
 }

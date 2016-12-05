@@ -3,6 +3,7 @@
  */
 package ccrmV;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -56,6 +57,8 @@ public class UserEditor extends HorizontalLayout implements View {
 	ComboBox settingsDatabaseComboBox = new ComboBox("Database");
 	ComboBox settingsThemeComboBox = new ComboBox("Theme");
 	Button settingsChangePasswordButton = new Button("Change Password");
+	
+	Boolean themeMutex = false;
 
 	// TODO: Allow password changing in settings.
 	// PasswordField settingsChangePasswordField;
@@ -104,6 +107,9 @@ public class UserEditor extends HorizontalLayout implements View {
 		adminDatabaseTwinColSelect.addValueChangeListener(e -> databasePermissionValueChanged());
 
 		databaseCreatorButton.addClickListener(click -> createDatabaseClick());
+		
+		//themes
+		settingsThemeComboBox.addValueChangeListener(e -> selectThemeChange());
 	}
 
 	private static final String ADMIN_SETTING_ID = "Admin";
@@ -112,6 +118,16 @@ public class UserEditor extends HorizontalLayout implements View {
 
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
+	}
+
+	private void selectThemeChange() {
+		if (themeMutex) {
+			return;
+		}
+		String themeSelected = (String) settingsThemeComboBox.getValue();
+		if (themeSelected != null) {
+			masterUi.changeTheme(themeSelected);
+		}
 	}
 
 	/*
@@ -128,7 +144,7 @@ public class UserEditor extends HorizontalLayout implements View {
 	 */
 	@Override
 	public void enter(ViewChangeEvent event) {
-
+		
 		// Ensure the user is logged in
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
@@ -136,6 +152,7 @@ public class UserEditor extends HorizontalLayout implements View {
 
 		// if (this.alreadyGenerated) {
 		this.removeAllComponents();
+		this.setSpacing(true);
 		// return;
 		// }
 		// userEditorAccordion
@@ -154,7 +171,8 @@ public class UserEditor extends HorizontalLayout implements View {
 		// settingsDatabaseComboBox
 		// settingsThemeComboBox
 		// settingsChangePasswordButton
-
+		
+		settingsThemeComboBox.setNullSelectionAllowed(false);
 		// settings action listeners
 		settingsDatabaseComboBox.setImmediate(true);
 		settingsDatabaseComboBox.setNullSelectionAllowed(false);
@@ -510,6 +528,17 @@ public class UserEditor extends HorizontalLayout implements View {
 			adminUserListSelect.addItems(DataHolder.getUserMap().keySet());
 
 		}
+		
+		//Themes
+		themeMutex = true;//Don't run the event listener code for selection
+		
+		settingsThemeComboBox.removeAllItems();
+		for (String themeName : MasterUI.avaliableThemes) {
+			settingsThemeComboBox.addItem(themeName);
+		}
+		settingsThemeComboBox.select(masterUi.currentTheme);
+		
+		themeMutex = false;// The theme code can now be run
 	}
 
 	/**

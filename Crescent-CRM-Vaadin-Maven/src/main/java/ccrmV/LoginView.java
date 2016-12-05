@@ -39,7 +39,8 @@ public class LoginView extends VerticalLayout implements View {
 	
 	Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
 	Resource res2 = new ThemeResource("images/StyleC_Logo_Dark_Theme_Login_11-30-16.svg");
-	Image logo = new Image(null, res2);
+	Image logo = new Image(null, res);
+	Image logo2 = new Image(null, res2);
 	//private static final ShortcutAction enterKeyShortcut = new ShortcutAction(null, ShortcutAction.KeyCode.ENTER, null);
 	Label versionLabel = new Label();
 	
@@ -57,6 +58,7 @@ public class LoginView extends VerticalLayout implements View {
 		
 		
 		 //logo
+		this.removeAllComponents();
 		
 		versionLabel.setCaption("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
 		addEnterKeyActionToTextField(passField);
@@ -65,8 +67,14 @@ public class LoginView extends VerticalLayout implements View {
 	    this.setMargin(true);
 	    this.setSpacing(true);
 		this.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
+		if (masterUi.currentTheme.equals(MasterUI.avaliableThemes[0])) {
+			//Black Logo
+			this.addComponent(logo);
+		} else {
+			//white logo
+			this.addComponent(logo2);
+		}
 		
-		this.addComponent(logo);
 		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
