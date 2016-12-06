@@ -3,6 +3,7 @@ package integrations;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,14 +38,21 @@ public class OauthUtils {
 	static String googleBaseURL = "https://accounts.google.com/o/oauth2/v2/auth?";
 	
 	static String googleClientID_Name = "client_id";
-	static String googleClientID = "118137317828-cl9hpkac2j5ijvo2ilhs11fbvjh5q7i2.apps.googleusercontent.com";
+	//old version
+	//static String googleClientID = "118137317828-cl9hpkac2j5ijvo2ilhs11fbvjh5q7i2.apps.googleusercontent.com";
+	static String googleClientID = "730608969085-l0eo54q33ajfrqdd8a1f5knm28ioocdd.apps.googleusercontent.com";
+	///730608969085-5iefi52bn6gguqur4ckp7ahnrilk49ut.apps.googleusercontent.com
+	
 	
 	//Don't need secret yet
-	//static String googleClientSecret_Name = "Client_Secret";
+	static String googleClientSecret_Name = "Client_Secret";
+	//old version
 	//static String googleClientSecret = "GECKkL2PMd8LFtoAA086ZIs_";
+	static String googleClientSecret = "oype5GajrhOf7Nz9IrlwZ_4F";
+	//V5NbeDOCrN3wl6BNLbNHZmIb
 	
 	static String googleResponseType_Name = "response_type";
-	static String googleResponseType = "token";
+	static String googleResponseType = "code";
 	
 	static String googleScope_Name = "scope";
 	static String googleScope = "openid%20email";
@@ -65,6 +73,12 @@ public class OauthUtils {
 	
 	static ArrayList<String> googleParameterKeyList = new ArrayList<String>();
 	static Map<String,String> googleParameterMap = new HashMap<String,String>();
+	
+	static ArrayList<String> googleScopeList = new ArrayList<String>();
+	static{
+		googleScopeList.add("openid");
+		googleScopeList.add("email");
+	}
 		
 		public static void addGoogleParameter(String key, String value) {
 			
@@ -73,6 +87,7 @@ public class OauthUtils {
 			googleParameterMap.put(key, value);
 			
 		}
+		
 		
 	
 	public static Link genGoogleLink() {
@@ -120,5 +135,32 @@ public class OauthUtils {
 	private static void clearGoogleParameters() {
 		googleParameterKeyList.clear();
 		googleParameterMap.clear();
+	}
+
+	public static String getGoogleID() {
+		return googleClientID;
+	}
+	
+	public static String getGoogleRedirectUri() {
+		// TODO Auto-generated method stub
+		return googleRedirect;
+	}
+	
+	public static String getGoogleSecret() {
+		return googleClientSecret;
+	}
+
+
+
+	public static String getGoogleScope() {
+		// TODO Auto-generated method stub
+		return googleScope;
+	}
+
+	
+
+	public static Collection<String> getGoogleScopes() {
+		// TODO Auto-generated method stub
+		return googleScopeList;
 	}
 }
