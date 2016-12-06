@@ -112,7 +112,7 @@ public class OauthUtils {
 		Debugging.output("Full URL: " + fullUrl,Debugging.OAUTH_OUTPUT , Debugging.OAUTH_OUTPUT_ENABLED);
 		
 		Link googleLink = new Link(null, new ExternalResource(fullUrl));
-		googleLink.setIcon(new ThemeResource("https://developers.google.com/identity/images/btn_google_signin_light_normal_web.png"));
+		googleLink.setIcon(new ThemeResource("images/btn_google_signin_light_normal_web.png"));
 		return googleLink;
 		
 	}

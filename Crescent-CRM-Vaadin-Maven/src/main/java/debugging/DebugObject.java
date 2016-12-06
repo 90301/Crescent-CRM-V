@@ -9,11 +9,20 @@ public class DebugObject {
 
 	Boolean logEnabled = true;
 	String debugLog = "";
+	String outputPreface = "";//adds this text to the beginning out output
+	//DOES NOT do this in the log.
 
 	public DebugObject(String debugStyle, Boolean enabled, Boolean logEnabled) {
 		this.debugStyle = debugStyle;
 		this.enabled = enabled;
 		this.logEnabled = logEnabled;
+	}
+	
+	public DebugObject(String debugStyle, Boolean enabled, Boolean logEnabled, String outputPreface) {
+		this.debugStyle = debugStyle;
+		this.enabled = enabled;
+		this.logEnabled = logEnabled;
+		this.outputPreface = outputPreface;
 	}
 
 	public void output(String outString) {
@@ -23,7 +32,7 @@ public class DebugObject {
 				debugLog += outString;
 			}
 			
-			Debugging.output(outString, debugStyle, enabled);
+			Debugging.output(this.outputPreface + outString, debugStyle, enabled);
 		}
 	}
 	

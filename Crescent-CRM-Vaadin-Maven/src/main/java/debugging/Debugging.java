@@ -130,6 +130,9 @@ public class Debugging {
 	
 	//Version 2 of debugging variables
 	public static final DebugObject FRONT_DESK_DEBUGGING = new DebugObject(CONSOLE_OUTPUT, true, true);
+	public static final DebugObject OAUTH2 = new DebugObject(CONSOLE_OUTPUT, true, true, "OAUTH2: ");
+	
+	
 	
 	//Andrews Debugging Variables
 	
@@ -140,6 +143,11 @@ public class Debugging {
 	
 	//Tony's Debugging Variables
 	
+	static
+	{
+		//This should execute when the program starts.
+		//static initialization 
+	}
 
 	public static void output(String output, String method, Boolean enabled) {
 		if (DEV_MODE) {
