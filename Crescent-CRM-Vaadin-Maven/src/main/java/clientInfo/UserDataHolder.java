@@ -5,6 +5,7 @@ package clientInfo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -242,6 +243,22 @@ public class UserDataHolder extends MaxObject {
 		
 	}
 	
+	public <T extends MaxObject> Collection<T> removeTemplate(Collection<T> list) {
+		
+		//NOTE, this is only being done this way because 
+		MaxObject templateObject = null;
+		for (MaxObject obj : list) {
+			if (obj.getPrimaryKey().equals(DataHolder.TEMPLATE_STRING)) {
+				templateObject = obj;
+				break;
+			}
+		}
+		
+		list.remove(templateObject);
+		
+		return list;
+	}
+	
 
 
 	/*
@@ -265,6 +282,25 @@ public class UserDataHolder extends MaxObject {
 	public Collection<Client> getAllClients() {
 		return userClientMap.values();
 	}
+	/**
+	 * Removes the template client
+	 * @return
+	 */
+	public Collection<Client> getAllRealClients() {
+		return removeTemplate(getAllClients());
+	}
+	/**
+	 * Gets the primary key of all REAL clients
+	 * @return
+	 */
+	public Collection<String> getAllStringClients() {
+		ArrayList<String> allStringClients = new ArrayList<String>();
+		for (Client c : getAllRealClients()) {
+			allStringClients.add(c.getPrimaryKey());
+		}
+		return allStringClients;
+	}
+	
 
 	/*
 	 * LOCATION
@@ -275,7 +311,7 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public Collection<Location> getAllLocations() {
-		return userLocationMap.values();
+		return removeTemplate(userLocationMap.values());
 	}
 
 	/*
@@ -287,7 +323,9 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public Collection<Status> getAllStatus() {
-		return userStatusMap.values();
+				
+		return removeTemplate(userStatusMap.values());
+		
 	}
 
 	/*
@@ -299,7 +337,7 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public Collection<Group> getAllGroups() {
-		return userGroupMap.values();
+		return removeTemplate(userGroupMap.values());
 	}
 	public ConcurrentHashMap<String, Location> getLocationMap() {
 		// TODO Auto-generated method stub

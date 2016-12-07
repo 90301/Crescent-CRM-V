@@ -636,23 +636,28 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Add a client
 		
 		if (CREATION_ALLOW_NEW_VALUES) {
-			
-			createClientStatus.setInvalidAllowed(true);
-			createClientLocation.setInvalidAllowed(true);
-			createClientGroup.setInvalidAllowed(true);
-			
-			createClientStatus.setTextInputAllowed(true);
-			createClientStatus.setNewItemsAllowed(true);
-			createClientStatus.setNullSelectionAllowed(true);
+			Boolean invalidAllow = true;
+			Boolean textInputAllow = true;
+			Boolean nullSelectionAllow = false;
+			Boolean newItemsAllowed = true;
 			
 			
-			createClientLocation.setTextInputAllowed(true);
-			createClientLocation.setNewItemsAllowed(true);
-			createClientLocation.setNullSelectionAllowed(true);
+			createClientStatus.setInvalidAllowed(invalidAllow);
+			createClientLocation.setInvalidAllowed(invalidAllow);
+			createClientGroup.setInvalidAllowed(invalidAllow);
 			
-			createClientGroup.setTextInputAllowed(true);
-			createClientGroup.setNewItemsAllowed(true);
-			createClientGroup.setNullSelectionAllowed(true);
+			createClientStatus.setTextInputAllowed(textInputAllow);
+			createClientStatus.setNewItemsAllowed(newItemsAllowed);
+			createClientStatus.setNullSelectionAllowed(nullSelectionAllow);
+			
+			
+			createClientLocation.setTextInputAllowed(textInputAllow);
+			createClientLocation.setNewItemsAllowed(newItemsAllowed);
+			createClientLocation.setNullSelectionAllowed(nullSelectionAllow);
+			
+			createClientGroup.setTextInputAllowed(textInputAllow);
+			createClientGroup.setNewItemsAllowed(newItemsAllowed);
+			createClientGroup.setNullSelectionAllowed(nullSelectionAllow);
 			
 		} else {
 			createClientStatus.setInvalidAllowed(false);

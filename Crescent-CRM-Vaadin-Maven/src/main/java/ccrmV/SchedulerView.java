@@ -333,7 +333,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	private void populateComboBoxes() {
 
 		createEventClientComboBox.removeAllItems();
-		createEventClientComboBox.addItems(masterUi.userDataHolder.getClientMap().keySet());
+		createEventClientComboBox.addItems(masterUi.userDataHolder.getAllStringClients());
 
 		createEventUserComboBox.removeAllItems();
 		createEventUserComboBox.addItems(DataHolder.getMap(User.class).keySet());
