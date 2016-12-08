@@ -534,8 +534,34 @@ public class Client extends MaxObject implements Item {
 			if (field.getShowField())
 				indexedContainer.addContainerProperty(field.getFieldName(), field.getExtendedClass(),
 				field.getDefaultFieldValue());
+			
+				Debugging.output(" Populating indexContatiner with: " + field + 
+						" FieldName: " + field.getFieldName() + 
+						" Extended Class" + field.getExtendedClass()
+						,Debugging.CLIENT_GRID_DEBUG);
 			}
+		
+		Debugging.output(Debugging.LINE ,Debugging.CLIENT_GRID_DEBUG);
+		
 		return indexedContainer;
+	}
+	
+	/**
+	 * Generates an item that can be added to a grid.
+	 * 
+	 * @param item
+	 *            the item to generate data into
+	 * @return the item with data generated
+	 */
+	public Item genItem(Item item) {
+
+		for (MaxField<?> mf : this.getAutoGenList()) {
+			if (mf.getShowField()) {
+				Property p = item.getItemProperty(mf.getFieldName());
+				p.setValue(mf.getFieldValue());
+			}
+		}
+		return item;
 	}
 
 }

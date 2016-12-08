@@ -66,23 +66,29 @@
     </display>  
   </class>  
   <association id="8">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="9" name="group">        
-        <position height="18" width="36" x="745" y="2525"/>      
+    <bendpoint x="284" y="1593"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="9" name="userLocationMap">        
+        <position height="18" width="91" x="214" y="2532"/>      
       </attribute>      
-      <multiplicity id="10" minimum="0" maximum="1"/>    
+      <multiplicity id="10" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="127" y="2555"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="3" navigable="true"/>    
+    <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="11">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="12" name="localUserMap">        
-        <position height="18" width="73" x="293" y="798"/>      
+    <bendpoint x="585" y="1593"/>    
+    <end type="SOURCE" refId="6" navigable="false">      
+      <attribute id="12" name="userStatusMap">        
+        <position height="18" width="81" x="586" y="2509"/>      
       </attribute>      
-      <multiplicity id="13" minimum="0" maximum="2147483647"/>    
+      <multiplicity id="13" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="7" navigable="true"/>    
+    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="14">    
@@ -90,7 +96,9 @@
       <attribute id="15" name="userClientMap">        
         <position height="18" width="76" x="207" y="1587"/>      
       </attribute>      
-      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
+      <multiplicity id="16" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
@@ -100,89 +108,73 @@
       <attribute id="18" name="templateClient">        
         <position height="18" width="76" x="204" y="1573"/>      
       </attribute>      
-      <multiplicity id="19" minimum="0" maximum="1"/>    
+      <multiplicity id="19" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="20">    
-    <bendpoint x="332" y="824"/>    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="21" name="templateClient"/>      
-      <multiplicity id="22" minimum="0" maximum="1"/>    
+      <attribute id="21" name="localUserMap">        
+        <position height="18" width="73" x="293" y="798"/>      
+      </attribute>      
+      <multiplicity id="22" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
-    <end type="TARGET" refId="2" navigable="true"/>    
+    <end type="TARGET" refId="7" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="23">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="24" name="userDataHolderMap"/>      
-      <multiplicity id="25" minimum="0" maximum="2147483647"/>    
+      <attribute id="24" name="userDataHolderMap">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </attribute>      
+      <multiplicity id="25" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="6" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="26">    
-    <bendpoint x="284" y="1593"/>    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="27" name="userLocationMap">        
-        <position height="18" width="91" x="214" y="2532"/>      
+    <bendpoint x="332" y="824"/>    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="27" name="templateClient">        
+        <position height="0" width="0" x="0" y="0"/>      
       </attribute>      
-      <multiplicity id="28" minimum="0" maximum="2147483647">        
-        <position height="16" width="21" x="127" y="2555"/>      
+      <multiplicity id="28" minimum="0" maximum="1">        
+        <position height="0" width="0" x="0" y="0"/>      
       </multiplicity>    
     </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
+    <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <association id="29">    
-    <bendpoint x="585" y="1593"/>    
-    <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="30" name="userStatusMap">        
-        <position height="18" width="81" x="586" y="2509"/>      
-      </attribute>      
-      <multiplicity id="31" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="32">    
     <bendpoint x="606" y="1593"/>    
     <end type="SOURCE" refId="6" navigable="false">      
-      <attribute id="33" name="userGroupMap">        
+      <attribute id="30" name="userGroupMap">        
         <position height="18" width="80" x="716" y="2499"/>      
       </attribute>      
-      <multiplicity id="34" minimum="0" maximum="2147483647"/>    
+      <multiplicity id="31" minimum="0" maximum="2147483647">        
+        <position height="0" width="0" x="0" y="0"/>      
+      </multiplicity>    
     </end>    
     <end type="TARGET" refId="3" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <association id="35">    
+  <association id="32">    
     <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="36" name="location">        
+      <attribute id="33" name="location">        
         <position height="18" width="45" x="351" y="2530"/>      
       </attribute>      
-      <multiplicity id="37" minimum="0" maximum="1">        
+      <multiplicity id="34" minimum="0" maximum="1">        
         <position height="16" width="23" x="89" y="2543"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="38">    
-    <end type="SOURCE" refId="4" navigable="false">      
-      <attribute id="39" name="closeLocations"/>      
-      <multiplicity id="40" minimum="0" maximum="2147483647"/>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="41">    
-    <end type="SOURCE" refId="2" navigable="false">      
-      <attribute id="42" name="status"/>      
-      <multiplicity id="43" minimum="0" maximum="1"/>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 

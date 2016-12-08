@@ -10,7 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import ccrmV.MasterUI;
@@ -62,6 +64,8 @@ public class Debugging {
 															// IMPLEMENTED YET
 
 	// output variables
+	
+	public static final String LINE = "--------------------------------------------";
 
 	// output errors related to writing debug files
 	private static final String FILE_OUT_ERROR_METHOD = CONSOLE_ERROR_OUTPUT;
@@ -135,6 +139,8 @@ public class Debugging {
 	public static final DebugObject TEMPLATE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Template Debug: ");
 	public static final DebugObject CLIENT_GRID_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Client Grid: ");
 	
+	
+	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrews Debugging Variables
 	
 	
@@ -182,6 +188,10 @@ public class Debugging {
 	
 	public static void output(String output, DebugObject debugObject) {
 		debugObject.output(output);
+		//add the debug object ot debug objects in use
+		if (!debugObjectsInUse.contains(debugObject)) {
+			debugObjectsInUse.add(debugObject);
+		}
 	}
 	
 	public static void fileOutput(String output, String filePath) {

@@ -95,7 +95,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	boolean alreadyGenerated = false;
 	
 	
-	public Grid clientTable = new Grid();
+	public Grid clientGrid = new Grid();
 	public IndexedContainer clients = new IndexedContainer();
 
 	//nav bar
@@ -144,7 +144,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	ClientEditor clientEditor = new ClientEditor(this);
 	
 	{
-		clientTable.addSelectionListener(event -> this.selectItem());
+		clientGrid.addSelectionListener(event -> this.selectItem());
 	}
 
 	private void hideFilterClick() {
@@ -178,13 +178,13 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		exampleClient.populateContainer(clients);
 		
-		clientTable.setContainerDataSource(clients);
+		clientGrid.setContainerDataSource(clients);
 		
 	}
 	/**
 	 * Updates the client table with the list of filtered clients.
 	 */
-	public void updateClientTable() {
+	public void updateClientGrid() {
 		
 		if (masterUi.userDataHolder.getDatabasePrefix()!=cacheDatabaseName) {
 			//try clearing the table if the database changes?
@@ -262,6 +262,10 @@ public class CrmUI extends HorizontalLayout implements View {
 				if (noteQueryFound == true) {
 					// add the new item
 					clients.addItem(c);
+					
+					Item clientItem = clients.getItem(c);
+					c.genItem(clientItem);
+					
 				}
 			}
 		}
@@ -329,15 +333,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	 */
 	public void selectItem() {
 
-		System.out.println("SELECTED AN ITEM." + clientTable.getSelectedRow());
+		System.out.println("SELECTED AN ITEM." + clientGrid.getSelectedRow());
 		// TODO: ASK before switching
 
 		// null check
-		if (clientTable.getSelectedRow() != null) {
-			localSelClient = masterUi.userDataHolder.getClient(((Client) clientTable.getSelectedRow()).getPrimaryKey());
+		if (clientGrid.getSelectedRow() != null) {
+			localSelClient = masterUi.userDataHolder.getClient(((Client) clientGrid.getSelectedRow()).getPrimaryKey());
 			if (localSelClient == null) {
 				System.out.println(
-						"Null value: " + localSelClient + " found for client: " + ((Client) clientTable.getSelectedRow()).getPrimaryKey());
+						"Null value: " + localSelClient + " found for client: " + ((Client) clientGrid.getSelectedRow()).getPrimaryKey());
 				return;
 			}
 
@@ -372,7 +376,7 @@ public class CrmUI extends HorizontalLayout implements View {
 			return;
 		}
 		clientEditor.setVisible(true);
-		clientTable.select(c);
+		clientGrid.select(c);
 		this.selectedClient = c;
 		clientEditor.selectClient(c);
 
@@ -532,7 +536,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		System.out.println("Created Client: " + c);
 
 		masterUi.userDataHolder.store(c, Client.class);
-		updateClientTable();
+		updateClientGrid();
 		
 		selectClient(c);
 		
@@ -752,14 +756,14 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		midLayout.setSpacing(true);
 		layout.addComponent(midLayout);
-		midLayout.addComponent(clientTable);
+		midLayout.addComponent(clientGrid);
 		//clientTable.setSelectionMode(true);
-		clientTable.setImmediate(true);
+		clientGrid.setImmediate(true);
 		//clientTable.addValueChangeListener(event -> this.selectItem(event));
 
 		
 		
-		updateClientTable();
+		updateClientGrid();
 
 		//Populating all Status, Location, and Group Lists
 		updateCreationLists();
@@ -814,12 +818,12 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		filterLayout.addComponent(filterLabel);
 		
-		filterClientTextField.addValueChangeListener(e -> updateClientTable());
-		filterStatus.addValueChangeListener(e -> updateClientTable());
-		filterLocation.addValueChangeListener(e -> updateClientTable());
-		filterGroup.addValueChangeListener(e -> updateClientTable());
-		filterClientNotesField.addValueChangeListener(e -> updateClientTable());
-		filterContactNowCheckBox.addValueChangeListener(e -> updateClientTable());
+		filterClientTextField.addValueChangeListener(e -> updateClientGrid());
+		filterStatus.addValueChangeListener(e -> updateClientGrid());
+		filterLocation.addValueChangeListener(e -> updateClientGrid());
+		filterGroup.addValueChangeListener(e -> updateClientGrid());
+		filterClientNotesField.addValueChangeListener(e -> updateClientGrid());
+		filterContactNowCheckBox.addValueChangeListener(e -> updateClientGrid());
 
 		//filterClientTextField 
 		filterLayout.addComponent(filterShowFilter);
@@ -856,14 +860,14 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterClientTextField.setValue("");
 		filterClientNotesField.setValue("");
 		filterContactNowCheckBox.setValue(false);
-		updateClientTable();
+		updateClientGrid();
 	}
 
 	/**
 	 * If not found, do not filter by the propriety
 	 */
 	private void filterClick() {
-		updateClientTable();
+		updateClientGrid();
 
 	}
 

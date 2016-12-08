@@ -184,7 +184,7 @@ public class MasterUI extends UI {
 	public void enterCRM() {
 		
 		mainNavigator.navigateTo(MAIN_APP);
-		mainApp.updateClientTable();
+		mainApp.updateClientGrid();
 		mainApp.updateCreationLists();
 		mainApp.updateAllComboBoxes();
 	}

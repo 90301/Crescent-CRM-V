@@ -35,6 +35,9 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	ArrayList<TextArea> consoles = new ArrayList<TextArea>();
 	ArrayList<Button> logOutputButtons = new ArrayList<Button>();
+	
+	static String consoleWidth = "800px";
+	static String consoleHeight = "800px";
 
 	{
 
@@ -49,7 +52,10 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-
+		
+		//consoleLayout.setSizeFull();
+		//consoleLayout.setWidth("100%");
+		
 		consoleLayout.removeAllComponents();
 		for (TextArea console : consoles) {
 			consoleLayout.addComponent(console);
@@ -72,7 +78,10 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	public TextArea createConsole(String consoleName) {
 		TextArea console = new TextArea(consoleName);
-
+		
+		console.setWidth(consoleWidth);
+		console.setHeight(consoleHeight);
+		
 		consoles.add(console);
 
 		return console;
@@ -86,7 +95,7 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	private void outputLog(DebugObject obj, TextArea console) {
 		obj.outputLog();
-		System.out.println(obj + " NAME: " + obj.getName());
+		//System.out.println(obj + " NAME: " + obj.getName());
 		console.setValue(obj.debugLog);
 	}
 

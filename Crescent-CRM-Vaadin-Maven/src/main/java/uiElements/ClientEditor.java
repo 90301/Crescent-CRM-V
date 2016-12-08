@@ -185,7 +185,7 @@ public class ClientEditor extends VerticalLayout {
 		
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
 		
-		crmUi.updateClientTable();
+		crmUi.updateClientGrid();
 		crmUi.selectClient(crmUi.selectedClient);
 		
 		Debugging.TEMPLATE_DEBUG.outputLog();
