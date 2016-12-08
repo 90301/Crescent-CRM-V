@@ -1,5 +1,7 @@
 package debugging;
 
+import org.omg.CORBA.Environment;
+
 import ccrmV.MasterUI;
 
 public class DebugObject {
@@ -29,7 +31,7 @@ public class DebugObject {
 		if (MasterUI.DEVELOPER_MODE) {
 
 			if (logEnabled) {
-				debugLog += outString;
+				debugLog += outString + System.getProperty("line.separator");
 			}
 			
 			Debugging.output(this.outputPreface + outString, debugStyle, enabled);

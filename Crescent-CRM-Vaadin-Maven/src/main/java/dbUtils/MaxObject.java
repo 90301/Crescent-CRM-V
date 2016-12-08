@@ -43,7 +43,7 @@ public abstract class MaxObject {
 	
 	public MaxField<?> keyField;
 	
-	
+	ArrayList<String> preparedListOrder = new ArrayList<String>();
 	
 	/*
 	 * End variables and data structures
@@ -97,7 +97,7 @@ public abstract class MaxObject {
 		return insertValues;
 	}
 	
-	ArrayList<String> preparedListOrder = new ArrayList<String>();
+
 	/**
 	 * PREPARED statement version of insertion
 	 * @return
@@ -300,7 +300,15 @@ public abstract class MaxObject {
 	 */
 	public void setUserDataHolder(UserDataHolder udh) {
 		this.userDataHolder = udh;
+		//loop through looking for conversions
+		
+		updateConversions();
+		
+		
 	}
+
+
+
 	/**
 	 * @deprecated
 	 * Loads data into dbMap from a csv file map.
@@ -478,6 +486,17 @@ public abstract class MaxObject {
 		table.setPrimaryKeyName(primaryKey.getFieldName());
 		table.createTable();
 		return table;
+	}
+	
+	/**
+	 * Updates the conversions to use the user data holder
+	 */
+	private void updateConversions() {
+		for (MaxField<?> m : this.autoGenList) {
+			if (m.conversion!=null) {
+				m.conversion.setUserDataHolder(this.userDataHolder);
+			}
+		}
 	}
 
 	/**

@@ -503,7 +503,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 		c.setName(name);
 
-		c.setId(Client.genId());
 		// set notes to template client
 		if (masterUi.userDataHolder.templateClient != null) {
 			c.setNotes(masterUi.userDataHolder.templateClient.getNotes());

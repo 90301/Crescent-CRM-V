@@ -4,41 +4,118 @@
 package clientInfo;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.data.Item;
+import com.vaadin.data.Property;
+import com.vaadin.data.util.ObjectProperty;
+
 import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import dbUtils.MaxObject;
+import dbUtils.Conversions.ClientFieldMapToString;
+import dbUtils.Conversions.UdhMaxObjectToString;
 import debugging.Debugging;
 
-public class Client extends MaxObject {
+public class Client extends MaxObject implements Item {
 
-	private Location location;
-	public static final String locationField = "locationName";
-	private Status status;
-	public static final String statusField = "statusName";
-	private Group group;
-	public static final String groupField = "groupName";
-	private String name;
-	public static final String nameField = "name";
-	private String notes;
-	public static final String notesField = "notes";
-	private Boolean contactNow = false;
-	public static final String contactNowField = "contactNow";
+	/*
+	 * private Location location; public static final String locationField =
+	 * "locationName"; private Status status; public static final String
+	 * statusField = "statusName"; private Group group; public static final
+	 * String groupField = "groupName"; private String name; public static final
+	 * String nameField = "name"; private String notes; public static final
+	 * String notesField = "notes"; private Boolean contactNow = false; public
+	 * static final String contactNowField = "contactNow"; // Dates private
+	 * java.util.Date lastUpdated = new Date(); public static final String
+	 * lastUpdatedField = "lastUpdated";
+	 * 
+	 * 
+	 * // CUSTOM FIELDS
+	 * 
+	 * private Map<String, ClientField> clientFields = new HashMap<String,
+	 * ClientField>(); public static final String clientFieldsField =
+	 * "clientFields";
+	 */
 	// The ID for the map that will hold all this information (or the id for the
 	// item in the database)
-	private String id;
-	public static final String idField = "id";
-	private Boolean mutex = false;// Do not update internal db if true
-	// Dates
-	private java.util.Date lastUpdated = new Date();
-	public static final String lastUpdatedField = "lastUpdated";
-	// CUSTOM FIELDS
+	// private String id;
+	// public static final String idField = "id";
 
-	private Map<String, ClientField> clientFields = new HashMap<String, ClientField>();
-	public static final String clientFieldsField = "clientFields";
+	private Boolean mutex = false;// Do not update internal db if true
+
+	MaxField<String> name = new MaxField<String>("name", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
+
+	MaxField<Location> location = new MaxField<Location>("locationName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,
+			new Location(), new Location(), this);
+	MaxField<Status> status = new MaxField<Status>("statusName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, new Status(),
+			new Status(), this);
+	MaxField<Group> group = new MaxField<Group>("groupName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, new Group(),
+			new Group(), this);
+
+	MaxField<String> notes = new MaxField<String>("notes", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "", this);
+	
+	MaxField<Boolean> contactNow = new MaxField<Boolean>("contactNow", MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN, false, false,
+			this);
+	MaxField<Date> lastUpdated = new MaxField<Date>("lastUpdated", MaxDBTable.DATA_MYSQL_TYPE_DATE_TIME, new Date(), new Date(), this);
+
+	MaxField<Map<String, ClientField>> clientFields = new MaxField<Map<String, ClientField>>("clientFields",
+			MaxDBTable.DATA_MYSQL_TYPE_STRING, new HashMap<String, ClientField>(), new HashMap<String, ClientField>(),
+			this);
+	
+	//Conversions
+	
+	UdhMaxObjectToString<Location> locationConversion = new UdhMaxObjectToString<Location>();
+	UdhMaxObjectToString<Status> statusConversion = new UdhMaxObjectToString<Status>();
+	UdhMaxObjectToString<Group> groupConversion = new UdhMaxObjectToString<Group>();
+	ClientFieldMapToString customFieldConversion = new ClientFieldMapToString();
+	
+	{
+		//set up conversions
+		
+		
+		locationConversion.setUserDataHolder(userDataHolder);//THIS MAY NOT WORK
+		locationConversion.setStoreRef(String.class);
+		locationConversion.setRef(Location.class);
+		locationConversion.setDefaultStoreValue("");
+		
+		statusConversion.setUserDataHolder(userDataHolder);
+		statusConversion.setStoreRef(String.class);
+		statusConversion.setRef(Status.class);
+		statusConversion.setDefaultStoreValue("");
+		
+		groupConversion.setUserDataHolder(userDataHolder);
+		groupConversion.setStoreRef(String.class);
+		groupConversion.setRef(Group.class);
+		groupConversion.setDefaultStoreValue("");
+		
+		
+		//Custom Fields
+		customFieldConversion.setStoreRef(String.class);
+		customFieldConversion.setUserDataHolder(userDataHolder);
+		customFieldConversion.setDefaultStoreValue("");
+		
+		location.setConversion(locationConversion);
+		status.setConversion(statusConversion);
+		group.setConversion(groupConversion);
+		clientFields.setConversion(customFieldConversion);
+		
+		
+		
+		this.setKeyField(name);
+		addMaxField(name);
+		addMaxField(location);
+		addMaxField(status);
+		addMaxField(group);
+		addMaxField(notes);
+		addMaxField(contactNow);
+		addMaxField(lastUpdated);
+		addMaxField(clientFields);
+	}
 
 	// private UserDataHolder userDataHolder;
 	/*
@@ -47,29 +124,20 @@ public class Client extends MaxObject {
 	 * 
 	 */
 	public Client() {
-		this.id = genId();
+		//this.id = genId();
 		updateDBMap();
 	}
-
+	
 	public static int clientAddCount = 0;
-
-	public static String genId() {
-		clientAddCount++;
-
-		String genID = System.currentTimeMillis() + " X " + clientAddCount;
-		System.out.println("Generated ID: " + genID);
-		return genID;
-	}
 
 	@Override
 	public String toString() {
 		return "Client [location=" + location + ", status=" + status + ", group=" + group + ", name=" + name
-				+ ", notes=" + notes + ", id=" + id + ", mutex=" + mutex + "]";
+				+ ", notes=" + notes + ", mutex=" + mutex + "]";
 	}
 
-	/**
-	 * UPDATE ON ADDING FIELDS
-	 */
+
+	/*
 	@Override
 	public void loadInternalFromMap() {
 		mutex = true;
@@ -80,10 +148,6 @@ public class Client extends MaxObject {
 		this.notes = (String) dbMap.get(notesField);
 		this.id = (String) dbMap.get(idField);
 		// null check everything
-		/*
-		 * if (dbMap.get(lastUpdatedField)!=null) this.lastUpdated =
-		 * (java.util.Date) dbMap.get(lastUpdatedField);
-		 */
 		lastUpdated = safeLoadFromInternalMap(lastUpdatedField, new Date());
 		contactNow = safeLoadFromInternalMap(contactNowField, false);
 
@@ -93,9 +157,7 @@ public class Client extends MaxObject {
 		mutex = false;
 	}
 
-	/**
-	 * UPDATE ON ADDING FIELDS
-	 */
+
 	@Override
 	public void updateDBMap() {
 		if (!mutex) {
@@ -113,12 +175,6 @@ public class Client extends MaxObject {
 
 	}
 
-	/**
-	 * Sets up the map of field names to datatypes MUST be updated when adding
-	 * new fields
-	 * 
-	 * UPDATE ON ADDING FIELDS
-	 */
 	@Override
 	public void setupDBDatatypes() {
 		if (dbDatatypes == null) {
@@ -155,6 +211,7 @@ public class Client extends MaxObject {
 		table.setPrimaryKeyName(nameField);
 		table.createTable();
 	}
+	*/
 
 	// ----[ Custom Fields ]
 	// -------------------------------------------------------------------
@@ -164,6 +221,7 @@ public class Client extends MaxObject {
 	 * 
 	 * @return
 	 */
+	/*
 	public String genFieldXml() {
 		String xml = "";
 
@@ -178,12 +236,14 @@ public class Client extends MaxObject {
 
 		return xml;
 	}
+	*/
 
 	/**
 	 * Loads custom fields from the xml data.
 	 * 
 	 * @param xml
 	 */
+	/*
 	public void loadCustomFields(String xml) {
 
 		HashMap<String, String> tempMap = new HashMap<String, String>();
@@ -212,12 +272,13 @@ public class Client extends MaxObject {
 		}
 
 	}
+	*/
 
 	public void setupCustomFieldsFromTemplate() {
 		for (String key : userDataHolder.getMap(TemplateField.class).keySet()) {
 
-			if (clientFields.containsKey(key)) {
-				ClientField cf = this.clientFields.get(key);
+			if (getClientFields().containsKey(key)) {
+				ClientField cf = this.getClientFields().get(key);
 
 				cf.setUserDataHolder(userDataHolder);
 
@@ -238,11 +299,14 @@ public class Client extends MaxObject {
 					cf.setFieldName(key);
 					cf.setFieldValue(tf.getDefaultValue());
 
-					clientFields.put(key, cf);
+					//Need a special method for adding to a client field?
+					getClientFields().put(key, cf);
 				}
 
 			}
 		}
+		
+		this.updateDBMap();
 	}
 
 	public void setCustomFieldValue(String fieldName, Object fieldValue) {
@@ -253,10 +317,10 @@ public class Client extends MaxObject {
 		// if the field isn't found, setup the fields from a template
 
 		// this assumes the field would be included in the template
-		if (!clientFields.containsKey(fieldName)) {
+		if (!getClientFields().containsKey(fieldName)) {
 			setupCustomFieldsFromTemplate();
-			Debugging.output("Field Not found in client: " + fieldName + " setup custom fields starting", Debugging.CLIENT_FIELD_DEBUGGING,
-					Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
+			Debugging.output("Field Not found in client: " + fieldName + " setup custom fields starting",
+					Debugging.CLIENT_FIELD_DEBUGGING, Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
 
 		}
 		if (!userDataHolder.getMap(TemplateField.class).containsKey(fieldName)) {
@@ -268,11 +332,11 @@ public class Client extends MaxObject {
 			return;
 		}
 
-		clientFields.get(fieldName).setFieldValue(fieldValue);
-		
-		Debugging.output("New custom Field: " + fieldName + " Value: " + clientFields.get(fieldName).getFieldValue(), Debugging.CLIENT_FIELD_DEBUGGING,
-				Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
-		
+		getClientFields().get(fieldName).setFieldValue(fieldValue);
+
+		Debugging.output("New custom Field: " + fieldName + " Value: " + getClientFields().get(fieldName).getFieldValue(),
+				Debugging.CLIENT_FIELD_DEBUGGING, Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
+
 		this.updateDBMap();
 	}
 
@@ -280,7 +344,7 @@ public class Client extends MaxObject {
 		// if the field isn't found, setup the fields from a template
 
 		// this assumes the field would be included in the template
-		if (!clientFields.containsKey(fieldName)) {
+		if (!getClientFields().containsKey(fieldName)) {
 			setupCustomFieldsFromTemplate();
 
 		}
@@ -290,113 +354,104 @@ public class Client extends MaxObject {
 
 			return null;
 		}
-		return clientFields.get(fieldName).getFieldValue();
+		return getClientFields().get(fieldName).getFieldValue();
 
 	}
 
+	private Map<String, ClientField> getClientFields() {
+		// TODO Auto-generated method stub
+		return clientFields.getFieldValue();
+	}
+
+
 	public Location getLocation() {
-		return location;
+		return location.getFieldValue();
 	}
 
 	public void setLocation(Location location) {
-		this.location = location;
-		updateDBMap();
+		this.location.setFieldValue(location);
 	}
 
 	public void setLocation(String locationName) {
-		this.location = userDataHolder.getLocation(locationName);
-		updateDBMap();
+		this.location.setFieldValue(userDataHolder.getLocation(locationName));
 	}
 
 	public void setLastUpdatedToNow() {
 		// this.lastUpdated =
 		// Math.toIntExact(System.currentTimeMillis()/DATE_MULTIPLIER);
-		this.lastUpdated = new Date();
-		updateDBMap();
+		this.lastUpdated.setFieldValue(new Date());
+
 		System.out.println("Last updated: " + lastUpdated);
 	}
 
 	public String getLocationName() {
 		String locName = null;
-		if (this.location != null) {
-			locName = this.location.getLocationName();
+		if (this.location.getFieldValue() != null) {
+			locName = this.location.getFieldValue().getLocationName();
 		}
 
 		return locName;
 	}
 
 	public Status getStatus() {
-		return status;
+		return status.getFieldValue();
 	}
 
 	public void setStatus(Status status) {
-		this.status = status;
-		updateDBMap();
+		this.status.setFieldValue(status);
 	}
 
 	public void setStatus(String statusName) {
-		this.status = userDataHolder.getStatus(statusName);
-		updateDBMap();
+		this.status.setFieldValue(userDataHolder.getStatus(statusName));
 	}
 
 	public String getStatusName() {
 		String statName = null;
-		if (this.status != null) {
-			statName = status.getStatusName();
+		if (this.status.getFieldValue() != null) {
+			statName = status.getFieldValue().getPrimaryKey();
 		}
 		return statName;
 	}
 
 	public String getName() {
-		return name;
+		return name.getFieldValue();
 	}
 
 	public void setName(String name) {
-		this.name = name;
-		updateDBMap();
+		this.name.setFieldValue(name);
 	}
 
 	public String getNotes() {
-		return notes;
+		return notes.getFieldValue();
 	}
 
 	public void setNotes(String notes) {
-		this.notes = notes;
-		updateDBMap();
+		this.notes.setFieldValue(notes);
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-		updateDBMap();
-	}
-
+	
 	public void setContactNow(Boolean contactNow) {
-		this.contactNow = contactNow;
-		updateDBMap();
+		this.contactNow.setFieldValue(contactNow);
 	}
 
 	public Group getGroup() {
-		return group;
+		return group.getFieldValue();
 	}
 
 	public void setGroup(Group group) {
-		this.group = group;
-		updateDBMap();
+		this.group.setFieldValue(group);
 	}
 
 	public void setGroup(String groupName) {
-		this.group = userDataHolder.getGroup(groupName);
-		updateDBMap();
+		
+		Group g = userDataHolder.getGroup(groupName);
+		
+		this.group.setFieldValue(g);
 	}
 
 	public String getGroupName() {
 		String groupName = null;
-		if (this.group != null) {
-			groupName = this.group.getPrimaryKey();
+		if (this.group.getFieldValue() != null) {
+			groupName = this.group.getFieldValue().getPrimaryKey();
 		}
 		return groupName;
 	}
@@ -408,11 +463,11 @@ public class Client extends MaxObject {
 	}
 
 	public java.util.Date getLastUpdated() {
-		return lastUpdated;
+		return lastUpdated.getFieldValue();
 	}
 
 	public void setLastUpdated(java.util.Date lastUpdated) {
-		this.lastUpdated = lastUpdated;
+		this.lastUpdated.setFieldValue(lastUpdated);
 	}
 
 	public static final java.text.SimpleDateFormat SIMPLE_DATE_FORMAT = new java.text.SimpleDateFormat(
@@ -425,7 +480,51 @@ public class Client extends MaxObject {
 	}
 
 	public Boolean getContactNow() {
-		return contactNow;
+		return contactNow.getFieldValue();
+	}
+
+	/*
+	 * VAADIN ITEM Allows addition to special data-structures
+	 */
+
+	@Override
+	public Property getItemProperty(Object id) {
+		HashMap<String, MaxField<?>> fields = new HashMap<String, MaxField<?>>();
+		for (MaxField<?> mf : this.autoGenList) {
+			if (mf.getShowField())
+				fields.put(mf.getFieldName(), mf);
+		}
+
+		MaxField<?> f = fields.get(id);
+
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		ObjectProperty prop = new ObjectProperty(f.getFieldValue(), f.getExtendedClass());
+		// prop.setValue(f.getFieldValue());
+
+		return prop;
+	}
+
+	@Override
+	public Collection<?> getItemPropertyIds() {
+		Collection<String> ids = new ArrayList<String>();
+		for (MaxField<?> mf : this.autoGenList) {
+			if (mf.getShowField())
+				ids.add(mf.getFieldName());
+		}
+
+		return ids;
+	}
+
+	@Override
+	public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

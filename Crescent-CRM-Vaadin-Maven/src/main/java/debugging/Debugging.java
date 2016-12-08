@@ -131,7 +131,8 @@ public class Debugging {
 	//Version 2 of debugging variables
 	public static final DebugObject FRONT_DESK_DEBUGGING = new DebugObject(CONSOLE_OUTPUT, true, true);
 	public static final DebugObject OAUTH2 = new DebugObject(CONSOLE_OUTPUT, true, true, "OAUTH2: ");
-	
+	public static final DebugObject CONVERSION_DEBUG2 = new DebugObject(CONSOLE_OUTPUT, true, true, "Conversion Debug2: ");
+	public static final DebugObject TEMPLATE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Template Debug: ");
 	
 	
 	//Andrews Debugging Variables

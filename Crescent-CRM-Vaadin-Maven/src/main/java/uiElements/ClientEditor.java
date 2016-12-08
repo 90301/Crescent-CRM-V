@@ -18,6 +18,7 @@ import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
 import clientInfo.UserDataHolder;
+import debugging.Debugging;
 
 public class ClientEditor extends VerticalLayout {
 	
@@ -143,12 +144,15 @@ public class ClientEditor extends VerticalLayout {
 		// Template code
 		if (crmUi.selectedClient.getName().contains(DataHolder.TEMPLATE_STRING)) {
 
-			Group tGroup = crmUi.masterUi.userDataHolder.getGroup(DataHolder.TEMPLATE_STRING);
-			Location tLocation = crmUi.masterUi.userDataHolder.getLocation(DataHolder.TEMPLATE_STRING);
-			Status tStatus = crmUi.masterUi.userDataHolder.getStatus(DataHolder.TEMPLATE_STRING);
-			crmUi.selectedClient.setGroup(tGroup);
-			crmUi.selectedClient.setLocation(tLocation);
-			crmUi.selectedClient.setStatus(tStatus);
+			//Group tGroup = crmUi.masterUi.userDataHolder.getGroup(DataHolder.TEMPLATE_STRING);
+			//Location tLocation = crmUi.masterUi.userDataHolder.getLocation(DataHolder.TEMPLATE_STRING);
+			//Status tStatus = crmUi.masterUi.userDataHolder.getStatus(DataHolder.TEMPLATE_STRING);
+			crmUi.selectedClient.setGroup(DataHolder.TEMPLATE_STRING);
+			crmUi.selectedClient.setLocation(DataHolder.TEMPLATE_STRING);
+			crmUi.selectedClient.setStatus(DataHolder.TEMPLATE_STRING);
+			
+			Debugging.output("Setting Template Values for status / location / group.",Debugging.TEMPLATE_DEBUG);
+			
 			//Update the fields
 			templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
 
@@ -178,10 +182,13 @@ public class ClientEditor extends VerticalLayout {
 		crmUi.selectedClient = customFieldEditor.updateClient(crmUi.selectedClient);
 
 		crmUi.selectedClient.setContactNow(clientContactNowCheckBox.getValue());
+		
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
+		
 		crmUi.updateClientTable();
 		crmUi.selectClient(crmUi.selectedClient);
 		
+		Debugging.TEMPLATE_DEBUG.outputLog();
 	}
 
 	public void updateAllComboBoxes() {

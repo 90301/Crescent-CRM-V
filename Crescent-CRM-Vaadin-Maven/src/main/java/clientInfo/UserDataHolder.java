@@ -122,7 +122,7 @@ public class UserDataHolder extends MaxObject {
 				store(group, Group.class);
 			}
 
-			c.setId(DataHolder.TEMPLATE_STRING);
+			//c.setId(DataHolder.TEMPLATE_STRING);
 			c.setName(DataHolder.TEMPLATE_STRING);
 			c.setGroup(group);
 			c.setLocation(loc);
@@ -245,18 +245,24 @@ public class UserDataHolder extends MaxObject {
 	
 	public <T extends MaxObject> Collection<T> removeTemplate(Collection<T> list) {
 		
+		Collection<T> outputList = new ArrayList<T>();
 		//NOTE, this is only being done this way because 
 		MaxObject templateObject = null;
-		for (MaxObject obj : list) {
+		
+		
+		
+		for (T obj : list) {
 			if (obj.getPrimaryKey().equals(DataHolder.TEMPLATE_STRING)) {
 				templateObject = obj;
-				break;
+				//break;
+			} else {
+				outputList.add(obj);
 			}
 		}
 		
-		list.remove(templateObject);
+		//outputList.remove(templateObject);
 		
-		return list;
+		return outputList;
 	}
 	
 

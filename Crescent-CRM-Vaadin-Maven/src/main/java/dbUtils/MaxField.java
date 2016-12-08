@@ -5,6 +5,7 @@
 package dbUtils;
 
 import dbUtils.Conversions.MaxConversion;
+import debugging.Debugging;
 import inventory.InventoryItem;
 
 /**
@@ -95,7 +96,9 @@ public class MaxField<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	public <STORE> void safeConversionLoad(MaxObject maxObject) {
-		STORE databaseLoadedValue = (STORE) maxObject.safeLoadFromInternalMap(this.fieldName, this.defaultFieldValue);
+		STORE databaseLoadedValue = (STORE) maxObject.safeLoadFromInternalMap(this.fieldName, this.conversion.getDefaultStoreValue());
+		
+		Debugging.output("database Loaded Value: " + databaseLoadedValue.toString(), Debugging.CONVERSION_DEBUG2);
 		
 		T convertedValue = (T) ((MaxConversion<T,STORE>) this.conversion).convertToUse(databaseLoadedValue);
 		
@@ -108,7 +111,11 @@ public class MaxField<T> {
 		return "MaxField [fieldName=" + fieldName + ", fieldDBType=" + fieldDBType + ", fieldValue=" + fieldValue
 				+ ", defaultFieldValue=" + defaultFieldValue + ", refClass=" + refClass + "]";
 		} else {
+			if (fieldValue==null) {
+				return "NULL VALUE";
+			} else {
 			return fieldValue.toString();
+			}
 		}
 		
 	}

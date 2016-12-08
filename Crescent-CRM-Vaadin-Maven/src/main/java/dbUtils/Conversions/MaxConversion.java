@@ -7,6 +7,8 @@ public abstract class MaxConversion <USE,STORE> {
 	public UserDataHolder userDataHolder;
 	public Class<STORE> storeRef;
 	
+	STORE defaultStoreValue;
+	
 	public void setUserDataHolder(UserDataHolder userDataHolder) {
 		this.userDataHolder = userDataHolder;
 	}
@@ -22,6 +24,13 @@ public abstract class MaxConversion <USE,STORE> {
 	public Class<STORE> getStoreClass() {
 		return storeRef;
 	}
+
+	public STORE getDefaultStoreValue() {
+		return defaultStoreValue;
+	}
 	
+	public void setDefaultStoreValue(STORE defaultValue) {
+		this.defaultStoreValue = defaultValue;
+	}
 	
 }

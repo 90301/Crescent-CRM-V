@@ -76,24 +76,6 @@ public class InventoryItem extends MaxObject implements Item {
 				+ ", itemReorderPoint=" + itemReorderPoint + "]";
 	}
 
-	/*
-	 * Max Object overrides
-	 */
-
-	/*
-	@Override
-	public void loadInternalFromMap() {
-		this.autoGenLoadInternalFromMap(this.autoGenList);
-
-	}
-
-	@Override
-	public void updateDBMap() {
-		this.autoGenUpdateDBMap(this.autoGenList);
-
-	}
-	*/
-
 	@Override
 	public String getPrimaryKey() {
 		String pKey = itemKey.getFieldValue();
@@ -101,20 +83,6 @@ public class InventoryItem extends MaxObject implements Item {
 				Debugging.INVENTORY_OUTPUT_ENABLED);
 		return pKey;
 	}
-
-	/*
-	@Override
-	public void createTableForClass(MaxDBTable table) {
-		this.autoGenCreateTableForClass(this.autoGenList, this.itemKey, table);
-
-	}
-
-	@Override
-	public void setupDBDatatypes() {
-		this.autoGenSetupDBTypes(this.autoGenList);
-
-	}
-	*/
 
 	// Generate a key
 	public void genKey() {
