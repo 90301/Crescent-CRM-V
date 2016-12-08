@@ -41,8 +41,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static final double versionNumber = 1.13;
-	public static final String versionDescription = " MaxField Client";
+	public static final double versionNumber = 1.14;
+	public static final String versionDescription = " Client Grid";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -75,7 +75,7 @@ public class MasterUI extends UI {
 	//if something breaks because of developer mode, turn developer mode off.
 	//no error checking will be implemented for developer mode, if you don't know
 	//exactly what you are doing with a setting, ask someone who does, or don't enable it.
-	public static final Boolean DEVELOPER_MODE = true;
+	public static final Boolean DEVELOPER_MODE = false;
 	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
 	//if no such user exists, the application will crash.
 	public static final Boolean DEV_AUTO_LOGIN = false;

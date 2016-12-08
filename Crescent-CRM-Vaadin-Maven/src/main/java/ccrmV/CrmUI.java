@@ -66,11 +66,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	ListSelect createGroupListSelect = new ListSelect();
 	
 	public static final int CREATE_LIST_SELECT_ROWS = 4;
- 	private static final int MAX_NOTE_ROWS = 20;
+ 	//private static final int MAX_NOTE_ROWS = 20;
 	private static final String PANEL_HEIGHT = "950px";
-	private static final String NOTE_WIDTH = "600px";
+	//private static final String NOTE_WIDTH = "600px";
 	private static final boolean PANNEL_ENABLED = false;
 	private static final boolean DEFAULT_FILTER_SHOW = false;
+	
+	public static final String gridWidth = "900px";
+	public static final String gridHeight = "600px";
+	
 	
 	//Clears textboxes and combo boxes upon creating a client
 	private static final boolean CLEAR_ON_CREATE = true;
@@ -752,7 +756,9 @@ public class CrmUI extends HorizontalLayout implements View {
 		 * M I D _ L A Y O U T
 		 * 
 		 */
-
+		//Client Grid
+		clientGrid.setWidth(gridWidth);
+		clientGrid.setHeight(gridHeight);
 		
 		midLayout.setSpacing(true);
 		layout.addComponent(midLayout);

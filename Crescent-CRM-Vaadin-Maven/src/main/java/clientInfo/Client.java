@@ -105,7 +105,11 @@ public class Client extends MaxObject implements Item {
 		group.setConversion(groupConversion);
 		clientFields.setConversion(customFieldConversion);
 		
+		//Hide certain fields for the grid
 		
+		notes.setShowField(false);
+		contactNow.setShowField(false);
+		clientFields.setShowField(false);
 		
 		this.setKeyField(name);
 		addMaxField(name);

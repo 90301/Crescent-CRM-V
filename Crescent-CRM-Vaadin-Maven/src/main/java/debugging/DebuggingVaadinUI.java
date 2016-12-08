@@ -53,7 +53,9 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		
-		//consoleLayout.setSizeFull();
+		//this.setSizeFull();
+		//consoleLayout.setWidth("80%");
+		//buttonLayout.setWidth("10%");
 		//consoleLayout.setWidth("100%");
 		
 		consoleLayout.removeAllComponents();
