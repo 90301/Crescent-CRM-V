@@ -16,6 +16,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
@@ -94,7 +95,8 @@ public class CrmUI extends HorizontalLayout implements View {
 	boolean alreadyGenerated = false;
 	
 	
-	public Table clientTable = new Table();
+	public Grid clientTable = new Grid();
+	public IndexedContainer clients = new IndexedContainer();
 
 	//nav bar
 	public NavBar navBar;
@@ -141,7 +143,9 @@ public class CrmUI extends HorizontalLayout implements View {
 	//Client Editing
 	ClientEditor clientEditor = new ClientEditor(this);
 	
-
+	{
+		clientTable.addSelectionListener(event -> this.selectItem());
+	}
 
 	private void hideFilterClick() {
 		setFilterShow(false);
@@ -167,14 +171,29 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterHideFilter.setVisible(showFilter);
 	}
 
+	public void createClientGrid() {
+		Client exampleClient = new Client();
+		
+		clients = new IndexedContainer();
+		
+		exampleClient.populateContainer(clients);
+		
+		clientTable.setContainerDataSource(clients);
+		
+	}
 	/**
 	 * Updates the client table with the list of filtered clients.
 	 */
 	public void updateClientTable() {
+		
 		if (masterUi.userDataHolder.getDatabasePrefix()!=cacheDatabaseName) {
 			//try clearing the table if the database changes?
-		clientTable.clear();
-		clientTable.removeAllItems();
+		//clientTable.clear();
+		//clientTable.removeAllItems();
+		
+		//createClientGrid();
+		
+		
 		Debugging.output("Detected database change: " + masterUi.userDataHolder.getDatabasePrefix() + " old: " + cacheDatabaseName
 				,Debugging.CRM_OUTPUT
 				,Debugging.CRM_OUTPUT_ENABLED);
@@ -184,13 +203,16 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		} else {
 			//force clear always!
-			clientTable.clear();
-			clientTable.removeAllItems();
+			//clientTable.clear();
+			//clientTable.removeAllItems();
+			
 		}
-		clientTable.addContainerProperty("Name", String.class, "<no name>");
-		clientTable.addContainerProperty("Location", String.class, null);
-		clientTable.addContainerProperty("Status", String.class, null);
-		clientTable.addContainerProperty("Groups", String.class, "<no group>");
+		
+		createClientGrid();
+		//clientTable.addContainerProperty("Name", String.class, "<no name>");
+		//clientTable.addContainerProperty("Location", String.class, null);
+		//clientTable.addContainerProperty("Status", String.class, null);
+		//clientTable.addContainerProperty("Groups", String.class, "<no group>");
 
 		// set up filter comparison objects
 		Status filterStatusTest = null;
@@ -216,9 +238,9 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		for (Client c : masterUi.userDataHolder.getAllClients()) {
 
-			if (clientTable.containsId(c.getPrimaryKey())) {
+			if (clients.containsId(c.getPrimaryKey())) {
 				// remove old item
-				clientTable.removeItem(c.getPrimaryKey());
+				clients.removeItem(c.getPrimaryKey());
 			}
 
 			// filter settings
@@ -239,9 +261,7 @@ public class CrmUI extends HorizontalLayout implements View {
 					}
 				if (noteQueryFound == true) {
 					// add the new item
-					clientTable.addItem(
-							new Object[] { c.getName(), c.getLocationName(), c.getStatusName(), c.getGroupName() },
-							c.getPrimaryKey());
+					clients.addItem(c);
 				}
 			}
 		}
@@ -306,19 +326,18 @@ public class CrmUI extends HorizontalLayout implements View {
 	/**
 	 * Selection event for selecting a client in the client table
 	 * (this method can be called with null selection safely)
-	 * @param event
 	 */
-	public void selectItem(ValueChangeEvent event) {
+	public void selectItem() {
 
-		System.out.println("SELECTED AN ITEM." + clientTable.getValue());
+		System.out.println("SELECTED AN ITEM." + clientTable.getSelectedRow());
 		// TODO: ASK before switching
 
 		// null check
-		if (clientTable.getValue() != null && !InhalerUtils.stringNullCheck((String) clientTable.getValue())) {
-			localSelClient = masterUi.userDataHolder.getClient((String) clientTable.getValue());
+		if (clientTable.getSelectedRow() != null) {
+			localSelClient = masterUi.userDataHolder.getClient(((Client) clientTable.getSelectedRow()).getPrimaryKey());
 			if (localSelClient == null) {
 				System.out.println(
-						"Null value: " + localSelClient + " found for client: " + (String) clientTable.getValue());
+						"Null value: " + localSelClient + " found for client: " + ((Client) clientTable.getSelectedRow()).getPrimaryKey());
 				return;
 			}
 
@@ -353,7 +372,7 @@ public class CrmUI extends HorizontalLayout implements View {
 			return;
 		}
 		clientEditor.setVisible(true);
-		clientTable.select(c.getName());
+		clientTable.select(c);
 		this.selectedClient = c;
 		clientEditor.selectClient(c);
 
@@ -734,10 +753,12 @@ public class CrmUI extends HorizontalLayout implements View {
 		midLayout.setSpacing(true);
 		layout.addComponent(midLayout);
 		midLayout.addComponent(clientTable);
-		clientTable.setSelectable(true);
+		//clientTable.setSelectionMode(true);
 		clientTable.setImmediate(true);
-		clientTable.addValueChangeListener(event -> this.selectItem(event));
+		//clientTable.addValueChangeListener(event -> this.selectItem(event));
 
+		
+		
 		updateClientTable();
 
 		//Populating all Status, Location, and Group Lists

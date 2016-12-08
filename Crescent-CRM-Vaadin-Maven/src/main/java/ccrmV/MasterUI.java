@@ -27,6 +27,7 @@ import dbUtils.MaxDB;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import debugging.Debugging;
+import debugging.DebuggingVaadinUI;
 import integrations.OauthUtils;
 import inventory.InventoryItem;
 import uiElements.NavBar;
@@ -67,6 +68,7 @@ public class MasterUI extends UI {
 	public static final String USER_EDITOR = "userEditor";
 	public static final String SCHEDULER = "scheduler";
 	public static final String INVENTORY = "inventory";
+	public static final String DEBUGGING = "debugging";
 	
 	//When DEVELOPER_MODE is set to true, developer settings will be enabled
 	//this includes auto-login, and bypassing certain aspects of the software.
@@ -96,6 +98,8 @@ public class MasterUI extends UI {
 	SchedulerView schedulerView = new SchedulerView();
 	LoginView loginView = new LoginView();
 	InventoryView inventoryView = new InventoryView();
+	DebuggingVaadinUI debugView = new DebuggingVaadinUI();
+	
 	User user = null;//logged in user
 	
 	
@@ -138,6 +142,9 @@ public class MasterUI extends UI {
 		inventoryView.masterUi = this;
 		inventoryView.navBar = navBar;
 		
+		debugView.masterUi = this;
+		debugView.navBar = navBar;
+		
 		
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
@@ -147,6 +154,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		mainNavigator.addView(SCHEDULER, schedulerView);
 		mainNavigator.addView(INVENTORY, inventoryView);
+		mainNavigator.addView(DEBUGGING, debugView);
 		
 		enterLogin();
 		
@@ -191,6 +199,10 @@ public class MasterUI extends UI {
 	public void enterScheduler() {
 		mainNavigator.navigateTo(SCHEDULER);
 	}
+	public void enterDebug() {
+		mainNavigator.navigateTo(DEBUGGING);
+	}
+	
 	
 	public void logout() {
 		loggedIn = false;

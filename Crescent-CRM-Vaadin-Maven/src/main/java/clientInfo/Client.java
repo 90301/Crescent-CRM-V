@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
+import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.data.util.ObjectProperty;
 
 import dbUtils.InhalerUtils;
@@ -496,6 +497,7 @@ public class Client extends MaxObject implements Item {
 		}
 
 		MaxField<?> f = fields.get(id);
+		Debugging.output("Item property from field: " + f,Debugging.CLIENT_GRID_DEBUG);
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		ObjectProperty prop = new ObjectProperty(f.getFieldValue(), f.getExtendedClass());
@@ -525,6 +527,15 @@ public class Client extends MaxObject implements Item {
 	public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	public IndexedContainer populateContainer(IndexedContainer indexedContainer) {
+		for (MaxField<?> field : this.getAutoGenList()) {
+			if (field.getShowField())
+				indexedContainer.addContainerProperty(field.getFieldName(), field.getExtendedClass(),
+				field.getDefaultFieldValue());
+			}
+		return indexedContainer;
 	}
 
 }

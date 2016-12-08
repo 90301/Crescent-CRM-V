@@ -41,4 +41,9 @@ public class DebugObject {
 	public void outputLog() {
 		Debugging.output(debugLog, debugStyle, enabled);
 	}
+
+	public String getName() {
+		// TODO Auto-generated method stub
+		return outputPreface;
+	}
 }

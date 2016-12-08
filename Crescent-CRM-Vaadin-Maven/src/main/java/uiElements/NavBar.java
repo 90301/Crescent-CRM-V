@@ -28,6 +28,7 @@ public class NavBar {
 	Button userEditorButton;
 	Button schedulerButton;
 	Button inventoryButton;
+	Button debugButton;
 	Button logoutButton;
 	Label statusLabel;
 	public static final String BUTTON_WIDTH = "120px";
@@ -52,30 +53,28 @@ public class NavBar {
 		
 		inventoryButton = new Button("Inventory", event -> this.inventoryClick() );
 		
+		debugButton = new Button("Debugging", event -> this.debugClick() );
+		
 		logoutButton = new Button("Log Out", event -> this.logoutClick());
 		
 		sidebarLayout.addComponent(statusLabel);
+		
+		/*
 		sidebarLayout.addComponent(crmButton);
 		sidebarLayout.addComponent(userEditorButton);
 		sidebarLayout.addComponent(schedulerButton);
 		sidebarLayout.addComponent(inventoryButton);
 		sidebarLayout.addComponent(logoutButton);
+		*/
 		
-		/*
-		crmButton.setWidth(BUTTON_WIDTH);
-		userEditorButton.setWidth(BUTTON_WIDTH);
-        schedulerButton.setWidth(BUTTON_WIDTH);
-        logoutButton.setWidth(BUTTON_WIDTH);
-        
-        crmButton.setHeight(BUTTON_HEIGHT);
-        userEditorButton.setHeight(BUTTON_HEIGHT);
-        schedulerButton.setHeight(BUTTON_HEIGHT);
-        logoutButton.setHeight(BUTTON_HEIGHT);
-        */
 		setupButton(crmButton);
 		setupButton(userEditorButton);
 		setupButton(schedulerButton);
 		setupButton(inventoryButton);
+		
+		if (MasterUI.DEVELOPER_MODE) {
+			setupButton(debugButton);
+		}
 		setupButton(logoutButton);
         
 		generatedLayout = true;
@@ -84,11 +83,18 @@ public class NavBar {
 		
 	}
 	
+
+
 	public void setupButton(Button b) {
 		b.setWidth(BUTTON_WIDTH);
         b.setHeight(BUTTON_HEIGHT);
+        sidebarLayout.addComponent(b);
 	}
 	
+	
+	private void debugClick() {
+		masterUi.enterDebug();
+	}
 	private void inventoryClick() {
 		masterUi.enterInventory();
 	}
