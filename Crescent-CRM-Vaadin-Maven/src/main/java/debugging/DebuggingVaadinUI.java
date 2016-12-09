@@ -42,12 +42,14 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 	{
 
 		TextArea mainConsole = createConsole("Main Console");
-
+		
+		/*
 		createLogOutputButton(Debugging.CLIENT_GRID_DEBUG, mainConsole);
 		createLogOutputButton(Debugging.FRONT_DESK_DEBUGGING, mainConsole);
 		createLogOutputButton(Debugging.OAUTH2, mainConsole);
 		createLogOutputButton(Debugging.CONVERSION_DEBUG2, mainConsole);
 		createLogOutputButton(Debugging.TEMPLATE_DEBUG, mainConsole);
+		*/
 	}
 
 	@Override
@@ -57,6 +59,8 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 		//consoleLayout.setWidth("80%");
 		//buttonLayout.setWidth("10%");
 		//consoleLayout.setWidth("100%");
+		
+		genLogButtons();
 		
 		consoleLayout.removeAllComponents();
 		for (TextArea console : consoles) {
@@ -68,6 +72,8 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 			buttonLayout.addComponent(b);
 		}
 		
+		
+		
 		this.removeAllComponents();
 
 		this.addComponent(navBar.sidebarLayout);
@@ -76,6 +82,14 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 		this.addComponent(consoleLayout);
 
+	}
+
+	private void genLogButtons() {
+		logOutputButtons.clear();
+		
+		for (DebugObject debugObj : Debugging.debugObjectsInUse) {
+			this.createLogOutputButton(debugObj, consoles.get(0));
+		}
 	}
 
 	public TextArea createConsole(String consoleName) {
