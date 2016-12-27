@@ -4,9 +4,10 @@
 
 package ccrmV;
 
-
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -40,7 +41,7 @@ public class MasterUI extends UI {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	public static final double versionNumber = 1.14;
 	public static final String versionDescription = " Client Grid";
 
@@ -52,47 +53,48 @@ public class MasterUI extends UI {
 		super(content);
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	Navigator mainNavigator;
-	
+
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = true, ui = MasterUI.class)
 	public static class Servlet extends VaadinServlet {
 
-
 		private static final long serialVersionUID = 1L;
 
 	}
+
 	public static final String LOGIN = "Login";
 	public static final String MAIN_APP = "mainApp";
 	public static final String USER_EDITOR = "userEditor";
 	public static final String SCHEDULER = "scheduler";
 	public static final String INVENTORY = "inventory";
 	public static final String DEBUGGING = "debugging";
-	
-	//When DEVELOPER_MODE is set to true, developer settings will be enabled
-	//this includes auto-login, and bypassing certain aspects of the software.
-	//if something breaks because of developer mode, turn developer mode off.
-	//no error checking will be implemented for developer mode, if you don't know
-	//exactly what you are doing with a setting, ask someone who does, or don't enable it.
-	public static final Boolean DEVELOPER_MODE = false;
-	//auto login will be enabled if set to true, will attempt to login with DEV_AUTOLOGIN_USER
-	//if no such user exists, the application will crash.
+
+	// When DEVELOPER_MODE is set to true, developer settings will be enabled
+	// this includes auto-login, and bypassing certain aspects of the software.
+	// if something breaks because of developer mode, turn developer mode off.
+	// no error checking will be implemented for developer mode, if you don't
+	// know
+	// exactly what you are doing with a setting, ask someone who does, or don't
+	// enable it.
+	public static final Boolean DEVELOPER_MODE = true;
+	// auto login will be enabled if set to true, will attempt to login with
+	// DEV_AUTOLOGIN_USER
+	// if no such user exists, the application will crash.
 	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
-	
-	//Automatically navigate to a specific page.
-	//This could cause issues when dealing with database initialization
+
+	// Automatically navigate to a specific page.
+	// This could cause issues when dealing with database initialization
 	public static final Boolean DEV_AUTO_NAVIGATE = false;
 	public static final String DEV_AUTO_NAVIGATE_PAGE = INVENTORY;
-	
-	
-	
+
 	public boolean loggedIn = false;
 	public static ArrayList<String> authenicatedHosts = new ArrayList<String>();
 	String userHost = "";
-	
+
 	CrmUI mainApp = new CrmUI();
 	UserEditor userEditor = new UserEditor();
 	SchedulerView schedulerView = new SchedulerView();
@@ -100,52 +102,51 @@ public class MasterUI extends UI {
 	InventoryView inventoryView = new InventoryView();
 	DebuggingVaadinUI debugView = new DebuggingVaadinUI();
 	
-	User user = null;//logged in user
-	
-	
-	//This is intended to make it so we can just call masterUI.userDataHolder
-	//everywhere dataholder used to be called.
-	public UserDataHolder userDataHolder;//Set when logging in
-	
-	public static final String[] avaliableThemes = {"mytheme","darkTheme"};
-	
+	CategoryEditorView categoryEditorView = new CategoryEditorView();
+
+	User user = null;// logged in user
+
+	// This is intended to make it so we can just call masterUI.userDataHolder
+	// everywhere dataholder used to be called.
+	public UserDataHolder userDataHolder;// Set when logging in
+
+	public static final String[] avaliableThemes = { "mytheme", "darkTheme" };
+
 	public String currentTheme = avaliableThemes[1];
-	
+
 	protected void init(VaadinRequest request) {
-		
+
+		oAuthManage(request);
+
 		this.setTheme(currentTheme);
-		
+
 		DataHolder.initalizeDatabases();
-		
+
 		userHost = request.getRemoteHost();
-		mainNavigator = new Navigator(this,this);
-		
+		mainNavigator = new Navigator(this, this);
+
 		loginView.host = userHost;
 		loginView.masterUi = this;
-		//Generate the nav bar to use
+		// Generate the nav bar to use
 		NavBar navBar = new NavBar();
 		navBar.masterUi = this;
 		navBar.generateNavBar();
-		
-		
-		
+
 		mainApp.masterUi = this;
 		mainApp.navBar = navBar;
-		
-		
+
 		userEditor.masterUi = this;
 		userEditor.navBar = navBar;
-		
+
 		schedulerView.masterUi = this;
 		schedulerView.navBar = navBar;
-		
+
 		inventoryView.masterUi = this;
 		inventoryView.navBar = navBar;
-		
+
 		debugView.masterUi = this;
 		debugView.navBar = navBar;
-		
-		
+
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
 		}
@@ -155,22 +156,51 @@ public class MasterUI extends UI {
 		mainNavigator.addView(SCHEDULER, schedulerView);
 		mainNavigator.addView(INVENTORY, inventoryView);
 		mainNavigator.addView(DEBUGGING, debugView);
-		
+
 		enterLogin();
-		
+
 		/*
 		 * Start of capstone
 		 */
-		
-		//Debug unit testing
+
+		// Debug unit testing
 		Debugging.debugUnitTesting();
 		devTestCode();
-		
-		//dev switch page
+
+		// dev switch page
 		if (DEVELOPER_MODE && DEV_AUTO_NAVIGATE) {
 			mainNavigator.navigateTo(DEV_AUTO_NAVIGATE_PAGE);
 		}
+
+	}
+
+	/**
+	 * Handles OAuth info for the request (HOPEFULLY)
+	 * @param request
+	 */
+	private void oAuthManage(VaadinRequest request) {
 		
+		Debugging.output("Vaadin REQUEST: "+ request,Debugging.OAUTH2);
+		
+		Enumeration<String> attributes = request.getAttributeNames();
+		while (attributes.hasMoreElements()) {
+			String atribute = attributes.nextElement();
+			String value = request.getAttribute(atribute).toString();
+			Debugging.output("Found Attribute: "+ atribute + " Value: " + value,Debugging.OAUTH2);
+		}
+		Map<String, String[]> parameters = request.getParameterMap();
+		
+		//String queryString = request.getQueryString();
+		//Debugging.output("Query String: " + queryString ,Debugging.OAUTH2);
+		
+		for (String parameterKey : parameters.keySet()) {
+			String[] value = parameters.get(parameterKey);
+			
+			Debugging.output("Found Parameter: "+ parameterKey + " Value: " + value,Debugging.OAUTH2);
+		}
+		
+		//String requestUrl = request.getRequestURI();
+		//Debugging.output("Request URL: " + requestUrl ,Debugging.OAUTH2);
 	}
 
 	public void startMainApp() {
@@ -178,32 +208,33 @@ public class MasterUI extends UI {
 		authenicatedHosts.add(userHost);
 		System.out.println("Attempting to navigate to the main application.");
 		mainNavigator.navigateTo(MAIN_APP);
-		
+
 	}
-	
+
 	public void enterCRM() {
-		
+
 		mainNavigator.navigateTo(MAIN_APP);
 		mainApp.updateClientGrid();
 		mainApp.updateCreationLists();
 		mainApp.updateAllComboBoxes();
 	}
-	
+
 	public void enterUserEditor() {
 		mainNavigator.navigateTo(USER_EDITOR);
 	}
-	
+
 	public void enterLogin() {
 		mainNavigator.navigateTo(LOGIN);
 	}
+
 	public void enterScheduler() {
 		mainNavigator.navigateTo(SCHEDULER);
 	}
+
 	public void enterDebug() {
 		mainNavigator.navigateTo(DEBUGGING);
 	}
-	
-	
+
 	public void logout() {
 		loggedIn = false;
 		userDataHolder = null;
@@ -211,47 +242,48 @@ public class MasterUI extends UI {
 		loginView.clearFields();
 		mainNavigator.navigateTo(LOGIN);
 	}
-	
+
 	public User getUser() {
 		return user;
 	}
 
 	/**
-	 * NO ERROR CHECKING done in this method yet.
-	 * sets the user data holder to the given userDataHolder name.
-	 * @param databaseName - the user data holder to select
+	 * NO ERROR CHECKING done in this method yet. sets the user data holder to
+	 * the given userDataHolder name.
+	 * 
+	 * @param databaseName
+	 *            - the user data holder to select
 	 */
 	public void setUserDataHolder(String databaseName) {
-		//TODO make sure user actually can access the database
+		// TODO make sure user actually can access the database
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
-		DataHolder.store(this.user,User.class);
+		DataHolder.store(this.user, User.class);
 	}
 
 	public void enterInventory() {
 		mainNavigator.navigateTo(INVENTORY);
-		
+
 	}
-	
+
 	/**
-	 * This method can be used to test things when in developer mode and dev test code
-	 * are set to true
+	 * This method can be used to test things when in developer mode and dev
+	 * test code are set to true
 	 */
 	public void devTestCode() {
-		
+
 		if (DEVELOPER_MODE && DEV_TEST_CODE) {
-			
-			Debugging.output("BEGIN DevTestCode. "
-					, Debugging.MASTER_UI_TESTING_OUTPUT
-					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-			
-			//inventory unit testing
-			
+
+			Debugging.output("BEGIN DevTestCode. ", Debugging.MASTER_UI_TESTING_OUTPUT,
+					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+
+			// inventory unit testing
+
 			UserDataHolder udhTest = new UserDataHolder();
 			udhTest.setDatabasePrefix("test");
 			udhTest.initalizeDatabases();
 			DataHolder.store(udhTest, UserDataHolder.class);
-			
+
 			InventoryItem invItem = new InventoryItem();
 			invItem.setItemKey("RR2016");
 			invItem.setItemName("7RR red dye");
@@ -260,81 +292,73 @@ public class MasterUI extends UI {
 			invItem.setItemURL("www.google.com");
 			invItem.setItemStock(12);
 			invItem.setItemReorderPoint(6);
-			
-			Debugging.output("Created Inventory Item: " + invItem
-					, Debugging.MASTER_UI_TESTING_OUTPUT
-					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-			
-			udhTest.store(invItem, InventoryItem.class);
-			
-			
-			Debugging.output("Stored Inventory Item. " + invItem.debugOutput()
-					, Debugging.MASTER_UI_TESTING_OUTPUT
-					, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-			
-			
 
-			//TESTING INHALER UTILS
-			
-			HashMap<String,String> map = new HashMap<String,String>();
+			Debugging.output("Created Inventory Item: " + invItem, Debugging.MASTER_UI_TESTING_OUTPUT,
+					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+
+			udhTest.store(invItem, InventoryItem.class);
+
+			Debugging.output("Stored Inventory Item. " + invItem.debugOutput(), Debugging.MASTER_UI_TESTING_OUTPUT,
+					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+
+			// TESTING INHALER UTILS
+
+			HashMap<String, String> map = new HashMap<String, String>();
 			map.put("Key1", "value1");
 			map.put("KEY2", "Value2");
-			
-			String xml= InhalerUtils.mapToXML(map);
-			
+
+			String xml = InhalerUtils.mapToXML(map);
+
 			String customField1 = "Custom-Field1";
-			
+
 			HashMap<String, String> map2 = InhalerUtils.xmlToMap(xml);
-			
+
 			TemplateField tf = new TemplateField();
 			tf.setDataType(TemplateField.DATA_TYPE_TEXT);
 			tf.setDefaultValue("Default");
 			tf.setFieldName(customField1);
 			tf.setUserDataHolder(udhTest);
 			udhTest.store(tf, TemplateField.class);
-			
+
 			Client testClient1 = new Client();
 			testClient1.setUserDataHolder(udhTest);
-			
+
 			testClient1.setName("robot9000");
 			testClient1.setupCustomFieldsFromTemplate();
-			
+
 			testClient1.setCustomFieldValue(customField1, "Grimes!");
-			
+
 			udhTest.store(testClient1, Client.class);
-			
+
 			String customField1Output = (String) testClient1.getCustomFieldValue(customField1);
-			
-			Debugging.output("Custom Field Output: " + customField1Output
-			, Debugging.MASTER_UI_TESTING_OUTPUT
-			, Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-						
-			//OAUTH2 Testing
-			
+
+			Debugging.output("Custom Field Output: " + customField1Output, Debugging.MASTER_UI_TESTING_OUTPUT,
+					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+
+			// OAUTH2 Testing
+
 			OauthUtils.genGoogleLink();
-			
-			//deletion testing
+
+			// deletion testing
 			udhTest.delete(tf, TemplateField.class);
-			
-			
+
 		}
 	}
 
 	public void changeTheme(String themeSelected) {
-		
-		//do nothing if the current theme is already this theme
+
+		// do nothing if the current theme is already this theme
 		if (this.currentTheme.equals(themeSelected)) {
 			return;
 		}
-		//ensure the theme is in the list of available themes
+		// ensure the theme is in the list of available themes
 		for (String s : avaliableThemes) {
 			if (s.equals(themeSelected)) {
 				this.currentTheme = themeSelected;
 				this.setTheme(this.currentTheme);
 			}
 		}
-		
-		
+
 	}
 
 }

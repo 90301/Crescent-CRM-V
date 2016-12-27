@@ -67,7 +67,8 @@ public class GoogleIntegrationsServlet extends HttpServlet {// AbstractAuthoriza
 		String requestUrl = request.getRequestURI();
 		Debugging.output("Request URL: " + requestUrl ,Debugging.OAUTH2);
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		response.sendRedirect("/");
 	}
 
 	/**
