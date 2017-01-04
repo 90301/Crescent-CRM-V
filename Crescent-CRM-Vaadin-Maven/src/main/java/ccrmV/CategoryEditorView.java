@@ -1,5 +1,8 @@
 package ccrmV;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -39,7 +42,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	
 	VerticalLayout locationEditorLayout = new VerticalLayout();
 	
-	
+	Location selectedLocation;
 	
 	
 	//location editor components
@@ -52,15 +55,17 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	Label hrule = new Label("-----------------------------------------------------");
 	
 	VerticalLayout editExistingLocationLayout = new VerticalLayout();
+	Label editLocationsSelectedLabel = new Label("Editing Location: ");
 	ComboBox editLocationSelectionBox = new ComboBox();
 	TwinColSelect editLocationProximitySelect = new TwinColSelect("Proximity");
-	Button editLocationUpdateButton = new Button("Update");
+	Button editLocationUpdateButton = new Button("Update", e-> editLocationUpdateClick());
 	/*
 	 * |---------------------------------------------|
 	 * | (New Location) - - - - - - - - - - - - - - -|
 	 * | (Text Box name) - (Button create) - (exists)|
 	 * |---------------------------------------------|
 	 * | (Edit Existing Locations) - - - - - - - - - |
+	 * | (Selected Location Label) - - - - - - - - - |
 	 * | (Location to Edit Drop-down box) - - - - - -|
 	 * | (proximity Twin Col Select) - - - - - - - - |
 	 * | (update button) - - - - - - - - - - - - - - |
@@ -82,6 +87,9 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		newLocationAllLocations.setNullSelectionAllowed(false);
 		editLocationSelectionBox.setNullSelectionAllowed(false);
 		editLocationProximitySelect.setNullSelectionAllowed(false);
+		
+		//Events
+		editLocationSelectionBox.addValueChangeListener(e -> selectLocation());
 	}
 	
 	@Override
@@ -105,6 +113,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		locationSeperator.addComponent(hrule);
 		
 		//Edit existing 
+		editExistingLocationLayout.addComponent(editLocationsSelectedLabel);
 		editExistingLocationLayout.addComponent(editLocationSelectionBox);
 		editExistingLocationLayout.addComponent(editLocationProximitySelect);
 		editExistingLocationLayout.addComponent(editLocationUpdateButton);
@@ -129,8 +138,12 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		alreadyGenerated = true;
 	}
 	
+
+
 	//Populate Locations
 	
+
+
 	/**
 	 * updates all location comboboxes. Useful when adding new locations
 	 * or loading the page.
@@ -174,5 +187,62 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		}
 	}
 	
+	private void loadProximity(Location l) {
+		editLocationProximitySelect.removeAllItems();
+		editLocationProximitySelect.addItems(masterUi.userDataHolder.getAllLocations());
+		
+		
+		//Must remove own location from combo box items
+		editLocationProximitySelect.removeItem(l);
+		//then add all the locations to the "proximity side" if they are a proximity location
+		for (Location closeLocation : l.getCloseLocations()) {
+			editLocationProximitySelect.select(closeLocation);
+		}
+	}
+	private void selectLocation() {
+		
+		String locationName = editLocationSelectionBox.getValue().toString();
+		
+		if (locationName!=null) {
+			selectEditLocation(locationName);
+		} else {
+			//NULL SELECTION!
+		}
+	}
 	
+	public void selectEditLocation(String locationName) {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		editLocationsSelectedLabel.setValue("Editing Location: " + locationName);
+		//Find the location in the user data holder
+		
+		Location l = udh.getLocation(locationName);
+		
+		//load proximitys for location L
+		loadProximity(l);
+		
+		selectedLocation = l;
+	}
+	private void editLocationUpdateClick() {
+		if (selectedLocation!=null) {
+			editLocationUpdate();
+		}
+	}
+	
+	private void editLocationUpdate() {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		HashSet<Location> closeLocations = new HashSet<Location>();
+		for (Location proximityLocation : (Collection<Location>) editLocationProximitySelect.getValue()) {
+			System.out.println("Prox Location found: " + proximityLocation);
+			closeLocations.add(proximityLocation);
+		}
+		
+		selectedLocation.setCloseLocations(closeLocations);
+		
+		//update the database
+		udh.store(selectedLocation, Location.class);
+		
+	}
+
 }
