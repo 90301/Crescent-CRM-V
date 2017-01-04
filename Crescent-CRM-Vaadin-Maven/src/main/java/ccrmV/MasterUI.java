@@ -42,8 +42,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.14;
-	public static final String versionDescription = " Client Grid";
+	public static final double versionNumber = 1.15;
+	public static final String versionDescription = " Proximity Locations Storing";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
