@@ -10,6 +10,9 @@ public class HashSetToString extends MaxConversion<HashSet<Location>, String> {
 	public static final String DELIMITER = "|";
 	@Override
 	public String convertToStore(HashSet<Location> input) {
+		
+		Debugging.output("Attempting to convert: " + input, Debugging.CONVERSION_DEBUG2);
+		
 		String csv = "";
 		Boolean firstRun = true;
 		for (Location l : input) {
@@ -19,6 +22,7 @@ public class HashSetToString extends MaxConversion<HashSet<Location>, String> {
 				firstRun = false;
 			}
 			csv += l.getPrimaryKey();
+			Debugging.output("primary key: " + l.getPrimaryKey(), Debugging.CONVERSION_DEBUG2);
 		}
 		return csv;
 	}
@@ -31,7 +35,7 @@ public class HashSetToString extends MaxConversion<HashSet<Location>, String> {
 	 */
 	public HashSet<Location> convertToUse(String input) {
 		
-		Debugging.output("Attempting to convert: " + input, Debugging.CONVERSION_DEBUG, Debugging.CONVERSION_DEBUG_ENABLED);
+		Debugging.output("Attempting to convert: " + input, Debugging.CONVERSION_DEBUG2);
 		
 		HashSet<Location> locations = new HashSet<Location>();
 		//split the string on the delimited

@@ -442,8 +442,10 @@ public abstract class MaxObject {
 		
 		for (MaxField<?> m : maxFields) {
 			if (m.conversion==null) {
+				Debugging.output("no conversion for: " + m, Debugging.CONVERSION_DEBUG2);
 			dbMap.put(m.getFieldName(), m.getFieldValue());
 			} else {
+				Debugging.output("Conversion found for: " + m, Debugging.CONVERSION_DEBUG2);
 				//load the converted value
 				dbMap.put(m.getFieldName(), m.getConvertedFieldValue());
 			}

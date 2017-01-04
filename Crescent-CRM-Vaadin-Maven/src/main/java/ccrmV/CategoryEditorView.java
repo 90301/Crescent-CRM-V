@@ -18,6 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.Location;
 import clientInfo.UserDataHolder;
+import debugging.Debugging;
 import uiElements.NavBar;
 
 public class CategoryEditorView extends HorizontalLayout implements View {
@@ -234,11 +235,16 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		HashSet<Location> closeLocations = new HashSet<Location>();
 		for (Location proximityLocation : (Collection<Location>) editLocationProximitySelect.getValue()) {
-			System.out.println("Prox Location found: " + proximityLocation);
+			//System.out.println("Prox Location found: " + proximityLocation);
 			closeLocations.add(proximityLocation);
+			
 		}
 		
 		selectedLocation.setCloseLocations(closeLocations);
+		//check to see if the close locations have been edited
+		for (Location l : selectedLocation.getCloseLocations()) {
+			Debugging.output("Close Location: " + l , Debugging.CATEGORY_EDITOR_DEBUG);
+		}
 		
 		//update the database
 		udh.store(selectedLocation, Location.class);

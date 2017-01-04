@@ -122,8 +122,15 @@ public class MaxField<T> {
 	
 
 	public <STORE> Object getConvertedFieldValue() {
-		@SuppressWarnings("unchecked")
+		
+		
+		Debugging.output(this.getFieldName() + " Conversion Class: " + this.conversion.getClass(), Debugging.CONVERSION_DEBUG2);
+		
+		
+		//@SuppressWarnings("unchecked")
 		Object convertedObject = ((MaxConversion<T,STORE>) this.conversion).convertToStore(this.getFieldValue());
+		
+		Debugging.output("Converted value: " + convertedObject, Debugging.CONVERSION_DEBUG2);
 		return convertedObject;
 	}
 

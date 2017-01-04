@@ -38,13 +38,15 @@ public class Location extends MaxObject {
 		
 		closeLocationsConversion.setUserDataHolder(userDataHolder);
 		closeLocationsConversion.setStoreRef(String.class);
+		closeLocationsConversion.setDefaultStoreValue("");
+		
 		closeLocations.setConversion(closeLocationsConversion);
 		
 		
 		this.setKeyField(locationName);
 
 		this.addMaxField(locationName);
-		//this.addMaxField(closeLocations);
+		this.addMaxField(closeLocations);
 	}
 
 	public Location() {
@@ -55,41 +57,6 @@ public class Location extends MaxObject {
 	public String toString() {
 		return this.getPrimaryKey();
 	}
-	/*
-	 * @Override public void setupDBDatatypes() {
-	 * 
-	 * if (dbDatatypes ==null) { dbDatatypes = new HashMap<String, Class<?>>();
-	 * }
-	 * 
-	 * dbDatatypes.put(locationNameField, String.class);
-	 * dbDatatypes.put(closeLocationsField, String.class);
-	 * 
-	 * }
-	 * 
-	 * public void updateDBMap() { dbMap.put(locationNameField, locationName);
-	 * //TODO: serialize close locations dbMap.put(closeLocationsField,
-	 * closeLocationsCSV()); }
-	 * 
-	 * public String closeLocationsCSV() { String csv = ""; Boolean firstRun =
-	 * true; for (Location l : closeLocations) { if (!firstRun) {
-	 * csv+=DELIMITER; } else { firstRun = false; } csv += l.getLocationName();
-	 * } return csv; }
-	 * 
-	 * 
-	 * 
-	 * public void createTableForClass(MaxDBTable table) {
-	 * table.addDatatype(locationNameField,
-	 * MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-	 * table.addDatatype(closeLocationsField,
-	 * MaxDBTable.DATA_MYSQL_TYPE_STRING);
-	 * table.setPrimaryKeyName(locationNameField); table.createTable(); }
-	 * 
-	 * @Override public void loadInternalFromMap() {
-	 * System.out.println("Read location: " + locationName); this.locationName =
-	 * (String) dbMap.get(locationNameField);
-	 * System.out.println("Read location: " + this.locationName); // TODO: parse
-	 * information from csv close locations }
-	 */
 
 	public void setLocationName(String locationName) {
 		this.locationName.setFieldValue(locationName);
