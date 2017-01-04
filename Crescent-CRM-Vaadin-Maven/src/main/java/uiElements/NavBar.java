@@ -28,6 +28,7 @@ public class NavBar {
 	Button userEditorButton;
 	Button schedulerButton;
 	Button inventoryButton;
+	Button categoryEditorButton;
 	Button debugButton;
 	Button logoutButton;
 	Label statusLabel;
@@ -47,11 +48,15 @@ public class NavBar {
 		
 		crmButton = new Button("CRM", event -> this.crmClick() );
 		
+		categoryEditorButton = new Button("Categories", event -> this.categoryEditorClick() );
+		
 		userEditorButton = new Button("User Editor", event -> this.userEditorClick() );
 		
 		schedulerButton = new Button("Scheduler", event -> this.schedulerClick() );
 		
 		inventoryButton = new Button("Inventory", event -> this.inventoryClick() );
+		
+		
 		
 		debugButton = new Button("Debugging", event -> this.debugClick() );
 		
@@ -68,9 +73,11 @@ public class NavBar {
 		*/
 		
 		setupButton(crmButton);
+		setupButton(categoryEditorButton);
 		setupButton(userEditorButton);
 		setupButton(schedulerButton);
 		setupButton(inventoryButton);
+		
 		
 		if (MasterUI.DEVELOPER_MODE) {
 			setupButton(debugButton);
@@ -85,13 +92,19 @@ public class NavBar {
 	
 
 
+
+
+
+
 	public void setupButton(Button b) {
 		b.setWidth(BUTTON_WIDTH);
         b.setHeight(BUTTON_HEIGHT);
         sidebarLayout.addComponent(b);
 	}
 	
-	
+		private void categoryEditorClick() {
+		masterUi.enterCategoryEditor();
+	}
 	private void debugClick() {
 		masterUi.enterDebug();
 	}

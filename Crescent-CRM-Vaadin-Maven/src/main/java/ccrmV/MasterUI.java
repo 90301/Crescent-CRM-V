@@ -70,6 +70,7 @@ public class MasterUI extends UI {
 	public static final String SCHEDULER = "scheduler";
 	public static final String INVENTORY = "inventory";
 	public static final String DEBUGGING = "debugging";
+	public static final String CATEGORY_EDITOR = "categoryEditor";
 
 	// When DEVELOPER_MODE is set to true, developer settings will be enabled
 	// this includes auto-login, and bypassing certain aspects of the software.
@@ -143,6 +144,9 @@ public class MasterUI extends UI {
 
 		inventoryView.masterUi = this;
 		inventoryView.navBar = navBar;
+		
+		categoryEditorView.masterUi = this;
+		categoryEditorView.navBar = navBar;
 
 		debugView.masterUi = this;
 		debugView.navBar = navBar;
@@ -156,7 +160,9 @@ public class MasterUI extends UI {
 		mainNavigator.addView(SCHEDULER, schedulerView);
 		mainNavigator.addView(INVENTORY, inventoryView);
 		mainNavigator.addView(DEBUGGING, debugView);
-
+		mainNavigator.addView(CATEGORY_EDITOR, categoryEditorView);
+		
+		
 		enterLogin();
 
 		/*
@@ -230,11 +236,15 @@ public class MasterUI extends UI {
 	public void enterScheduler() {
 		mainNavigator.navigateTo(SCHEDULER);
 	}
-
+	
 	public void enterDebug() {
 		mainNavigator.navigateTo(DEBUGGING);
 	}
-
+	
+	public void enterCategoryEditor() {
+		mainNavigator.navigateTo(CATEGORY_EDITOR);
+	}
+	
 	public void logout() {
 		loggedIn = false;
 		userDataHolder = null;
