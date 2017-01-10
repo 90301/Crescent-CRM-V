@@ -196,11 +196,18 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		//Must remove own location from combo box items
 		editLocationProximitySelect.removeItem(l);
 		//then add all the locations to the "proximity side" if they are a proximity location
-		for (Location closeLocation : l.getCloseLocations()) {
+		for (Location closeLocation : l.getRealCloseLocations()) {
 			editLocationProximitySelect.select(closeLocation);
+			Debugging.output("Close Location loaded: " + closeLocation , Debugging.CATEGORY_EDITOR_DEBUG);
 		}
 	}
 	private void selectLocation() {
+		Debugging.output("Selected Location: " + editLocationSelectionBox.getValue() , Debugging.CATEGORY_EDITOR_DEBUG);
+		
+		if (editLocationSelectionBox.getValue()==null) {
+			//null selection
+			return;
+		}
 		
 		String locationName = editLocationSelectionBox.getValue().toString();
 		
@@ -240,9 +247,9 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 			
 		}
 		
-		selectedLocation.setCloseLocations(closeLocations);
+		selectedLocation.setRealCloseLocations(closeLocations);
 		//check to see if the close locations have been edited
-		for (Location l : selectedLocation.getCloseLocations()) {
+		for (Location l : selectedLocation.getRealCloseLocations()) {
 			Debugging.output("Close Location: " + l , Debugging.CATEGORY_EDITOR_DEBUG);
 		}
 		
