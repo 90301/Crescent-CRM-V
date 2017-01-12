@@ -139,6 +139,7 @@ public class Debugging {
 	public static final DebugObject TEMPLATE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Template Debug: ");
 	public static final DebugObject CLIENT_GRID_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Client Grid: ");
 	public static final DebugObject CATEGORY_EDITOR_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Category Editor: ");
+	public static final DebugObject MOBILE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Mobile UI: ");
 	
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrews Debugging Variables

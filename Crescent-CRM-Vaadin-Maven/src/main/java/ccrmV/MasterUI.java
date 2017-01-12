@@ -31,6 +31,7 @@ import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
 import integrations.OauthUtils;
 import inventory.InventoryItem;
+import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
 
@@ -42,8 +43,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.16;
-	public static final String versionDescription = " Proximity Locations Strings";
+	public static final double versionNumber = 1.17;
+	public static final String versionDescription = " Mobility detection framework";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -115,8 +116,17 @@ public class MasterUI extends UI {
 
 	public String currentTheme = avaliableThemes[1];
 
+	String userAgent = "";
+	Boolean mobileUser = false;
+	
 	protected void init(VaadinRequest request) {
 
+		userAgent = request.getHeader("User-Agent");
+		
+		mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
+		
+		Debugging.output("User Agent: " + userAgent, Debugging.MOBILE_DEBUG);
+		
 		oAuthManage(request);
 
 		this.setTheme(currentTheme);
