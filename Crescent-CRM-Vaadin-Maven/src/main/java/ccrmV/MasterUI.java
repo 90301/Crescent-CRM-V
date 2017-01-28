@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
@@ -34,7 +35,7 @@ import inventory.InventoryItem;
 import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
-
+@PreserveOnRefresh
 @Theme("darkTheme")
 public class MasterUI extends UI {
 
@@ -120,7 +121,7 @@ public class MasterUI extends UI {
 	Boolean mobileUser = false;
 	
 	protected void init(VaadinRequest request) {
-
+		
 		userAgent = request.getHeader("User-Agent");
 		
 		mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
