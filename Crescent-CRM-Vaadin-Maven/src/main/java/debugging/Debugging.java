@@ -141,6 +141,9 @@ public class Debugging {
 	public static final DebugObject CATEGORY_EDITOR_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Category Editor: ");
 	public static final DebugObject MOBILE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Mobile UI: ");
 	
+	public static final DebugObject GOOGLE_FURY_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Google Fury: ");
+	
+	
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrews Debugging Variables
 	

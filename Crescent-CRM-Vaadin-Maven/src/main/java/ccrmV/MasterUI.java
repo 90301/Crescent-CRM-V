@@ -124,7 +124,7 @@ public class MasterUI extends UI {
 	
 	protected void init(VaadinRequest request) {
 		
-		
+		Debugging.output("INIT CODE RUNNING. attributes: " + request.getAttributeNames(), Debugging.GOOGLE_FURY_DEBUG);
 		
 		getPage().addUriFragmentChangedListener(
 	               new UriFragmentChangedListener() {
@@ -209,7 +209,10 @@ public class MasterUI extends UI {
 	 * @param uriFragment
 	 */
 	protected void enter(String uriFragment) {
-		// TODO Auto-generated method stub
+		Debugging.output("URI FRAGMENT CHANGE DETECTION. new URI: " + uriFragment, Debugging.GOOGLE_FURY_DEBUG);
+		
+		Debugging.output("PAGE GET LOCATION: " + getPage().getLocation(), Debugging.GOOGLE_FURY_DEBUG);
+		
 		
 	}
 
