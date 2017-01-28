@@ -44,8 +44,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.17;
-	public static final String versionDescription = " Mobility detection framework";
+	public static final double versionNumber = 1.18;
+	public static final String versionDescription = " Google Fury";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

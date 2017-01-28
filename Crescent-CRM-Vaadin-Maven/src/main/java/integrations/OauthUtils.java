@@ -58,7 +58,9 @@ public class OauthUtils {
 	static String googleScope = "openid%20email";
 	
 	static String googleRedirect_Name = "redirect_uri";
-	static String googleRedirect = "https://localhost:8443/Crescent-CRM-Vaadin-Maven/GoogleIntegrationsServlet";
+	//static String googleRedirect = "https://localhost:8443/Crescent-CRM-Vaadin-Maven/GoogleIntegrationsServlet";
+	static String googleRedirect = "https://localhost:8443/Crescent-CRM-Vaadin-Maven/";
+	
 	//static String googleRedirect = "http%3A%2F%2Flocalhost%3A8080";
 	
 	static String googleState_Name = "state";
