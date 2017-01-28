@@ -220,8 +220,11 @@ public class UserEditor extends HorizontalLayout implements View {
 	public void enter(ViewChangeEvent event) {
 		
 		// Ensure the user is logged in
-		if (masterUi.loggedIn == false)
+		if (masterUi.loggedIn == false) {
+			System.out.println("invalid user detected, redirect to login");
 			masterUi.enterLogin();
+			return;
+		}
 		// return;
 
 		// if (this.alreadyGenerated) {
