@@ -15,6 +15,8 @@ import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
+import com.vaadin.server.Page.UriFragmentChangedEvent;
+import com.vaadin.server.Page.UriFragmentChangedListener;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Component;
@@ -122,6 +124,16 @@ public class MasterUI extends UI {
 	
 	protected void init(VaadinRequest request) {
 		
+		
+		
+		getPage().addUriFragmentChangedListener(
+	               new UriFragmentChangedListener() {
+	           public void uriFragmentChanged(
+	                   UriFragmentChangedEvent source) {
+	               enter(source.getUriFragment());
+	            }
+	        });
+		
 		userAgent = request.getHeader("User-Agent");
 		
 		mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
@@ -168,6 +180,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(LOGIN, loginView);
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
+		mainNavigator.addView("", userEditor);//attempting to fix a bug 
 		mainNavigator.addView(SCHEDULER, schedulerView);
 		mainNavigator.addView(INVENTORY, inventoryView);
 		mainNavigator.addView(DEBUGGING, debugView);
@@ -189,6 +202,15 @@ public class MasterUI extends UI {
 			mainNavigator.navigateTo(DEV_AUTO_NAVIGATE_PAGE);
 		}
 
+	}
+
+	/**
+	 * Runs when URI Fragement is changed
+	 * @param uriFragment
+	 */
+	protected void enter(String uriFragment) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
