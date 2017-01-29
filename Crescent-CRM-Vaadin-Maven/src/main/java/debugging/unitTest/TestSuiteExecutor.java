@@ -1,6 +1,8 @@
 package debugging.unitTest;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 import debugging.DebugObject;
 import debugging.Debugging;
@@ -32,4 +34,15 @@ public abstract class TestSuiteExecutor {
 		}
 	}
 	
+	static Random rand = new Random();
+	public String genRandomString() {
+		String randString = "" + UUID.randomUUID();;
+		return randString;
+	}
+	
+	public String genSmallRandomString(String prefix) {
+		String randString = prefix + rand.nextInt();
+		
+		return randString;
+	}
 }
