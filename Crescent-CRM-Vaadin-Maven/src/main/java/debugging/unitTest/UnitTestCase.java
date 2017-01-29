@@ -14,7 +14,8 @@ public class UnitTestCase {
 	
 	public static final String TEST_TYPE_OBJECT = "object";
 	public static final String TEST_TYPE_STRING_CONTAINS = "string contains";
-	
+	public static final String TEST_TYPE_NOT_NULL = "not null";
+	public static final String TEST_TYPE_NOT_EQUAL = "not equal";
 	
 	
 	private String testName = "";
@@ -78,6 +79,31 @@ public class UnitTestCase {
 	
 	
 	
+	public UnitTestCase(String testName, String testMessage, Object expectedResult, Object actualResult,
+			String testType, TestSuiteExecutor testSuiteExecutor) {
+		super();
+		this.testMessage = testMessage;
+		this.testName = testName;
+		this.expectedResult = expectedResult;
+		this.actualResult = actualResult;
+		this.testType = testType;
+		
+		testSuiteExecutor.testCases.add(this);
+		this.checkTest();
+	}
+	
+	public UnitTestCase(String testName, String testMessage, Object expectedResult,
+			String testType, TestSuiteExecutor testSuiteExecutor) {
+		super();
+		this.testMessage = testMessage;
+		this.testName = testName;
+		this.expectedResult = expectedResult;
+		this.testType = testType;
+		
+		testSuiteExecutor.testCases.add(this);
+	}
+
+
 	public Boolean getTestResult() {
 		return testResult;
 	}
@@ -130,6 +156,8 @@ public class UnitTestCase {
 			checkStringContains();
 		} else if (testType.equals(TEST_TYPE_OBJECT)) {
 			checkObjectResult();
+		} else if (testType.equals(TEST_TYPE_NOT_EQUAL)) {
+			checkNotEqual();
 		} else {
 			checkObjectResult();
 		}
@@ -154,6 +182,23 @@ public class UnitTestCase {
 			this.testResult = false;
 		}
 	}
+	
+	public void checkNotNull() {
+		if (actualResult!=null) {
+			this.testResult = true;
+		} else {
+			this.testResult = false;
+		}
+	}
+	
+	public void checkNotEqual() {
+		if (!actualResult.equals(expectedResult)) {
+			this.testResult = true;
+		} else {
+			this.testResult = false;
+		}
+	}
+	
 	/*
 	 * OUTPUT CODE
 	 */
@@ -165,7 +210,7 @@ public class UnitTestCase {
 			output += TEST_FAIL_STRING;
 		}
 		
-		output += testName + DELIMITER + testMessage;
+		output += testName + DELIMITER + testMessage + " Result: " + actualResult + " Expected: " + expectedResult;
 		return output;
 		
 	}

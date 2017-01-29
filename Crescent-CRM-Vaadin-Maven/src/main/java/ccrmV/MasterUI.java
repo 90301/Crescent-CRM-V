@@ -32,7 +32,9 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
+import debugging.unitTest.TestSuiteExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
+import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
 import integrations.OauthUtils;
 import inventory.InventoryItem;
 import themes.UserAgentProcessor;
@@ -47,8 +49,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.18;
-	public static final String versionDescription = " Google Fury";
+	public static final double versionNumber = 1.19;
+	public static final String versionDescription = " Test Suite 2.0";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -331,8 +333,12 @@ public class MasterUI extends UI {
 					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
 			
 			DatabaseTestExecutor dTestExecutor = new DatabaseTestExecutor();
+			TestSuiteMetaExecutor metaTests = new TestSuiteMetaExecutor();
 			dTestExecutor.runTests();
 			dTestExecutor.debugOutputTestCases();
+			
+			metaTests.runTests();
+			metaTests.debugOutputTestCases();
 			
 			//Old test code below
 
