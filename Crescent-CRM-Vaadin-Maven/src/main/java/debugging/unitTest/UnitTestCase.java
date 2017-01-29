@@ -33,7 +33,9 @@ public class UnitTestCase {
 	
 	
 	
-	
+	{
+		UnitTestSuite.addTestCase(this);
+	}
 	
 	
 	

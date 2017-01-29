@@ -32,6 +32,7 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
+import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import integrations.OauthUtils;
 import inventory.InventoryItem;
 import themes.UserAgentProcessor;
@@ -121,6 +122,12 @@ public class MasterUI extends UI {
 
 	String userAgent = "";
 	Boolean mobileUser = false;
+	
+	/*
+	 * UNIT TESTING VARIABLES
+	 */
+	
+	
 	
 	protected void init(VaadinRequest request) {
 		
@@ -322,6 +329,12 @@ public class MasterUI extends UI {
 
 			Debugging.output("BEGIN DevTestCode. ", Debugging.MASTER_UI_TESTING_OUTPUT,
 					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
+			
+			DatabaseTestExecutor dTestExecutor = new DatabaseTestExecutor();
+			dTestExecutor.runTests();
+			dTestExecutor.debugOutputTestCases();
+			
+			//Old test code below
 
 			// inventory unit testing
 
