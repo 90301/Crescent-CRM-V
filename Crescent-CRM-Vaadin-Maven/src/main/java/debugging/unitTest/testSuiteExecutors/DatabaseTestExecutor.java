@@ -1,7 +1,10 @@
 package debugging.unitTest.testSuiteExecutors;
 
+import java.util.HashSet;
+
 import clientInfo.Client;
 import clientInfo.DataHolder;
+import clientInfo.Location;
 import clientInfo.Status;
 import clientInfo.UserDataHolder;
 import debugging.unitTest.TestSuiteExecutor;
@@ -27,8 +30,16 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 	static String statusTest1Name = "Prospect";  
 	static int statusTest1Color = 122;
 	
+	//location testing
+	static String locationTest1Name = "Columbia";//set to random string
+	
 	@Override
 	public Boolean runTests() {
+		
+		//Gen Random Values
+		
+		locationTest1Name = genSmallRandomString("City:");
+		
 		
 		//Create Test cases
 		UnitTestCase createDatabaseTest1 = new UnitTestCase("createDatabaseTest1", "Ensures prefix for the user data holder works correctly", "test", UnitTestCase.TEST_TYPE_STRING_CONTAINS);
@@ -63,11 +74,14 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		
 		//UnitTestCase createClientTest1 = new UnitTestCase("createClientTest1", "Creating a client", client1TestName, UnitTestCase.TEST_TYPE_OBJECT);
 		
-		UnitTestCase createStatusTest1 = new UnitTestCase("createStatusTest1", "Set name ", statusTest1Name, UnitTestCase.TEST_TYPE_OBJECT);
-		this.testCases.add(createStatusTest1);
+		UnitTestCase createStatusTest1 = new UnitTestCase("createStatusTest1", "Set status name ", statusTest1Name, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
 		//UnitTestCase createStatusTest2 = new UnitTestCase("createStatusTest2", "Set color ", statusTest1Color, UnitTestCase.TEST_TYPE_OBJECT);
 		//this.testCases.add(createStatusTest2);
+		
+		UnitTestCase createLocationTest1 = new UnitTestCase("createLocationTest1", "Set location name  ", locationTest1Name, UnitTestCase.TEST_TYPE_OBJECT,this);
+		
+		UnitTestCase createLocationTest2 = new UnitTestCase("createLocationTest2", "Close locations testing  ", true, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
 		
 		
@@ -126,7 +140,27 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		//testStatus1.setStatusColor(statusTest1Color);
 		
 		createStatusTest1.setActualResult(testStatus1.getStatusName());
-				
+		//TODO: do DB testing
+		
+		//location testing
+		Location testLocation1 = new Location();
+		testLocation1.setLocationName(locationTest1Name);
+		
+		udhTest.store(testLocation1, Location.class);//store in DB
+		
+		createLocationTest1.setActualResult(testLocation1.getLocationName());
+		
+		//testing for close locations
+		
+		Location testLocation2 = new Location();
+		testLocation2.setLocationName(genSmallRandomString("closeCity:"));
+		
+		HashSet<String> closeLocationsTest1 = new HashSet<String>();
+		closeLocationsTest1.add(testLocation1.getPrimaryKey());
+		testLocation2.setCloseLocations(closeLocationsTest1);
+		udhTest.store(testLocation2, Location.class);//store in DB
+		createLocationTest2.setExpectedResult(closeLocationsTest1);
+		createLocationTest2.setActualResult(testLocation2.getCloseLocations());
 		
 		return true;
 	}
