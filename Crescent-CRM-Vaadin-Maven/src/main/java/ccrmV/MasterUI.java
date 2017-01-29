@@ -337,7 +337,7 @@ public class MasterUI extends UI {
 			//Old test code below
 
 			// inventory unit testing
-
+			/*
 			UserDataHolder udhTest = new UserDataHolder();
 			udhTest.setDatabasePrefix("test");
 			udhTest.initalizeDatabases();
@@ -400,7 +400,7 @@ public class MasterUI extends UI {
 
 			// deletion testing
 			udhTest.delete(tf, TemplateField.class);
-
+	*/
 		}
 	}
 

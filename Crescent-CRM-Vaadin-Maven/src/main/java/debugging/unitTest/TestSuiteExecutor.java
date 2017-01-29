@@ -21,9 +21,14 @@ public abstract class TestSuiteExecutor {
 	public DebugObject testResultDebugOutput = defaultTestOutput;//This can be changed to another  debug object if you so desire.
 	public abstract Boolean runTests();
 	
+	
+	public boolean hasOutput = false;
 	public void debugOutputTestCases() {
+		if (!hasOutput) {
 		for (UnitTestCase testCase : testCases) {
 			Debugging.output(testCase.toString(), testResultDebugOutput );
+		}
+		hasOutput = true;
 		}
 	}
 	
