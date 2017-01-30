@@ -36,6 +36,10 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 	ArrayList<TextArea> consoles = new ArrayList<TextArea>();
 	ArrayList<Button> logOutputButtons = new ArrayList<Button>();
 	
+	ArrayList<Button> richLogOutputButtons = new ArrayList<Button>();
+	ArrayList<DebuggingVaadinRichTextConsole> richTextConsole = new ArrayList<DebuggingVaadinRichTextConsole>();
+	
+	
 	static String consoleWidth = "800px";
 	static String consoleHeight = "800px";
 
@@ -43,6 +47,7 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 		TextArea mainConsole = createConsole("Main Console");
 		
+		DebuggingVaadinRichTextConsole mainRichConsole = new DebuggingVaadinRichTextConsole();
 		/*
 		createLogOutputButton(Debugging.CLIENT_GRID_DEBUG, mainConsole);
 		createLogOutputButton(Debugging.FRONT_DESK_DEBUGGING, mainConsole);
@@ -72,6 +77,9 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 			buttonLayout.addComponent(b);
 		}
 		
+		for (Button b : richLogOutputButtons) {
+			buttonLayout.addComponent(b);
+		}
 		
 		
 		this.removeAllComponents();
@@ -86,6 +94,10 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	private void genLogButtons() {
 		logOutputButtons.clear();
+		
+		for (DebugObject debugObj : Debugging.debugObjectsInUse) {
+			this.createLogOutputButton(debugObj, consoles.get(0));
+		}
 		
 		for (DebugObject debugObj : Debugging.debugObjectsInUse) {
 			this.createLogOutputButton(debugObj, consoles.get(0));
@@ -108,11 +120,20 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 		logOutputButtons.add(button);
 	}
+	
+	private void outputLog(DebugObject obj, DebuggingVaadinRichTextConsole console) {
+		obj.outputLog();
+		//System.out.println(obj + " NAME: " + obj.getName());
+		console.setValue(obj.debugLog);
 
+	}
+
+	
 	private void outputLog(DebugObject obj, TextArea console) {
 		obj.outputLog();
 		//System.out.println(obj + " NAME: " + obj.getName());
 		console.setValue(obj.debugLog);
+
 	}
 
 }
