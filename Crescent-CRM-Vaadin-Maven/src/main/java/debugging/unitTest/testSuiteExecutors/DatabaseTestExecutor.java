@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import clientInfo.Client;
 import clientInfo.DataHolder;
+import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
 import clientInfo.UserDataHolder;
@@ -33,12 +34,19 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 	//location testing
 	static String locationTest1Name = "Columbia";//set to random string
 	
+	//group testing 
+	static String GroupTest1Name = "Referral";//set to random string
+	static int GroupTest1Color = 155;
+	
 	@Override
 	public Boolean runTests() {
 		
-		//Gen Random Values
+		//Gen Random Values 
 		
 		locationTest1Name = genSmallRandomString("City:");
+		
+		GroupTest1Name =  genSmallRandomString("Group");
+		
 		
 		
 		//Create Test cases
@@ -82,6 +90,12 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		UnitTestCase createLocationTest1 = new UnitTestCase("createLocationTest1", "Set location name  ", locationTest1Name, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
 		UnitTestCase createLocationTest2 = new UnitTestCase("createLocationTest2", "Close locations testing  ", true, UnitTestCase.TEST_TYPE_OBJECT,this);
+		
+		UnitTestCase createGroupTest1 = new UnitTestCase("createGroupTest1", "Set group name", GroupTest1Name, UnitTestCase.TEST_TYPE_OBJECT,this);
+		
+		UnitTestCase createGroupTest2 = new UnitTestCase("createGroupTest2", "Set group color", GroupTest1Color, UnitTestCase.TEST_TYPE_OBJECT,this);
+		
+		
 		
 		
 		
@@ -161,6 +175,18 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		udhTest.store(testLocation2, Location.class);//store in DB
 		createLocationTest2.setExpectedResult(closeLocationsTest1);
 		createLocationTest2.setActualResult(testLocation2.getCloseLocations());
+		
+		//group testing
+		Group testGroup1 = new Group();
+		testGroup1.setGroupName(GroupTest1Name);
+		testGroup1.setColor(GroupTest1Color);
+		
+		createGroupTest1.setActualResult(testGroup1.getGroupName());
+		createGroupTest2.setActualResult(testGroup1.getColor());
+		
+		
+		
+		
 		
 		return true;
 	}
