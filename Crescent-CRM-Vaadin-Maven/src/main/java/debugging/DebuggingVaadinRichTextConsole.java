@@ -14,6 +14,10 @@ public class DebuggingVaadinRichTextConsole extends HorizontalLayout {
 	
 	public void genConsole() {
 		console.clear();
+		
+		console.setSizeFull();
+		console.setWidth("500px");
+		console.setHeight("800px");
 		this.addComponent(console);
 	}
 	

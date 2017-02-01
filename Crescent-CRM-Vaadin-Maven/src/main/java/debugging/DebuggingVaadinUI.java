@@ -26,6 +26,7 @@ import uiElements.NavBar;
  */
 public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
+	private static final boolean RICHTEXT = false;
 	public NavBar navBar;
 	public MasterUI masterUi;
 
@@ -35,53 +36,62 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	ArrayList<TextArea> consoles = new ArrayList<TextArea>();
 	ArrayList<Button> logOutputButtons = new ArrayList<Button>();
-	
+
 	ArrayList<Button> richLogOutputButtons = new ArrayList<Button>();
-	ArrayList<DebuggingVaadinRichTextConsole> richTextConsole = new ArrayList<DebuggingVaadinRichTextConsole>();
-	
-	
+	ArrayList<DebuggingVaadinRichTextConsole> richTextConsoles = new ArrayList<DebuggingVaadinRichTextConsole>();
+
 	static String consoleWidth = "800px";
 	static String consoleHeight = "800px";
 
 	{
 
 		TextArea mainConsole = createConsole("Main Console");
-		
+
 		DebuggingVaadinRichTextConsole mainRichConsole = new DebuggingVaadinRichTextConsole();
+
+		mainRichConsole.genConsole();
+
+		richTextConsoles.add(mainRichConsole);
 		/*
-		createLogOutputButton(Debugging.CLIENT_GRID_DEBUG, mainConsole);
-		createLogOutputButton(Debugging.FRONT_DESK_DEBUGGING, mainConsole);
-		createLogOutputButton(Debugging.OAUTH2, mainConsole);
-		createLogOutputButton(Debugging.CONVERSION_DEBUG2, mainConsole);
-		createLogOutputButton(Debugging.TEMPLATE_DEBUG, mainConsole);
-		*/
+		 * createLogOutputButton(Debugging.CLIENT_GRID_DEBUG, mainConsole);
+		 * createLogOutputButton(Debugging.FRONT_DESK_DEBUGGING, mainConsole);
+		 * createLogOutputButton(Debugging.OAUTH2, mainConsole);
+		 * createLogOutputButton(Debugging.CONVERSION_DEBUG2, mainConsole);
+		 * createLogOutputButton(Debugging.TEMPLATE_DEBUG, mainConsole);
+		 */
 	}
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-		
-		//this.setSizeFull();
-		//consoleLayout.setWidth("80%");
-		//buttonLayout.setWidth("10%");
-		//consoleLayout.setWidth("100%");
-		
+
+		// this.setSizeFull();
+		// consoleLayout.setWidth("80%");
+		// buttonLayout.setWidth("10%");
+		// consoleLayout.setWidth("100%");
+
 		genLogButtons();
-		
+
 		consoleLayout.removeAllComponents();
-		for (TextArea console : consoles) {
-			consoleLayout.addComponent(console);
+
+		if (!RICHTEXT) {
+			for (TextArea console : consoles) {
+				consoleLayout.addComponent(console);
+			}
+		} else {
+			for (DebuggingVaadinRichTextConsole console : richTextConsoles) {
+				consoleLayout.addComponent(console);
+			}
 		}
 
 		buttonLayout.removeAllComponents();
 		for (Button b : logOutputButtons) {
 			buttonLayout.addComponent(b);
 		}
-		
+
 		for (Button b : richLogOutputButtons) {
 			buttonLayout.addComponent(b);
 		}
-		
-		
+
 		this.removeAllComponents();
 
 		this.addComponent(navBar.sidebarLayout);
@@ -94,11 +104,15 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	private void genLogButtons() {
 		logOutputButtons.clear();
-		
+
 		for (DebugObject debugObj : Debugging.debugObjectsInUse) {
-			this.createLogOutputButton(debugObj, consoles.get(0));
+			if (!RICHTEXT) {
+				this.createLogOutputButton(debugObj, consoles.get(0));
+			} else {
+				this.createLogOutputButton(debugObj, richTextConsoles.get(0));
+			}
 		}
-		
+
 		for (DebugObject debugObj : Debugging.debugObjectsInUse) {
 			this.createLogOutputButton(debugObj, consoles.get(0));
 		}
@@ -106,10 +120,10 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	public TextArea createConsole(String consoleName) {
 		TextArea console = new TextArea(consoleName);
-		
+
 		console.setWidth(consoleWidth);
 		console.setHeight(consoleHeight);
-		
+
 		consoles.add(console);
 
 		return console;
@@ -120,18 +134,23 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 		logOutputButtons.add(button);
 	}
-	
+
+	public void createLogOutputButton(DebugObject obj, DebuggingVaadinRichTextConsole console) {
+		Button button = new Button(obj.getName(), e -> outputLog(obj, console));
+
+		logOutputButtons.add(button);
+	}
+
 	private void outputLog(DebugObject obj, DebuggingVaadinRichTextConsole console) {
 		obj.outputLog();
-		//System.out.println(obj + " NAME: " + obj.getName());
+		// System.out.println(obj + " NAME: " + obj.getName());
 		console.setValue(obj.debugLog);
 
 	}
 
-	
 	private void outputLog(DebugObject obj, TextArea console) {
 		obj.outputLog();
-		//System.out.println(obj + " NAME: " + obj.getName());
+		// System.out.println(obj + " NAME: " + obj.getName());
 		console.setValue(obj.debugLog);
 
 	}
