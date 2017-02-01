@@ -1,5 +1,7 @@
 package debugging.unitTest;
 
+import debugging.Debugging;
+
 /**
  * Data holder for the result of a test
  * Should also contain utility functions for outputting data.
@@ -30,6 +32,7 @@ public class UnitTestCase {
 	//Choosing tests
 	
 	private String testType = "";
+	private boolean outputChanges = true;
 	
 	
 	
@@ -128,17 +131,39 @@ public class UnitTestCase {
 	}
 	public void setExpectedResult(Object expectedResult) {
 		this.expectedResult = expectedResult;
+		
+		if (outputChanges ) {
+			outputResult("Expected Result",expectedResult);
+		}
+		
 	}
 	public Object getActualResult() {
 		return actualResult;
 	}
 	
+	
+	
+	public boolean isOutputChanges() {
+		return outputChanges;
+	}
+
+
+	public void setOutputChanges(boolean outputChanges) {
+		this.outputChanges = outputChanges;
+	}
+
+
 	/**
 	 * This adds the actual result to the test case and then checks the result.
 	 * @param actualResult
 	 */
 	public void setActualResult(Object actualResult) {
 		this.actualResult = actualResult;
+		if (outputChanges ) {
+			outputResult("Actual Result",actualResult);
+		}
+		
+		
 		this.checkTest();
 	}
 	
@@ -146,6 +171,9 @@ public class UnitTestCase {
 	 * Check results
 	 */
 	
+
+
+
 	/**
 	 * This determines the test to use, and runs that method
 	 * to set the testResult.
@@ -215,5 +243,9 @@ public class UnitTestCase {
 		
 	}
 
-	
+	private void outputResult(String preface, Object result) {
+		
+		Debugging.output(testName + " | " + preface + " : " + result, Debugging.UNIT_TEST_TRACK_CHANGES);
+		
+	}
 }

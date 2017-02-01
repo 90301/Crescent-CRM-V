@@ -38,6 +38,15 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 	static String GroupTest1Name = "Referral";//set to random string
 	static int GroupTest1Color = 155;
 	
+	//client testing
+	static String clientTest1Name = "Karen Smith";
+	static String clientTest1Location = "Lexington";
+	static String clientTest1Status = "Prospect";
+	static String clientTest1Group = "Referral";
+	static Boolean clientTest1ContactNow = true;
+	static String clientTest1LastUpdated = "Yesterday";
+	static String clientTest1Notes = "Little Dog";
+	
 	@Override
 	public Boolean runTests() {
 		
@@ -45,7 +54,7 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		
 		locationTest1Name = genSmallRandomString("City:");
 		
-		GroupTest1Name =  genSmallRandomString("Group");
+		GroupTest1Name = genSmallRandomString("Group");
 		
 		
 		
@@ -93,13 +102,26 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		
 		UnitTestCase createGroupTest1 = new UnitTestCase("createGroupTest1", "Set group name", GroupTest1Name, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
-		UnitTestCase createGroupTest2 = new UnitTestCase("createGroupTest2", "Set group color", GroupTest1Color, UnitTestCase.TEST_TYPE_OBJECT,this);
+		UnitTestCase createGroupTest2 = new UnitTestCase("createGroupTest2", "Set client name", GroupTest1Color, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
 		
+		//Client Testing
+		UnitTestCase createClientTest1 = new UnitTestCase("createClientTest1", "Set client name", null, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
+		UnitTestCase createClientTest2 = new UnitTestCase("createClientTest2", "Set client location", null, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
+		UnitTestCase createClientTest3 = new UnitTestCase("createClientTest3", "Set client status", null, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
+		UnitTestCase createClientTest4 = new UnitTestCase("createClientTest4", "Set client group", clientTest1ContactNow, UnitTestCase.TEST_TYPE_OBJECT,this);
 		
+		UnitTestCase createClientTest5 = new UnitTestCase("createClientTest5", "Set client last updated to now", null, UnitTestCase.TEST_TYPE_NOT_NULL,this);
+		
+		UnitTestCase createClientTest6 = new UnitTestCase("createClientTest6", "Set client notes", null, UnitTestCase.TEST_TYPE_OBJECT,this);
+		
+		UnitTestCase createClientTest7 = new UnitTestCase("createClientTest7", "Set client notes", null, UnitTestCase.TEST_TYPE_OBJECT,this);
+
+		
+			
 		//Execute code for tests
 		
 
@@ -165,7 +187,6 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		createLocationTest1.setActualResult(testLocation1.getLocationName());
 		
 		//testing for close locations
-		
 		Location testLocation2 = new Location();
 		testLocation2.setLocationName(genSmallRandomString("closeCity:"));
 		
@@ -176,15 +197,55 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		createLocationTest2.setExpectedResult(closeLocationsTest1);
 		createLocationTest2.setActualResult(testLocation2.getCloseLocations());
 		
+		
+		
 		//group testing
 		Group testGroup1 = new Group();
 		testGroup1.setGroupName(GroupTest1Name);
 		testGroup1.setColor(GroupTest1Color);
 		
+		udhTest.store(testGroup1, Group.class);
+		
+		
 		createGroupTest1.setActualResult(testGroup1.getGroupName());
 		createGroupTest2.setActualResult(testGroup1.getColor());
 		
+
+		//Client Testing
 		
+		Client clientTest1 = new Client();
+		
+		clientTest1.setName(clientTest1Name);
+		
+		clientTest1.setLocation(testLocation2);
+		
+		clientTest1.setStatus(testStatus1);
+		
+		clientTest1.setGroup(testGroup1);
+		
+		clientTest1.setLastUpdatedToNow();
+		
+		clientTest1.setNotes(clientTest1Notes);
+		
+		clientTest1.setContactNow(clientTest1ContactNow);
+		
+		udhTest.store(clientTest1, Client.class);
+		
+		createClientTest1.setExpectedResult(clientTest1Name);
+		createClientTest2.setExpectedResult(testLocation2);
+		createClientTest3.setExpectedResult(testStatus1);
+		createClientTest4.setExpectedResult(testGroup1);
+		//createClientTest5.setExpectedResult(null);
+		createClientTest6.setExpectedResult(clientTest1Notes);
+		createClientTest7.setExpectedResult(clientTest1ContactNow);
+		
+		createClientTest1.setActualResult(clientTest1.getName());
+		createClientTest2.setActualResult(clientTest1.getLocation());
+		createClientTest3.setActualResult(clientTest1.getStatus());
+		createClientTest4.setActualResult(clientTest1.getGroup());
+		createClientTest5.setActualResult(clientTest1.getLastUpdated());
+		createClientTest6.setActualResult(clientTest1.getNotes());
+		createClientTest7.setActualResult(clientTest1.getContactNow());
 		
 		
 		

@@ -152,6 +152,11 @@ public class Debugging {
 	//Troy's Debugging Variables
 	
 	
+	//Mark's Debug Variables
+	public static final DebugObject UNIT_TEST_TRACK_CHANGES = new DebugObject(CONSOLE_OUTPUT, true, true, "Unit Test Changes: ");
+	
+	
+	
 	//Tony's Debugging Variables
 	
 	static
