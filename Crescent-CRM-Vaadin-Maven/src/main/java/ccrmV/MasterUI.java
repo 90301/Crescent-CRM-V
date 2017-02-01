@@ -34,6 +34,7 @@ import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
 import debugging.unitTest.TestSuiteExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
+import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
 import integrations.OauthUtils;
 import inventory.InventoryItem;
@@ -49,8 +50,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.19;
-	public static final String versionDescription = " Test Suite 2.0";
+	public static final double versionNumber = 1.20;
+	public static final String versionDescription = " Test Suite 2.5";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -334,11 +335,16 @@ public class MasterUI extends UI {
 			
 			DatabaseTestExecutor dTestExecutor = new DatabaseTestExecutor();
 			TestSuiteMetaExecutor metaTests = new TestSuiteMetaExecutor();
+			LoginTestExecutor loginTests = new LoginTestExecutor(loginView,this);
+			
 			dTestExecutor.runTests();
 			dTestExecutor.debugOutputTestCases();
 			
 			metaTests.runTests();
 			metaTests.debugOutputTestCases();
+			
+			loginTests.runTests();
+			loginTests.debugOutputTestCases();
 			
 			//Old test code below
 

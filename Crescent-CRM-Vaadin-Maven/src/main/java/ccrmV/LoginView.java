@@ -30,10 +30,10 @@ public class LoginView extends VerticalLayout implements View {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	Label welcomeLabel = new Label();;
-	TextField userField = new TextField("User: ");;
-	PasswordField passField  = new PasswordField("Pass: ");
-	Button loginButton  = new Button("Login", event -> attemptLogin());
+	public Label welcomeLabel = new Label();;
+	public TextField userField = new TextField("User: ");;
+	public PasswordField passField  = new PasswordField("Pass: ");
+	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public String host;
 	
 	
@@ -74,7 +74,6 @@ public class LoginView extends VerticalLayout implements View {
 			//white logo
 			this.addComponent(logo2);
 		}
-		
 		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
@@ -122,7 +121,7 @@ public class LoginView extends VerticalLayout implements View {
 	   
 public boolean loginSucsess = false;
 public MasterUI masterUi; 
-	private void attemptLogin() {
+	public void attemptLogin() {
 		//welcomeLabel.setValue("U: " + userField.getValue() + " P: " + passField.getValue());
 		// TODO Auto-generated method stub
 		//if (userField.getValue().contains("ccrmUser") && passField.getValue().contains("ccrmPass") || MasterUI.authenicatedHosts.contains(host)) {
