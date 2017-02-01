@@ -280,6 +280,12 @@ public class Client extends MaxObject implements Item {
 	*/
 
 	public void setupCustomFieldsFromTemplate() {
+		
+		if (userDataHolder == null) {
+			System.err.println("Failed to set user data holder for client");
+		}
+		
+		
 		for (String key : userDataHolder.getMap(TemplateField.class).keySet()) {
 
 			if (getClientFields().containsKey(key)) {
