@@ -186,6 +186,8 @@ public class UnitTestCase {
 			checkObjectResult();
 		} else if (testType.equals(TEST_TYPE_NOT_EQUAL)) {
 			checkNotEqual();
+		}  else if (testType.equals(TEST_TYPE_NOT_NULL)) {
+			checkNotNull();
 		} else {
 			checkObjectResult();
 		}
