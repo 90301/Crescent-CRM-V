@@ -32,6 +32,8 @@ public class LoginTestExecutor extends TestSuiteExecutor {
 		
 		UnitTestCase loginUITest1 = new UnitTestCase("loginUITest1", "Attempts to login." , true, masterUi.loggedIn, UnitTestCase.TEST_TYPE_OBJECT, this);
 		
+		
+		
 		return true;
 	}
 
