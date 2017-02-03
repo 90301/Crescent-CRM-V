@@ -13,8 +13,10 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
+import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
@@ -33,8 +35,10 @@ public class LoginView extends VerticalLayout implements View {
 	public Label welcomeLabel = new Label();;
 	public TextField userField = new TextField("User: ");;
 	public PasswordField passField  = new PasswordField("Pass: ");
+	public Label loginError = new Label("Incorrect Username/Password!", ContentMode.HTML);
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public String host;
+	public HorizontalLayout hLayout = new HorizontalLayout();
 	
 	
 	Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
@@ -77,11 +81,14 @@ public class LoginView extends VerticalLayout implements View {
 		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
+		this.addComponent(hLayout);
+		hLayout.addComponent(loginError);
 		this.addComponent(loginButton);
 		this.addComponent(versionLabel);
 		this.setComponentAlignment(versionLabel, Alignment.BOTTOM_CENTER);
 		
 		
+		hLayout.setVisible(false);
 		
 		
 		if (MasterUI.DEV_AUTO_LOGIN && MasterUI.DEVELOPER_MODE) {
@@ -140,9 +147,15 @@ public MasterUI masterUi;
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			}
+			hLayout.setVisible(false);
+
 			masterUi.startMainApp();
 			
 		} else {
+			
+			if((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.WRONG_PASS_CODE) {
+				hLayout.setVisible(true);
+			}
 			welcomeLabel.setData(code);
 		}
 	}
