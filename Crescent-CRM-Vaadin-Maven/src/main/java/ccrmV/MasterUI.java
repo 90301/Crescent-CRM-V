@@ -33,6 +33,7 @@ import dbUtils.MaxField;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
 import debugging.unitTest.TestSuiteExecutor;
+import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
@@ -336,6 +337,7 @@ public class MasterUI extends UI {
 			DatabaseTestExecutor dTestExecutor = new DatabaseTestExecutor();
 			TestSuiteMetaExecutor metaTests = new TestSuiteMetaExecutor();
 			LoginTestExecutor loginTests = new LoginTestExecutor(loginView,this);
+			CRMTestExecutor crmTests = new CRMTestExecutor(mainApp,this);
 			
 			dTestExecutor.runTests();
 			dTestExecutor.debugOutputTestCases();
@@ -345,6 +347,12 @@ public class MasterUI extends UI {
 			
 			loginTests.runTests();
 			loginTests.debugOutputTestCases();
+			
+			//Change active database here?
+			
+			crmTests.runTests();
+			crmTests.debugOutputTestCases();
+			
 			
 			//Old test code below
 
