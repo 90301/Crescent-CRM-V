@@ -32,8 +32,8 @@ public class LoginView extends VerticalLayout implements View {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public Label welcomeLabel = new Label();;
-	public TextField userField = new TextField("User: ");;
+	public Label welcomeLabel = new Label();
+	public TextField userField = new TextField("User: ");
 	public PasswordField passField  = new PasswordField("Pass: ");
 	public Label loginError = new Label(String.format("<color=\"red\"> Incorrect Username/Password!"), ContentMode.HTML);
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
