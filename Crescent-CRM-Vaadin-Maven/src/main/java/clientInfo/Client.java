@@ -68,6 +68,8 @@ public class Client extends MaxObject implements Item {
 			MaxDBTable.DATA_MYSQL_TYPE_STRING, new HashMap<String, ClientField>(), new HashMap<String, ClientField>(),
 			this);
 	
+	MaxField<String> profilePicture = new MaxField<String>("profilePicture", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "", this);
+	
 	//Conversions
 	
 	UdhMaxObjectToString<Location> locationConversion = new UdhMaxObjectToString<Location>();
@@ -120,6 +122,8 @@ public class Client extends MaxObject implements Item {
 		addMaxField(contactNow);
 		addMaxField(lastUpdated);
 		addMaxField(clientFields);
+		addMaxField(profilePicture);
+		
 	}
 
 	// private UserDataHolder userDataHolder;
@@ -466,6 +470,14 @@ public class Client extends MaxObject implements Item {
 		}
 		return groupName;
 	}
+	
+	public String getProfilePicture() {
+		return profilePicture.getFieldValue();
+	}
+
+	public void setProfilePicture(String profilePicture) {
+		this.profilePicture.setFieldValue(profilePicture);
+	}
 
 	@Override
 	public String getPrimaryKey() {
@@ -573,5 +585,4 @@ public class Client extends MaxObject implements Item {
 		}
 		return item;
 	}
-
 }

@@ -54,6 +54,10 @@ public class ClientEditor extends VerticalLayout {
 	TemplateEditor templateEditor = new TemplateEditor();
 	CustomFieldEditor customFieldEditor = new CustomFieldEditor();
 	
+	//Profile Picture
+	ProfilePicture pPicture = new ProfilePicture();
+	UploadProfilePicture uploadProfilePicture = new UploadProfilePicture();
+	
 	public ClientEditor(CrmUI crmUi) {
 		this.crmUi = crmUi;
 		genClientEditor();
@@ -118,6 +122,11 @@ public class ClientEditor extends VerticalLayout {
 		this.setSpacing(true);
 		
 		this.addComponent(clientNameLabel);
+		
+		uploadProfilePicture.addUploadUI();
+		this.addComponent(pPicture);
+		this.addComponent(uploadProfilePicture);
+		
 		this.addComponent(clientEditorMetaLayout);
 		
 		this.addComponent(templateEditor);
@@ -182,6 +191,8 @@ public class ClientEditor extends VerticalLayout {
 		crmUi.selectedClient = customFieldEditor.updateClient(crmUi.selectedClient);
 
 		crmUi.selectedClient.setContactNow(clientContactNowCheckBox.getValue());
+		
+		crmUi.selectedClient.setProfilePicture(uploadProfilePicture.updateProfilePicture());
 		
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
 		
@@ -252,6 +263,9 @@ public class ClientEditor extends VerticalLayout {
 		}
 		
 		clientContactNowCheckBox.setValue(c.getContactNow());
+		
+		//Profile picture
+				pPicture.loadprofilePictureField(c);
 
 	}
 	
