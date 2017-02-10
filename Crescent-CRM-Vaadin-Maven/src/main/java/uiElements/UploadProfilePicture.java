@@ -45,7 +45,7 @@ Upload.FinishedListener, Receiver{
 	
 	String fileName = "";
 	
-	public static String PROFILE_PICTURE_FOLDER = "C:/Users/Boogy/Pictures/VaadinTest/";
+	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
 
 	//uploadPhoto.setImmediate(false);
 	//uploadPhoto.setButtonCaption("Upload File");
@@ -150,6 +150,8 @@ Upload.FinishedListener, Receiver{
 		this.removeAllComponents();
 		this.addComponent(uploadLabel);
 		this.addComponent(uploadPhoto);
+		
+		makeDirectory();
 	}
 
 	//Add labels for each event e.g. result, fileName, Progress, state
@@ -182,11 +184,13 @@ Upload.FinishedListener, Receiver{
 	@Override
 	public OutputStream receiveUpload(String filename, String mimeType) {
 		// TODO Auto-generated method stub
-
+		makeDirectory();
 		FileOutputStream fos = null;
 		try {
 			recentUpload = new File(filename);
+			
 			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + recentUpload);
+			
 			
 			this.fileName = recentUpload.getName();
 		} catch (final java.io.FileNotFoundException e){
@@ -196,5 +200,10 @@ Upload.FinishedListener, Receiver{
 		}
 		return fos;
 	}
-
+	
+	public void makeDirectory() {
+		File f = new File(PROFILE_PICTURE_FOLDER);
+		Boolean worked = f.mkdirs();
+		Debugging.output("Created new directory: " + worked,  Debugging.UPLOAD_IMAGE);
+	}
 }
