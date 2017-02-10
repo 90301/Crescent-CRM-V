@@ -51,8 +51,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.21;
-	public static final String versionDescription = " Public Stability Restored";
+	public static final double versionNumber = 1.22;
+	public static final String versionDescription = " Testing and Profile Pictures";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
