@@ -14,6 +14,7 @@ import clientInfo.Client;
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
+import debugging.Debugging;
 
 //Check if there is an image link for the client. If there isn't, go to UploadProfilePhoto
 public class ProfilePicture extends HorizontalLayout{
@@ -21,45 +22,43 @@ public class ProfilePicture extends HorizontalLayout{
 	public FileResource DEFAULT_PROFILE_PICTURE = new FileResource(new File("C:/Users/Boogy/Pictures/MarkDefault.jpg"));
 	public Link link;
 	public Panel panelPicture = new Panel("Profile Picture");
-	public Image profilePicture;
+	public Image profilePicture, defaultPicture;
+
 
 	//TODO 
 	public void loadprofilePictureField(Client c) {
-		
-		profilePicture = new Image("Profile Picture", DEFAULT_PROFILE_PICTURE);
-		profilePicture.setWidth("128px");
-		profilePicture.setHeight("128px");
 		this.removeAllComponents();
-		this.addComponent(profilePicture);
-		
+		//Debug the issue with no default image on the page for clients.
 		if(c ==  null){
+			Debugging.output("There is no image to upload because the client is null", Debugging.UPLOAD_IMAGE);
 			return;
 		}
 		//If template is selected, load default image
 		if (c.getName().contains(DataHolder.TEMPLATE_STRING)) {
-			profilePicture = new Image("Profile Picture", DEFAULT_PROFILE_PICTURE);
-			this.removeAllComponents();
-			this.addComponent(profilePicture);
+			defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
+			defaultPicture.setWidth("128px");
+			defaultPicture.setHeight("128px");
+			this.addComponent(defaultPicture);
 		}
-
-		//Check if client has a profile picture stored and if so, show it for the client.
-		UploadProfilePicture uPP = new UploadProfilePicture();
-
-
-		//Need to grab the link of the clients photo
-		String pictureLink = c.getProfilePicture();
-		//If no link, then add the upload photo functionality
-		if(InhalerUtils.stringNullCheck(pictureLink)){
-			uPP.addUploadUI();
-		}
-		//If there is an image saved for the client, grab the link and show it.
 		else{
-			FileResource clientPhoto = new FileResource(new File(pictureLink));
-			profilePicture = new Image("Profile Picture", clientPhoto);
-			this.removeAllComponents();
-			this.addComponent(profilePicture);
-		}
+			//Check if client has a profile picture stored and if so, show it for the client.
+			UploadProfilePicture uPP = new UploadProfilePicture();
 
+			//Need to grab the link of the clients photo
+			String pictureLink = c.getProfilePicture();
+			//If no link, then add the upload photo functionality
+			if(InhalerUtils.stringNullCheck(pictureLink)){
+				uPP.addUploadUI();
+			}
+			//If there is an image saved for the client, grab the link and show it.
+			else{
+				Debugging.output("pictureLink: " + pictureLink, Debugging.UPLOAD_IMAGE);
+				FileResource clientPhoto = new FileResource(new File(pictureLink));
+				profilePicture = new Image("Profile Picture", clientPhoto);
+				this.removeAllComponents();
+				this.addComponent(profilePicture);
+			}
+		}
 	}
 
 

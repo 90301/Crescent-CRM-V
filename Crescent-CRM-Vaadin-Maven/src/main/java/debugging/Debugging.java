@@ -145,7 +145,7 @@ public class Debugging {
 	
 	
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
-	//Andrews Debugging Variables
+	//Andrew's Debugging Variables
 	
 	public static final DebugObject UPLOAD_IMAGE = new DebugObject(CONSOLE_OUTPUT, true, true, "Profile Picture: ");
 	

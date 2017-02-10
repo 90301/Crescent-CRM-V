@@ -39,19 +39,22 @@ Upload.FinishedListener, Receiver{
 	//Upload(null, Receiver) may need a new class for receiver based off demo source code
 	Upload uploadPhoto = new Upload(null, this);
 	public File recentUpload;
-	Panel imagePanel = new Panel("Profile Picture");
 	FileResource resource;
-	public Link link;
+	public String link;
 	Client c;
+	
+	String fileName = "";
+	
+	public static String PROFILE_PICTURE_FOLDER = "C:/Users/Boogy/Pictures/VaadinTest/";
 
 	//uploadPhoto.setImmediate(false);
 	//uploadPhoto.setButtonCaption("Upload File");
 
-	public Link getLink() {
+	public String getLink() {
 		return link;
 	}
 
-	public void setLink(Link link) {
+	public void setLink(String link) {
 		this.link = link;
 	}
 
@@ -93,7 +96,8 @@ Upload.FinishedListener, Receiver{
 	//TODO When update is clicked. Test for null on resource and then for the link
 	//Currently trying to figure out if I need the link to be MaxField<String>
 	public String updateProfilePicture(){
-		String photoLink = this.resource.toString();
+		
+		String photoLink = getLink();
 
 		if(photoLink.equals(null)){
 			Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
@@ -111,29 +115,28 @@ Upload.FinishedListener, Receiver{
 		String fileType = event.getMIMEType();
 
 		Debugging.output("File Type: " + fileType, Debugging.UPLOAD_IMAGE);
-		Label state = new Label("Finished Upload");
-		this.addComponent(state);
-		this.removeComponent(uploadLabel);
-		this.removeAllComponents();
+		//this.removeAllComponents();
 		
+		/*
 		if(fileType.equals("image/jpeg")){
-			resource = new FileResource(new File("C:/Users/Boogy/Pictures/TopTwenty.jpg"));
+			resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + event.getFilename()+ this.fileName));
 		}
 		else{
-			resource = new FileResource(new File("C:/Users/Boogy/Pictures/TopTwenty.png"));
+			resource = new FileResource(new File("C:/Users/Boogy/Pictures/VaadinTest/TopTwenty.png"));
 		}
+		*/
+		resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + event.getFilename()));
+		
+		link = resource.getSourceFile().getAbsoluteFile().toString();
 		// Show the image in the application
-		Image image = new Image("Profile Picture", resource);
-		image.setWidth("240px");
-		image.setHeight("160px");
+		//Image image = new Image("Profile Picture", resource);
+		//image.setWidth("240px");
+		//image.setHeight("160px");
 		Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
-		// Let the user view the file in browser or download it
-		Link link = new Link("Link to Picture", resource);
 		//Get selected client and add link to photo to the clients profilePicture
-		String newLink = resource.toString();
 		//Same comment as above this method
 		//c.setProfilePicture(newLink);
-		this.addComponent(image);
+		//this.addComponent(image);
 	}
 
 
@@ -142,6 +145,7 @@ Upload.FinishedListener, Receiver{
 	 */
 	public void addUploadUI(){
 
+		
 		this.setSpacing(true);
 		this.removeAllComponents();
 		this.addComponent(uploadLabel);
@@ -182,7 +186,9 @@ Upload.FinishedListener, Receiver{
 		FileOutputStream fos = null;
 		try {
 			recentUpload = new File(filename);
-			fos = new FileOutputStream("C:/Users/Boogy/Pictures/VaadinTest/" + recentUpload);
+			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + recentUpload);
+			
+			this.fileName = recentUpload.getName();
 		} catch (final java.io.FileNotFoundException e){
 			new Notification("Couldn't open the file", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
 
