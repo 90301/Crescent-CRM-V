@@ -21,7 +21,7 @@ import clientInfo.UserDataHolder;
 import debugging.Debugging;
 
 public class ClientEditor extends VerticalLayout {
-	
+
 	public static final int MAX_NOTE_ROWS = 15;
 
 
@@ -32,12 +32,12 @@ public class ClientEditor extends VerticalLayout {
 	CrmUI crmUi;
 	//IMPORTANT VARIABLES in CRM UI
 	//SelectedClient - the currently selected client
-	
-	
+
+
 	//VerticalLayout this = new VerticalLayout();
 	HorizontalLayout clientEditorMetaLayout = new HorizontalLayout();
 	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
-	
+
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
 	ComboBox clientStatus = new ComboBox("Status"); 
@@ -49,44 +49,48 @@ public class ClientEditor extends VerticalLayout {
 	Label clientLastUpdate = new Label("Last Updated: --/--/----");
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
 	ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
-	
+
 	//Custom Fields
 	TemplateEditor templateEditor = new TemplateEditor();
 	CustomFieldEditor customFieldEditor = new CustomFieldEditor();
-	
+
+	//Profile Picture
+	ProfilePicture pPicture = new ProfilePicture();
+	UploadProfilePicture uploadProfilePicture = new UploadProfilePicture();
+
 	public ClientEditor(CrmUI crmUi) {
 		this.crmUi = crmUi;
 		genClientEditor();
 	}
-	
+
 	/**
 	 * Adds all the components for the clientEditor
 	 */
 	private void genClientEditor() {
-		
-	
+
+
 		//clientNameLabel 
-		
+
 		//clientNoteBox
 		clientNoteBox.setSizeFull();
 		clientNoteBox.setWidth(NOTE_WIDTH);
 		clientNoteBox.setResponsive(true);
-		
+
 		//clientLocation 
 		clientLocation.setNullSelectionAllowed(false);
 		clientLocation.setInvalidAllowed(false);
-		
+
 		//clientGroup 
 		clientGroup.setNullSelectionAllowed(false);
 		clientGroup.setInvalidAllowed(false);
-		
+
 		//clientStatus 
 		clientStatus.setNullSelectionAllowed(false);
 		clientStatus.setInvalidAllowed(false);
 
 		clientLastUpdate.setSizeFull();
 		// client editing events
-		
+
 		//Editor for the client meta data (location status group)
 		clientEditorMetaLayout.setSpacing(true);
 		clientEditorMetaLayout.setSizeFull();
@@ -94,47 +98,52 @@ public class ClientEditor extends VerticalLayout {
 		clientEditorMetaLayout.addComponent(clientLocation);
 		clientEditorMetaLayout.addComponent(clientStatus);
 		clientEditorMetaLayout.addComponent(clientGroup);
-		
+
 		//Editor actions (archive update ect)
 		clientEditorActionLayout.setSpacing(true);
-		
+
 		clientEditorActionLayout.addComponent(clientLastUpdate);
 		clientEditorActionLayout.addComponent(clientUpdateButton);
 		clientEditorActionLayout.addComponent(clientArchiveButton);
 		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
 		clientEditorActionLayout.addComponent(clientContactFrequency);
-		
+
 		//Template editor
 		templateEditor.updateUI();
 		templateEditor.setVisible(false);
-		
+
 		//templateEditor.setUdh(crmUi.masterUi.userDataHolder);
-		
+
 		//Custom Field Editor
 		//This is buggy and has been replaced
 		//customFieldEditor.setUserDataHolder(crmUi.masterUi.userDataHolder);
-		
+
 		//holds the client editor
 		this.setSpacing(true);
-		
+
 		this.addComponent(clientNameLabel);
+
+		uploadProfilePicture.addUploadUI();
+		this.addComponent(pPicture);
+		this.addComponent(uploadProfilePicture);
+
 		this.addComponent(clientEditorMetaLayout);
-		
+
 		this.addComponent(templateEditor);
 		this.addComponent(customFieldEditor);
-		
+
 		this.addComponent(clientNoteBox);
 		this.addComponent(clientEditorActionLayout);
 	}
-	
+
 	/**
 	 * Method called when updating a client with the latest information
 	 * Fired when clicked
 	 */
 	private void updateClientClick() {
-		
-		
-		
+
+
+
 		// UPDATE fields in client
 
 		crmUi.selectedClient.setNotes(clientNoteBox.getValue());
@@ -150,9 +159,9 @@ public class ClientEditor extends VerticalLayout {
 			crmUi.selectedClient.setGroup(DataHolder.TEMPLATE_STRING);
 			crmUi.selectedClient.setLocation(DataHolder.TEMPLATE_STRING);
 			crmUi.selectedClient.setStatus(DataHolder.TEMPLATE_STRING);
-			
+
 			Debugging.output("Setting Template Values for status / location / group.",Debugging.TEMPLATE_DEBUG);
-			
+
 			//Update the fields
 			templateEditor.updateTemplates(crmUi.masterUi.userDataHolder);
 
@@ -178,16 +187,18 @@ public class ClientEditor extends VerticalLayout {
 
 		}
 		crmUi.selectedClient.setLastUpdatedToNow();
-		
+
 		crmUi.selectedClient = customFieldEditor.updateClient(crmUi.selectedClient);
 
 		crmUi.selectedClient.setContactNow(clientContactNowCheckBox.getValue());
-		
+
+		crmUi.selectedClient.setProfilePicture(uploadProfilePicture.updateProfilePicture());
+
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
-		
+
 		crmUi.updateClientGrid();
 		crmUi.selectClient(crmUi.selectedClient);
-		
+
 		Debugging.TEMPLATE_DEBUG.outputLog();
 	}
 
@@ -195,20 +206,20 @@ public class ClientEditor extends VerticalLayout {
 		clientStatus.clear();
 		clientLocation.clear();
 		clientGroup.clear();
-		
+
 		clientStatus.removeAllItems();
 		clientLocation.removeAllItems();
 		clientGroup.removeAllItems();
-		
+
 		// Client editor
 		crmUi.fillComboBox(clientStatus, crmUi.masterUi.userDataHolder.getAllStatus());
 		crmUi.fillComboBox(clientLocation, crmUi.masterUi.userDataHolder.getAllLocations());
 		crmUi.fillComboBox(clientGroup, crmUi.masterUi.userDataHolder.getAllGroups());
 
 	}
-	
+
 	public void selectClient(Client c) {
-		
+
 		if (c != null) {
 
 		} else {
@@ -250,9 +261,12 @@ public class ClientEditor extends VerticalLayout {
 		} else {
 			clientLastUpdate.setValue("Never updated");
 		}
-		
+
 		clientContactNowCheckBox.setValue(c.getContactNow());
 
+		//Profile picture
+		pPicture.loadprofilePictureField(c);
+
 	}
-	
+
 }
