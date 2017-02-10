@@ -51,14 +51,14 @@ public class CrmUI extends HorizontalLayout implements View {
 	/*
 	 * UI elements (accessible)
 	 */
-	TextField createLocationName = new TextField();//"Location Name");
-	TextField createStatusName  = new TextField();//"Status Name");
-	TextField createGroupName = new TextField();//"Group Name");
-	TextField createClientName = new TextField("Name");
+	public TextField createLocationName = new TextField();//"Location Name");
+	public TextField createStatusName  = new TextField();//"Status Name");
+	public TextField createGroupName = new TextField();//"Group Name");
+	public TextField createClientName = new TextField("Name");
 	
-	ComboBox createClientStatus = new ComboBox("Status");
-	ComboBox createClientLocation = new ComboBox("Location");
-	ComboBox createClientGroup = new ComboBox("Group");
+	public ComboBox createClientStatus = new ComboBox("Status");
+	public ComboBox createClientLocation = new ComboBox("Location");
+	public ComboBox createClientGroup = new ComboBox("Group");
 	
 	//ListBox is containing current statuses...
 	ListSelect createLocationListSelect = new ListSelect();
@@ -390,17 +390,19 @@ public class CrmUI extends HorizontalLayout implements View {
 	public void createLocationClick() {
 		String text = this.createLocationName.getValue();
 		createLocation(text);
+		this.createLocationName.clear();
 	}
 
 	public void createStatusClick() {
 		String text = this.createStatusName.getValue();
 		createStatus(text);
+		this.createStatusName.clear();
 	}
 
 	public void createGroupClick() {
 		String text = this.createGroupName.getValue();
 		createGroup(text);
-		
+		this.createGroupName.clear();
 	}
 	
 	
