@@ -35,7 +35,9 @@ public class LoginView extends VerticalLayout implements View {
 	public Label welcomeLabel = new Label();
 	public TextField userField = new TextField("User: ");
 	public PasswordField passField  = new PasswordField("Pass: ");
-	public Label loginError = new Label(String.format("<color=\"red\"> Incorrect Username/Password!"), ContentMode.HTML);
+	public Label loginError = new Label(
+			String.format("<font size = \"3\" color=\"red\"> Incorrect Username/Password!" )
+			, ContentMode.HTML);
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public String host;
 	public HorizontalLayout hLayout = new HorizontalLayout();
