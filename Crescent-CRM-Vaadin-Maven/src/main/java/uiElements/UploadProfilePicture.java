@@ -1,12 +1,18 @@
 /**
  * Author: Andrew Dorsett
- * Last Modified: 1/23/17
+ * Last Modified: 2/10/17
  */
 package uiElements;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+
+import javax.imageio.ImageIO;
+
+import org.imgscalr.Scalr;
 
 //Not sure if this is needed
 import clientInfo.Client;
@@ -42,9 +48,10 @@ Upload.FinishedListener, Receiver{
 	FileResource resource;
 	public String link;
 	Client c;
-	
+	BufferedImage originalImage;
+
 	String fileName = "";
-	
+
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
 
 	//uploadPhoto.setImmediate(false);
@@ -96,7 +103,7 @@ Upload.FinishedListener, Receiver{
 	//TODO When update is clicked. Test for null on resource and then for the link
 	//Currently trying to figure out if I need the link to be MaxField<String>
 	public String updateProfilePicture(){
-		
+
 		String photoLink = getLink();
 
 		if(photoLink.equals(null)){
@@ -110,13 +117,42 @@ Upload.FinishedListener, Receiver{
 
 	}
 
+	public String resizeImage(FinishedEvent event){
+		
+		File imageFile = ((FileResource)event.getSource()).getSourceFile();
+		try {
+			BufferedImage originalImage = ImageIO.read(imageFile) ;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		BufferedImage scaledImage = Scalr.resize(originalImage, 128);
+
+		FileOutputStream fos = null;
+		try {
+
+			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + "Scaled" + scaledImage);
+
+		} catch (final java.io.FileNotFoundException e){
+			new Notification("Couldn't open the file", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
+		}
+
+		resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + "Scaled" + scaledImage));
+
+		link = resource.getSourceFile().getAbsoluteFile().toString();
+		
+		return link;
+		
+	}
+	
 	private void isFinished(FinishedEvent event) {
 		// TODO Auto-generated method stub
 		String fileType = event.getMIMEType();
 
 		Debugging.output("File Type: " + fileType, Debugging.UPLOAD_IMAGE);
 		//this.removeAllComponents();
-		
+
 		/*
 		if(fileType.equals("image/jpeg")){
 			resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + event.getFilename()+ this.fileName));
@@ -124,8 +160,12 @@ Upload.FinishedListener, Receiver{
 		else{
 			resource = new FileResource(new File("C:/Users/Boogy/Pictures/VaadinTest/TopTwenty.png"));
 		}
-		*/
+		 */
+
 		resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + event.getFilename()));
+		
+		//TODO need to get resizeImage() to work properly
+		//link = resizeImage(event);
 		
 		link = resource.getSourceFile().getAbsoluteFile().toString();
 		// Show the image in the application
@@ -145,12 +185,12 @@ Upload.FinishedListener, Receiver{
 	 */
 	public void addUploadUI(){
 
-		
+
 		this.setSpacing(true);
 		this.removeAllComponents();
 		this.addComponent(uploadLabel);
 		this.addComponent(uploadPhoto);
-		
+
 		makeDirectory();
 	}
 
@@ -188,10 +228,10 @@ Upload.FinishedListener, Receiver{
 		FileOutputStream fos = null;
 		try {
 			recentUpload = new File(filename);
-			
+
 			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + recentUpload);
-			
-			
+
+
 			this.fileName = recentUpload.getName();
 		} catch (final java.io.FileNotFoundException e){
 			new Notification("Couldn't open the file", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
@@ -200,7 +240,7 @@ Upload.FinishedListener, Receiver{
 		}
 		return fos;
 	}
-	
+
 	public void makeDirectory() {
 		File f = new File(PROFILE_PICTURE_FOLDER);
 		Boolean worked = f.mkdirs();
