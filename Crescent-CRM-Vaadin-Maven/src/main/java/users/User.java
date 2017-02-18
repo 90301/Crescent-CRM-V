@@ -18,8 +18,10 @@ import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import dbUtils.PasswordAuthentication;
+import dbUtils.Conversions.ArrayListToString;
 
 public class User extends MaxObject {
 	
@@ -41,10 +43,34 @@ public class User extends MaxObject {
 	/*
 	 * Logging in info
 	 */
+	
+	
+	/*
+	 
 	String userName;
 	public static final String userNameField = "UserName";
 	String passHash;
 	public static final String passHashField = "PassHash";
+	
+	*/
+	
+	MaxField<String> userName = new MaxField<String>("UserName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
+			this);
+	
+	MaxField<String> passHash = new MaxField<String>("PassHash", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "",
+			this);
+	
+	MaxField<ArrayList<String>> databasesAccsessable = new MaxField<ArrayList<String>>("databasesAccsessable", MaxDBTable.DATA_MYSQL_TYPE_STRING,
+			new ArrayList<String>(), new ArrayList<String>(), this);
+	
+	MaxField<String> databaseSelected = new MaxField<String>("databaseSelectedField", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
+			this);
+	
+	MaxField<Boolean> admin = new MaxField<Boolean>("admin", MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN, false, false,
+			this);
+	
+	ArrayListToString arraylistToString = new ArrayListToString();
+	
 	//private static final SecureRandom random = new SecureRandom();
 	PasswordAuthentication pa = new PasswordAuthentication();
 	
@@ -52,17 +78,17 @@ public class User extends MaxObject {
 	 * Database selection
 	 */
 	//TODO: make this concurrent
-	ArrayList<String> databasesAccsessable = new ArrayList<String>();
-	public static final String dataBasesAccsessableField = "databasesAccsessable";
+	//ArrayList<String> databasesAccsessable = new ArrayList<String>();
+	//public static final String dataBasesAccsessableField = "databasesAccsessable";
 	
 	//Serialized with gson as json text
 	
 	
-	String databaseSelected;
-	public static final String databaseSelectedField = "databaseSelectedField";
+	//String databaseSelected;
+	//public static final String databaseSelectedField = "databaseSelectedField";
 	
-	Boolean admin;
-	public static final String adminField = "admin";
+	//Boolean admin;
+	//public static final String adminField = "admin";
 	
 	
 	/*
@@ -74,6 +100,20 @@ public class User extends MaxObject {
 	 * 
 	 * 
 	 */
+	
+	{
+		
+		databasesAccsessable.setConversion(arraylistToString);
+		
+		this.setKeyField(userName);
+		
+		this.addMaxField(userName);
+		this.addMaxField(passHash);
+		this.addMaxField(databasesAccsessable);
+		this.addMaxField(databaseSelected);
+		this.addMaxField(admin);
+		
+	}
 	public User() {
 		init();
 	}
@@ -87,7 +127,7 @@ public class User extends MaxObject {
 		return this.getPrimaryKey();
 	}
 
-
+/*
 	@Override
 	public void loadInternalFromMap() {
 		
@@ -105,12 +145,14 @@ public class User extends MaxObject {
 			this.databasesAccsessable.add((UserDataHolder) udh);
 		}
 		*/
-		
+		/*
 		this.admin = (boolean) dbMap.get(adminField);
 		
 		safetyCheck();
 	}
 
+*/
+	/*
 	@Override
 	public void updateDBMap() {
 		safetyCheck();
@@ -127,19 +169,21 @@ public class User extends MaxObject {
 		
 		dbMap.put(adminField, admin);
 	}
-
+*/
 	private void safetyCheck() {
 		if (this.databaseSelected==null){
-			this.databaseSelected="";
+			this.databaseSelected.setFieldValue("");
 		}
 		
 	}
 
+	
 	@Override
 	public String getPrimaryKey() {
-		return userName;
+		return userName.getFieldValue();
 	}
-
+	
+/*
 	@Override
 	public void createTableForClass(MaxDBTable table) {
 		table.addDatatype(userNameField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
@@ -152,15 +196,16 @@ public class User extends MaxObject {
 		table.setPrimaryKeyName(userNameField);
 		table.createTable();
 	}
+	*/
 	
 	public void setPassword(String pass) {
 		
-		this.passHash = pa.hash(pass.toCharArray());
+		this.passHash.setFieldValue(pa.hash(pass.toCharArray()));
 		updateDBMap();
 	}
 	
 	public Boolean checkPassword(String pass) {
-		Boolean authenticated = pa.authenticate(pass.toCharArray(), this.passHash);
+		Boolean authenticated = pa.authenticate(pass.toCharArray(), this.passHash.getFieldValue());
 		
 		return authenticated;
 	}
@@ -169,6 +214,8 @@ public class User extends MaxObject {
 	 * 
 	 * @see dbUtils.MaxObject#setupDBDatatypes()
 	 */
+	
+	/*
 	@Override
 	public void setupDBDatatypes() {
 		if (dbDatatypes == null) {
@@ -185,45 +232,44 @@ public class User extends MaxObject {
 		
 		dbDatatypes.put(adminField, Boolean.class);
 	}
-
+*/
 	public void setUserName(String userName) {
-		this.userName = userName;
-		updateDBMap();
+		this.userName.setFieldValue(userName);
 		
 	}
 
 	public void setAdmin(boolean admin) {
-		this.admin = admin;
-		updateDBMap();
+		this.admin.setFieldValue(admin);
 		
 	}
 	
 	public void setDatabaseSelected(String selectedDB) {
 		//TODO: Error checking and access requirements
-		this.databaseSelected = selectedDB;
+		this.databaseSelected.setFieldValue(selectedDB);
 		updateDBMap();
 	}
 	public String getDatabaseSelected() {
-		return databaseSelected;
+		return databaseSelected.getFieldValue();
 		
 	}
 
 	public void addDatabaseAccsessable(String string) {
-		this.databasesAccsessable.add(string);
+		this.databasesAccsessable.getFieldValue().add(string);
+		this.updateDBMap();
 		
 	}
 	public void addDatabaseAccsessable(UserDataHolder udh) {
-		this.databasesAccsessable.add(udh.getPrimaryKey());
+		this.addDatabaseAccsessable(udh.getPrimaryKey());
 		
 	}
 	
 	public Collection<String> getDatabasesAccsessable() {
-		return databasesAccsessable;
+		return databasesAccsessable.getFieldValue();
 	}
 
 	public boolean getAdmin() {
 		// TODO Auto-generated method stub
-		return admin;
+		return admin.getFieldValue();
 	}
 
 	/**
@@ -231,12 +277,14 @@ public class User extends MaxObject {
 	 * @param databases a list of the databases the user will be able to use
 	 */
 	public void setDatabaseAccessible(Collection<String> databases) {
+		/*
 		this.databasesAccsessable.clear();
 		for (String database : databases) {
 			this.databasesAccsessable.add(database);
 		}
 		updateDBMap();
-		
+		*/
+		this.databasesAccsessable.setFieldValue(new ArrayList<String>(databases));
 	}
 
 }
