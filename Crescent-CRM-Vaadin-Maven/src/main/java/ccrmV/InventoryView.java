@@ -63,14 +63,18 @@ public class InventoryView extends HorizontalLayout implements View {
 			this.removeAllComponents();
 			// return;
 		}
+		
+		inventoryAccordion.addStyleName("lighterSelection");
 
 		// create item categories
 		inventoryCategoryListSelect.setNullSelectionAllowed(false);
 
 		createInventoryCategoryLayout.setCaption("Create Categories");
 		createInventoryCategoryLayout.setSpacing(true);
+		createInventoryCategoryLayout.addStyleName("filterBorder");
+		//createInventoryCategoryLayout.setStyleName(".filterBorder");
 		
-		createInventoryCategoryLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		createInventoryCategoryLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 
 		createInventoryCategoryLayout.addComponent(createInventoryCategoryName);
 
@@ -83,7 +87,7 @@ public class InventoryView extends HorizontalLayout implements View {
 		// Create item ui
 		createInventoryItemLayout.setCaption("Create Items");
 		
-		createInventoryItemLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		createInventoryItemLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		createInventoryItemLayout.setSpacing(true);
 
 		createInventoryItemLayout.addComponent(createInventoryName);
@@ -120,6 +124,7 @@ public class InventoryView extends HorizontalLayout implements View {
 		this.addComponent(navBar.sidebarLayout);
 
 		this.addComponent(inventoryAccordion);
+		
 
 		this.alreadyGenerated = true;
 	}
