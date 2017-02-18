@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.UUID;
 
 import javax.imageio.ImageIO;
 
@@ -114,12 +115,16 @@ Upload.FinishedListener, Receiver{
 			Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
 			return photoLink;
 		}
-
 	}
-
+	
+	public void renameProfilePicture(){
+		
+	}
+	
+	//TODO
 	public String resizeImage(FinishedEvent event){
 		
-		File imageFile = ((FileResource)event.getSource()).getSourceFile();
+		File imageFile = new File(event.getFilename());
 		try {
 			BufferedImage originalImage = ImageIO.read(imageFile) ;
 		} catch (IOException e) {
@@ -161,8 +166,25 @@ Upload.FinishedListener, Receiver{
 			resource = new FileResource(new File("C:/Users/Boogy/Pictures/VaadinTest/TopTwenty.png"));
 		}
 		 */
+		//resizeImage(event);
+		
+		String extension = "";
 
-		resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + event.getFilename()));
+		int i = event.getFilename().lastIndexOf('.');
+		if (i > 0) {
+		    extension = fileName.substring(i);
+		}
+		
+		String originalName = event.getFilename();
+		UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
+		String newName = randomUUIDString + extension;
+		
+		File oldFileName = new File(PROFILE_PICTURE_FOLDER + originalName);
+		File newFileName = new File(PROFILE_PICTURE_FOLDER + newName);
+		oldFileName.renameTo(newFileName);
+		
+		resource = new FileResource(newFileName);
 		
 		//TODO need to get resizeImage() to work properly
 		//link = resizeImage(event);

@@ -118,8 +118,4 @@ public class ProfilePicture extends HorizontalLayout{
 		// TODO Auto-generated constructor stub
 
 	}
-
-
-
-
 }
