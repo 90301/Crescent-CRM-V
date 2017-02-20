@@ -121,31 +121,50 @@ Upload.FinishedListener, Receiver{
 		
 	}
 	
-	//TODO
-	public String resizeImage(FinishedEvent event){
+	//TODO Need this done ASAP
+	public String resizeImage(FileResource resource){
 		
-		File imageFile = new File(event.getFilename());
+		File imageFile = resource.getSourceFile().getAbsoluteFile();
+		
+		Debugging.output("ImageFile: " + imageFile, Debugging.UPLOAD_IMAGE);
+		BufferedImage originalImage = null;
 		try {
-			BufferedImage originalImage = ImageIO.read(imageFile) ;
+			originalImage = ImageIO.read(imageFile);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Debugging.output("BufferedImage: " + originalImage, Debugging.UPLOAD_IMAGE);
+		
+		BufferedImage scaledImage = Scalr.resize(originalImage, 128);
+		
+		Debugging.output("ScaledImage: " + scaledImage, Debugging.UPLOAD_IMAGE);
+		
+		File scaledImageOutput = null;
+		
+		String scaledImageLocation = PROFILE_PICTURE_FOLDER + "Scaled" + imageFile.getName();
+		scaledImageOutput = new File(scaledImageLocation);
+
+		Debugging.output("ScaledOutput: " + scaledImageOutput, Debugging.UPLOAD_IMAGE);
+		try {
+			Debugging.output("Writing scaled file starting. File: " + scaledImageOutput.getAbsolutePath(), Debugging.UPLOAD_IMAGE);
+			ImageIO.write(scaledImage, "jpg", scaledImageOutput);
+			Debugging.output("Writing scaled file finished. File: " + scaledImageOutput.getAbsolutePath(), Debugging.UPLOAD_IMAGE);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		BufferedImage scaledImage = Scalr.resize(originalImage, 128);
+		Debugging.output("ScaledOutput: " + scaledImageOutput, Debugging.UPLOAD_IMAGE);
+		
+		resource = new FileResource(new File(scaledImageLocation));
 
-		FileOutputStream fos = null;
-		try {
-
-			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + "Scaled" + scaledImage);
-
-		} catch (final java.io.FileNotFoundException e){
-			new Notification("Couldn't open the file", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
-		}
-
-		resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + "Scaled" + scaledImage));
-
+		Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
+		
 		link = resource.getSourceFile().getAbsoluteFile().toString();
+		
+		Debugging.output("Link: " + link, Debugging.UPLOAD_IMAGE);
 		
 		return link;
 		
@@ -187,9 +206,8 @@ Upload.FinishedListener, Receiver{
 		resource = new FileResource(newFileName);
 		
 		//TODO need to get resizeImage() to work properly
-		//link = resizeImage(event);
-		
-		link = resource.getSourceFile().getAbsoluteFile().toString();
+		link= resizeImage(resource);
+		//link = resource.getSourceFile().getAbsoluteFile().toString();
 		// Show the image in the application
 		//Image image = new Image("Profile Picture", resource);
 		//image.setWidth("240px");
