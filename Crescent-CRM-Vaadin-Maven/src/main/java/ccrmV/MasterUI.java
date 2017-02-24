@@ -37,6 +37,7 @@ import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
+import integrations.ChatSocket;
 import integrations.OauthUtils;
 import inventory.InventoryItem;
 import themes.UserAgentProcessor;
@@ -51,8 +52,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.22;
-	public static final String versionDescription = " Testing and Profile Pictures.";
+	public static final double versionNumber = 1.23;
+	public static final String versionDescription = " Node Socket.";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -212,6 +213,9 @@ public class MasterUI extends UI {
 		if (DEVELOPER_MODE && DEV_AUTO_NAVIGATE) {
 			mainNavigator.navigateTo(DEV_AUTO_NAVIGATE_PAGE);
 		}
+		
+		
+		ChatSocket.setupNodeSocket();
 
 	}
 
@@ -224,7 +228,9 @@ public class MasterUI extends UI {
 		
 		Debugging.output("PAGE GET LOCATION: " + getPage().getLocation(), Debugging.GOOGLE_FURY_DEBUG);
 		
-		
+		if (this.user!= null) {
+			
+		}
 	}
 
 	/**

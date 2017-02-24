@@ -84,6 +84,8 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 		}
 
 		buttonLayout.removeAllComponents();
+		
+		
 		for (Button b : logOutputButtons) {
 			buttonLayout.addComponent(b);
 		}
@@ -112,10 +114,11 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 				this.createLogOutputButton(debugObj, richTextConsoles.get(0));
 			}
 		}
-
+		/*
 		for (DebugObject debugObj : Debugging.debugObjectsInUse) {
 			this.createLogOutputButton(debugObj, consoles.get(0));
 		}
+		*/
 	}
 
 	public TextArea createConsole(String consoleName) {
@@ -138,7 +141,7 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 	public void createLogOutputButton(DebugObject obj, DebuggingVaadinRichTextConsole console) {
 		Button button = new Button(obj.getName(), e -> outputLog(obj, console));
 
-		logOutputButtons.add(button);
+		richLogOutputButtons.add(button);
 	}
 
 	private void outputLog(DebugObject obj, DebuggingVaadinRichTextConsole console) {

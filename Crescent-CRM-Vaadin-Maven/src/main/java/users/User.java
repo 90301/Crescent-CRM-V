@@ -66,11 +66,18 @@ public class User extends MaxObject {
 	MaxField<String> databaseSelected = new MaxField<String>("databaseSelectedField", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
 			this);
 	
+
+	
 	MaxField<Boolean> admin = new MaxField<Boolean>("admin", MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN, false, false,
 			this);
 	
 	ArrayListToString arraylistToString = new ArrayListToString();
 	
+	//API fields
+	MaxField<String> facebookKey = new MaxField<String>("facebookKey", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "",
+			this);
+	MaxField<String> googleKey = new MaxField<String>("googleKey", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "",
+			this);
 	//private static final SecureRandom random = new SecureRandom();
 	PasswordAuthentication pa = new PasswordAuthentication();
 	
@@ -113,6 +120,8 @@ public class User extends MaxObject {
 		this.addMaxField(databaseSelected);
 		this.addMaxField(admin);
 		
+		this.addMaxField(facebookKey);
+		this.addMaxField(googleKey);
 	}
 	public User() {
 		init();
@@ -246,7 +255,7 @@ public class User extends MaxObject {
 	public void setDatabaseSelected(String selectedDB) {
 		//TODO: Error checking and access requirements
 		this.databaseSelected.setFieldValue(selectedDB);
-		updateDBMap();
+		//updateDBMap();
 	}
 	public String getDatabaseSelected() {
 		return databaseSelected.getFieldValue();
@@ -255,7 +264,7 @@ public class User extends MaxObject {
 
 	public void addDatabaseAccsessable(String string) {
 		this.databasesAccsessable.getFieldValue().add(string);
-		this.updateDBMap();
+		this.updateDBMap();//Must be called.
 		
 	}
 	public void addDatabaseAccsessable(UserDataHolder udh) {
@@ -271,6 +280,25 @@ public class User extends MaxObject {
 		// TODO Auto-generated method stub
 		return admin.getFieldValue();
 	}
+	
+
+	
+	public String getFacebookKey() {
+		return facebookKey.getFieldValue();
+	}
+
+	public void setFacebookKey(String facebookKey) {
+		this.facebookKey.setFieldValue(facebookKey);
+	}
+	
+	public String getGoogleKey() {
+		return googleKey.getFieldValue();
+	}
+
+	public void setGoogleKey(String googleKey) {
+		this.googleKey.setFieldValue(googleKey);
+	}
+	
 
 	/**
 	 * This SETS the databases that are accessible to a user.
