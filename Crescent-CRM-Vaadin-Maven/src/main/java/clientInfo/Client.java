@@ -112,6 +112,7 @@ public class Client extends MaxObject implements Item {
 		notes.setShowField(false);
 		contactNow.setShowField(false);
 		clientFields.setShowField(false);
+		profilePicture.setShowField(false);
 		
 		this.setKeyField(name);
 		addMaxField(name);

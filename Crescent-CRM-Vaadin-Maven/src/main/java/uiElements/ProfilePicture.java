@@ -28,13 +28,12 @@ import debugging.Debugging;
 public class ProfilePicture extends HorizontalLayout{
 
 	//TODO Will need to change the path to something else later on
-	
+
 	//Resource res = new ThemeResource("DefaultImage.jpg");
 	//Image defaultImage = new Image(null, res);
-	public FileResource DEFAULT_PROFILE_PICTURE = new FileResource(new File(System.getProperty("user.home")+"/ClientPictures/" + "DefaultPicture.jpg"));
+	public FileResource DEFAULT_PROFILE_PICTURE;
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
 	public Link link;
-	public Panel panelPicture = new Panel("Profile Picture");
 	public Image profilePicture, defaultPicture;
 	public int DEFAULT_IMAGE_SIZE = 128;
 
@@ -47,48 +46,41 @@ public class ProfilePicture extends HorizontalLayout{
 			Debugging.output("There is no image to upload because the client is null", Debugging.UPLOAD_IMAGE);
 			return;
 		}
-		
-		//This is to load the DefaultPhoto to the users computer and to store it.
-		BufferedImage image = null;
-        try {
 
-            URL url = new URL("https://cloud.githubusercontent.com/assets/21223293/22850853/6ea39df2-efdf-11e6-8fa9-a47ecc9b45d7.jpg");
-            image = ImageIO.read(url);
-
-            ImageIO.write(image, "jpg",new File(System.getProperty("user.home")+"/ClientPictures/" + "DefaultPicture.jpg"));
-            
-
-        } catch (IOException e) {
-        	e.printStackTrace();
-        }
+		UploadProfilePicture uPP = new UploadProfilePicture();
 		
 		//If template is selected, load default image
 		if (c.getName().contains(DataHolder.TEMPLATE_STRING)) {
-			defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
-			defaultPicture.setWidth("128px");
-			defaultPicture.setHeight("128px");
-			this.addComponent(defaultPicture);
+			//defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
+			//defaultPicture.setWidth("128px");
+			//defaultPicture.setHeight("128px");
+			String pictureLink = c.getProfilePicture();
+			Debugging.output("Template Image Link is: " + pictureLink, Debugging.UPLOAD_IMAGE);
+			FileResource DEFAULT_PROFILE_PICTURE = new FileResource(new File(pictureLink));
+			profilePicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
+			this.removeAllComponents();
+			this.addComponent(profilePicture);
 		}
 		else{
 			//Check if client has a profile picture stored and if so, show it for the client.
-			UploadProfilePicture uPP = new UploadProfilePicture();
 
 			//Need to grab the link of the clients photo
 			String pictureLink = c.getProfilePicture();
 			//If no link, then add the upload photo functionality
 			if(InhalerUtils.stringNullCheck(pictureLink)){
+				if(DEFAULT_PROFILE_PICTURE != null){
 				defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
 				defaultPicture.setWidth("128px");
 				defaultPicture.setHeight("128px");
 				this.addComponent(defaultPicture);
-
+				}
 				uPP.addUploadUI();
 			}
 			//If there is an image saved for the client, grab the link and show it.
 			else{
 				Debugging.output("pictureLink: " + pictureLink, Debugging.UPLOAD_IMAGE);
 				FileResource clientPhoto = new FileResource(new File(pictureLink));
-				profilePicture = new Image("Profile Picture", clientPhoto);
+				profilePicture = new Image("", clientPhoto);
 				this.removeAllComponents();
 				this.addComponent(profilePicture);
 			}

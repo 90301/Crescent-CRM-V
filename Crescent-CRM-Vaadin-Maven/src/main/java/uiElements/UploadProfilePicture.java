@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -24,6 +25,7 @@ import debugging.Debugging;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Upload;
 import com.vaadin.ui.Upload.FailedEvent;
@@ -41,22 +43,18 @@ public class UploadProfilePicture extends HorizontalLayout implements Upload.Sta
 Upload.ProgressListener, Upload.FailedListener, Upload.SucceededListener,
 Upload.FinishedListener, Receiver{
 
-	Label uploadLabel = new Label("Profile Picture");
-	Label state = new Label();
 	//Upload(null, Receiver) may need a new class for receiver based off demo source code
-	Upload uploadPhoto = new Upload(null, this);
+	Upload uploadPhoto = new Upload("Upload Image", this);
 	public File recentUpload;
 	FileResource resource;
 	public String link;
 	Client c;
 	BufferedImage originalImage;
-
 	String fileName = "";
+	ArrayList<String> allowedMimeTypes;
 
+	//Find home folder that contains all Client Photos
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
-
-	//uploadPhoto.setImmediate(false);
-	//uploadPhoto.setButtonCaption("Upload File");
 
 	public String getLink() {
 		return link;
@@ -76,25 +74,11 @@ Upload.FinishedListener, Receiver{
 
 	{
 		uploadPhoto.addFinishedListener(e->isFinished(e));
+		uploadPhoto.addStartedListener(e->uploadStarted(e));
+		ArrayList<String> allowedMimeTypes = new ArrayList<String>();
+		allowedMimeTypes.add("image/jpeg");
+		allowedMimeTypes.add("image/png");
 	}
-	/*
-	uploadPhoto.addStartedListener(new StartedListener() {
-		@Override
-		public void uploadStarted(final StartedEvent event) {
-			if (uploadInfoWindow.getParent() == null) {
-				UI.getCurrent().addWindow(uploadInfoWindow);
-			}
-			uploadInfoWindow.setClosable(false);
-		}
-
-		uploadPhoto.addFinishedListener(new Upload.FinishedListener() {
-			@Override
-			public void uploadFinished(final FinishedEvent event) {
-				uploadInfoWindow.setClosable(true);
-			}
-		}
-	 */
-	//uploadInfoWindow = new UploadInfoWindow(uploadPhoto, lineBreakCounter);
 
 	//Constructor
 	public UploadProfilePicture(){
@@ -107,7 +91,7 @@ Upload.FinishedListener, Receiver{
 
 		String photoLink = getLink();
 
-		if(photoLink.equals(null)){
+		if(photoLink == null){
 			Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
 			return null;
 		}
@@ -116,107 +100,82 @@ Upload.FinishedListener, Receiver{
 			return photoLink;
 		}
 	}
-	
+
 	public void renameProfilePicture(){
-		
+
 	}
-	
+
 	//TODO Need this done ASAP
 	public String resizeImage(FileResource resource){
-		
+
 		File imageFile = resource.getSourceFile().getAbsoluteFile();
-		
+
 		Debugging.output("ImageFile: " + imageFile, Debugging.UPLOAD_IMAGE);
 		BufferedImage originalImage = null;
 		try {
 			originalImage = ImageIO.read(imageFile);
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if(originalImage == null){
+			return null;
+		}
 		Debugging.output("BufferedImage: " + originalImage, Debugging.UPLOAD_IMAGE);
-		
 		BufferedImage scaledImage = Scalr.resize(originalImage, 128);
-		
 		Debugging.output("ScaledImage: " + scaledImage, Debugging.UPLOAD_IMAGE);
-		
+
 		File scaledImageOutput = null;
-		
+
 		String scaledImageLocation = PROFILE_PICTURE_FOLDER + "Scaled" + imageFile.getName();
 		scaledImageOutput = new File(scaledImageLocation);
 
 		Debugging.output("ScaledOutput: " + scaledImageOutput, Debugging.UPLOAD_IMAGE);
 		try {
-			Debugging.output("Writing scaled file starting. File: " + scaledImageOutput.getAbsolutePath(), Debugging.UPLOAD_IMAGE);
+			//Debugging.output("Writing scaled file starting. File: " + scaledImageOutput.getAbsolutePath(), Debugging.UPLOAD_IMAGE);
 			ImageIO.write(scaledImage, "jpg", scaledImageOutput);
-			Debugging.output("Writing scaled file finished. File: " + scaledImageOutput.getAbsolutePath(), Debugging.UPLOAD_IMAGE);
+			//Debugging.output("Writing scaled file finished. File: " + scaledImageOutput.getAbsolutePath(), Debugging.UPLOAD_IMAGE);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		Debugging.output("ScaledOutput: " + scaledImageOutput, Debugging.UPLOAD_IMAGE);
-		
-		resource = new FileResource(new File(scaledImageLocation));
 
-		Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
-		
+		//Debugging.output("ScaledOutput: " + scaledImageOutput, Debugging.UPLOAD_IMAGE);
+
+		resource = new FileResource(new File(scaledImageLocation));
+		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
+
 		link = resource.getSourceFile().getAbsoluteFile().toString();
-		
-		Debugging.output("Link: " + link, Debugging.UPLOAD_IMAGE);
-		
+		//Debugging.output("Link: " + link, Debugging.UPLOAD_IMAGE);
+
 		return link;
-		
+
 	}
-	
+
 	private void isFinished(FinishedEvent event) {
 		// TODO Auto-generated method stub
 		String fileType = event.getMIMEType();
 
 		Debugging.output("File Type: " + fileType, Debugging.UPLOAD_IMAGE);
-		//this.removeAllComponents();
 
-		/*
-		if(fileType.equals("image/jpeg")){
-			resource = new FileResource(new File(PROFILE_PICTURE_FOLDER + event.getFilename()+ this.fileName));
-		}
-		else{
-			resource = new FileResource(new File("C:/Users/Boogy/Pictures/VaadinTest/TopTwenty.png"));
-		}
-		 */
-		//resizeImage(event);
-		
-		String extension = "";
+		//Find the extension for the file
+		String extension = getFileExtension(event.getFilename());
 
-		int i = event.getFilename().lastIndexOf('.');
-		if (i > 0) {
-		    extension = fileName.substring(i);
-		}
-		
 		String originalName = event.getFilename();
 		UUID uuid = UUID.randomUUID();
-        String randomUUIDString = uuid.toString();
+		String randomUUIDString = uuid.toString();
 		String newName = randomUUIDString + extension;
-		
+
+		//Rename image so there won't be any duplicates
 		File oldFileName = new File(PROFILE_PICTURE_FOLDER + originalName);
 		File newFileName = new File(PROFILE_PICTURE_FOLDER + newName);
 		oldFileName.renameTo(newFileName);
-		
+
 		resource = new FileResource(newFileName);
-		
-		//TODO need to get resizeImage() to work properly
-		link= resizeImage(resource);
-		//link = resource.getSourceFile().getAbsoluteFile().toString();
-		// Show the image in the application
-		//Image image = new Image("Profile Picture", resource);
-		//image.setWidth("240px");
-		//image.setHeight("160px");
-		Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
-		//Get selected client and add link to photo to the clients profilePicture
-		//Same comment as above this method
-		//c.setProfilePicture(newLink);
-		//this.addComponent(image);
+
+		link = resizeImage(resource);
+		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
 	}
 
 
@@ -225,20 +184,25 @@ Upload.FinishedListener, Receiver{
 	 */
 	public void addUploadUI(){
 
-
 		this.setSpacing(true);
 		this.removeAllComponents();
-		this.addComponent(uploadLabel);
 		this.addComponent(uploadPhoto);
-
 		makeDirectory();
 	}
 
-	//Add labels for each event e.g. result, fileName, Progress, state
+	public String getFileExtension(String fileName){
+		String extension = "";
 
+		int i = fileName.lastIndexOf('.');
+		if (i > 0) {
+			extension = fileName.substring(i);
+		}
+		return extension;
+	}
+
+	//Add labels for each event if needed
 	public void uploadFinished(final FinishedEvent event) {
-		state.setValue("Upload Finished");
-		this.addComponent(state);
+
 	}
 	@Override
 	public void uploadSucceeded(SucceededEvent event) {
@@ -255,10 +219,21 @@ Upload.FinishedListener, Receiver{
 		// TODO Auto-generated method stub
 
 	}
-	@Override
+	//TODO Fix this bulls
 	public void uploadStarted(StartedEvent event) {
 		// TODO Auto-generated method stub
-
+		
+		String fileName = event.getMIMEType();
+		Debugging.output("File Type in UploadStarted: " + fileName,  Debugging.UPLOAD_IMAGE);
+		
+			if(fileName.contains("image")){
+				
+			}
+			else{
+				Notification.show("Error", "\nFile Types Allowed: .jpg and .png" + "\nClick on error message to dismiss.", Type.ERROR_MESSAGE);
+				uploadPhoto.interruptUpload();
+			}
+		
 	}
 
 	@Override
@@ -266,15 +241,20 @@ Upload.FinishedListener, Receiver{
 		// TODO Auto-generated method stub
 		makeDirectory();
 		FileOutputStream fos = null;
+
+		//If upload button is selected amd there isn'ta file, break from method
+
 		try {
 			recentUpload = new File(filename);
+			//if(recentUpload == null){
+			//	return null;
+			//}
 
 			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + recentUpload);
 
-
 			this.fileName = recentUpload.getName();
 		} catch (final java.io.FileNotFoundException e){
-			new Notification("Couldn't open the file", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
+			new Notification("Couldn't open the file, please refresh the page", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
 
 			return null;
 		}

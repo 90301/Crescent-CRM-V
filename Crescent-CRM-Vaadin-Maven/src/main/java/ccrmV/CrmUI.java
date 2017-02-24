@@ -535,6 +535,8 @@ public class CrmUI extends HorizontalLayout implements View {
 		// set notes to template client
 		if (masterUi.userDataHolder.templateClient != null) {
 			c.setNotes(masterUi.userDataHolder.templateClient.getNotes());
+			c.setProfilePicture(masterUi.userDataHolder.templateClient.getProfilePicture());
+			
 		} else {
 			c.setNotes("Notes:");
 		}

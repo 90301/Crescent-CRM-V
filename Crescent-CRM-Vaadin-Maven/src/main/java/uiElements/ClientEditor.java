@@ -192,8 +192,11 @@ public class ClientEditor extends VerticalLayout {
 
 		crmUi.selectedClient.setContactNow(clientContactNowCheckBox.getValue());
 
+		String uPP = uploadProfilePicture.updateProfilePicture();
+		if(uPP != null){
 		crmUi.selectedClient.setProfilePicture(uploadProfilePicture.updateProfilePicture());
-
+		}
+		
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
 
 		crmUi.updateClientGrid();
