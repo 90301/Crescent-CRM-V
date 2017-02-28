@@ -4,6 +4,7 @@
  */
 package uiElements;
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -105,12 +106,54 @@ Upload.FinishedListener, Receiver{
 
 	}
 
+	public File convertPNGtoJPEG(File imageFile){
+		BufferedImage bufferedImage;
+
+		String imageName = "";
+
+		int i = fileName.lastIndexOf('.');
+		if (i >= 0) {
+			imageName = fileName.substring(0, i-1); //Grabs the whole front part of the name of the file
+		}
+		try {
+
+		  //read image file
+		  bufferedImage = ImageIO.read(imageFile);
+
+		  // create a blank, RGB, same width and height, and a white background
+		  BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+				bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+		  newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+		  //Change the.png extension to .jpg
+		  File imageFile2 = new File(PROFILE_PICTURE_FOLDER + imageName +".jpg");
+		  // write to jpeg file
+		  imageFile.renameTo(imageFile2);
+		  ImageIO.write(newBufferedImage, "jpg", imageFile);
+
+		  System.out.println("Done");
+
+		} catch (IOException e) {
+
+		  e.printStackTrace();
+
+		}
+
+	   
+
+		return imageFile;
+	}
+	
 	//TODO Need this done ASAP
 	public String resizeImage(FileResource resource){
 
 		File imageFile = resource.getSourceFile().getAbsoluteFile();
 
 		Debugging.output("ImageFile: " + imageFile, Debugging.UPLOAD_IMAGE);
+		
+		if(imageFile.getName().contains("png")){
+			imageFile = convertPNGtoJPEG(imageFile);
+		}
+		
 		BufferedImage originalImage = null;
 		try {
 			originalImage = ImageIO.read(imageFile);
