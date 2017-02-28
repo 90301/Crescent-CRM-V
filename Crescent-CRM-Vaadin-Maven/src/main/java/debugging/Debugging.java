@@ -221,6 +221,13 @@ public class Debugging {
 		// Files.write(file, lines, Charset.forName("UTF-8"),
 		// StandardOpenOption.APPEND);
 	}
+	
+	
+	public static void outputArray(Object[] array, DebugObject debugObj) {
+		for (Object obj : array) {
+			debugObj.output(""+obj);
+		}
+	}
 
 	/**
 	 * Tests the debug methods to ensure they will work

@@ -4,6 +4,7 @@
 
 package ccrmV;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -52,8 +53,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.26;
-	public static final String versionDescription = " fix PNG";
+	public static final double versionNumber = 1.27;
+	public static final String versionDescription = " Google Code for OAuth stored in user";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -142,7 +143,7 @@ public class MasterUI extends UI {
 	               new UriFragmentChangedListener() {
 	           public void uriFragmentChanged(
 	                   UriFragmentChangedEvent source) {
-	               enter(source.getUriFragment());
+	               enter(source);
 	            }
 	        });
 		
@@ -221,15 +222,33 @@ public class MasterUI extends UI {
 
 	/**
 	 * Runs when URI Fragement is changed
-	 * @param uriFragment
+	 * 
+	 * Can be used to get oAuth tokens
+	 * @param source
 	 */
-	protected void enter(String uriFragment) {
-		Debugging.output("URI FRAGMENT CHANGE DETECTION. new URI: " + uriFragment, Debugging.GOOGLE_FURY_DEBUG);
+	protected void enter(UriFragmentChangedEvent source) {
+		Debugging.output("URI FRAGMENT CHANGE DETECTION. new URI: " + source, Debugging.GOOGLE_FURY_DEBUG);
 		
 		Debugging.output("PAGE GET LOCATION: " + getPage().getLocation(), Debugging.GOOGLE_FURY_DEBUG);
 		
+		//URI uriOfPage = new URI(getPage().getLocation());
+		
+		String[] querySplit = getPage().getLocation().getQuery().split("&");
+		
+		Debugging.outputArray(querySplit, Debugging.GOOGLE_FURY_DEBUG);
+		
+		String code = null;
+		for (String q : querySplit) {
+			if (q.contains("code=")) {
+				code = q.substring(5, q.length()-1);
+				Debugging.output("code: " + code, Debugging.GOOGLE_FURY_DEBUG);
+			}
+		}
+		
 		if (this.user!= null) {
-			
+			this.user.setGoogleKey(code);
+			DataHolder.store(this.user, User.class);
+			Debugging.output("google code updated: " + this.user.getGoogleKey(), Debugging.GOOGLE_FURY_DEBUG);
 		}
 	}
 
