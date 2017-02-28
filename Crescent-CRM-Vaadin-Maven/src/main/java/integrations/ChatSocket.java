@@ -10,7 +10,11 @@ public class ChatSocket {
 	public static ServerSocket nodeSocket; 
 	public static Integer NODE_PORT = 3000;
 	
+	public static Boolean DISABLE_SOCKET_CODE = true;
+	
 	public static void setupNodeSocket() {
+		
+		if (!DISABLE_SOCKET_CODE) {
 		try {
 			
 			Debugging.output("Starting socket on port: " + NODE_PORT , Debugging.NODE_SOCKET_DEBUG);
@@ -27,6 +31,7 @@ public class ChatSocket {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
 		}
 	}
 	
