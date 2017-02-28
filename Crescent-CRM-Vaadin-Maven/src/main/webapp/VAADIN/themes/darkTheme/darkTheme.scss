@@ -23,6 +23,16 @@ $v-component-group-spacing: 6px;
   // Insert your own theme rules here
   .filterBorder {
   border-style: dotted;
-  border-width: 250px;
+  border-width: 1px;
+  
+  }
+   .lighterSelection {
+  background-color: rgba(103, 117, 121, 0.99);
+  
+  }
+  
+  .lighterSelection:hover {
+  background-color: rgba(103, 117, 121, 0.25);
+  
   }
 }
