@@ -52,8 +52,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.23;
-	public static final String versionDescription = " Node Socket.";
+	public static final double versionNumber = 1.25;
+	public static final String versionDescription = " Client Profile Pictures";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
