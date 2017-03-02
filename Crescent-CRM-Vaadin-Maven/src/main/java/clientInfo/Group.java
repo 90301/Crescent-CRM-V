@@ -57,7 +57,6 @@ public class Group extends MaxObject implements Comparable<Group> {
 
 	@Override
 	public int compareTo(Group o) {
-		// TODO Auto-generated method stub
 		return this.getGroupName().compareTo(o.getGroupName());
 	}
 

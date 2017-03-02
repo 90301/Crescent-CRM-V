@@ -204,6 +204,9 @@ public class UserEditor extends HorizontalLayout implements View {
 		String themeSelected = (String) settingsThemeComboBox.getValue();
 		if (themeSelected != null) {
 			masterUi.changeTheme(themeSelected);
+			
+			masterUi.user.setTheme(themeSelected);
+			DataHolder.store(masterUi.user, User.class);
 		}
 	}
 

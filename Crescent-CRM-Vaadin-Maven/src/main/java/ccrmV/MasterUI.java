@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.servlet.annotation.WebServlet;
 
@@ -53,8 +54,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.29;
-	public static final String versionDescription = " Mobile UI";
+	public static final double versionNumber = 1.30;
+	public static final String versionDescription = " Store Theme for User";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -124,7 +125,9 @@ public class MasterUI extends UI {
 
 	public static final String[] avaliableThemes = { "mytheme", "darkTheme" };
 
-	public String currentTheme = avaliableThemes[1];
+	public static final String DEFAULT_THEME = avaliableThemes[1];
+
+	public String currentTheme = DEFAULT_THEME;
 
 	String userAgent = "";
 	Boolean mobileUser = false;
@@ -291,6 +294,17 @@ public class MasterUI extends UI {
 		loggedIn = true;
 		authenicatedHosts.add(userHost);
 		System.out.println("Attempting to navigate to the main application.");
+		//Change theme
+		if (user!=null) {
+			if (Stream.of(avaliableThemes).anyMatch(x -> x.equals(user.getTheme()))) {
+				setTheme(user.getTheme());
+			} else {
+				user.setTheme(DEFAULT_THEME);
+				DataHolder.store(user, User.class);
+			}
+		
+		}
+		
 		mainNavigator.navigateTo(MAIN_APP);
 
 	}
@@ -385,73 +399,6 @@ public class MasterUI extends UI {
 			crmTests.debugOutputTestCases();
 			
 			
-			//Old test code below
-
-			// inventory unit testing
-			/*
-			UserDataHolder udhTest = new UserDataHolder();
-			udhTest.setDatabasePrefix("test");
-			udhTest.initalizeDatabases();
-			DataHolder.store(udhTest, UserDataHolder.class);
-
-			InventoryItem invItem = new InventoryItem();
-			invItem.setItemKey("RR2016");
-			invItem.setItemName("7RR red dye");
-			invItem.setItemCategory("Dye");
-			invItem.setItemBarcode("0000001");
-			invItem.setItemURL("www.google.com");
-			invItem.setItemStock(12);
-			invItem.setItemReorderPoint(6);
-
-			Debugging.output("Created Inventory Item: " + invItem, Debugging.MASTER_UI_TESTING_OUTPUT,
-					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-
-			udhTest.store(invItem, InventoryItem.class);
-
-			Debugging.output("Stored Inventory Item. " + invItem.debugOutput(), Debugging.MASTER_UI_TESTING_OUTPUT,
-					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-
-			// TESTING INHALER UTILS
-
-			HashMap<String, String> map = new HashMap<String, String>();
-			map.put("Key1", "value1");
-			map.put("KEY2", "Value2");
-
-			String xml = InhalerUtils.mapToXML(map);
-
-			String customField1 = "Custom-Field1";
-
-			HashMap<String, String> map2 = InhalerUtils.xmlToMap(xml);
-
-			TemplateField tf = new TemplateField();
-			tf.setDataType(TemplateField.DATA_TYPE_TEXT);
-			tf.setDefaultValue("Default");
-			tf.setFieldName(customField1);
-			tf.setUserDataHolder(udhTest);
-			udhTest.store(tf, TemplateField.class);
-
-			Client testClient1 = new Client();
-			testClient1.setUserDataHolder(udhTest);
-
-			testClient1.setName("robot9000");
-			testClient1.setupCustomFieldsFromTemplate();
-
-			testClient1.setCustomFieldValue(customField1, "Grimes!");
-
-			udhTest.store(testClient1, Client.class);
-
-			String customField1Output = (String) testClient1.getCustomFieldValue(customField1);
-
-			Debugging.output("Custom Field Output: " + customField1Output, Debugging.MASTER_UI_TESTING_OUTPUT,
-					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
-
-			// OAUTH2 Testing
-
-			OauthUtils.genGoogleLink();
-
-			// deletion testing
-			udhTest.delete(tf, TemplateField.class);
-	*/
 		}
 	}
 

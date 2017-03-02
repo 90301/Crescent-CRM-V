@@ -14,6 +14,7 @@ import java.util.HashMap;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+import ccrmV.MasterUI;
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
@@ -81,6 +82,11 @@ public class User extends MaxObject {
 	//private static final SecureRandom random = new SecureRandom();
 	PasswordAuthentication pa = new PasswordAuthentication();
 	
+	
+	//Themes
+	MaxField<String> theme = new MaxField<String>("theme", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
+			this);
+	
 	/*
 	 * Database selection
 	 */
@@ -122,6 +128,8 @@ public class User extends MaxObject {
 		
 		this.addMaxField(facebookKey);
 		this.addMaxField(googleKey);
+		
+		this.addMaxField(theme);
 	}
 	public User() {
 		init();
@@ -136,76 +144,11 @@ public class User extends MaxObject {
 		return this.getPrimaryKey();
 	}
 
-/*
-	@Override
-	public void loadInternalFromMap() {
-		
-		this.userName = (String) dbMap.get(userNameField);
-		this.passHash = (String) dbMap.get(passHashField);
-		this.databaseSelected = (String) dbMap.get(databaseSelectedField);
-		//conversion
-		
-		//take the csv data in the dbMap convert that to a list of string refs to UserDataHolders
-
-		this.databasesAccsessable.clear();
-		this.databasesAccsessable.addAll(InhalerUtils.csvToList((String) dbMap.get(dataBasesAccsessableField)));
-		/*
-		for (MaxObject udh : InhalerUtils.maxObjectCSVToList((String) dbMap.get(dataBasesAccsessableField), null, UserDataHolder.class)) {
-			this.databasesAccsessable.add((UserDataHolder) udh);
-		}
-		*/
-		/*
-		this.admin = (boolean) dbMap.get(adminField);
-		
-		safetyCheck();
-	}
-
-*/
-	/*
-	@Override
-	public void updateDBMap() {
-		safetyCheck();
-		dbMap.put(userNameField, userName);
-		dbMap.put(passHashField, passHash);
-		dbMap.put(databaseSelectedField, this.databaseSelected);
-		
-		//conversion
-		//databasesAccsessable --> CSV string to be stored in the database
-		String csvDatabaseAccsessable = InhalerUtils.listToCsv(this.databasesAccsessable);
-		System.out.println("CSV output: " + csvDatabaseAccsessable);
-		dbMap.put(dataBasesAccsessableField,csvDatabaseAccsessable);
-		
-		
-		dbMap.put(adminField, admin);
-	}
-*/
-	private void safetyCheck() {
-		if (this.databaseSelected==null){
-			this.databaseSelected.setFieldValue("");
-		}
-		
-	}
-
 	
 	@Override
 	public String getPrimaryKey() {
 		return userName.getFieldValue();
 	}
-	
-/*
-	@Override
-	public void createTableForClass(MaxDBTable table) {
-		table.addDatatype(userNameField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		table.addDatatype(passHashField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
-		//database selection
-		table.addDatatype(dataBasesAccsessableField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
-		table.addDatatype(databaseSelectedField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		//Administration / rights
-		table.addDatatype(adminField, MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN);
-		table.setPrimaryKeyName(userNameField);
-		table.createTable();
-	}
-	*/
 	
 	public void setPassword(String pass) {
 		
@@ -219,29 +162,7 @@ public class User extends MaxObject {
 		return authenticated;
 	}
 	
-	/*
-	 * 
-	 * @see dbUtils.MaxObject#setupDBDatatypes()
-	 */
 	
-	/*
-	@Override
-	public void setupDBDatatypes() {
-		if (dbDatatypes == null) {
-			dbDatatypes = new HashMap<String, Class<?>>();
-		}
-		
-		dbDatatypes.put(userNameField, String.class);
-		//Traditional Way ^^^
-		dbDatatypes.put(passHashField, String.class);
-		//Would this work? ^^^
-		dbDatatypes.put(databaseSelectedField, String.class);
-		
-		dbDatatypes.put(dataBasesAccsessableField, String.class);//CSV converted
-		
-		dbDatatypes.put(adminField, Boolean.class);
-	}
-*/
 	public void setUserName(String userName) {
 		this.userName.setFieldValue(userName);
 		
@@ -253,7 +174,6 @@ public class User extends MaxObject {
 	}
 	
 	public void setDatabaseSelected(String selectedDB) {
-		//TODO: Error checking and access requirements
 		this.databaseSelected.setFieldValue(selectedDB);
 		//updateDBMap();
 	}
@@ -277,7 +197,6 @@ public class User extends MaxObject {
 	}
 
 	public boolean getAdmin() {
-		// TODO Auto-generated method stub
 		return admin.getFieldValue();
 	}
 	
@@ -299,19 +218,18 @@ public class User extends MaxObject {
 		this.googleKey.setFieldValue(googleKey);
 	}
 	
+	public String getTheme() {
+		return theme.getFieldValue();
+	}
+	public void setTheme(String theme) {
+		this.theme.setFieldValue(theme);
+	}
 
 	/**
 	 * This SETS the databases that are accessible to a user.
 	 * @param databases a list of the databases the user will be able to use
 	 */
 	public void setDatabaseAccessible(Collection<String> databases) {
-		/*
-		this.databasesAccsessable.clear();
-		for (String database : databases) {
-			this.databasesAccsessable.add(database);
-		}
-		updateDBMap();
-		*/
 		this.databasesAccsessable.setFieldValue(new ArrayList<String>(databases));
 	}
 
