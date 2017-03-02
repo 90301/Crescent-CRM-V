@@ -98,6 +98,8 @@ public class MasterUI extends UI {
 	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
+	
+	public static final Boolean DEV_FORCE_MOBILE = true;
 
 	// Automatically navigate to a specific page.
 	// This could cause issues when dealing with database initialization
@@ -132,7 +134,7 @@ public class MasterUI extends UI {
 	String userAgent = "";
 	Boolean mobileUser = false;
 	
-	Boolean DEV_FORCE_MOBILE = true;
+
 	
 	/*
 	 * UNIT TESTING VARIABLES
