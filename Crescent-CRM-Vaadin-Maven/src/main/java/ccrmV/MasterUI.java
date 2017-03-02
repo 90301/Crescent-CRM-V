@@ -53,8 +53,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.28;
-	public static final String versionDescription = " Change Notifications";
+	public static final double versionNumber = 1.29;
+	public static final String versionDescription = " Mobile UI";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -129,6 +129,8 @@ public class MasterUI extends UI {
 	String userAgent = "";
 	Boolean mobileUser = false;
 	
+	Boolean DEV_FORCE_MOBILE = true;
+	
 	/*
 	 * UNIT TESTING VARIABLES
 	 */
@@ -150,6 +152,10 @@ public class MasterUI extends UI {
 		userAgent = request.getHeader("User-Agent");
 		
 		mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
+		
+		if (DEVELOPER_MODE && DEV_FORCE_MOBILE) {
+			mobileUser = true;
+		}
 		
 		Debugging.output("User Agent: " + userAgent, Debugging.MOBILE_DEBUG);
 		

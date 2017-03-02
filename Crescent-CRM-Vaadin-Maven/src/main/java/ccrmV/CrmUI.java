@@ -792,9 +792,15 @@ public class CrmUI extends HorizontalLayout implements View {
 		// CLIENT EDITING UI
 		clientEditor.setVisible(false);
 		
-		midLayout.addComponent(clientEditor);
+		
 
 		updateAllComboBoxes();
+		
+		if (masterUi.mobileUser) {
+			layout.addComponent(clientEditor);
+		} else {
+			midLayout.addComponent(clientEditor);
+		}
 		
 		//Adding creation tab
 		layout.addComponent(creationTabs);
