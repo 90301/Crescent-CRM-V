@@ -90,7 +90,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	ComboBox filterStatus  = new ComboBox("Status");
 	ComboBox filterLocation = new ComboBox("Location");
 	ComboBox filterGroup = new ComboBox("Group");
-	Button filterButton = new Button("Filter", event -> this.filterClick());
+	//Button filterButton = new Button("Filter", event -> this.filterClick());
 	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
 	TextField filterClientTextField = new TextField(" Name ");
 	TextField filterClientNotesField = new TextField("Notes Include:");
@@ -166,7 +166,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterStatus.setVisible(showFilter);
 		filterLocation.setVisible(showFilter);
 		filterGroup.setVisible(showFilter);
-		filterButton.setVisible(showFilter);
+		//filterButton.setVisible(showFilter);
 		resetFilterButton.setVisible(showFilter);
 		filterClientTextField.setVisible(showFilter);
 		filterClientNotesField.setVisible(showFilter);
@@ -859,7 +859,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterLayout.addComponent(filterContactNowCheckBox);
 
 		//filterButton
-		filterLayout.addComponent(filterButton);
+		//filterLayout.addComponent(filterButton);
 		//resetFilterButton 
 		filterLayout.addComponent(resetFilterButton);
 		
