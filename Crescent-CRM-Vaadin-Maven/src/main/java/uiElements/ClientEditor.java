@@ -200,6 +200,8 @@ public class ClientEditor extends VerticalLayout {
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
 
 		crmUi.updateClientGrid();
+		
+		crmUi.resetFilterClick();
 		crmUi.selectClient(crmUi.selectedClient);
 
 		Debugging.TEMPLATE_DEBUG.outputLog();
@@ -270,6 +272,25 @@ public class ClientEditor extends VerticalLayout {
 		//Profile picture
 		pPicture.loadprofilePictureField(c);
 
+	}
+
+	/**
+	 * Checks to see if the client has been updated
+	 * @return TRUE is client has been updated
+	 */
+	public boolean checkUpdate() {
+		//check notes
+		Boolean rtrn = false;
+		if (crmUi.selectedClient != null) {
+			if (!crmUi.selectedClient.getNotes().equals(clientNoteBox.getValue())) {
+				//notes have changed
+				rtrn = true;
+			} else if (crmUi.selectedClient.getContactNow() != clientContactNowCheckBox.getValue()) {
+				//contact now has changed
+				rtrn = true;
+			}
+		}
+		return rtrn;
 	}
 
 }

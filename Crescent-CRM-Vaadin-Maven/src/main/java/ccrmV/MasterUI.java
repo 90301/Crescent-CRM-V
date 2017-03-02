@@ -53,8 +53,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.27;
-	public static final String versionDescription = " Google Code for OAuth stored in user";
+	public static final double versionNumber = 1.28;
+	public static final String versionDescription = " Change Notifications";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

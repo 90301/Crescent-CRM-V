@@ -20,6 +20,7 @@ import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Page;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button.ClickEvent;
@@ -120,7 +121,7 @@ public class CrmUI extends HorizontalLayout implements View {
 
 	public Client selectedClient;
 	Boolean discard = false;
-	private boolean unsavedProgress = false;
+	boolean unsavedProgress = false;
 	private Client localSelClient = null;
 	private String cacheDatabaseName = "";
 	// holds all possible values that mean null.
@@ -138,7 +139,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	Button createClientButton = new Button("Create Client", event -> this.createClientClick());
 	HorizontalLayout midLayout = new HorizontalLayout();
 	//GridLayout clientGridLayout = new GridLayout(4, 10);
-	//TODO
+	
 	Button createLocationButton = new Button("Create Location", event -> this.createLocationClick());
 	Button createStatusButton = new Button("Create Status", event -> this.createStatusClick());
 	Button createGroupButton = new Button("Create Group", event -> this.createGroupClick());
@@ -352,17 +353,15 @@ public class CrmUI extends HorizontalLayout implements View {
 		} else {
 			return;
 		}
-		if (unsavedProgress) {
+		if (clientEditor.checkUpdate() && this.discard == false) {
 			// TODO: implement unsaved progress
-			this.discard = false;
-			/*
-			MessageBox switchQuestion = MessageBox.createQuestion().withCaption("Discard Changes?")
-					.withMessage("You have unsaved information, are you sure you want to discard that?")
-					.withOkButton(() -> this.selectClient(this.localSelClient)).withAbortButton();
-			switchQuestion.open();
-			*/
+			this.discard = true;
+			Notification n = new Notification("You have unsaved changes! <br> Click message to dismiss.","", Notification.Type.WARNING_MESSAGE,true);
+			
+			n.show(Page.getCurrent());
 		} else {
 			selectClient(localSelClient);
+			
 		}
 
 	}
@@ -372,6 +371,11 @@ public class CrmUI extends HorizontalLayout implements View {
 	 * @param c
 	 */
 	public void selectClient(Client c) {
+		
+		
+		this.discard = false;
+		
+		
 		if (c != null) {
 
 		} else {
@@ -862,8 +866,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 	}
 
-	private void resetFilterClick() {
-		// TODO Auto-generated method stub
+	public void resetFilterClick() {
 		filterStatus.setValue(null);
 		filterLocation.setValue(null);
 		filterGroup.setValue(null);
