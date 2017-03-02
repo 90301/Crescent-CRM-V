@@ -548,6 +548,9 @@ public class CrmUI extends HorizontalLayout implements View {
 		System.out.println("Created Client: " + c);
 
 		masterUi.userDataHolder.store(c, Client.class);
+		
+		resetFilterClick();
+		
 		updateClientGrid();
 		
 		selectClient(c);
