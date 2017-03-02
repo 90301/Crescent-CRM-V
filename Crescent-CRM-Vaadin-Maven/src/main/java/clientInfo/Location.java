@@ -14,7 +14,7 @@ import dbUtils.Conversions.HashSetToString;
 import dbUtils.Conversions.MaxConversion;
 import debugging.Debugging;
 
-public class Location extends MaxObject {
+public class Location extends MaxObject implements Comparable<Location> {
 
 	/*
 	 * private String locationName; public static final String locationNameField
@@ -112,8 +112,12 @@ public class Location extends MaxObject {
 	
 	@Override
 	public String getPrimaryKey() {
-		// TODO Auto-generated method stub
 		return this.getLocationName();
+	}
+
+	@Override
+	public int compareTo(Location o) {
+		return this.getLocationName().compareTo(o.getLocationName());
 	}
 
 	

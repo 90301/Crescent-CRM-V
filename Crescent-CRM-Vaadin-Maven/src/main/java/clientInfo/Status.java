@@ -9,7 +9,7 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
 
-public class Status extends MaxObject {
+public class Status extends MaxObject implements Comparable<Status> {
 
 
 	MaxField<String> statusName = new MaxField<String>("statusName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
@@ -43,8 +43,13 @@ public class Status extends MaxObject {
 
 	@Override
 	public String getPrimaryKey() {
-		// TODO Auto-generated method stub
 		return this.getStatusName();
+	}
+
+
+	@Override
+	public int compareTo(Status o) {
+		return this.getStatusName().compareTo(o.getStatusName());
 	}
 
 

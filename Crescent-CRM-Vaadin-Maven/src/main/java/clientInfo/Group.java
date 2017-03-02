@@ -10,15 +10,8 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
 
-public class Group extends MaxObject {
+public class Group extends MaxObject implements Comparable<Group> {
 
-	/*
-	String groupName;
-	public static final String groupNameField = "groupName";
-	Integer color = 0;
-	public static final String colorField = "color";
-	
-	*/
 	//Max Field Version
 	MaxField<String> groupName = new MaxField<String>("groupName",MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING,"","",this);
 	MaxField<Integer> color = new MaxField<Integer>("color",MaxDBTable.DATA_MYSQL_TYPE_INT,0,0,this);
@@ -39,40 +32,6 @@ public class Group extends MaxObject {
 		return getPrimaryKey();
 	}
 
-	/*
-	@Override
-	public void updateDBMap() {
-		dbMap.put(groupNameField, groupName);
-		dbMap.put(colorField, color);
-	}
-
-	@Override
-	public void setupDBDatatypes() {
-		if (dbDatatypes ==null) {
-			dbDatatypes = new HashMap<String, Class<?>>();
-		}
-
-			dbDatatypes.put(groupNameField, String.class);
-			dbDatatypes.put(colorField, Integer.class);
-
-
-	}
-	
-	@Override
-	public void createTableForClass(MaxDBTable table) {
-		table.addDatatype(groupNameField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		table.addDatatype(colorField, MaxDBTable.DATA_MYSQL_TYPE_INT);
-		table.setPrimaryKeyName(groupNameField);
-		table.createTable();
-
-	}
-
-	@Override
-	public void loadInternalFromMap() {
-		this.groupName = (String) dbMap.get(groupNameField);
-		this.color = (Integer) dbMap.get(colorField);
-	}
-	*/
 	@Override
 	public String getPrimaryKey() {
 		return this.getGroupName();
@@ -94,6 +53,12 @@ public class Group extends MaxObject {
 
 	public void setColor(Integer color) {
 		this.color.setFieldValue(color);
+	}
+
+	@Override
+	public int compareTo(Group o) {
+		// TODO Auto-generated method stub
+		return this.getGroupName().compareTo(o.getGroupName());
 	}
 
 
