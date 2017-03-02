@@ -12,6 +12,7 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
@@ -26,6 +27,7 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
@@ -121,6 +123,7 @@ public class UserEditor extends HorizontalLayout implements View {
 	private static final String ADMIN_SETTING_ID = "Admin";
 	private static final String SETTING_NAME_ID = "Setting Name";
 	private static final String SETTING_VALUE_ID = "Value";
+	private static final int PASS_MIN_LENGTH = 5;
 
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
@@ -639,12 +642,12 @@ public class UserEditor extends HorizontalLayout implements View {
 	private void createNewUserClick() {
 		String userName = createUserNameTextField.getValue();
 		String pass = createUserPassField.getValue();
-
+		
 		User nUser = new User();
 		// Check to see if a user already has a specific name
 		// This doesn't appear to be working. a user can be created with
 		// the same username.
-		if (DataHolder.getUser(userName) == null) {
+		if (DataHolder.getUser(userName) == null && pass.length() >= PASS_MIN_LENGTH) {
 			nUser.setUserName(userName);
 			nUser.setPassword(pass);
 			nUser.setAdmin(false);
@@ -653,13 +656,25 @@ public class UserEditor extends HorizontalLayout implements View {
 			nUser.addDatabaseAccsessable(userName);
 
 			DataHolder.store(nUser, User.class);
-
+			createUserNameTextField.setValue("");
+			createUserPassField.setValue("");
 		} else {
-			// User already exists
-
+			
+			if (pass.length() < PASS_MIN_LENGTH) {
+				Notification notification = new Notification("Password is too short.", "<br>Minimum Length: "
+			+ PASS_MIN_LENGTH + "<br>Click to Dismiss", Notification.Type.ERROR_MESSAGE,true);
+				notification.show(Page.getCurrent());
+			} else {
+				// User already exists
+				Notification notification = new Notification("User: "+ userName + " Already Exists.", "<br>Click to Dismiss" , Notification.Type.ERROR_MESSAGE,true);
+				notification.show(Page.getCurrent());
+			}
 		}
 
 		populateAllData();
+		
+		//clear textbox
+		
 	}
 
 	/*
