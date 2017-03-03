@@ -37,7 +37,7 @@ public class ProfilePicture extends HorizontalLayout{
 	public Image profilePicture, defaultPicture;
 	public int DEFAULT_IMAGE_SIZE = 128;
 	public UploadProfilePicture uPP = new UploadProfilePicture();
-
+	
 	//TODO 
 	public void loadprofilePictureField(Client c) {
 		this.removeAllComponents();

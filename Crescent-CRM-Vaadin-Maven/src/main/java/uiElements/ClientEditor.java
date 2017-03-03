@@ -297,6 +297,8 @@ public class ClientEditor extends VerticalLayout {
 			} else if (crmUi.selectedClient.getContactNow() != clientContactNowCheckBox.getValue()) {
 				//contact now has changed
 				rtrn = true;
+			} else if(uploadProfilePicture.getHasUploaded()){
+				rtrn = true;
 			}
 		}
 		return rtrn;

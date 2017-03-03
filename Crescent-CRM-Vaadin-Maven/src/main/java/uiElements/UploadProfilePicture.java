@@ -53,6 +53,15 @@ Upload.FinishedListener, Receiver{
 	BufferedImage originalImage;
 	String fileName = "";
 	ArrayList<String> allowedMimeTypes;
+	public Boolean hasUploaded;
+
+	public Boolean getHasUploaded() {
+		return hasUploaded;
+	}
+
+	public void setHasUploaded(Boolean hasUploaded) {
+		this.hasUploaded = hasUploaded;
+	}
 
 	//Find home folder that contains all Client Photos
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
@@ -219,6 +228,7 @@ Upload.FinishedListener, Receiver{
 
 		link = resizeImage(resource);
 		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
+		setHasUploaded(true);
 	}
 
 
@@ -226,7 +236,7 @@ Upload.FinishedListener, Receiver{
 	 * Adding the label and buttons using this method. Will need some editing.
 	 */
 	public void addUploadUI(){
-
+		setHasUploaded(false);
 		this.setSpacing(true);
 		this.removeAllComponents();
 		this.addComponent(uploadPhoto);
