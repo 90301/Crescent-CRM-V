@@ -19,6 +19,8 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -38,9 +40,13 @@ public class LoginView extends VerticalLayout implements View {
 	public Label loginError = new Label(
 			String.format("<font size = \"3\" color=\"red\"> Incorrect Username/Password!" )
 			, ContentMode.HTML);
+	public Label userError = new Label(
+			String.format("<font size = \"3\" color=\"red\"> No such user exists!" )
+			, ContentMode.HTML);
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public String host;
-	public HorizontalLayout hLayout = new HorizontalLayout();
+	public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
+	public HorizontalLayout hLayoutUser = new HorizontalLayout();
 	
 	
 	Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
@@ -83,14 +89,17 @@ public class LoginView extends VerticalLayout implements View {
 		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
-		this.addComponent(hLayout);
-		hLayout.addComponent(loginError);
+		this.addComponent(hLayoutIncorrect);
+		this.addComponent(hLayoutUser);
+		//hLayoutIncorrect.addComponent(loginError);
+		//hLayoutUser.addComponent(userError);
 		this.addComponent(loginButton);
 		this.addComponent(versionLabel);
 		this.setComponentAlignment(versionLabel, Alignment.BOTTOM_CENTER);
 		
 		
-		hLayout.setVisible(false);
+		//hLayoutIncorrect.setVisible(false);
+		//hLayoutUser.setVisible(false);
 		
 		
 		if (MasterUI.DEV_AUTO_LOGIN && MasterUI.DEVELOPER_MODE) {
@@ -149,14 +158,22 @@ public MasterUI masterUi;
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			}
-			hLayout.setVisible(false);
+			//hLayoutIncorrect.setVisible(false);
+			//hLayoutUser.setVisible(false);
 
 			masterUi.startMainApp();
 			
 		} else {
 			
 			if((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.WRONG_PASS_CODE) {
-				hLayout.setVisible(true);
+				Notification.show("Incorrect username/password!", "\nClick to dismiss", Type.ERROR_MESSAGE);
+				//hLayoutIncorrect.setVisible(true);
+				//hLayoutUser.setVisible(false);
+			}
+			else if((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.NO_USER_CODE) {
+				Notification.show("No such user exists!", "\nClick to dismiss", Type.ERROR_MESSAGE);
+				//hLayoutUser.setVisible(true);
+				//hLayoutIncorrect.setVisible(false);
 			}
 			welcomeLabel.setData(code);
 		}
