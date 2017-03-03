@@ -158,7 +158,9 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 			masterUi.userDataHolder.store(l, Location.class);
 		}
 		populateAllLocationBoxes();
-		//updateCreationLists();
+		
+		newLocationAllLocations.setValue(l);
+		
 		return l;
 	}
 
