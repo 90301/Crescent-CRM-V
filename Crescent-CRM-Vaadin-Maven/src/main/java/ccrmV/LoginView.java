@@ -10,6 +10,7 @@ import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
@@ -19,6 +20,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.PasswordField;
@@ -44,9 +46,15 @@ public class LoginView extends VerticalLayout implements View {
 			String.format("<font size = \"3\" color=\"red\"> No such user exists!" )
 			, ContentMode.HTML);
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
+	public Button registerButton = new Button("Register", event -> createNewUserClick());
+	public Layout userCreatorLayout = new VerticalLayout();
+	public Layout buttonLayout = new HorizontalLayout();
+	public TextField createUserTextField = new TextField("User Name");
+	public PasswordField createPassField = new PasswordField("Password");
+	private static final int PASS_MIN_LENGTH = 5;
 	public String host;
-	public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
-	public HorizontalLayout hLayoutUser = new HorizontalLayout();
+	//public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
+	//public HorizontalLayout hLayoutUser = new HorizontalLayout();
 	
 	
 	Resource res = new ThemeResource("images/StyleC_Logo_London_9-25-16_2InchWide.svg");
@@ -89,12 +97,18 @@ public class LoginView extends VerticalLayout implements View {
 		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
-		this.addComponent(hLayoutIncorrect);
-		this.addComponent(hLayoutUser);
+		userCreatorLayout.setCaption("Create Users");
+		userCreatorLayout.addComponent(createUserTextField);
+		userCreatorLayout.addComponent(createPassField);
+		userCreatorLayout.addComponent(registerButton);
+		//this.addComponent(hLayoutIncorrect);
+		//this.addComponent(hLayoutUser);
 		//hLayoutIncorrect.addComponent(loginError);
 		//hLayoutUser.addComponent(userError);
-		this.addComponent(loginButton);
+		buttonLayout.addComponent(loginButton);
+		buttonLayout.addComponent(registerButton);
 		this.addComponent(versionLabel);
+		this.addComponent(buttonLayout);
 		this.setComponentAlignment(versionLabel, Alignment.BOTTOM_CENTER);
 		
 		
@@ -177,6 +191,44 @@ public MasterUI masterUi;
 			}
 			welcomeLabel.setData(code);
 		}
+	}
+	
+	private void createNewUserClick() {
+		String userName = createUserTextField.getValue();
+		String pass = createPassField.getValue();
+		
+		User nUser = new User();
+		// Check to see if a user already has a specific name
+		// This doesn't appear to be working. a user can be created with
+		// the same username.
+		if (DataHolder.getUser(userName) == null && pass.length() >= PASS_MIN_LENGTH) {
+			nUser.setUserName(userName);
+			nUser.setPassword(pass);
+			nUser.setAdmin(false);
+			// set the database to the user name
+			nUser.setDatabaseSelected(userName);
+			nUser.addDatabaseAccsessable(userName);
+
+			DataHolder.store(nUser, User.class);
+			createUserTextField.setValue("");
+			createPassField.setValue("");
+		} else {
+			
+			if (pass.length() < PASS_MIN_LENGTH) {
+				Notification notification = new Notification("Password is too short.", "<br>Minimum Length: "
+			+ PASS_MIN_LENGTH + "<br>Click to Dismiss", Notification.Type.ERROR_MESSAGE,true);
+				notification.show(Page.getCurrent());
+			} else {
+				// User already exists
+				Notification notification = new Notification("User: "+ userName + " Already Exists.", "<br>Click to Dismiss" , Notification.Type.ERROR_MESSAGE,true);
+				notification.show(Page.getCurrent());
+			}
+		}
+
+		//populateAllData();
+		
+		//clear textbox
+		
 	}
 
 }
