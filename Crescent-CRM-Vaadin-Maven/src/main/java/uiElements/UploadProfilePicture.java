@@ -166,7 +166,7 @@ Upload.FinishedListener, Receiver{
 			return null;
 		}
 		Debugging.output("BufferedImage: " + originalImage, Debugging.UPLOAD_IMAGE);
-		BufferedImage scaledImage = Scalr.resize(originalImage, 128);
+		BufferedImage scaledImage = Scalr.resize(originalImage, 256);
 		Debugging.output("ScaledImage: " + scaledImage, Debugging.UPLOAD_IMAGE);
 
 		File scaledImageOutput = null;
