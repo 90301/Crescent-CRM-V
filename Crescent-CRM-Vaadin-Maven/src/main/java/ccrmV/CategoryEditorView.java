@@ -18,6 +18,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.Location;
 import clientInfo.UserDataHolder;
+import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import uiElements.NavBar;
 
@@ -49,7 +50,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	//location editor components
 	HorizontalLayout newLocationLayout = new HorizontalLayout();
 	TextField newLocationNameTextBox = new TextField();
-	Button newLocationCreateButton = new Button("Create");
+	Button newLocationCreateButton = new Button("Create", e -> createLocationClick());
 	ListSelect newLocationAllLocations = new ListSelect("Locations");//Should Filter as the user types for the new location
 	
 	HorizontalLayout locationSeperator = new HorizontalLayout();
@@ -139,6 +140,28 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		alreadyGenerated = true;
 	}
 	
+
+
+	private void createLocationClick() {
+		String text = this.newLocationNameTextBox.getValue();
+		createLocation(text);
+		this.newLocationNameTextBox.clear();
+		
+	}
+	
+	public Location createLocation(String locationName) {
+		Location l = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(locationName)) {
+			l = new Location();
+			l.setLocationName(locationName);
+			masterUi.userDataHolder.store(l, Location.class);
+		}
+		populateAllLocationBoxes();
+		//updateCreationLists();
+		return l;
+	}
+
 
 
 	//Populate Locations
