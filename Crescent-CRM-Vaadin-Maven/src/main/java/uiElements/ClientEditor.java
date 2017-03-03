@@ -3,6 +3,7 @@ package uiElements;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
@@ -37,6 +38,7 @@ public class ClientEditor extends VerticalLayout {
 	//VerticalLayout this = new VerticalLayout();
 	HorizontalLayout clientEditorMetaLayout = new HorizontalLayout();
 	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
+	HorizontalLayout uploadProfileLayout = new HorizontalLayout();
 
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
@@ -108,6 +110,15 @@ public class ClientEditor extends VerticalLayout {
 		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
 		clientEditorActionLayout.addComponent(clientContactFrequency);
 
+		//Profile Picture Horizontal Layout
+		uploadProfileLayout.setSpacing(true);
+		uploadProfilePicture.addUploadUI();
+		uploadProfileLayout.addComponent(pPicture);
+		uploadProfileLayout.addComponent(uploadProfilePicture);
+		
+		
+		
+		
 		//Template editor
 		templateEditor.updateUI();
 		templateEditor.setVisible(false);
@@ -123,11 +134,9 @@ public class ClientEditor extends VerticalLayout {
 
 		this.addComponent(clientNameLabel);
 
-		uploadProfilePicture.addUploadUI();
-		this.addComponent(pPicture);
-		this.addComponent(uploadProfilePicture);
-
 		this.addComponent(clientEditorMetaLayout);
+		
+		this.addComponent(uploadProfileLayout);
 
 		this.addComponent(templateEditor);
 		this.addComponent(customFieldEditor);
@@ -194,8 +203,11 @@ public class ClientEditor extends VerticalLayout {
 
 		String uPP = uploadProfilePicture.updateProfilePicture();
 		if(uPP != null){
-		crmUi.selectedClient.setProfilePicture(uploadProfilePicture.updateProfilePicture());
+		crmUi.selectedClient.setProfilePicture(uPP);
+		
+		uploadProfilePicture.setLink(null);
 		}
+		
 		
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
 
@@ -287,6 +299,8 @@ public class ClientEditor extends VerticalLayout {
 				rtrn = true;
 			} else if (crmUi.selectedClient.getContactNow() != clientContactNowCheckBox.getValue()) {
 				//contact now has changed
+				rtrn = true;
+			} else if(uploadProfilePicture.getHasUploaded()){
 				rtrn = true;
 			}
 		}

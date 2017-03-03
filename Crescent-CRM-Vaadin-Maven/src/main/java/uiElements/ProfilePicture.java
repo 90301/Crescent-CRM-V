@@ -36,19 +36,17 @@ public class ProfilePicture extends HorizontalLayout{
 	public Link link;
 	public Image profilePicture, defaultPicture;
 	public int DEFAULT_IMAGE_SIZE = 128;
-
-
+	public UploadProfilePicture uPP = new UploadProfilePicture();
+	
 	//TODO 
 	public void loadprofilePictureField(Client c) {
 		this.removeAllComponents();
-		//Debug the issue with no default image on the page for clients.
+
 		if(c ==  null){
 			Debugging.output("There is no image to upload because the client is null", Debugging.UPLOAD_IMAGE);
 			return;
 		}
 
-		UploadProfilePicture uPP = new UploadProfilePicture();
-		
 		//If template is selected, load default image
 		if (c.getName().contains(DataHolder.TEMPLATE_STRING)) {
 			//defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
@@ -66,13 +64,14 @@ public class ProfilePicture extends HorizontalLayout{
 
 			//Need to grab the link of the clients photo
 			String pictureLink = c.getProfilePicture();
+			Debugging.output("Profile Picture: " + pictureLink, Debugging.UPLOAD_IMAGE);
 			//If no link, then add the upload photo functionality
 			if(InhalerUtils.stringNullCheck(pictureLink)){
 				if(DEFAULT_PROFILE_PICTURE != null){
-				defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
-				defaultPicture.setWidth("128px");
-				defaultPicture.setHeight("128px");
-				this.addComponent(defaultPicture);
+					defaultPicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
+					defaultPicture.setWidth("128px");
+					defaultPicture.setHeight("128px");
+					this.addComponent(defaultPicture);
 				}
 				uPP.addUploadUI();
 			}
@@ -84,6 +83,7 @@ public class ProfilePicture extends HorizontalLayout{
 				this.removeAllComponents();
 				this.addComponent(profilePicture);
 			}
+
 		}
 	}
 

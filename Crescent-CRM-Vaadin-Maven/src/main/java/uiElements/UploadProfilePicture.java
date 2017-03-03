@@ -53,6 +53,15 @@ Upload.FinishedListener, Receiver{
 	BufferedImage originalImage;
 	String fileName = "";
 	ArrayList<String> allowedMimeTypes;
+	public Boolean hasUploaded;
+
+	public Boolean getHasUploaded() {
+		return hasUploaded;
+	}
+
+	public void setHasUploaded(Boolean hasUploaded) {
+		this.hasUploaded = hasUploaded;
+	}
 
 	//Find home folder that contains all Client Photos
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
@@ -91,6 +100,10 @@ Upload.FinishedListener, Receiver{
 	public String updateProfilePicture(){
 
 		String photoLink = getLink();
+		
+		setLink(null);
+		
+		setHasUploaded(false);
 
 		if(photoLink == null){
 			Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
@@ -166,7 +179,7 @@ Upload.FinishedListener, Receiver{
 			return null;
 		}
 		Debugging.output("BufferedImage: " + originalImage, Debugging.UPLOAD_IMAGE);
-		BufferedImage scaledImage = Scalr.resize(originalImage, 128);
+		BufferedImage scaledImage = Scalr.resize(originalImage, 256);
 		Debugging.output("ScaledImage: " + scaledImage, Debugging.UPLOAD_IMAGE);
 
 		File scaledImageOutput = null;
@@ -217,8 +230,10 @@ Upload.FinishedListener, Receiver{
 
 		resource = new FileResource(newFileName);
 
-		link = resizeImage(resource);
+		this.link = resizeImage(resource);
+		//setLink(link);
 		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
+		setHasUploaded(true);
 	}
 
 
@@ -226,7 +241,7 @@ Upload.FinishedListener, Receiver{
 	 * Adding the label and buttons using this method. Will need some editing.
 	 */
 	public void addUploadUI(){
-
+		setHasUploaded(false);
 		this.setSpacing(true);
 		this.removeAllComponents();
 		this.addComponent(uploadPhoto);
