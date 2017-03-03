@@ -35,9 +35,9 @@ public class ProfilePicture extends HorizontalLayout{
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
 	public Link link;
 	public Image profilePicture, defaultPicture;
-	public int DEFAULT_IMAGE_SIZE = 128;
+	public int DEFAULT_IMAGE_SIZE = 256;
 	public UploadProfilePicture uPP = new UploadProfilePicture();
-	
+
 	//TODO 
 	public void loadprofilePictureField(Client c) {
 		this.removeAllComponents();
@@ -53,11 +53,16 @@ public class ProfilePicture extends HorizontalLayout{
 			//defaultPicture.setWidth("128px");
 			//defaultPicture.setHeight("128px");
 			String pictureLink = c.getProfilePicture();
-			Debugging.output("Template Image Link is: " + pictureLink, Debugging.UPLOAD_IMAGE);
-			FileResource DEFAULT_PROFILE_PICTURE = new FileResource(new File(pictureLink));
-			profilePicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
-			this.removeAllComponents();
-			this.addComponent(profilePicture);
+			if(InhalerUtils.stringNullCheck(pictureLink)){
+				Debugging.output("Template Image Link is: " + pictureLink, Debugging.UPLOAD_IMAGE);
+			}
+			else{
+				Debugging.output("Template Image Link is: " + pictureLink, Debugging.UPLOAD_IMAGE);
+				FileResource DEFAULT_PROFILE_PICTURE = new FileResource(new File(pictureLink));
+				profilePicture = new Image("Default Picture", DEFAULT_PROFILE_PICTURE);
+				this.removeAllComponents();
+				this.addComponent(profilePicture);
+			}
 		}
 		else{
 			//Check if client has a profile picture stored and if so, show it for the client.
