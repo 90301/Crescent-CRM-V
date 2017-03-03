@@ -64,6 +64,7 @@ public class ProfilePicture extends HorizontalLayout{
 
 			//Need to grab the link of the clients photo
 			String pictureLink = c.getProfilePicture();
+			Debugging.output("Profile Picture: " + pictureLink, Debugging.UPLOAD_IMAGE);
 			//If no link, then add the upload photo functionality
 			if(InhalerUtils.stringNullCheck(pictureLink)){
 				if(DEFAULT_PROFILE_PICTURE != null){

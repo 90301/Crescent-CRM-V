@@ -100,6 +100,10 @@ Upload.FinishedListener, Receiver{
 	public String updateProfilePicture(){
 
 		String photoLink = getLink();
+		
+		setLink(null);
+		
+		setHasUploaded(false);
 
 		if(photoLink == null){
 			Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
@@ -226,7 +230,8 @@ Upload.FinishedListener, Receiver{
 
 		resource = new FileResource(newFileName);
 
-		link = resizeImage(resource);
+		this.link = resizeImage(resource);
+		//setLink(link);
 		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
 		setHasUploaded(true);
 	}
