@@ -107,8 +107,8 @@ public class LoginView extends VerticalLayout implements View {
 		//hLayoutUser.addComponent(userError);
 		buttonLayout.addComponent(loginButton);
 		buttonLayout.addComponent(registerButton);
-		this.addComponent(versionLabel);
 		this.addComponent(buttonLayout);
+		this.addComponent(versionLabel);
 		this.setComponentAlignment(versionLabel, Alignment.BOTTOM_CENTER);
 		
 		
