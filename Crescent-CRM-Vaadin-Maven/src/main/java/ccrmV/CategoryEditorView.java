@@ -15,6 +15,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.components.colorpicker.ColorPickerSelect;
 
 import clientInfo.Location;
 import clientInfo.UserDataHolder;
@@ -43,6 +44,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	TabSheet categoryTabs = new TabSheet();
 	
 	VerticalLayout locationEditorLayout = new VerticalLayout();
+	VerticalLayout statusEditorLayout = new VerticalLayout();
 	
 	Location selectedLocation;
 	
@@ -75,13 +77,41 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	 * 
 	 */
 	
+	HorizontalLayout newStatusLayout = new HorizontalLayout();
+	TextField newStatusNameTextBox = new TextField();
+	Button newStatusCreateButton = new Button("Create", e -> createStatusClick());
+	ListSelect newStatusAllStatus = new ListSelect("Status");//Should Filter as the user types for the new location
+	
+	HorizontalLayout statusSeperator = new HorizontalLayout();
+	
+	VerticalLayout editExistingStatusLayout = new VerticalLayout();
+	Label editStatusSelectedLabel = new Label("Editing Status: ");
+	ComboBox editStatusSelectionBox = new ComboBox();
+	ColorPickerSelect editStatusColorPickerSelect = new ColorPickerSelect();
+	
+	Button editStatusUpdateButton = new Button("Update", e-> editLocationUpdateClick());
+	
+	/*
+	 * |---------------------------------------------|
+	 * | (New Status) - - - - - - - - - - - - - - -|
+	 * | (Text Box name) - (Button create) - (exists)|
+	 * |---------------------------------------------|
+	 * | (Edit Existing Status) - - - - - - - - - |
+	 * | (Selected Location Label) - - - - - - - - - |
+	 * | (Location to Edit Drop-down box) - - - - - -|
+	 * | (Color selection) - - - - - - - - |
+	 * | (update button) - - - - - - - - - - - - - - |
+	 * |---------------------------------------------|
+	 * 
+	 */
+	
 	{
 		this.setSpacing(true);
 		newLocationLayout.setSpacing(true);
 		editExistingLocationLayout.setSpacing(true);
 		//Tab Names
 		locationEditorLayout.setCaption("Locations");
-		
+		statusEditorLayout.setCaption("Status");
 		//Layout Names
 		newLocationLayout.setCaption("New Locations");	
 		editExistingLocationLayout.setCaption("Edit Existing Locations");
@@ -106,6 +136,9 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		}
 		this.addComponent(navBar.sidebarLayout);
 		
+		
+		//LOCATION
+		
 		newLocationLayout.addComponent(newLocationNameTextBox);
 		newLocationLayout.addComponent(newLocationCreateButton);
 		newLocationLayout.addComponent(newLocationAllLocations);
@@ -128,8 +161,32 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 
 		locationEditorLayout.addComponent(editExistingLocationLayout);
 		
+		
+		//STATUS
+		newStatusLayout.addComponent(newStatusNameTextBox);
+		newStatusLayout.addComponent(newStatusNameTextBox);
+		newStatusLayout.addComponent(newStatusNameTextBox);
+		
+		statusSeperator.addComponent(hrule);
+		
+		editExistingStatusLayout.addComponent(editStatusSelectedLabel);
+		editExistingStatusLayout.addComponent(editStatusSelectionBox);
+		editExistingStatusLayout.addComponent(editStatusColorPickerSelect);
+		editExistingStatusLayout.addComponent(editStatusUpdateButton);
+		editExistingStatusLayout.setComponentAlignment(editStatusUpdateButton, Alignment.BOTTOM_RIGHT);
+		
+		
+		statusEditorLayout.addComponent(newStatusLayout);
+		
+		statusEditorLayout.addComponent(statusSeperator);
+
+		statusEditorLayout.addComponent(editExistingStatusLayout);
+		
 		//Tab Layout
 		categoryTabs.addComponent(locationEditorLayout);
+		
+		categoryTabs.addComponent(statusEditorLayout);
+		
 		
 		this.addComponent(categoryTabs);
 		
@@ -140,6 +197,13 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		alreadyGenerated = true;
 	}
 	
+
+
+	private void createStatusClick() {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 	private void createLocationClick() {
