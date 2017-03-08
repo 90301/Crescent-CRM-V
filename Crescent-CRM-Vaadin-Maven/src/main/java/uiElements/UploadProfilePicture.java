@@ -44,16 +44,18 @@ public class UploadProfilePicture extends HorizontalLayout implements Upload.Sta
 Upload.ProgressListener, Upload.FailedListener, Upload.SucceededListener,
 Upload.FinishedListener, Receiver{
 
-	//Upload(null, Receiver) may need a new class for receiver based off demo source code
-	Upload uploadPhoto = new Upload("Upload Image", this);
-	public File recentUpload;
-	FileResource resource;
-	public String link;
-	Client c;
-	BufferedImage originalImage;
-	String fileName = "";
-	ArrayList<String> allowedMimeTypes;
 	public Boolean hasUploaded;
+	public File recentUpload;
+	public String link;
+	//Find home folder that contains all Client Photos
+	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
+	
+	ArrayList<String> allowedMimeTypes;
+	BufferedImage originalImage;
+	Client c;
+	FileResource resource;
+	String fileName = "";
+	Upload uploadPhoto = new Upload("Upload Image", this);
 
 	public Boolean getHasUploaded() {
 		return hasUploaded;
@@ -62,9 +64,6 @@ Upload.FinishedListener, Receiver{
 	public void setHasUploaded(Boolean hasUploaded) {
 		this.hasUploaded = hasUploaded;
 	}
-
-	//Find home folder that contains all Client Photos
-	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
 
 	public String getLink() {
 		return link;
@@ -160,6 +159,9 @@ Upload.FinishedListener, Receiver{
 	public String resizeImage(FileResource resource){
 
 		File imageFile = resource.getSourceFile().getAbsoluteFile();
+		
+		//Copy of the File that will be deleted
+		File imageToDelete = resource.getSourceFile().getAbsoluteFile();
 
 		Debugging.output("ImageFile: " + imageFile, Debugging.UPLOAD_IMAGE);
 		
@@ -196,15 +198,15 @@ Upload.FinishedListener, Receiver{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		//Debugging.output("ScaledOutput: " + scaledImageOutput, Debugging.UPLOAD_IMAGE);
-
 		resource = new FileResource(new File(scaledImageLocation));
-		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
 
+		//Set link to new image file that has been scaled.
 		link = resource.getSourceFile().getAbsoluteFile().toString();
-		//Debugging.output("Link: " + link, Debugging.UPLOAD_IMAGE);
 
+		//Delete original image file. 
+		Boolean deletion = imageToDelete.delete();
+		Debugging.output("Original Image deleted? " + deletion, Debugging.UPLOAD_IMAGE);
+		
 		return link;
 
 	}
