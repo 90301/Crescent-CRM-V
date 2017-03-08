@@ -110,7 +110,9 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	{
 		this.setSpacing(true);
 		newLocationLayout.setSpacing(true);
+		newStatusLayout.setSpacing(true);
 		editExistingLocationLayout.setSpacing(true);
+		editExistingStatusLayout.setSpacing(true);
 		//Tab Names
 		locationEditorLayout.setCaption("Locations");
 		statusEditorLayout.setCaption("Status");
@@ -126,6 +128,12 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		
 		//Status
+		newStatusLayout.setCaption("New Status");	
+		editExistingStatusLayout.setCaption("Edit Existing Status");
+		
+		newStatusAllStatus.setNullSelectionAllowed(false);
+		editStatusSelectionBox.setNullSelectionAllowed(false);
+		
 		editStatusColorPicker.setCaption("Status Color (Beta)");
 		editStatusColorPicker.setSwatchesVisibility(true);
 		editStatusColorPicker.setHistoryVisibility(false);
