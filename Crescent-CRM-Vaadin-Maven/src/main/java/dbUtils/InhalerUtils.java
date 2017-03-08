@@ -26,6 +26,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -34,6 +35,7 @@ import org.xml.sax.InputSource;
 //END XML IMPORTS
 import org.xml.sax.SAXException;
 
+import ccrmV.MasterUI;
 import clientInfo.DataHolder;
 import clientInfo.Location;
 import clientInfo.UserDataHolder;
@@ -157,9 +159,15 @@ public class InhalerUtils {
 	 * @return
 	 */
 	public static String mapToXML(Map<String, String> map) {
+		//clean map
+		
+		Map<String,String> mapUsed = cleanMap(map);
+		
 		String xml = "";
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
+		
+		
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 
@@ -167,17 +175,17 @@ public class InhalerUtils {
 			Element rootElement = doc.createElement(ROOT_DOC_STRING);
 			doc.appendChild(rootElement);
 
-			for (String key : map.keySet()) {
+			for (String key : mapUsed.keySet()) {
 				
 				Debugging.output("Writing (key): " + key, Debugging.INHALER_UTILS_DEBUG,
 						Debugging.INHALER_UTILS_DEBUG_ENABLED);
 				
-				Debugging.output("Writing (Value): " + map.get(key), Debugging.INHALER_UTILS_DEBUG,
+				Debugging.output("Writing (Value): " + mapUsed.get(key), Debugging.INHALER_UTILS_DEBUG,
 						Debugging.INHALER_UTILS_DEBUG_ENABLED);
 				
 				Element child = doc.createElement(key);
 				// Attr child = doc.createAttribute(key);
-				child.appendChild(doc.createTextNode(map.get(key)));
+				child.appendChild(doc.createTextNode(mapUsed.get(key)));
 
 				rootElement.appendChild(child);
 
@@ -206,13 +214,39 @@ public class InhalerUtils {
 					Debugging.INHALER_UTILS_DEBUG_ENABLED);
 
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			//e.printStackTrace();
 		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			
+			//e.printStackTrace();
+		} catch (DOMException e) {
+			
 		}
 		return xml;
+	}
+
+	/**
+	 * Cleans a map for storage.
+	 * @param map - used for storage
+	 * @return
+	 */
+	public static Map<String, String> cleanMap(Map<String, String> map) {
+		Map<String,String> cleanMap = new HashMap<String,String>();
+		for(String key : map.keySet()) {
+			String nKey = key;
+			String value = map.get(key);
+			String nValue = value;
+			//test if key is proper
+			if (key.contains(" ")) {
+				nKey = key.replace(' ', '-');
+				
+			}
+			//test if  body is correct
+			
+			
+			cleanMap.put(nKey, nValue);
+		}
+		return cleanMap;
 	}
 
 	/**
@@ -255,14 +289,25 @@ public class InhalerUtils {
 			
 
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+			} else {
+				
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+			} else {
+				
+			}
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+			} else {
+				
+			}
+		} catch (DOMException e) {
+			map = new HashMap<String,String>();
 		}
 		
 		return map;

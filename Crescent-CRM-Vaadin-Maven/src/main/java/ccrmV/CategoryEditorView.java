@@ -7,6 +7,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -18,6 +19,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.colorpicker.ColorPickerSelect;
 
 import clientInfo.Location;
+import clientInfo.Status;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
@@ -87,19 +89,19 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	VerticalLayout editExistingStatusLayout = new VerticalLayout();
 	Label editStatusSelectedLabel = new Label("Editing Status: ");
 	ComboBox editStatusSelectionBox = new ComboBox();
-	ColorPickerSelect editStatusColorPickerSelect = new ColorPickerSelect();
+	ColorPicker editStatusColorPicker = new ColorPicker();
 	
 	Button editStatusUpdateButton = new Button("Update", e-> editLocationUpdateClick());
 	
 	/*
 	 * |---------------------------------------------|
-	 * | (New Status) - - - - - - - - - - - - - - -|
+	 * | (New Status) - - - - - - - - - - - - - - - -|
 	 * | (Text Box name) - (Button create) - (exists)|
 	 * |---------------------------------------------|
-	 * | (Edit Existing Status) - - - - - - - - - |
+	 * | (Edit Existing Status) - - - - - - - - - - -|
 	 * | (Selected Location Label) - - - - - - - - - |
 	 * | (Location to Edit Drop-down box) - - - - - -|
-	 * | (Color selection) - - - - - - - - |
+	 * | (Color selection) - - - - - - - - - - - - - |
 	 * | (update button) - - - - - - - - - - - - - - |
 	 * |---------------------------------------------|
 	 * 
@@ -113,12 +115,22 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		locationEditorLayout.setCaption("Locations");
 		statusEditorLayout.setCaption("Status");
 		//Layout Names
+		
+		//Locations
 		newLocationLayout.setCaption("New Locations");	
 		editExistingLocationLayout.setCaption("Edit Existing Locations");
 		
 		newLocationAllLocations.setNullSelectionAllowed(false);
 		editLocationSelectionBox.setNullSelectionAllowed(false);
 		editLocationProximitySelect.setNullSelectionAllowed(false);
+		
+		
+		//Status
+		editStatusColorPicker.setCaption("Status Color (Beta)");
+		editStatusColorPicker.setSwatchesVisibility(true);
+		editStatusColorPicker.setHistoryVisibility(false);
+		editStatusColorPicker.setTextfieldVisibility(false);
+		editStatusColorPicker.setHSVVisibility(false);
 		
 		//Events
 		editLocationSelectionBox.addValueChangeListener(e -> selectLocation());
@@ -164,14 +176,14 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		//STATUS
 		newStatusLayout.addComponent(newStatusNameTextBox);
-		newStatusLayout.addComponent(newStatusNameTextBox);
-		newStatusLayout.addComponent(newStatusNameTextBox);
+		newStatusLayout.addComponent(newStatusCreateButton);
+		newStatusLayout.addComponent(newStatusAllStatus);
 		
 		statusSeperator.addComponent(hrule);
 		
 		editExistingStatusLayout.addComponent(editStatusSelectedLabel);
 		editExistingStatusLayout.addComponent(editStatusSelectionBox);
-		editExistingStatusLayout.addComponent(editStatusColorPickerSelect);
+		editExistingStatusLayout.addComponent(editStatusColorPicker);
 		editExistingStatusLayout.addComponent(editStatusUpdateButton);
 		editExistingStatusLayout.setComponentAlignment(editStatusUpdateButton, Alignment.BOTTOM_RIGHT);
 		
@@ -192,27 +204,32 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		//Populate data
 		populateAllLocationBoxes();
-		
+		populateAllStatusBoxes();
 		
 		alreadyGenerated = true;
 	}
 	
 
 
-	private void createStatusClick() {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 
-	private void createLocationClick() {
+
+
+
+	public void createLocationClick() {
 		String text = this.newLocationNameTextBox.getValue();
 		createLocation(text);
 		this.newLocationNameTextBox.clear();
 		
 	}
 	
+	
+	public void createStatusClick() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public Location createLocation(String locationName) {
 		Location l = null;
 		// Check for valid input
@@ -228,7 +245,20 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		return l;
 	}
 
-
+	public Status createStatus(String statusName) {
+		Status s = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(statusName)) {
+			s = new Status();
+			s.setStatusName(statusName);
+			masterUi.userDataHolder.store(s, Status.class);
+		}
+		populateAllStatusBoxes();
+		
+		newStatusAllStatus.setValue(s);
+		
+		return s;
+	}
 
 	//Populate Locations
 	
@@ -276,6 +306,18 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 			
 		}
 	}
+	
+	private void populateAllStatusBoxes() {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		newStatusAllStatus.removeAllItems();
+		newStatusAllStatus.addItems(udh.getAllStatus());
+		
+		editStatusSelectionBox.removeAllItems();
+		editStatusSelectionBox.addItems(udh.getAllStatus());
+		
+	}
+
 	
 	private void loadProximity(Location l) {
 		editLocationProximitySelect.removeAllItems();
