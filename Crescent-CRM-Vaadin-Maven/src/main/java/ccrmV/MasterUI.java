@@ -244,6 +244,12 @@ public class MasterUI extends UI {
 		
 		//URI uriOfPage = new URI(getPage().getLocation());
 		
+		if (InhalerUtils.stringNullCheck(getPage().getLocation().getQuery())) {
+			
+			Debugging.output("Null query detected: " + getPage().getLocation(), Debugging.GOOGLE_FURY_DEBUG);
+			return;
+		}
+		
 		String[] querySplit = getPage().getLocation().getQuery().split("&");
 		
 		Debugging.outputArray(querySplit, Debugging.GOOGLE_FURY_DEBUG);
@@ -418,6 +424,10 @@ public class MasterUI extends UI {
 			}
 		}
 
+	}
+
+	public boolean getMobileUser() {
+		return mobileUser;
 	}
 
 }

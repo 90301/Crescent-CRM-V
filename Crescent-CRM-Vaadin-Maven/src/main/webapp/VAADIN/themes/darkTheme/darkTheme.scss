@@ -4,7 +4,7 @@ $v-focus-color: #07a9ca;
 $v-focus-style: 0 0 3px 2px $v-focus-color;
 $v-bevel-depth: 40%;
 $v-gradient: v-linear 12%;
-$v-border-radius: 10px;
+$v-border-radius: 2px;//Controls corner rounding of all elements(higher px = more rounding) 2px seems preferable.
 $v-font-family: Roboto, sans-serif;
 $v-font-weight: 400;
 $v-font-weight--header: 400;
@@ -25,14 +25,17 @@ $v-component-group-spacing: 6px;
   border-style: dotted;
   border-width: 1px;
   
-  }
+  } 
+  
+   .navBarMargin   {padding-left:   10px;}
+   
+  
    .lighterSelection {
   background-color: rgba(103, 117, 121, 0.99);
   
   }
-  
+ 
   .lighterSelection:hover {
   background-color: rgba(103, 117, 121, 0.25);
-  
   }
 }

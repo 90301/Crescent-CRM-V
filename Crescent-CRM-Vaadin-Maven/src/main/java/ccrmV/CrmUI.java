@@ -706,7 +706,7 @@ public class CrmUI extends HorizontalLayout implements View {
 			createClientGroup.setNullSelectionAllowed(false);
 		}
 		
-		
+		createClientLayout.setMargin(true);
 		//createClientName 
 		createClientLayout.addComponent(createClientName);
 
