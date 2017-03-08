@@ -32,12 +32,22 @@ public class NavBar {
 	Button debugButton;
 	Button logoutButton;
 	Label statusLabel;
-	public static final String BUTTON_WIDTH = "120px";
-	public static final String BUTTON_HEIGHT = "60px";
+	public static String BUTTON_WIDTH = "120px";
+	public static String BUTTON_HEIGHT = "60px";
 	
 	public Layout generateNavBar() {
 		
+		if (masterUi.getMobileUser()) {
+			BUTTON_WIDTH = "180px";
+			BUTTON_HEIGHT = "180px";
+		} else {
+			BUTTON_WIDTH = "120px";
+			BUTTON_HEIGHT = "60px";
+		}
 		
+		sidebarLayout.addStyleName("navBarMargin");
+		
+		//sidebarLayout.setMargin(true);
 		
 		sidebarLayout.removeAllComponents();
 		
@@ -46,7 +56,7 @@ public class NavBar {
 		
 		statusLabel = new Label("NavBar");
 		
-		crmButton = new Button("CRM", event -> this.crmClick() );
+		crmButton = new Button("Clients", event -> this.crmClick() );
 		
 		categoryEditorButton = new Button("Categories", event -> this.categoryEditorClick() );
 		
