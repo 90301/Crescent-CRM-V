@@ -54,8 +54,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.32;
-	public static final String versionDescription = " default profile hotfix";
+	public static final double versionNumber = 1.33;
+	public static final String versionDescription = " Status Editor";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
