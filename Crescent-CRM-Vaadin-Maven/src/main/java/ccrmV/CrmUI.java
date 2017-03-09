@@ -79,6 +79,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	
 	//Clears textboxes and combo boxes upon creating a client
 	private static final boolean CLEAR_ON_CREATE = true;
+	private static final boolean BOTTOM_CREATION_TABS = false;
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
 	// filtering
@@ -588,6 +589,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		
 		this.setSpacing(true);
+		this.addStyleName("topScreenPadding");
 		
 		masterUi.userDataHolder.initalizeDatabases();
 
@@ -760,9 +762,14 @@ public class CrmUI extends HorizontalLayout implements View {
 		 * 
 		 */
 
+		if (!BOTTOM_CREATION_TABS) {
+		//Adding creation tab
+		layout.addComponent(creationTabs);
+		}
+		
 		genFilterLayout();
 		layout.addComponent(filterLayout);
-
+		
 		/***
 		 * M I D _ L A Y O U T
 		 * 
@@ -802,8 +809,10 @@ public class CrmUI extends HorizontalLayout implements View {
 			midLayout.addComponent(clientEditor);
 		}
 		
+		if (BOTTOM_CREATION_TABS) {
 		//Adding creation tab
 		layout.addComponent(creationTabs);
+		}
 		
 		// version label
 		versionLabel.setValue("Version: " + MasterUI.versionNumber + MasterUI.versionDescription);
@@ -812,6 +821,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		this.alreadyGenerated = true;
 		
+		creationTabs.setSelectedTab(createClientLayout);
 
 	}
 	

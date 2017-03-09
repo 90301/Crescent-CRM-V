@@ -131,6 +131,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		this.setSpacing(true);
+		this.addStyleName("topScreenPadding");
 		// TODO
 		if (!masterUi.loggedIn || masterUi.user == null)
 			masterUi.enterLogin();

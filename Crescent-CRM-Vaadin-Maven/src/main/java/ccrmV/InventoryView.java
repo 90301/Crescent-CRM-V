@@ -64,6 +64,9 @@ public class InventoryView extends HorizontalLayout implements View {
 			// return;
 		}
 		
+		this.setSpacing(true);
+		this.addStyleName("topScreenPadding");
+		
 		inventoryAccordion.addStyleName("lighterSelection");
 
 		// create item categories
@@ -71,6 +74,8 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		createInventoryCategoryLayout.setCaption("Create Categories");
 		createInventoryCategoryLayout.setSpacing(true);
+		createInventoryCategoryLayout.setMargin(true);
+		
 		createInventoryCategoryLayout.addStyleName("filterBorder");
 		//createInventoryCategoryLayout.setStyleName(".filterBorder");
 		
@@ -87,8 +92,10 @@ public class InventoryView extends HorizontalLayout implements View {
 		// Create item ui
 		createInventoryItemLayout.setCaption("Create Items");
 		
+		
 		createInventoryItemLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		createInventoryItemLayout.setSpacing(true);
+		createInventoryItemLayout.setMargin(true);
 
 		createInventoryItemLayout.addComponent(createInventoryName);
 
@@ -105,6 +112,7 @@ public class InventoryView extends HorizontalLayout implements View {
 		editInventoryLayout.setCaption("Edit Inventory Items");
 		editInventoryLayout.setSpacing(true);
 		editInventoryLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		editInventoryLayout.setMargin(true);
 
 		editInventoryGrid.setCaption("Inventory Grid");
 

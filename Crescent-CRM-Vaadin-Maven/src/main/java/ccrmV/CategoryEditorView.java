@@ -109,10 +109,28 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	
 	{
 		this.setSpacing(true);
+		this.addStyleName("topScreenPadding");
 		newLocationLayout.setSpacing(true);
-		newStatusLayout.setSpacing(true);
+		newStatusLayout.setSpacing(true);		
+		
+		newLocationLayout.addStyleName("leftPadding");
+		newStatusLayout.addStyleName("leftPadding");
+		
+		//newLocationLayout.setMargin(true);
+		//newStatusLayout.setMargin(true);
+		
 		editExistingLocationLayout.setSpacing(true);
 		editExistingStatusLayout.setSpacing(true);
+		
+		editExistingLocationLayout.addStyleName("bottomPadding");
+		editExistingStatusLayout.addStyleName("bottomPadding");
+		
+		editExistingLocationLayout.addStyleName("leftPadding");
+		editExistingStatusLayout.addStyleName("leftPadding");
+		
+		//editExistingLocationLayout.setMargin(true);
+		//editExistingStatusLayout.setMargin(true);
+		
 		//Tab Names
 		locationEditorLayout.setCaption("Locations");
 		statusEditorLayout.setCaption("Status");
@@ -128,7 +146,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		
 		//Status
-		newStatusLayout.setCaption("New Status");	
+		newStatusLayout.setCaption("New Status");
 		editExistingStatusLayout.setCaption("Edit Existing Status");
 		
 		newStatusAllStatus.setNullSelectionAllowed(false);

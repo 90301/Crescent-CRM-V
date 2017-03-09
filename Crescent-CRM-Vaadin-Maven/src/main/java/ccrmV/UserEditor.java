@@ -236,6 +236,7 @@ public class UserEditor extends HorizontalLayout implements View {
 		// if (this.alreadyGenerated) {
 		this.removeAllComponents();
 		this.setSpacing(true);
+		this.addStyleName("topScreenPadding");
 		// return;
 		// }
 		// userEditorAccordion
@@ -341,6 +342,8 @@ public class UserEditor extends HorizontalLayout implements View {
 		// databaseCreatorLayout
 		databaseCreatorLayout.setCaption("Database Creator");
 		databaseCreatorLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		databaseCreatorLayout.setSpacing(true);
+		databaseCreatorLayout.setMargin(true);
 		// TODO add a list of databases already in the system.
 		// databaseCreatorTextField
 
