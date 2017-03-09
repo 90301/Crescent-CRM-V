@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ColorPicker;
@@ -13,6 +14,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
@@ -52,6 +54,8 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	VerticalLayout groupEditorLayout = new VerticalLayout();
 	
 	Location selectedLocation;
+	Status selectedStatus;
+	Group selectedGroup;
 	
 	
 	//location editor components
@@ -94,7 +98,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	ComboBox editStatusSelectionBox = new ComboBox();
 	ColorPicker editStatusColorPicker = new ColorPicker();
 	
-	Button editStatusUpdateButton = new Button("Update", e-> editLocationUpdateClick());
+	Button editStatusUpdateButton = new Button("Update", e-> editStatusUpdateClick());
 	
 	/*
 	 * |---------------------------------------------|
@@ -142,30 +146,6 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		this.setSpacing(true);
 		this.addStyleName("topScreenPadding");
 		
-		/*
-		newLocationLayout.setSpacing(true);
-		newStatusLayout.setSpacing(true);		
-		
-		newLocationLayout.addStyleName("leftPadding");
-		newStatusLayout.addStyleName("leftPadding");
-		
-		//newLocationLayout.setMargin(true);
-		//newStatusLayout.setMargin(true);
-		
-		editExistingLocationLayout.setSpacing(true);
-		editExistingStatusLayout.setSpacing(true);
-		
-		
-		editExistingLocationLayout.addStyleName("bottomPadding");
-		editExistingStatusLayout.addStyleName("bottomPadding");
-		
-		editExistingLocationLayout.addStyleName("leftPadding");
-		editExistingStatusLayout.addStyleName("leftPadding");
-		
-		//editExistingLocationLayout.setMargin(true);
-		//editExistingStatusLayout.setMargin(true);
-		 * 
-		 */
 		setupUI(newLocationLayout, editExistingLocationLayout);
 		setupUI(newStatusLayout, editExistingStatusLayout);
 		setupUI(newGroupLayout, editExistingGroupLayout);
@@ -213,6 +193,8 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		//Events
 		editLocationSelectionBox.addValueChangeListener(e -> selectLocation());
+		editStatusSelectionBox.addValueChangeListener(e -> selectStatus());
+		editGroupSelectionBox.addValueChangeListener(e -> selectGroup());
 	}
 	
 	public static void setupUI(HorizontalLayout newLayout, VerticalLayout existingLayout) {
@@ -224,6 +206,13 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		existingLayout.addStyleName("bottomPadding");
 	}
 	
+
+
+
+
+
+
+
 	@Override
 	public void enter(ViewChangeEvent event) {
 		
@@ -424,9 +413,17 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		}
 	}
 	
+	private void editStatusUpdateClick() {
+		if (selectedStatus!=null) {
+			editStatusUpdate();
+		}
+	}
+
+	
 		private void editGroupUpdateClick() {
-		// TODO Auto-generated method stub
-		return;
+		if (selectedGroup != null) {
+			//TODO
+		}
 	}
 		
 		
@@ -448,6 +445,15 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		//update the database
 		udh.store(selectedLocation, Location.class);
+		
+	}
+	
+	public void editStatusUpdate() {
+		UserDataHolder udh = masterUi.userDataHolder;
+		int color = editStatusColorPicker.getColor().getRGB();
+		selectedStatus.setColor(color);
+		
+		udh.store(selectedStatus, Status.class);
 		
 	}
 	
@@ -538,6 +544,10 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		}
 	}
 	
+	/*
+	 * Select Items
+	 */
+	
 	private void selectLocation() {
 		Debugging.output("Selected Location: " + editLocationSelectionBox.getValue() , Debugging.CATEGORY_EDITOR_DEBUG);
 		
@@ -555,6 +565,46 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		}
 	}
 	
+	private void selectStatus() {
+		Debugging.output("Selected Status: " + editStatusSelectionBox.getValue() , Debugging.CATEGORY_EDITOR_DEBUG);
+		
+		if (editStatusSelectionBox.getValue()==null) {
+			//null selection
+			return;
+		}
+		
+		String statusName = editStatusSelectionBox.getValue().toString();
+		
+		if (statusName!=null) {
+			selectEditStatus(statusName);
+		} else {
+			//NULL SELECTION!
+		}
+	}
+	
+	private void selectGroup() {
+		Debugging.output("Selected Groups: " + editGroupSelectionBox.getValue() , Debugging.CATEGORY_EDITOR_DEBUG);
+		
+		if (editGroupSelectionBox.getValue()==null) {
+			//null selection
+			return;
+		}
+		
+		String groupName = editGroupSelectionBox.getValue().toString();
+		
+		if (groupName!=null) {
+			selectEditGroup(groupName);
+		} else {
+			//NULL SELECTION!
+		}
+	}
+
+	
+
+
+
+
+
 	public void selectEditLocation(String locationName) {
 		UserDataHolder udh = masterUi.userDataHolder;
 		
@@ -568,6 +618,45 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		selectedLocation = l;
 	}
+	
+	public void selectEditStatus(String statusName) {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		editLocationsSelectedLabel.setValue("Editing Location: " + statusName);
+		//Find the location in the user data holder
+		
+		Status s = udh.getStatus(statusName);
+		
+		loadStatus(s);
+		
+		selectedStatus = s;
+	}
 
+	private void selectEditGroup(String groupName) {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		editLocationsSelectedLabel.setValue("Editing Location: " + groupName);
+		//Find the location in the user data holder
+		
+		Group g = udh.getGroup(groupName);
+		
+		loadGroup(g);
+		
+		selectedGroup = g;
+	}
+
+
+	private void loadGroup(Group g) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+
+	private void loadStatus(Status s) {
+		editGroupSelectedLabel.setValue(s.getStatusName());
+		editGroupColorPicker.setColor(s.getJavaColor());
+	}
 
 }

@@ -5,6 +5,8 @@ package clientInfo;
 
 import java.util.Collection;
 
+import com.vaadin.shared.ui.colorpicker.Color;
+
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
@@ -38,6 +40,18 @@ public class Status extends MaxObject implements Comparable<Status> {
 	public void setStatusName(String statusName) {
 		
 		this.statusName.setFieldValue(statusName);
+	}
+	
+	public Integer getColor() {
+		return statusColor.getFieldValue();
+	}
+	
+	public Color getJavaColor() {
+		Color c = new Color(statusColor.getFieldValue());
+		return c;
+	}
+	public void setColor(Integer color) {
+		this.statusColor.setFieldValue(color);
 	}
 
 

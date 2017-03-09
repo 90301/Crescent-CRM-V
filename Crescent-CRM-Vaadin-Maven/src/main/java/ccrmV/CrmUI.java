@@ -193,6 +193,8 @@ public class CrmUI extends HorizontalLayout implements View {
 	 */
 	public void updateClientGrid() {
 		
+		updateColors();
+		
 		if (masterUi.userDataHolder.getDatabasePrefix()!=cacheDatabaseName) {
 			//try clearing the table if the database changes?
 		//clientTable.clear();
@@ -786,18 +788,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		clientGrid.setImmediate(true);
 		//clientTable.addValueChangeListener(event -> this.selectItem(event));
 		
-		//Dynamic CSS attempt
-		Styles styles = Page.getCurrent().getStyles();
-		
-		styles.add(".Prospect { color: " + "blue" + "; }");
-		
-		clientGrid.setRowStyleGenerator(client -> {
-			 if (((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName().contains("Prospect")) {
-				 return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
-			 } else {
-				 return null;
-			 }
-		});
+
 		
 		
 		updateClientGrid();
@@ -836,6 +827,32 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		creationTabs.setSelectedTab(createClientLayout);
 
+	}
+	
+	public void updateColors() {
+		//Dynamic CSS
+		
+		Styles styles = Page.getCurrent().getStyles();
+		
+		//styles.add(".Prospect { color: " + "blue" + "; }");
+		
+		for (Status s : masterUi.userDataHolder.getAllStatus()) {
+			String statusName = s.getStatusName();
+			String statusColor = String.format("#%06X", (0xFFFFFF & s.getColor()));
+			styles.add("."+ statusName+ " { color: " + statusColor + "; }");
+		}
+		
+		clientGrid.setRowStyleGenerator(client -> {
+			
+			/*
+			 if (((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName().contains("Prospect")) {
+				 return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+			 } else {
+				 return null;
+			 }
+			 */
+			return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+		});
 	}
 	
 
