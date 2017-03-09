@@ -624,7 +624,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		/***
 		 * T A B S
 		 */
-
+		creationTabs.setStyleName("createClientBorder");
 		// add a location
 		
 		//createLocationName 
