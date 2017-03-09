@@ -11,6 +11,7 @@ import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
 import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
@@ -18,6 +19,7 @@ import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.components.colorpicker.ColorPickerSelect;
 
+import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
 import clientInfo.UserDataHolder;
@@ -47,6 +49,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	
 	VerticalLayout locationEditorLayout = new VerticalLayout();
 	VerticalLayout statusEditorLayout = new VerticalLayout();
+	VerticalLayout groupEditorLayout = new VerticalLayout();
 	
 	Location selectedLocation;
 	
@@ -107,9 +110,39 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	 * 
 	 */
 	
+	HorizontalLayout newGroupLayout = new HorizontalLayout();
+	TextField newGroupNameTextBox = new TextField();
+	Button newGroupCreateButton = new Button("Create", e -> createGroupClick());
+	ListSelect newGroupAllGroups = new ListSelect("Group");//Should Filter as the user types for the new location
+	
+	HorizontalLayout GroupSeperator = new HorizontalLayout();
+	
+	VerticalLayout editExistingGroupLayout = new VerticalLayout();
+	Label editGroupSelectedLabel = new Label("Editing Group: ");
+	ComboBox editGroupSelectionBox = new ComboBox();
+	ColorPicker editGroupColorPicker = new ColorPicker();
+	
+	Button editGroupUpdateButton = new Button("Update", e-> editGroupUpdateClick());
+	
+	/*
+	 * |---------------------------------------------|
+	 * | (New Group) - - - - - - - - - - - - - - - - |
+	 * | (Text Box name) - (Button create) - (exists)|
+	 * |---------------------------------------------|
+	 * | (Edit Existing Groups) - - - - - - - - - - -|
+	 * | (Selected Location Label) - - - - - - - - - |
+	 * | (Group to Edit Drop-down box) - - - - - - - |
+	 * | (Color selection) - - - - - - - - - - - - - |
+	 * | (update button) - - - - - - - - - - - - - - |
+	 * |---------------------------------------------|
+	 * 
+	 */
+	
 	{
 		this.setSpacing(true);
 		this.addStyleName("topScreenPadding");
+		
+		/*
 		newLocationLayout.setSpacing(true);
 		newStatusLayout.setSpacing(true);		
 		
@@ -122,6 +155,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		editExistingLocationLayout.setSpacing(true);
 		editExistingStatusLayout.setSpacing(true);
 		
+		
 		editExistingLocationLayout.addStyleName("bottomPadding");
 		editExistingStatusLayout.addStyleName("bottomPadding");
 		
@@ -130,10 +164,16 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		//editExistingLocationLayout.setMargin(true);
 		//editExistingStatusLayout.setMargin(true);
+		 * 
+		 */
+		setupUI(newLocationLayout, editExistingLocationLayout);
+		setupUI(newStatusLayout, editExistingStatusLayout);
+		setupUI(newGroupLayout, editExistingGroupLayout);
 		
 		//Tab Names
 		locationEditorLayout.setCaption("Locations");
 		statusEditorLayout.setCaption("Status");
+		groupEditorLayout.setCaption("Groups");
 		//Layout Names
 		
 		//Locations
@@ -158,8 +198,30 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		editStatusColorPicker.setTextfieldVisibility(false);
 		editStatusColorPicker.setHSVVisibility(false);
 		
+		//Group
+				newGroupLayout.setCaption("New Group");
+				editExistingGroupLayout.setCaption("Edit Existing Group");
+				
+				newGroupAllGroups.setNullSelectionAllowed(false);
+				editGroupSelectionBox.setNullSelectionAllowed(false);
+				
+				editGroupColorPicker.setCaption("Group Color (Beta)");
+				editGroupColorPicker.setSwatchesVisibility(true);
+				editGroupColorPicker.setHistoryVisibility(false);
+				editGroupColorPicker.setTextfieldVisibility(false);
+				editGroupColorPicker.setHSVVisibility(false);
+		
 		//Events
 		editLocationSelectionBox.addValueChangeListener(e -> selectLocation());
+	}
+	
+	public static void setupUI(HorizontalLayout newLayout, VerticalLayout existingLayout) {
+		newLayout.setSpacing(true);
+		newLayout.addStyleName("leftPadding");
+		
+		existingLayout.setSpacing(true);
+		existingLayout.addStyleName("leftPadding");
+		existingLayout.addStyleName("bottomPadding");
 	}
 	
 	@Override
@@ -220,21 +282,61 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 
 		statusEditorLayout.addComponent(editExistingStatusLayout);
 		
+		//Group
+				newGroupLayout.addComponent(newGroupNameTextBox);
+				newGroupLayout.addComponent(newGroupCreateButton);
+				newGroupLayout.addComponent(newGroupAllGroups);
+				
+				GroupSeperator.addComponent(hrule);
+				
+				editExistingGroupLayout.addComponent(editGroupSelectedLabel);
+				editExistingGroupLayout.addComponent(editGroupSelectionBox);
+				editExistingGroupLayout.addComponent(editGroupColorPicker);
+				editExistingGroupLayout.addComponent(editGroupUpdateButton);
+				editExistingGroupLayout.setComponentAlignment(editGroupUpdateButton, Alignment.BOTTOM_RIGHT);
+				
+				
+				groupEditorLayout.addComponent(newGroupLayout);
+				
+				groupEditorLayout.addComponent(GroupSeperator);
+
+				groupEditorLayout.addComponent(editExistingGroupLayout);
+				
 		//Tab Layout
 		categoryTabs.addComponent(locationEditorLayout);
 		
 		categoryTabs.addComponent(statusEditorLayout);
 		
+		categoryTabs.addComponent(groupEditorLayout);
 		
 		this.addComponent(categoryTabs);
 		
 		//Populate data
 		populateAllLocationBoxes();
 		populateAllStatusBoxes();
+		populateAllGroupBoxes();
 		
 		alreadyGenerated = true;
 	}
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -252,8 +354,16 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	
 	
 	public void createStatusClick() {
-		// TODO Auto-generated method stub
+		String text = this.newStatusNameTextBox.getValue();
+		createStatus(text);
+		this.newStatusNameTextBox.clear();
 		
+	}
+	
+	public void createGroupClick() {
+		String text = this.newGroupNameTextBox.getValue();
+		createGroup(text);
+		this.newStatusNameTextBox.clear();
 	}
 
 	public Location createLocation(String locationName) {
@@ -286,10 +396,67 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		return s;
 	}
 
-	//Populate Locations
+	public Group createGroup(String groupName) {
+		Group g = null;
+		// Check for valid input
+		if (!InhalerUtils.stringNullCheck(groupName)) {
+			g = new Group();
+			g.setGroupName(groupName);
+			masterUi.userDataHolder.store(g, Group.class);
+		}
+		populateAllGroupBoxes();
+		
+		newGroupAllGroups.setValue(g);
+		
+		return g;
+	}
+	
+
+	/*
+	 * Update categories
+	 */
 	
 
 
+	private void editLocationUpdateClick() {
+		if (selectedLocation!=null) {
+			editLocationUpdate();
+		}
+	}
+	
+		private void editGroupUpdateClick() {
+		// TODO Auto-generated method stub
+		return;
+	}
+		
+		
+	private void editLocationUpdate() {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		HashSet<Location> closeLocations = new HashSet<Location>();
+		for (Location proximityLocation : (Collection<Location>) editLocationProximitySelect.getValue()) {
+			//System.out.println("Prox Location found: " + proximityLocation);
+			closeLocations.add(proximityLocation);
+			
+		}
+		
+		selectedLocation.setRealCloseLocations(closeLocations);
+		//check to see if the close locations have been edited
+		for (Location l : selectedLocation.getRealCloseLocations()) {
+			Debugging.output("Close Location: " + l , Debugging.CATEGORY_EDITOR_DEBUG);
+		}
+		
+		//update the database
+		udh.store(selectedLocation, Location.class);
+		
+	}
+	
+	/*
+	 * Populate data
+	 */
+	
+	//Populate Locations
+	
 	/**
 	 * updates all location comboboxes. Useful when adding new locations
 	 * or loading the page.
@@ -310,6 +477,8 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		editLocationProximitySelect.removeAllItems();
 		editLocationProximitySelect.addItems(udh.getAllLocations());
 	}
+	
+
 	/**
 	 * Adds item only if it doesn't exist (not good for removing / renaming locations)
 	 */
@@ -344,7 +513,17 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 	}
 
-	
+	public void populateAllGroupBoxes() {
+		UserDataHolder udh = masterUi.userDataHolder;
+		
+		newGroupAllGroups.removeAllItems();
+		newGroupAllGroups.addItems(udh.getAllGroups());
+		
+		editGroupSelectionBox.removeAllItems();
+		editGroupSelectionBox.addItems(udh.getAllGroups());
+		
+	}
+
 	private void loadProximity(Location l) {
 		editLocationProximitySelect.removeAllItems();
 		editLocationProximitySelect.addItems(masterUi.userDataHolder.getAllLocations());
@@ -358,6 +537,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 			Debugging.output("Close Location loaded: " + closeLocation , Debugging.CATEGORY_EDITOR_DEBUG);
 		}
 	}
+	
 	private void selectLocation() {
 		Debugging.output("Selected Location: " + editLocationSelectionBox.getValue() , Debugging.CATEGORY_EDITOR_DEBUG);
 		
@@ -388,31 +568,6 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		
 		selectedLocation = l;
 	}
-	private void editLocationUpdateClick() {
-		if (selectedLocation!=null) {
-			editLocationUpdate();
-		}
-	}
-	
-	private void editLocationUpdate() {
-		UserDataHolder udh = masterUi.userDataHolder;
-		
-		HashSet<Location> closeLocations = new HashSet<Location>();
-		for (Location proximityLocation : (Collection<Location>) editLocationProximitySelect.getValue()) {
-			//System.out.println("Prox Location found: " + proximityLocation);
-			closeLocations.add(proximityLocation);
-			
-		}
-		
-		selectedLocation.setRealCloseLocations(closeLocations);
-		//check to see if the close locations have been edited
-		for (Location l : selectedLocation.getRealCloseLocations()) {
-			Debugging.output("Close Location: " + l , Debugging.CATEGORY_EDITOR_DEBUG);
-		}
-		
-		//update the database
-		udh.store(selectedLocation, Location.class);
-		
-	}
+
 
 }

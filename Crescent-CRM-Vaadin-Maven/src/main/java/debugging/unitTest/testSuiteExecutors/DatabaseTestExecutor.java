@@ -19,6 +19,8 @@ import inventory.InventoryItem;
  *
  */
 public class DatabaseTestExecutor extends TestSuiteExecutor {
+	
+	public static String TEST_DB = "test";
 	//inventory items testing
 	static String inventoryItem1TestName = "7RR red dye";
 	static String inventoryItemTestKey = "RR2016";
@@ -151,9 +153,10 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		
 
 		UserDataHolder udhTest = new UserDataHolder();
-		udhTest.setDatabasePrefix("test");
+		udhTest.setDatabasePrefix(TEST_DB);
 		udhTest.initalizeDatabases();
 		DataHolder.store(udhTest, UserDataHolder.class);
+		
 		
 		createDatabaseTest1.setActualResult(udhTest.getDatabasePrefix());
 		
@@ -199,6 +202,7 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		Status testStatus1 = new Status();
 		testStatus1.setStatusName(statusTest1Name);
 		//testStatus1.setStatusColor(statusTest1Color);
+		udhTest.store(testStatus1, Status.class);
 		
 		createStatusTest1.setActualResult(testStatus1.getStatusName());
 		//TODO: do DB testing

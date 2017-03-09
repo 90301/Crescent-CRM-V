@@ -21,6 +21,7 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button.ClickEvent;
@@ -784,7 +785,19 @@ public class CrmUI extends HorizontalLayout implements View {
 		//clientTable.setSelectionMode(true);
 		clientGrid.setImmediate(true);
 		//clientTable.addValueChangeListener(event -> this.selectItem(event));
-
+		
+		//Dynamic CSS attempt
+		Styles styles = Page.getCurrent().getStyles();
+		
+		styles.add(".Prospect { color: " + "blue" + "; }");
+		
+		clientGrid.setRowStyleGenerator(client -> {
+			 if (((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName().contains("Prospect")) {
+				 return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+			 } else {
+				 return null;
+			 }
+		});
 		
 		
 		updateClientGrid();

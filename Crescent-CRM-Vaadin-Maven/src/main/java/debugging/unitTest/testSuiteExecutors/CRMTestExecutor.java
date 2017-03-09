@@ -2,6 +2,7 @@ package debugging.unitTest.testSuiteExecutors;
 
 import ccrmV.CrmUI;
 import ccrmV.MasterUI;
+import clientInfo.DataHolder;
 import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
@@ -54,6 +55,10 @@ public class CRMTestExecutor extends TestSuiteExecutor {
 	    UnitTestCase addClientTest2 = new UnitTestCase("addClientTest2", "Ensure the Location of the client is correct", locationTest1Name , UnitTestCase.TEST_TYPE_OBJECT,this);
 	    UnitTestCase addClientTest3 = new UnitTestCase("addClientTest3", "Ensure the Status of the client is correct", statusTest1Name , UnitTestCase.TEST_TYPE_OBJECT,this);
 	    UnitTestCase addClientTest4 = new UnitTestCase("addClientTest4", "Ensure the Group of the client is correct", groupTest1Name , UnitTestCase.TEST_TYPE_OBJECT,this);
+	    
+	    
+	    //switch database
+	    this.masterUi.setUserDataHolder(DatabaseTestExecutor.TEST_DB);
 	    
 		//location test
 	    
