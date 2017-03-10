@@ -838,7 +838,10 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		for (Status s : masterUi.userDataHolder.getAllStatus()) {
 			String statusName = s.getStatusName();
+			
+			//convert int color to hex for use with  CSS
 			String statusColor = String.format("#%06X", (0xFFFFFF & s.getColor()));
+			
 			styles.add("."+ statusName+ " { color: " + statusColor + "; }");
 		}
 		
