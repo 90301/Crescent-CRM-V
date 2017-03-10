@@ -99,7 +99,7 @@ public class MasterUI extends UI {
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	public static final Boolean DEV_TEST_CODE = true;
 	
-	public static final Boolean DEV_FORCE_MOBILE = true;
+	public static final Boolean DEV_FORCE_MOBILE = false;
 
 	// Automatically navigate to a specific page.
 	// This could cause issues when dealing with database initialization
@@ -109,6 +109,8 @@ public class MasterUI extends UI {
 	public boolean loggedIn = false;
 	public static ArrayList<String> authenicatedHosts = new ArrayList<String>();
 	String userHost = "";
+	
+	NavBar navBar = new NavBar();
 
 	CrmUI mainApp = new CrmUI();
 	UserEditor userEditor = new UserEditor();
@@ -157,10 +159,12 @@ public class MasterUI extends UI {
 		userAgent = request.getHeader("User-Agent");
 		
 		mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
-		
+		/*
 		if (DEVELOPER_MODE && DEV_FORCE_MOBILE) {
 			mobileUser = true;
 		}
+		*/
+		changeViewMode();
 		
 		Debugging.output("User Agent: " + userAgent, Debugging.MOBILE_DEBUG);
 		
@@ -176,7 +180,7 @@ public class MasterUI extends UI {
 		loginView.host = userHost;
 		loginView.masterUi = this;
 		// Generate the nav bar to use
-		NavBar navBar = new NavBar();
+		
 		navBar.masterUi = this;
 		navBar.generateNavBar();
 
@@ -306,6 +310,7 @@ public class MasterUI extends UI {
 		if (user!=null) {
 			if (Stream.of(avaliableThemes).anyMatch(x -> x.equals(user.getTheme()))) {
 				setTheme(user.getTheme());
+				changeViewMode();
 			} else {
 				user.setTheme(DEFAULT_THEME);
 				DataHolder.store(user, User.class);
@@ -428,6 +433,31 @@ public class MasterUI extends UI {
 
 	public boolean getMobileUser() {
 		return mobileUser;
+	}
+
+	public void changeViewMode() {
+		
+		if (user==null) {
+			mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
+			return;
+		}
+		
+		
+		if (user.getViewMode().equals(User.VIEW_MODE_DESKTOP)) {
+			mobileUser = false;
+		} else if (user.getViewMode().equals(User.VIEW_MODE_MOBILE)) {
+			mobileUser = true;
+		} else if (user.getViewMode().equals(User.VIEW_MODE_DEFAULT)) {
+			//TODO
+			//detect mobile
+			mobileUser = UserAgentProcessor.isAgentMobile(userAgent);
+		} else {
+			user.setViewMode(User.VIEW_MODE_DEFAULT);
+			DataHolder.store(user, User.class);
+		}
+		
+		navBar.generateNavBar();
+		
 	}
 
 }

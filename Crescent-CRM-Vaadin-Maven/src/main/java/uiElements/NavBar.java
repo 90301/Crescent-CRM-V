@@ -35,27 +35,7 @@ public class NavBar {
 	public static String BUTTON_WIDTH = "120px";
 	public static String BUTTON_HEIGHT = "60px";
 	
-	public Layout generateNavBar() {
-		
-		if (masterUi.getMobileUser()) {
-			BUTTON_WIDTH = "180px";
-			BUTTON_HEIGHT = "180px";
-		} else {
-			BUTTON_WIDTH = "120px";
-			BUTTON_HEIGHT = "60px";
-		}
-		
-		sidebarLayout.addStyleName("navBarMargin");
-		
-		//sidebarLayout.setMargin(true);
-		
-		sidebarLayout.removeAllComponents();
-		
-		sidebarLayout.setSpacing(true);
-		
-		
-		statusLabel = new Label("NavBar");
-		
+	{
 		crmButton = new Button("Clients", event -> this.crmClick() );
 		
 		categoryEditorButton = new Button("Categories", event -> this.categoryEditorClick() );
@@ -72,6 +52,30 @@ public class NavBar {
 		
 		logoutButton = new Button("Log Out", event -> this.logoutClick());
 		
+	}
+	
+	public Layout generateNavBar() {
+		
+		if (masterUi.getMobileUser()) {
+			BUTTON_WIDTH = "140px";
+			BUTTON_HEIGHT = "140px";
+		} else {
+			BUTTON_WIDTH = "120px";
+			BUTTON_HEIGHT = "60px";
+		}
+		
+		sidebarLayout.addStyleName("navBarMargin");
+		
+		//sidebarLayout.setMargin(true);
+		
+		sidebarLayout.removeAllComponents();
+		
+		sidebarLayout.setSpacing(true);
+		
+		
+		statusLabel = new Label("NavBar");
+		
+
 		sidebarLayout.addComponent(statusLabel);
 		
 		/*

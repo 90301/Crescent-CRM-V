@@ -58,6 +58,8 @@ public class UserEditor extends HorizontalLayout implements View {
 
 	ComboBox settingsDatabaseComboBox = new ComboBox("Database");
 	ComboBox settingsThemeComboBox = new ComboBox("Theme");
+	ComboBox settingsViewModeComboBox = new ComboBox("Select View Mode");
+	
 	Button settingsChangePasswordButton = new Button("Change Password", e -> settingsChangePasswordClick());
 	
 	PasswordField settingsOldPassword = new PasswordField("Old Password");
@@ -80,7 +82,7 @@ public class UserEditor extends HorizontalLayout implements View {
 	// Admin menu
 	Layout adminLayout = new HorizontalLayout();;
 	// may need to change this to a grid later. needs to be improved a lot, bare
-	// bones functonality implemented
+	// bones functionality implemented
 	// ComboBox adminUserSelector, adminDatabaseSelector;
 	// Button adminAddDatabaseButton;
 
@@ -118,6 +120,7 @@ public class UserEditor extends HorizontalLayout implements View {
 		
 		//themes
 		settingsThemeComboBox.addValueChangeListener(e -> selectThemeChange());
+		settingsViewModeComboBox.addValueChangeListener(e -> selectViewModeChange());
 	}
 
 	private static final String ADMIN_SETTING_ID = "Admin";
@@ -128,6 +131,8 @@ public class UserEditor extends HorizontalLayout implements View {
 	public UserEditor() {
 		// TODO Auto-generated constructor stub
 	}
+
+
 
 	private void settingsChangePasswordClick() {
 		//Attempts to change password if everything is showing
@@ -142,8 +147,8 @@ public class UserEditor extends HorizontalLayout implements View {
 			String newConfirm = settingsNewConfirmPassword.getValue();
 			
 			if (newPass.equals(newConfirm)) {
-				Boolean sucsess = attemptPasswordChange(masterUi.user,old,newPass);
-				if (sucsess) {
+				Boolean success = attemptPasswordChange(masterUi.user,old,newPass);
+				if (success) {
 					settingsStatusLabel.setCaption("Password Updated");
 				} else {
 					settingsStatusLabel.setCaption("Password Update Failed");
@@ -196,6 +201,10 @@ public class UserEditor extends HorizontalLayout implements View {
 		settingsNewPassword.clear();
 		settingsNewConfirmPassword.clear();
 	}
+	
+	public void setCurrentTheme() {
+		settingsThemeComboBox.setValue(masterUi.user.getTheme());
+	}
 
 	private void selectThemeChange() {
 		if (themeMutex) {
@@ -207,6 +216,18 @@ public class UserEditor extends HorizontalLayout implements View {
 			
 			masterUi.user.setTheme(themeSelected);
 			DataHolder.store(masterUi.user, User.class);
+		}
+	}
+	
+	public void selectViewModeChange() {
+		if (settingsViewModeComboBox.getValue()!=null) {
+			//attempt to update view mode.
+			String viewMode = (String) settingsViewModeComboBox.getValue();
+			
+			
+			masterUi.user.setViewMode(viewMode);
+			DataHolder.store(masterUi.user, User.class);
+			masterUi.changeViewMode();
 		}
 	}
 
@@ -261,6 +282,10 @@ public class UserEditor extends HorizontalLayout implements View {
 		settingsDatabaseComboBox.setImmediate(true);
 		settingsDatabaseComboBox.setNullSelectionAllowed(false);
 		
+		settingsViewModeComboBox.setNullSelectionAllowed(false);
+		settingsViewModeComboBox.setImmediate(true);
+		
+		
 		settingsOldPassword.setVisible(false);
 		settingsNewPassword.setVisible(false);
 		settingsNewConfirmPassword.setVisible(false);
@@ -269,6 +294,7 @@ public class UserEditor extends HorizontalLayout implements View {
 
 		settingsLayout.addComponent(settingsDatabaseComboBox);
 		settingsLayout.addComponent(settingsThemeComboBox);
+		settingsLayout.addComponent(settingsViewModeComboBox);
 		
 		settingsLayout.addComponent(settingsOldPassword);
 		settingsLayout.addComponent(settingsNewPassword);
@@ -359,8 +385,12 @@ public class UserEditor extends HorizontalLayout implements View {
 
 		oauthLayout.addComponent(googleLink);
 
-		// Data in itmes
+		// Data in items
 		populateAllData();
+		
+		setCurrentTheme();
+		
+		
 
 		// put them on the screen
 
@@ -638,6 +668,10 @@ public class UserEditor extends HorizontalLayout implements View {
 		settingsThemeComboBox.select(masterUi.currentTheme);
 		
 		themeMutex = false;// The theme code can now be run
+		
+		settingsViewModeComboBox.removeAllItems();
+		settingsViewModeComboBox.addItems(User.VIEW_MODES);
+		settingsViewModeComboBox.select(masterUi.getUser().getViewMode());
 	}
 
 	/**

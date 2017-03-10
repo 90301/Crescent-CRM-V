@@ -87,6 +87,15 @@ public class User extends MaxObject {
 	MaxField<String> theme = new MaxField<String>("theme", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
 			this);
 	
+	MaxField<String> viewMode = new MaxField<String>("viewMode", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, VIEW_MODE_DEFAULT, VIEW_MODE_DEFAULT,
+			this);
+	
+	
+	public static final String VIEW_MODE_DEFAULT = "Default View";
+	public static final String VIEW_MODE_DESKTOP = "Desktop View";
+	public static final String VIEW_MODE_MOBILE = "Mobile View";
+	
+	public static final String[] VIEW_MODES = {VIEW_MODE_DEFAULT,VIEW_MODE_DESKTOP,VIEW_MODE_MOBILE};
 	/*
 	 * Database selection
 	 */
@@ -130,6 +139,7 @@ public class User extends MaxObject {
 		this.addMaxField(googleKey);
 		
 		this.addMaxField(theme);
+		this.addMaxField(viewMode);
 	}
 	public User() {
 		init();
@@ -224,7 +234,13 @@ public class User extends MaxObject {
 	public void setTheme(String theme) {
 		this.theme.setFieldValue(theme);
 	}
-
+	
+	public String getViewMode() {
+		return viewMode.getFieldValue();
+	}
+	public void setViewMode(String viewMode) {
+		this.viewMode.setFieldValue(viewMode);
+	}
 	/**
 	 * This SETS the databases that are accessible to a user.
 	 * @param databases a list of the databases the user will be able to use

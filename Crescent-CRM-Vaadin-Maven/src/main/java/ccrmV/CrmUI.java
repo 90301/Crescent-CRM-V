@@ -854,7 +854,11 @@ public class CrmUI extends HorizontalLayout implements View {
 				 return null;
 			 }
 			 */
-			return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+			if (((Status)client.getItem().getItemProperty("statusName").getValue())!= null) {
+				return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+			} else {
+				return null;
+			}
 		});
 	}
 	
