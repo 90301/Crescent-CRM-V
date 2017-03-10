@@ -33,6 +33,7 @@
 
 	<dependencyManagement>
 		<dependencies>
+
 			<dependency>
      			<groupId>com.google.apis</groupId>
     			<artifactId>google-api-services-oauth2</artifactId>
@@ -87,6 +88,13 @@
 			<artifactId>imgscalr-lib</artifactId>
 			<version>4.2</version>
 		</dependency>
+				<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>5.1.41</version>
+</dependency>
+
 	</dependencies>
 
 	<build>
