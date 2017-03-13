@@ -837,7 +837,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		//styles.add(".Prospect { color: " + "blue" + "; }");
 		
 		for (Status s : masterUi.userDataHolder.getAllStatus()) {
-			String statusName = s.getStatusName();
+			String statusName = InhalerUtils.removeSpecialCharacters(s.getStatusName());
 			
 			//convert int color to hex for use with  CSS
 			String statusColor = String.format("#%06X", (0xFFFFFF & s.getColor()));
@@ -855,7 +855,11 @@ public class CrmUI extends HorizontalLayout implements View {
 			 }
 			 */
 			if (((Status)client.getItem().getItemProperty("statusName").getValue())!= null) {
-				return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+				String cssName = ((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+				
+				cssName = InhalerUtils.removeSpecialCharacters(cssName);
+				
+				return ""+ cssName;
 			} else {
 				return null;
 			}

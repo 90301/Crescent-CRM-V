@@ -353,5 +353,12 @@ public class InhalerUtils {
 		
 		return uid.toString();
 	}
+	
+	public static String removeSpecialCharacters(String str) {
+		String str2 = str;
+		str2 = str2.replaceAll("[^A-Za-z0-9]", "");
+		
+		return str2;
+	}
 
 }
