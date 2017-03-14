@@ -1,5 +1,7 @@
 package uiElements;
 
+import com.vaadin.data.Container.Filter;
+import com.vaadin.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -14,8 +16,10 @@ import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
 import dbUtils.InhalerUtils;
+import debugging.DebugObject;
+import debugging.Debugging;
 
-public class ClientFilter extends HorizontalLayout {
+public class ClientFilter extends HorizontalLayout implements Filter {
 	
 	private static final boolean DEFAULT_FILTER_SHOW = false;
 
@@ -212,6 +216,36 @@ public class ClientFilter extends HorizontalLayout {
 			}
 		}
 		//does not meet all the conditions, return false
+		return false;
+	}
+
+	/**
+	 * Filters clients, Note that itemId is the actual client.
+	 */
+	@Override
+	public boolean passesFilter(Object itemId, Item item) throws UnsupportedOperationException {
+		if (itemId != null && item != null) {
+			
+			Debugging.output("ItemID: " + itemId, Debugging.FILTER2);
+			
+			Client c = (Client) itemId;
+			
+			Debugging.output("client: " + c, Debugging.FILTER2);
+			
+			if (c!=null && checkClientMeetsFilter(c)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * No clue what this does yet -Josh
+	 * TODO Implement this
+	 */
+	@Override
+	public boolean appliesToProperty(Object propertyId) {
+		// TODO Auto-generated method stub
 		return false;
 	}
 }

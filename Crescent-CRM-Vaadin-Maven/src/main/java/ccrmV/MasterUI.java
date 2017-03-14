@@ -4,10 +4,8 @@
 
 package ccrmV;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -24,24 +22,16 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.UI;
 
-import clientInfo.Client;
 import clientInfo.DataHolder;
-import clientInfo.TemplateField;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
-import dbUtils.MaxDB;
-import dbUtils.MaxDBTable;
-import dbUtils.MaxField;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
-import debugging.unitTest.TestSuiteExecutor;
 import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
 import integrations.ChatSocket;
-import integrations.OauthUtils;
-import inventory.InventoryItem;
 import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
@@ -54,8 +44,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.36;
-	public static final String versionDescription = " Remove Special Characters";
+	public static final double versionNumber = 1.37;
+	public static final String versionDescription = " Lightning Filter";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -97,9 +87,10 @@ public class MasterUI extends UI {
 	// if no such user exists, the application will crash.
 	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
-	public static final Boolean DEV_TEST_CODE = true;
 	
-	public static final Boolean DEV_FORCE_MOBILE = false;
+	public static final Boolean DEV_TEST_CODE = true; //UNIT TESTING
+	
+	//public static final Boolean DEV_FORCE_MOBILE = false;
 
 	// Automatically navigate to a specific page.
 	// This could cause issues when dealing with database initialization

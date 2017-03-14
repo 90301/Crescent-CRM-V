@@ -82,6 +82,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	//Clears textboxes and combo boxes upon creating a client
 	private static final boolean CLEAR_ON_CREATE = true;
 	private static final boolean BOTTOM_CREATION_TABS = false;
+	private static final boolean USE_VAADIN_FILTER = true;
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
 	// filtering
@@ -225,6 +226,10 @@ public class CrmUI extends HorizontalLayout implements View {
 		}
 		
 		createClientGrid();
+		
+		
+		
+		
 		//clientTable.addContainerProperty("Name", String.class, "<no name>");
 		//clientTable.addContainerProperty("Location", String.class, null);
 		//clientTable.addContainerProperty("Status", String.class, null);
@@ -287,6 +292,7 @@ public class CrmUI extends HorizontalLayout implements View {
 				}
 			}
 			*/
+			if (!USE_VAADIN_FILTER) {
 			if (clientFilter.checkClientMeetsFilter(c)) {
 				//add item to indexed container
 				clients.addItem(c);
@@ -294,6 +300,18 @@ public class CrmUI extends HorizontalLayout implements View {
 				Item clientItem = clients.getItem(c);
 				c.genItem(clientItem);
 			}
+			} else {
+				//add item to indexed container
+				clients.addItem(c);
+				//generate client "item" for grid.
+				Item clientItem = clients.getItem(c);
+				c.genItem(clientItem);
+			}
+		}
+		
+		//Filter 2.0
+		if (USE_VAADIN_FILTER){
+			clients.addContainerFilter(clientFilter);
 		}
 
 	}
@@ -397,7 +415,6 @@ public class CrmUI extends HorizontalLayout implements View {
 		clientGrid.select(c);
 		this.selectedClient = c;
 		clientEditor.selectClient(c);
-
 
 	}
 
