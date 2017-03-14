@@ -224,6 +224,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		//clientTable.addContainerProperty("Groups", String.class, "<no group>");
 
 		// set up filter comparison objects
+		/*
 		Status filterStatusTest = null;
 		if (filterStatus.getValue() != null)
 			filterStatusTest = masterUi.userDataHolder.getStatus(filterStatus.getValue().toString());
@@ -245,15 +246,16 @@ public class CrmUI extends HorizontalLayout implements View {
 
 		Boolean contactNowOnly = filterContactNowCheckBox.getValue();
 		
+		*/
 		for (Client c : masterUi.userDataHolder.getAllClients()) {
-
+			
 			if (clients.containsId(c.getPrimaryKey())) {
 				// remove old item
 				clients.removeItem(c.getPrimaryKey());
 			}
 
 			// filter settings
-
+			/*
 			if ((filterStatusTest == c.getStatus() || filterStatusTest == null)
 					&& (filterLocationTest == c.getLocation() || filterLocationTest == null)
 					&& (filterGroupTest == c.getGroup() || filterGroupTest == null)
@@ -276,6 +278,14 @@ public class CrmUI extends HorizontalLayout implements View {
 					c.genItem(clientItem);
 					
 				}
+			}
+			*/
+			if (checkClientMeetsFilter(c)) {
+				//add item to indexed container
+				clients.addItem(c);
+				//generate client "item" for grid.
+				Item clientItem = clients.getItem(c);
+				c.genItem(clientItem);
 			}
 		}
 
@@ -553,7 +563,10 @@ public class CrmUI extends HorizontalLayout implements View {
 
 		masterUi.userDataHolder.store(c, Client.class);
 		
-		resetFilterClick();
+		//reset filter if the current filter does not contain the client that was updated.
+		if (!checkClientMeetsFilter(c)) {
+			resetFilterClick();
+		}
 		
 		updateClientGrid();
 		
@@ -924,6 +937,63 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		setFilterShow(DEFAULT_FILTER_SHOW);
 		
+	}
+	
+	/**
+	 * Checks to see if a client meets the current filter
+	 * if it does, return true.
+	 * Intended for use with reseting the filter, and in the future
+	 * this may be used to actually replace the current filter code.
+	 * 
+	 * @param c the client to check if it meets the filter
+	 * @return if the client should be show with the current filter.
+	 */
+	public boolean checkClientMeetsFilter(Client c) {
+		
+		
+		Status filterStatusTest = null;
+		if (filterStatus.getValue() != null)
+			filterStatusTest = masterUi.userDataHolder.getStatus(filterStatus.getValue().toString());
+		Location filterLocationTest = null;
+		if (filterLocation.getValue() != null)
+			filterLocationTest = masterUi.userDataHolder.getLocation(filterLocation.getValue().toString());
+		Group filterGroupTest = null;
+		if (filterGroup.getValue() != null)
+			filterGroupTest = masterUi.userDataHolder.getGroup(filterGroup.getValue().toString());
+
+		String filterNameTest = null;
+		if (filterClientTextField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientTextField.getValue()))
+			filterNameTest = filterClientTextField.getValue().toString();
+		String[] filterNotesTests = null;
+		if (filterClientNotesField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientNotesField.getValue()))
+			filterNotesTests = filterClientNotesField.getValue().toLowerCase().split("\\s+");
+		
+		Boolean contactNowOnly = filterContactNowCheckBox.getValue();
+
+		// filter settings
+
+		if ((filterStatusTest == c.getStatus() || filterStatusTest == null)
+				&& (filterLocationTest == c.getLocation() || filterLocationTest == null)
+				&& (filterGroupTest == c.getGroup() || filterGroupTest == null)
+				&& (filterNameTest == null || c.getName().toLowerCase().contains(filterNameTest.toLowerCase()))
+				&& (!contactNowOnly || c.getContactNow())) {
+
+			boolean noteQueryFound = true;
+			// Make sure the notes contain all the terms
+			if (filterNotesTests != null)
+				for (String noteKeyword : filterNotesTests) {
+					if (!c.getNotes().toLowerCase().contains(noteKeyword)) {
+						noteQueryFound = false;
+					}
+				}
+			if (noteQueryFound == true) {
+				//meets the conditions, return true
+				return true;
+				
+			}
+		}
+		//does not meet all the conditions, return false
+		return false;
 	}
 
 	public void resetFilterClick() {
