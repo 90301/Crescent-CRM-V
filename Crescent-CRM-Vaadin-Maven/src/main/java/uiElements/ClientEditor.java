@@ -212,8 +212,10 @@ public class ClientEditor extends VerticalLayout {
 		crmUi.masterUi.userDataHolder.store(crmUi.selectedClient, Client.class);
 
 		crmUi.updateClientGrid();
-		
-		crmUi.resetFilterClick();
+		//reset the filter if the selected client doesn't meet the current filter
+		if (!crmUi.checkClientMeetsFilter(crmUi.selectedClient)) {
+			crmUi.resetFilterClick();
+		}
 		crmUi.selectClient(crmUi.selectedClient);
 
 		Debugging.TEMPLATE_DEBUG.outputLog();
