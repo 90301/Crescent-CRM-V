@@ -3,9 +3,13 @@ var fs = require('fs');
 var prompt = require ('prompt');
 var net = require ('net');
 
-var io  = require('socket.io').listen(5001),
+var client = net.connect(3000, 'localhost');
+
+
+
+/*var io  = require('socket.io').listen(5001),
     dl  = require('delivery'),
-    fs  = require('fs');
+    fs  = require('fs');*/
 
 var fileName = ("test.txt");
 //var fileText = ('');
@@ -136,7 +140,12 @@ api.getThreadHistory(event.threadID, 0, 5, null, function(err, history){
 	*
     **********************************************************/
 	function sendPacket(file){
-		io.sockets.on('connection', function(socket){
+		client.write(file);
+		console.log("Successful");
+		client.end();
+
+
+		/*io.sockets.on('connection', function(socket){
   			var delivery = dl.listen(socket);
   			
   			delivery.on('receive.success',function(file){
@@ -150,7 +159,7 @@ api.getThreadHistory(event.threadID, 0, 5, null, function(err, history){
    					};
    				});
   			});
-		});
+		});*/
 	};
 });
 });
