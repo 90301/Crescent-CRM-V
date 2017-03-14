@@ -32,6 +32,7 @@ import dbUtils.InhalerUtils;
 import dbUtils.MaxObject;
 import debugging.Debugging;
 import uiElements.ClientEditor;
+import uiElements.ClientFilter;
 //import de.steinwedel.messagebox.MessageBox;
 import uiElements.NavBar;
 
@@ -84,6 +85,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
 	// filtering
+	/*
 	HorizontalLayout filterLayout = new HorizontalLayout();
 	Button filterShowFilter = new Button(">>",e -> showFilterClick());
 	Button filterHideFilter = new Button("<<", e -> hideFilterClick());
@@ -98,7 +100,10 @@ public class CrmUI extends HorizontalLayout implements View {
 	TextField filterClientNotesField = new TextField("Notes Include:");
 	Label filterLabel = new Label("Filter :");
 	CheckBox filterContactNowCheckBox = new CheckBox("Contact Now Only");
-
+	*/
+	//Filtering 2.0
+	public ClientFilter clientFilter = new ClientFilter(this);
+	
 	boolean alreadyGenerated = false;
 	
 	
@@ -154,6 +159,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		clientGrid.addSelectionListener(event -> this.selectItem());
 	}
 
+	/*
 	private void hideFilterClick() {
 		setFilterShow(false);
 	}
@@ -177,6 +183,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		filterShowFilter.setVisible(!showFilter);
 		filterHideFilter.setVisible(showFilter);
 	}
+	*/
 
 	public void createClientGrid() {
 		Client exampleClient = new Client();
@@ -280,7 +287,7 @@ public class CrmUI extends HorizontalLayout implements View {
 				}
 			}
 			*/
-			if (checkClientMeetsFilter(c)) {
+			if (clientFilter.checkClientMeetsFilter(c)) {
 				//add item to indexed container
 				clients.addItem(c);
 				//generate client "item" for grid.
@@ -299,30 +306,19 @@ public class CrmUI extends HorizontalLayout implements View {
 		createClientStatus.clear();
 		createClientLocation.clear();
 		createClientGroup.clear();
-
-		filterStatus.clear();
-		filterLocation.clear();
-		filterGroup.clear();
+		
 		
 		createClientStatus.removeAllItems();
 		createClientLocation.removeAllItems();
 		createClientGroup.removeAllItems();
 		
-		filterStatus.removeAllItems();
-		filterLocation.removeAllItems();
-		filterGroup.removeAllItems();
-
-		//csvBackupSelect.clear();
-
 		// create clients
 		fillComboBox(createClientStatus, masterUi.userDataHolder.getAllStatus());
 		fillComboBox(createClientLocation, masterUi.userDataHolder.getAllLocations());
 		fillComboBox(createClientGroup, masterUi.userDataHolder.getAllGroups());
 
 		// filter
-		fillComboBox(filterStatus, masterUi.userDataHolder.getAllStatus());
-		fillComboBox(filterLocation, masterUi.userDataHolder.getAllLocations());
-		fillComboBox(filterGroup, masterUi.userDataHolder.getAllGroups());
+		clientFilter.updateAllComboBoxes();
 
 		clientEditor.updateAllComboBoxes();
 		
@@ -564,8 +560,8 @@ public class CrmUI extends HorizontalLayout implements View {
 		masterUi.userDataHolder.store(c, Client.class);
 		
 		//reset filter if the current filter does not contain the client that was updated.
-		if (!checkClientMeetsFilter(c)) {
-			resetFilterClick();
+		if (!clientFilter.checkClientMeetsFilter(c)) {
+			clientFilter.resetFilterClick();
 		}
 		
 		updateClientGrid();
@@ -783,8 +779,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		layout.addComponent(creationTabs);
 		}
 		
-		genFilterLayout();
-		layout.addComponent(filterLayout);
+		layout.addComponent(clientFilter);
 		
 		/***
 		 * M I D _ L A Y O U T
@@ -860,13 +855,6 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		clientGrid.setRowStyleGenerator(client -> {
 			
-			/*
-			 if (((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName().contains("Prospect")) {
-				 return ""+((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
-			 } else {
-				 return null;
-			 }
-			 */
 			if (((Status)client.getItem().getItemProperty("statusName").getValue())!= null) {
 				String cssName = ((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
 				
@@ -892,126 +880,5 @@ public class CrmUI extends HorizontalLayout implements View {
 	}
 
 
-
-	/**
-	 * Adds all the components related to the filter layout
-	 */
-	private void genFilterLayout() {
-		
-		filterLayout.setSpacing(true);
-		filterLayout.setMargin(false);
-		//filterLayout.addStyleName("filterBorder");
-		//filterLayout.setColumns(8);
-		filterLayout.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
-		filterLayout.addComponent(filterLabel);
-		
-		filterClientTextField.addValueChangeListener(e -> updateClientGrid());
-		filterStatus.addValueChangeListener(e -> updateClientGrid());
-		filterLocation.addValueChangeListener(e -> updateClientGrid());
-		filterGroup.addValueChangeListener(e -> updateClientGrid());
-		filterClientNotesField.addValueChangeListener(e -> updateClientGrid());
-		filterContactNowCheckBox.addValueChangeListener(e -> updateClientGrid());
-
-		//filterClientTextField 
-		filterLayout.addComponent(filterShowFilter);
-		
-		filterLayout.addComponent(filterClientTextField);
-		//filterStatus
-		filterLayout.addComponent(filterStatus);
-		//filterLocation 
-		filterLayout.addComponent(filterLocation);
-		//filterGroup 
-		filterLayout.addComponent(filterGroup);
-		// filter notes
-
-		filterLayout.addComponent(filterClientNotesField);
-		
-		filterLayout.addComponent(filterContactNowCheckBox);
-
-		//filterButton
-		//filterLayout.addComponent(filterButton);
-		//resetFilterButton 
-		filterLayout.addComponent(resetFilterButton);
-		
-		filterLayout.addComponent(filterHideFilter);
-		
-		setFilterShow(DEFAULT_FILTER_SHOW);
-		
-	}
-	
-	/**
-	 * Checks to see if a client meets the current filter
-	 * if it does, return true.
-	 * Intended for use with reseting the filter, and in the future
-	 * this may be used to actually replace the current filter code.
-	 * 
-	 * @param c the client to check if it meets the filter
-	 * @return if the client should be show with the current filter.
-	 */
-	public boolean checkClientMeetsFilter(Client c) {
-		
-		
-		Status filterStatusTest = null;
-		if (filterStatus.getValue() != null)
-			filterStatusTest = masterUi.userDataHolder.getStatus(filterStatus.getValue().toString());
-		Location filterLocationTest = null;
-		if (filterLocation.getValue() != null)
-			filterLocationTest = masterUi.userDataHolder.getLocation(filterLocation.getValue().toString());
-		Group filterGroupTest = null;
-		if (filterGroup.getValue() != null)
-			filterGroupTest = masterUi.userDataHolder.getGroup(filterGroup.getValue().toString());
-
-		String filterNameTest = null;
-		if (filterClientTextField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientTextField.getValue()))
-			filterNameTest = filterClientTextField.getValue().toString();
-		String[] filterNotesTests = null;
-		if (filterClientNotesField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientNotesField.getValue()))
-			filterNotesTests = filterClientNotesField.getValue().toLowerCase().split("\\s+");
-		
-		Boolean contactNowOnly = filterContactNowCheckBox.getValue();
-
-		// filter settings
-
-		if ((filterStatusTest == c.getStatus() || filterStatusTest == null)
-				&& (filterLocationTest == c.getLocation() || filterLocationTest == null)
-				&& (filterGroupTest == c.getGroup() || filterGroupTest == null)
-				&& (filterNameTest == null || c.getName().toLowerCase().contains(filterNameTest.toLowerCase()))
-				&& (!contactNowOnly || c.getContactNow())) {
-
-			boolean noteQueryFound = true;
-			// Make sure the notes contain all the terms
-			if (filterNotesTests != null)
-				for (String noteKeyword : filterNotesTests) {
-					if (!c.getNotes().toLowerCase().contains(noteKeyword)) {
-						noteQueryFound = false;
-					}
-				}
-			if (noteQueryFound == true) {
-				//meets the conditions, return true
-				return true;
-				
-			}
-		}
-		//does not meet all the conditions, return false
-		return false;
-	}
-
-	public void resetFilterClick() {
-		filterStatus.setValue(null);
-		filterLocation.setValue(null);
-		filterGroup.setValue(null);
-		filterClientTextField.setValue("");
-		filterClientNotesField.setValue("");
-		filterContactNowCheckBox.setValue(false);
-		updateClientGrid();
-	}
-
-	/**
-	 * If not found, do not filter by the propriety
-	 */
-	private void filterClick() {
-		updateClientGrid();
-
-	}
 
 }
