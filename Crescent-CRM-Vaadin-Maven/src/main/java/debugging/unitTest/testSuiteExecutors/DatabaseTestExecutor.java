@@ -186,7 +186,7 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		inventoryItemCreateTest6.setActualResult(invItem.getItemReorderPoint());
 		
 		
-		
+		inventoryItemInDBTest1.startProfiling();
 		
 		udhTest.store(invItem, InventoryItem.class);
 		
@@ -200,7 +200,7 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 		
 		inventoryItemInDBTest2.setActualResult(fromDBItem1.getItemName());
 		
-		
+		createStatusTest1.startProfiling();
 		//status testing
 		Status testStatus1 = new Status();
 		testStatus1.setStatusName(statusTest1Name);
