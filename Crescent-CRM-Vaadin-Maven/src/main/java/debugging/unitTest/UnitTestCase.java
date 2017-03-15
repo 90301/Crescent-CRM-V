@@ -1,5 +1,7 @@
 package debugging.unitTest;
 
+import java.text.NumberFormat;
+
 import debugging.Debugging;
 
 /**
@@ -32,6 +34,12 @@ public class UnitTestCase {
 	//Choosing tests
 	
 	private String testType = "";
+	
+	//profiling
+	
+	long startTime = 0;
+	long stopTime = 0;
+	
 	private boolean outputChanges = true;
 	
 	
@@ -163,6 +171,9 @@ public class UnitTestCase {
 			outputResult("Actual Result",actualResult);
 		}
 		
+		if (startTime!=0 && stopTime ==0) {
+			stopProfiling();
+		}
 		
 		this.checkTest();
 	}
@@ -230,6 +241,18 @@ public class UnitTestCase {
 	}
 	
 	/*
+	 * Profiling
+	 */
+	
+	public void startProfiling() {
+		startTime = System.nanoTime();
+	}
+	
+	public void stopProfiling() {
+		stopTime = System.nanoTime();
+	}
+	
+	/*
 	 * OUTPUT CODE
 	 */
 	public String toString() {
@@ -243,6 +266,17 @@ public class UnitTestCase {
 		output += testName + DELIMITER + testMessage + " Result: " + actualResult + " Expected: " + expectedResult;
 		return output;
 		
+	}
+	
+	public void outputProfiling() {
+		if (startTime ==0 && stopTime==0) {
+			return;
+		}
+		
+		long runTime = stopTime-startTime;
+		String runTimeOutput = NumberFormat.getInstance().format(runTime);
+		String profileOutput = testName + " | run-time: "  + runTimeOutput;
+		Debugging.output(profileOutput, Debugging.PROFILING);
 	}
 
 	private void outputResult(String preface, Object result) {

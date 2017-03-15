@@ -14,6 +14,7 @@ public class DebugObject {
 	String outputPreface = "";//adds this text to the beginning out output
 	//DOES NOT do this in the log.
 
+
 	public DebugObject(String debugStyle, Boolean enabled, Boolean logEnabled) {
 		this.debugStyle = debugStyle;
 		this.enabled = enabled;

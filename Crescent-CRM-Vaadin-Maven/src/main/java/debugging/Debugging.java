@@ -145,7 +145,7 @@ public class Debugging {
 	public static final DebugObject NODE_SOCKET_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "NODE SOCKET: ");
 	public static final DebugObject FILTER2 = new DebugObject(CONSOLE_OUTPUT, true, true, "Filter2: ");
 	public static final DebugObject CONFIG_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Configuration: ");
-	
+	public static final DebugObject PROFILING = new DebugObject(CONSOLE_OUTPUT, true, true, "Profiling: ");
 	
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
@@ -157,6 +157,7 @@ public class Debugging {
 	
 	//Mark's Debug Variables
 	public static final DebugObject UNIT_TEST_TRACK_CHANGES = new DebugObject(CONSOLE_OUTPUT, true, true, "Unit Test Changes: ");
+	
 	
 	
 	

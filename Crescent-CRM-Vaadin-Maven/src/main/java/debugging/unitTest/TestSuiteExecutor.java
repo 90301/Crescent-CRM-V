@@ -29,7 +29,9 @@ public abstract class TestSuiteExecutor {
 		if (!hasOutput) {
 		for (UnitTestCase testCase : testCases) {
 			Debugging.output(testCase.toString(), testResultDebugOutput );
+			testCase.outputProfiling();
 		}
+		
 		hasOutput = true;
 		}
 	}

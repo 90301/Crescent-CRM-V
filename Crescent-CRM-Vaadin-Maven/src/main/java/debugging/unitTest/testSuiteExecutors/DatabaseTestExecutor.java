@@ -151,18 +151,21 @@ public class DatabaseTestExecutor extends TestSuiteExecutor {
 			
 		//Execute code for tests
 		
-
+		createDatabaseTest1.startProfiling();
+		
 		UserDataHolder udhTest = new UserDataHolder();
 		udhTest.setDatabasePrefix(TEST_DB);
 		udhTest.initalizeDatabases();
 		DataHolder.store(udhTest, UserDataHolder.class);
 		
-		
+		//createDatabaseTest1.stopProfiling();
 		createDatabaseTest1.setActualResult(udhTest.getDatabasePrefix());
 		
 		Boolean udhClientMapExists = (udhTest.getMap(Client.class) != null);
 		createDatabaseTest2.setTestMessage("Client Map" + udhTest.getMap(Client.class));
 		createDatabaseTest2.setActualResult(udhClientMapExists);
+		
+		inventoryItemCreateTest1.startProfiling();
 		
 		InventoryItem invItem = new InventoryItem();
 		invItem.setItemKey(inventoryItemTestKey);
