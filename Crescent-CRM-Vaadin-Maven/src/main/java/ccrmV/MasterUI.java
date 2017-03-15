@@ -91,6 +91,8 @@ public class MasterUI extends UI {
 	
 	public static final Boolean DEV_TEST_CODE = true; //UNIT TESTING
 	
+	public static Boolean unitTestsAlreadyRan = false;
+	
 	//public static final Boolean DEV_FORCE_MOBILE = false;
 
 	// Automatically navigate to a specific page.
@@ -388,7 +390,7 @@ public class MasterUI extends UI {
 	 */
 	public void devTestCode() {
 
-		if (DEVELOPER_MODE && DEV_TEST_CODE) {
+		if (DEVELOPER_MODE && DEV_TEST_CODE && !unitTestsAlreadyRan) {
 
 			Debugging.output("BEGIN DevTestCode. ", Debugging.MASTER_UI_TESTING_OUTPUT,
 					Debugging.MASTER_UI_TESTING_OUTPUT_ENABLED);
@@ -412,7 +414,7 @@ public class MasterUI extends UI {
 			crmTests.runTests();
 			crmTests.debugOutputTestCases();
 			
-			
+			unitTestsAlreadyRan = true;
 		}
 	}
 

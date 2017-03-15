@@ -56,7 +56,7 @@ public class CRMTestExecutor extends TestSuiteExecutor {
 	    UnitTestCase addClientTest3 = new UnitTestCase("addClientTest3", "Ensure the Status of the client is correct", statusTest1Name , UnitTestCase.TEST_TYPE_OBJECT,this);
 	    UnitTestCase addClientTest4 = new UnitTestCase("addClientTest4", "Ensure the Group of the client is correct", groupTest1Name , UnitTestCase.TEST_TYPE_OBJECT,this);
 	    
-	    
+	    addLocationTest1.startProfiling();
 	    //switch database
 	    this.masterUi.setUserDataHolder(DatabaseTestExecutor.TEST_DB);
 	    
@@ -97,7 +97,7 @@ public class CRMTestExecutor extends TestSuiteExecutor {
 		addGroupTest2.setActualResult(crmUi.createGroupName.getValue());
 		
 		//create a client using existing categories and create client using new categories 
-		
+		addClientTest1.startProfiling();
 		
 		crmUi.createClientName.setValue(clientTest1Name);
 		
