@@ -24,6 +24,7 @@ import com.vaadin.ui.UI;
 
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
+import configuration.Configuration;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
@@ -44,8 +45,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.37;
-	public static final String versionDescription = " Lightning Filter";
+	public static final double versionNumber = 1.38;
+	public static final String versionDescription = " Configuration added";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -81,7 +82,7 @@ public class MasterUI extends UI {
 	// know
 	// exactly what you are doing with a setting, ask someone who does, or don't
 	// enable it.
-	public static final Boolean DEVELOPER_MODE = true;
+	public static Boolean DEVELOPER_MODE = true;
 	// auto login will be enabled if set to true, will attempt to login with
 	// DEV_AUTOLOGIN_USER
 	// if no such user exists, the application will crash.
@@ -138,6 +139,15 @@ public class MasterUI extends UI {
 	protected void init(VaadinRequest request) {
 		
 		Debugging.output("INIT CODE RUNNING. attributes: " + request.getAttributeNames(), Debugging.GOOGLE_FURY_DEBUG);
+		
+		Configuration.loadConfig();
+		
+		Debugging.output("Config loaded: " + Configuration.loadedConfig.get(Configuration.DOMAIN_NAME_KEY), Debugging.CONFIG_DEBUG);
+		
+		if (Configuration.loadedConfig.get(Configuration.DEVELOPER_MODE_OVERRIDE_KEY).equals("true")) {
+			System.out.println("Config turned off developer mode.");
+			DEVELOPER_MODE = false;
+		}
 		
 		getPage().addUriFragmentChangedListener(
 	               new UriFragmentChangedListener() {
