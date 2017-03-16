@@ -12,11 +12,18 @@ import dbUtils.InhalerUtils;
  * (c) 2017 Joshua Benton All Rights Reserved.
  *
  */
-public class RapidProfilingTimer extends ProfilingTimer {
+public class RapidProfilingTimer {
 
 	
 	private static final int MAX_OUTPUT_LINES = 50;
 
+	String timerName = "";
+	
+	long startTime = 0;
+	long endTime = 0;
+	
+	long elapsedTime = 0;
+	
 	ArrayList<Long> timeReadings = new ArrayList<Long>();
 	
 	//Processed values
@@ -29,7 +36,8 @@ public class RapidProfilingTimer extends ProfilingTimer {
 	long minRun = 0;
 	
 	public RapidProfilingTimer(String timerName) {
-		super(timerName);
+		this.timerName = timerName;
+		MasterTimer.addTimer(this);
 	}
 	
 	/**
@@ -96,8 +104,9 @@ public class RapidProfilingTimer extends ProfilingTimer {
 		this.endTime = timeReadings.get(timeReadings.size()-1);
 		this.elapsedTime = endTime-startTime;
 	}
+
+
 	
-	@Override
 	public String formattedOutput() {
 		
 		if (this.maxRun==0) {
@@ -138,5 +147,40 @@ public class RapidProfilingTimer extends ProfilingTimer {
 		return output;
 	}
 	
+	
+	
+	
+	
+	public ArrayList<Long> getTimeReadings() {
+		return timeReadings;
+	}
+
+	public ArrayList<Long> getTimeElapsed() {
+		return timeElapsed;
+	}
+
+	public long getTotalTime() {
+		return totalTime;
+	}
+
+	public long getAverageTime() {
+		return averageTime;
+	}
+
+	public long getAvgDeviation() {
+		return avgDeviation;
+	}
+
+	public long getLargestDeviation() {
+		return largestDeviation;
+	}
+
+	public long getMaxRun() {
+		return maxRun;
+	}
+
+	public long getMinRun() {
+		return minRun;
+	}
 
 }

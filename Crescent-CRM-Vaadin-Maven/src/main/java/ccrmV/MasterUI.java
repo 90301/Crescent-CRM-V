@@ -45,8 +45,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.38;
-	public static final String versionDescription = " Configuration added";
+	public static final double versionNumber = 1.39;
+	public static final String versionDescription = " Meta Profiling Start";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
