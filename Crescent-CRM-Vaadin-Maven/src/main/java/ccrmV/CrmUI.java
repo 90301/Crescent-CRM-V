@@ -31,6 +31,7 @@ import dbUtils.BackupManager;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxObject;
 import debugging.Debugging;
+import debugging.profiling.ProfilingTimer;
 import debugging.profiling.RapidProfilingTimer;
 import uiElements.ClientEditor;
 import uiElements.ClientFilter;
@@ -228,79 +229,23 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		createClientGrid();
 		
-		
-		
-		
-		//clientTable.addContainerProperty("Name", String.class, "<no name>");
-		//clientTable.addContainerProperty("Location", String.class, null);
-		//clientTable.addContainerProperty("Status", String.class, null);
-		//clientTable.addContainerProperty("Groups", String.class, "<no group>");
-
-		// set up filter comparison objects
-		/*
-		Status filterStatusTest = null;
-		if (filterStatus.getValue() != null)
-			filterStatusTest = masterUi.userDataHolder.getStatus(filterStatus.getValue().toString());
-		Location filterLocationTest = null;
-		if (filterLocation.getValue() != null)
-			filterLocationTest = masterUi.userDataHolder.getLocation(filterLocation.getValue().toString());
-		Group filterGroupTest = null;
-		if (filterGroup.getValue() != null)
-			filterGroupTest = masterUi.userDataHolder.getGroup(filterGroup.getValue().toString());
-
-		String filterNameTest = null;
-		if (filterClientTextField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientTextField.getValue()))
-			filterNameTest = filterClientTextField.getValue().toString();
-		String[] filterNotesTests = null;
-		if (filterClientNotesField.getValue() != null && !InhalerUtils.stringNullCheck(filterClientNotesField.getValue()))
-			filterNotesTests = filterClientNotesField.getValue().toLowerCase().split("\\s+");
-
-		System.out.println("Looking for: " + filterNameTest);
-
-		Boolean contactNowOnly = filterContactNowCheckBox.getValue();
-		
-		*/
 		for (Client c : masterUi.userDataHolder.getAllClients()) {
 			
 			if (clients.containsId(c.getPrimaryKey())) {
 				// remove old item
 				clients.removeItem(c.getPrimaryKey());
 			}
-
-			// filter settings
-			/*
-			if ((filterStatusTest == c.getStatus() || filterStatusTest == null)
-					&& (filterLocationTest == c.getLocation() || filterLocationTest == null)
-					&& (filterGroupTest == c.getGroup() || filterGroupTest == null)
-					&& (filterNameTest == null || c.getName().toLowerCase().contains(filterNameTest.toLowerCase()))
-					&& (!contactNowOnly || c.getContactNow())) {
-
-				boolean noteQueryFound = true;
-				// Make sure the notes contain all the terms
-				if (filterNotesTests != null)
-					for (String noteKeyword : filterNotesTests) {
-						if (!c.getNotes().toLowerCase().contains(noteKeyword)) {
-							noteQueryFound = false;
-						}
-					}
-				if (noteQueryFound == true) {
-					// add the new item
-					clients.addItem(c);
-					
-					Item clientItem = clients.getItem(c);
-					c.genItem(clientItem);
-					
-				}
-			}
-			*/
+			
+			
 			if (!USE_VAADIN_FILTER) {
-			if (clientFilter.checkClientMeetsFilter(c)) {
+				if (clientFilter.checkClientMeetsFilter(c)) {
 				//add item to indexed container
 				clients.addItem(c);
 				//generate client "item" for grid.
 				Item clientItem = clients.getItem(c);
 				c.genItem(clientItem);
-			}
+				}
+			
 			} else {
 				//add item to indexed container
 				clients.addItem(c);
@@ -312,7 +257,13 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		//Filter 2.0
 		if (USE_VAADIN_FILTER){
+			ProfilingTimer filterTimer1 = new ProfilingTimer("filter timer1");
+			//Determine the time it takes to remove the old filter and add the new one.
+			//TODO
+			//It may be possible to move this code out to another method
+			clients.removeAllContainerFilters();
 			clients.addContainerFilter(clientFilter);
+			filterTimer1.stopTimer();
 		}
 
 	}

@@ -73,7 +73,11 @@ public class MetaProfilingTimer {
 		
 		String preBox = "";
 		preBox += "Meta Stats for: " + id + System.lineSeparator();
-		preBox += "Avg Time: " + avgRunTime + " | Avg Deviation: " + avgDeviation + System.lineSeparator();
+		preBox += "Avg Time: " + formatNum(avgRunTime) + " | Avg Deviation: " + formatNum(avgDeviation) + System.lineSeparator();
+		
+		preBox += "Runs: " + formatNum(timers.size()) + " Total Run Time: " + formatNum(totalRunTime) + System.lineSeparator();
+		
+		
 		
 		preBox += "Range: " +  NumberFormat.getInstance().format(minRun) + " - " + 
 				NumberFormat.getInstance().format(maxRun) + System.lineSeparator();
