@@ -407,15 +407,67 @@ public class InhalerUtils {
 		return output;
 	}
 	
+	public static final String SPACING_FORMAT_BLANK_LINE = "<BLANK_LINE>";
+	public static final String SPACING_FORMAT_CENTERED = "<CENTERED>";
+	
+	/**
+	 * Adds spacing to string to the length.
+	 * dots are added every other character to help with formatting
+	 * 
+	 * Other advanced features are included if certain constants are found
+	 * in the string, to see all the available constants, look at SPACING_FORMAT constants.
+	 * 
+	 * @param input the string to add spacing to
+	 * @param length the length of the string to space to
+	 * @return the formatted string
+	 */
 	public static String addSpacing(String input, int length) {
 		String output = input;
 		
+		//check input for special formatting
+		if (input.contains(SPACING_FORMAT_BLANK_LINE)) {
+			//Creates a blank line
+			//____________________
+			output = "";
+			for (int i=0;i<length;i++) {
+				output += "_";
+			}
+			
+		} else if (input.contains(SPACING_FORMAT_CENTERED)) {
+			//Creates centered text
+			//____Centered Text____
+			String strippedInput = input.replace(SPACING_FORMAT_CENTERED, "");
+			//determine spacing to add
+			output = "";
+			int inputLength = strippedInput.length();
+			int halfway = (length - inputLength)/2;
+			
+			if (halfway <0) {
+				return "Error formatting: " + input;
+			}
+			
+			String spacingStart = "";
+			for (int i = 0;i<halfway;i++) {
+				spacingStart += "_";
+			}
+			output = spacingStart + strippedInput;
+			//add remaining spacing
+			for (int i = output.length();i<length;i++) {
+				output += "_";
+			}
+			
+			
+		} else {
+		
+			//STANDARD SPACING
 		for (int i = output.length();i<length;i++) {
 			if (i%2==0) {
 				output += " ";
 			} else {
 				output += ".";
 			}
+		}
+		
 		}
 		
 		return output;

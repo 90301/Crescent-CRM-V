@@ -96,30 +96,34 @@ public class MetaRapidProfilingTimer {
 		String output = "";
 		
 		String preBox = "";
+		preBox += InhalerUtils.SPACING_FORMAT_CENTERED + id + System.lineSeparator();
 		preBox += "Meta Rapid Stats for: " + id + System.lineSeparator();
-		preBox += "Avg Time: " + avgRunTime + " | Avg Deviation: " + avgDeviation + System.lineSeparator();
+		preBox += "Avg Time: " + formatNum(avgRunTime) + " | Avg Deviation: " + formatNum(avgDeviation) + System.lineSeparator();
 		
-		preBox += "Avg Cycle: " + avgCycleTime + " | Cycles: " + totalCycles + System.lineSeparator();
+		preBox += "Avg Cycle: " + formatNum(avgCycleTime) + " | Cycles: " + formatNum(totalCycles) + System.lineSeparator();
 		
-		preBox += "Range: " +  NumberFormat.getInstance().format(minRun) + " - " + 
-				NumberFormat.getInstance().format(maxRun) + System.lineSeparator();
+		preBox += "Total Time: " + formatNum(totalRunTime) + System.lineSeparator();
 		
+		preBox += "Range: " +  formatNum(minRun) + " - " + 
+				formatNum(maxRun) + System.lineSeparator();
 		
+		preBox += InhalerUtils.SPACING_FORMAT_BLANK_LINE + System.lineSeparator();
 		//Output the First value, mid value and last value
-		
-		preBox += formatNum(timers.get(0).elapsedTime) + " | ";
+		preBox += InhalerUtils.SPACING_FORMAT_CENTERED;
+		preBox += "   " + formatNum(timers.get(0).elapsedTime) + " | ";
 		preBox += formatNum(timers.get(timers.size()/2).elapsedTime) + " | ";
-		preBox += formatNum(timers.get(timers.size()-1).elapsedTime) + System.lineSeparator();
+		preBox += formatNum(timers.get(timers.size()-1).elapsedTime) + "  " + System.lineSeparator();
 		
 		output  = InhalerUtils.boxString(preBox);
 		
 		return output;
 	}
 	
+	static final long NANO_TO_SEC = 1000000000;
+	
 	public String formatNum(long number) {
 		return NumberFormat.getInstance().format(number);
 	}
-	
 	
 	
 	public String getID() {
