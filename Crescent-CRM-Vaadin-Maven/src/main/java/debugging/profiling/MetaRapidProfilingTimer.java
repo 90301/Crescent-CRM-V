@@ -22,6 +22,9 @@ public class MetaRapidProfilingTimer {
 	long totalRunTime = 0;
 	long avgDeviation = 0;
 	
+	long avgCycleTime = 0;
+	long totalCycles = 0;
+	
 	long minRun = 0;
 	long maxRun = 0;
 	
@@ -51,8 +54,12 @@ public class MetaRapidProfilingTimer {
 		minRun = 0;
 		maxRun = 0;
 		
+		totalCycles = 0;
+		
 		for (RapidProfilingTimer timer : timers) {
 			long time = timer.elapsedTime;
+			
+			
 			
 			totalRunTime += timer.elapsedTime;
 					
@@ -62,7 +69,11 @@ public class MetaRapidProfilingTimer {
 			if (time > this.maxRun ) {
 				this.maxRun = time;
 			}
+			
+			totalCycles += timer.timeElapsed.size();
 		}
+		
+		avgCycleTime = totalRunTime / totalCycles;
 		
 		avgRunTime = totalRunTime / timers.size();
 		
@@ -87,6 +98,8 @@ public class MetaRapidProfilingTimer {
 		String preBox = "";
 		preBox += "Meta Rapid Stats for: " + id + System.lineSeparator();
 		preBox += "Avg Time: " + avgRunTime + " | Avg Deviation: " + avgDeviation + System.lineSeparator();
+		
+		preBox += "Avg Cycle: " + avgCycleTime + " | Cycles: " + totalCycles + System.lineSeparator();
 		
 		preBox += "Range: " +  NumberFormat.getInstance().format(minRun) + " - " + 
 				NumberFormat.getInstance().format(maxRun) + System.lineSeparator();
