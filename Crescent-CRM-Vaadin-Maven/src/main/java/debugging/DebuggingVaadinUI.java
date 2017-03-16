@@ -8,12 +8,15 @@ import java.util.ArrayList;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
+import com.vaadin.server.Page.Styles;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
 import ccrmV.MasterUI;
+import debugging.profiling.MasterTimer;
 import uiElements.NavBar;
 
 /**
@@ -40,12 +43,20 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 	ArrayList<Button> richLogOutputButtons = new ArrayList<Button>();
 	ArrayList<DebuggingVaadinRichTextConsole> richTextConsoles = new ArrayList<DebuggingVaadinRichTextConsole>();
 
+	
+	TextArea mainConsole = null;
+	
 	static String consoleWidth = "800px";
 	static String consoleHeight = "800px";
 
 	{
-
-		TextArea mainConsole = createConsole("Main Console");
+		
+		
+		
+		
+		mainConsole = createConsole("Main Console");
+		
+		
 
 		DebuggingVaadinRichTextConsole mainRichConsole = new DebuggingVaadinRichTextConsole();
 
@@ -63,7 +74,17 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 	@Override
 	public void enter(ViewChangeEvent event) {
-
+		
+		MasterTimer.outputAllTimers();
+		
+		Styles styles = Page.getCurrent().getStyles();
+		styles.add(".consoleOutput {font-family: monospace; }" );
+		
+		styles.add(".v-textarea-consoleOutput {font-family: monospace; }" );
+		
+		styles.add(".v-app .v-textarea { font-family:" + "monospace" + "; }");
+		
+		mainConsole.addStyleName("consoleOutput");
 		// this.setSizeFull();
 		// consoleLayout.setWidth("80%");
 		// buttonLayout.setWidth("10%");

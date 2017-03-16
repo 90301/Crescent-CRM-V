@@ -8,6 +8,8 @@ import clientInfo.Location;
 import clientInfo.Status;
 import debugging.DebugObject;
 import debugging.Debugging;
+import debugging.profiling.MasterTimer;
+import debugging.profiling.ProfilingTimer;
 import debugging.unitTest.TestSuiteExecutor;
 import debugging.unitTest.UnitTestCase;
 
@@ -33,6 +35,9 @@ public class CRMTestExecutor extends TestSuiteExecutor {
 	    
 	@Override
 	public Boolean runTests() {
+		
+		ProfilingTimer runTime = new ProfilingTimer("CRM Test Executor");
+		
 		//randomize values
 		
 		locationTest1Name = genSmallRandomString("City");
@@ -153,6 +158,8 @@ public class CRMTestExecutor extends TestSuiteExecutor {
 		
 		//attempt to edit a template field on existing clinet
 		
+		
+		runTime.stopTimer();
 		
 		
 		return true;

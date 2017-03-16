@@ -235,7 +235,7 @@ public class MasterUI extends UI {
 		
 		
 		ChatSocket.setupNodeSocket();
-
+		
 	}
 
 	/**

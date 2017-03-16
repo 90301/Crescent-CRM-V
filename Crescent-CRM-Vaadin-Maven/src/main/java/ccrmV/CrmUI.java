@@ -31,6 +31,7 @@ import dbUtils.BackupManager;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxObject;
 import debugging.Debugging;
+import debugging.profiling.RapidProfilingTimer;
 import uiElements.ClientEditor;
 import uiElements.ClientFilter;
 //import de.steinwedel.messagebox.MessageBox;
@@ -344,11 +345,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	}
 
 	public <T extends Object> void fillComboBox(ComboBox box, Collection<T> values) {
+		
+		RapidProfilingTimer rpt = new RapidProfilingTimer("CrmUI fillComboBox");
+		
 		for (Object val : values) {
 			// add any non template entity. (unless template is selected)
 			if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
 				box.addItem(val.toString());
 			}
+			rpt.logTime();
 		}
 	}
 

@@ -360,5 +360,65 @@ public class InhalerUtils {
 		
 		return str2;
 	}
+	
+	/**
+	 * ._____________________________________________________________.
+	 * | Attempts to Format a block of text by surrounding it with a |
+	 * | box . . . . . . . . . . . . . . . . . . . . . . . . . . . . |
+	 * |_____________________________________________________________|
+	 * @param s the string to box
+	 * @return the string with a box around it
+	 */
+	public static String boxString(String s) {
+		String output = "";
+		
+		//split string into an array of lines
+		String lines[] = s.split("\\r?\\n");
+		
+		//find the longest line
+		int longestLine = 0;
+		
+		for (String line : lines) {
+			if (line.length() > longestLine) {
+				longestLine = line.length();
+			}
+		}
+		
+		//create top and bottom sections of the box
+		String topBox = "._";
+		String bottomBox = "|_";
+		for (int i = 0; i < longestLine; i++) {
+				topBox += "_";
+				bottomBox += "_";
+		}
+		topBox += "_.";
+		bottomBox += "_|";
+		
+		output += topBox + System.lineSeparator();
+		
+		for (String line : lines) {
+			String spacedLine = addSpacing(line,longestLine);
+			
+			output += "| " + spacedLine + " |" + System.lineSeparator();
+		}
+		
+		output += bottomBox;
+		
+		return output;
+	}
+	
+	public static String addSpacing(String input, int length) {
+		String output = input;
+		
+		for (int i = output.length();i<length;i++) {
+			if (i%2==0) {
+				output += " ";
+			} else {
+				output += ".";
+			}
+		}
+		
+		return output;
+	}
 
 }
