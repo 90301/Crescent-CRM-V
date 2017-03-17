@@ -111,7 +111,7 @@ public class InhalerUtils {
 	public static Collection<String> csvToList(String csv) {
 		ArrayList<String> list = new ArrayList<String>();
 		for (String s : csv.split("\\" + DELIMITER)) {
-			System.out.println("CSV ITEM: " + s);
+			Debugging.output("CSV ITEM: " + s,Debugging.DATABASE_OUTPUT);
 			list.add(s);
 		}
 
@@ -344,7 +344,7 @@ public class InhalerUtils {
 			rtrn = true;
 		}
 
-		System.out.println("Tested: " + testingString + " Null?: " + rtrn);
+		Debugging.output("Tested: " + testingString + " Null?: " + rtrn,Debugging.DATABASE_OUTPUT);
 		return rtrn;
 	}
 	

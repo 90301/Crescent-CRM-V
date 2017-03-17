@@ -129,11 +129,11 @@ public class UserDataHolder extends MaxObject {
 			c.setStatus(status);
 			c.setNotes("");
 			
-			System.out.println("Template class created: " + c);
+			Debugging.output("Template class created: " + c,Debugging.DATABASE_OUTPUT);
 			store(c, Client.class);
 			this.templateClient = c;
 		} else {
-			System.out.println("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c);
+			Debugging.output("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c,Debugging.DATABASE_OUTPUT);
 			this.templateClient = c;
 		}
 	}
@@ -192,14 +192,14 @@ public class UserDataHolder extends MaxObject {
 	@SuppressWarnings("unchecked")
 	public <T extends MaxObject> void loadMaxObjects(Map<String, T> localMap, MaxDBTable table, Class<T> ref) {
 
-		System.out.println("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref);
+		Debugging.output("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref,Debugging.DATABASE_OUTPUT);
 		if (table == null) {
 			return;// This is a bug
 		}
 		ResultSet allObjects = table.getAllRows();
-		System.out.println("Result set: " + allObjects);
+		Debugging.output("Result set: " + allObjects,Debugging.DATABASE_OUTPUT);
 		if (allObjects == null) {
-			System.out.println("NO  objects found");
+			Debugging.output("NO  objects found",Debugging.DATABASE_OUTPUT);
 			return;// no results found
 		}
 		try {
@@ -208,7 +208,7 @@ public class UserDataHolder extends MaxObject {
 				obj = ref.newInstance();
 				obj.setUserDataHolder(this);
 				obj.loadFromDB(allObjects);
-				System.out.println("Loaded: " + obj + " from database.");
+				Debugging.output("Loaded: " + obj + " from database.",Debugging.DATABASE_OUTPUT);
 				if (obj.getPrimaryKey() != null) {
 					localMap.put(obj.getPrimaryKey(), (T) obj);
 				}
