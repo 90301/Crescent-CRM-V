@@ -49,8 +49,6 @@ public class LoginView extends VerticalLayout implements View {
 	public Button registerButton = new Button("Register", event -> createNewUserClick());
 	public Layout userCreatorLayout = new VerticalLayout();
 	public Layout buttonLayout = new HorizontalLayout();
-	public TextField createUserTextField = new TextField("User Name");
-	public PasswordField createPassField = new PasswordField("Password");
 	private static final int PASS_MIN_LENGTH = 5;
 	public String host;
 	//public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
@@ -98,8 +96,7 @@ public class LoginView extends VerticalLayout implements View {
 		this.addComponent(userField);
 		this.addComponent(passField);
 		userCreatorLayout.setCaption("Create Users");
-		userCreatorLayout.addComponent(createUserTextField);
-		userCreatorLayout.addComponent(createPassField);
+		
 		userCreatorLayout.addComponent(registerButton);
 		//this.addComponent(hLayoutIncorrect);
 		//this.addComponent(hLayoutUser);
@@ -194,24 +191,26 @@ public MasterUI masterUi;
 	}
 	
 	private void createNewUserClick() {
-		String userName = createUserTextField.getValue();
-		String pass = createPassField.getValue();
+		String userName = userField.getValue();
+		String pass = passField.getValue();
 		
-		User nUser = new User();
+		User newUser = new User();
 		// Check to see if a user already has a specific name
 		// This doesn't appear to be working. a user can be created with
 		// the same username.
 		if (DataHolder.getUser(userName) == null && pass.length() >= PASS_MIN_LENGTH) {
-			nUser.setUserName(userName);
-			nUser.setPassword(pass);
-			nUser.setAdmin(false);
+			newUser.setUserName(userName);
+			newUser.setPassword(pass);
+			newUser.setAdmin(false);
 			// set the database to the user name
-			nUser.setDatabaseSelected(userName);
-			nUser.addDatabaseAccsessable(userName);
-
-			DataHolder.store(nUser, User.class);
-			createUserTextField.setValue("");
-			createPassField.setValue("");
+			newUser.setDatabaseSelected(userName);
+			newUser.addDatabaseAccsessable(userName);
+			DataHolder.store(newUser, User.class);
+			userField.setValue("");
+			passField.setValue("");
+			//Notification notif = new Notification("User Created!", "\nClick to dismiss", Type.HUMANIZED_MESSAGE);
+			//notif.setDelayMsec(-1);
+			//notif.show(Page.getCurrent());
 		} else {
 			
 			if (pass.length() < PASS_MIN_LENGTH) {
