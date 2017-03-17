@@ -82,7 +82,7 @@ public class MasterUI extends UI {
 	// know
 	// exactly what you are doing with a setting, ask someone who does, or don't
 	// enable it.
-	public static Boolean DEVELOPER_MODE = false;
+	public static Boolean DEVELOPER_MODE = true;
 	// auto login will be enabled if set to true, will attempt to login with
 	// DEV_AUTOLOGIN_USER
 	// if no such user exists, the application will crash.
