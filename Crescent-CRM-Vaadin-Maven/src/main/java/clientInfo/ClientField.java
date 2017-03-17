@@ -1,5 +1,6 @@
 package clientInfo;
 
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class ClientField {
 	 * Data will not be deleted upon removing a field (it just won't be shown)
 	 * Data will be cleared upon dataType Changing.
 	 */
-	
+
 	//fieldName, Value
 	//public MasterUI masterUi;
 	UserDataHolder userDataHolder;
@@ -27,12 +28,12 @@ public class ClientField {
 	private String currentDataType = "";
 	//To be used for the purpose of determining if the datatype changed
 	private Object fieldValue;
-	
+
 	public ClientField() {
 		// TODO Auto-generated constructor stub
-		
+
 	}
-	
+
 	/**
 	 * ensures the current datatype is the same as the template
 	 * if a mismatch occurs, corrective action is taken.
@@ -44,21 +45,21 @@ public class ClientField {
 		if (this.userDataHolder != null && fieldName !="") {
 			//Ensure there is a template field with the same name as this field
 			if (userDataHolder.getMap(TemplateField.class).contains(fieldName)) {
-			
-			TemplateField masterTemplateField = userDataHolder.getMap(TemplateField.class).get(fieldName);
-			
-			if (this.currentDataType != masterTemplateField.getDataType()) {
-				String oldDataType = this.currentDataType;
-				
-				this.currentDataType = masterTemplateField.getDataType();
-				
-				setupDataType(oldDataType);
-				
-				
+
+				TemplateField masterTemplateField = userDataHolder.getMap(TemplateField.class).get(fieldName);
+
+				if (this.currentDataType != masterTemplateField.getDataType()) {
+					String oldDataType = this.currentDataType;
+
+					this.currentDataType = masterTemplateField.getDataType();
+
+					setupDataType(oldDataType);
+
+
+				}
+
 			}
-			
-			}
-			
+
 		} else {
 			Debugging.output("Client Field improperly initalized: user data holder: " + userDataHolder + " fieldName: " + this.fieldName,
 					Debugging.CLIENT_FIELD_DEBUGGING, Debugging.CLIENT_FIELD_DEBUGGING_ENABLED);
@@ -71,26 +72,29 @@ public class ClientField {
 	 * @param oldDataType
 	 */
 	public void setupDataType(String oldDataType) {
-		if (this.currentDataType==TemplateField.DATA_TYPE_TEXT) {
+		if (this.currentDataType.equals(TemplateField.DATA_TYPE_TEXT)) {
 			//TEXT data
 			Object oldFieldValue = this.fieldValue;
 			this.fieldValue = oldFieldValue.toString();
-			
-			
-		} else if (this.currentDataType==TemplateField.DATA_TYPE_DATE) {
+
+
+		} else if (this.currentDataType.equals(TemplateField.DATA_TYPE_DATE)) {
 			//DATE data
 			this.fieldValue = new Date();
-			
+
 			Calendar cal = Calendar.getInstance();
 			cal.set(Calendar.YEAR, 2000);
 			cal.set(Calendar.MONTH, Calendar.JANUARY);
 			cal.set(Calendar.DAY_OF_MONTH, 1);
 			Date dateRepresentation = cal.getTime();
-			
+
 			this.fieldValue = dateRepresentation;
-		} else if (this.currentDataType==TemplateField.DATA_TYPE_NUMBER) {
+		} else if (this.currentDataType.equals(TemplateField.DATA_TYPE_NUMBER)) {
 			//Number Value
 			this.fieldValue = new Integer(0);
+		} else if (this.currentDataType.equals(TemplateField.DATA_TYPE_LINK))  {
+			//Link data
+			this.fieldValue = "";
 		}
 	}
 
@@ -98,28 +102,47 @@ public class ClientField {
 		typeCheck();
 		return fieldValue;
 	}
-	
+
 	/**
 	 * String representation return of the data.
 	 * Special cases for data not yet implemented.
 	 * @return
 	 */
 	public String getStringFieldValue() {
-		//TODO date support
-		return fieldValue.toString();
 		
+		Debugging.output("String Field Value(): currentDataType: "+this.currentDataType, Debugging.CUSTOM_FIELD_DEBUG);
+		//TODO date support
+		if(this.currentDataType.equals(TemplateField.DATA_TYPE_DATE)){
+			Debugging.output("String Field Value(): Converting date to string: "+this.fieldValue, Debugging.CUSTOM_FIELD_DEBUG);
+			String stringDate = "";
+			try {
+				stringDate = TemplateField.DATE_FORMAT.format(fieldValue);
+			} catch (Exception e) {
+				Debugging.output("Error converting date: " + this.fieldValue, Debugging.CUSTOM_FIELD_DEBUG);
+				this.fieldValue = TemplateField.DEFAULT_DATE;
+				stringDate = TemplateField.DATE_FORMAT.format(fieldValue);
+			}
+			return stringDate;
+		} else {
+			return fieldValue.toString();
+		}
 	}
 
 	@SuppressWarnings("unused")
 	public void setFieldValue(Object fieldValue) {
 		typeCheck();
-		
-		if (this.currentDataType==TemplateField.DATA_TYPE_TEXT) {
+
+		if (this.currentDataType.equals(TemplateField.DATA_TYPE_TEXT)) {
 			this.fieldValue = fieldValue.toString();
-		} else if (this.currentDataType==TemplateField.DATA_TYPE_DATE) {
+		} else if (this.currentDataType.equals(TemplateField.DATA_TYPE_DATE)) {
 			//Ensure a date is provided
-			
-		} else if (this.currentDataType==TemplateField.DATA_TYPE_NUMBER) {
+			if (fieldValue.getClass().isInstance(Date.class)) {
+				//We think this means it's a java.date
+				this.fieldValue = fieldValue;
+			} else {
+				//TODO print error and debug info
+			}
+		} else if (this.currentDataType.equals(TemplateField.DATA_TYPE_NUMBER)) {
 			//Ensure an Integer number is provided
 			Integer intRep = new Integer((int)fieldValue);
 			if (intRep==null) {
@@ -128,11 +151,37 @@ public class ClientField {
 				this.fieldValue = intRep;
 			}
 		}
-		
+
 		this.fieldValue = fieldValue;
 	}
 	
-	
+	/**
+	 * This takes a string representation of the object
+	 * and converts it to the actual object
+	 * @param str - the string to convert
+	 */
+	public void setStringFieldValue(String str) {
+		if (this.currentDataType.equals(TemplateField.DATA_TYPE_DATE)) {
+			//convert string date to java.date
+			Date convertedDate;
+			try {
+				convertedDate = TemplateField.DATE_FORMAT.parse(str);
+				this.fieldValue = convertedDate;
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				if (MasterUI.DEVELOPER_MODE) {
+					//TODO error message
+				}
+				//e.printStackTrace();
+				
+				this.fieldValue = TemplateField.DEFAULT_DATE;
+			}
+			
+		} else {
+			setCurrentDataType(str);
+		}
+	}
+
 
 	public UserDataHolder getUserDataHolder() {
 		return userDataHolder;
@@ -157,7 +206,7 @@ public class ClientField {
 	public void setCurrentDataType(String currentDataType) {
 		this.currentDataType = currentDataType;
 	}
-	
-	
+
+
 
 }

@@ -150,7 +150,9 @@ public class Debugging {
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
 	
-	public static final DebugObject UPLOAD_IMAGE = new DebugObject(CONSOLE_OUTPUT, true, true, "Profile Picture: ");
+	public static final DebugObject UPLOAD_IMAGE = new DebugObject(CONSOLE_OUTPUT, true, true, "Uploading Image: ");
+	public static final DebugObject CUSTOM_FIELD_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Custom Field: ");
+	
 	
 	//Troy's Debugging Variables
 	

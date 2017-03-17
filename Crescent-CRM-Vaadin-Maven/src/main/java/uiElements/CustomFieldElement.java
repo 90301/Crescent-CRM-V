@@ -1,6 +1,9 @@
 package uiElements;
 
+import java.util.Date;
+
 import com.vaadin.ui.Component;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
@@ -24,14 +27,16 @@ public class CustomFieldElement extends HorizontalLayout{
 	public String getFieldName() {
 		return fieldName;
 	}
-	
+
 	public Object getFieldValue(){
-		
+
 		if(fieldComponent instanceof TextField){
 			return ((TextField)fieldComponent).getValue();
 		}
-		
-		
+		if (fieldComponent instanceof DateField) {
+			return ((DateField)fieldComponent).getValue();
+		}
+
 		return null;
 	}
 
@@ -50,7 +55,8 @@ public class CustomFieldElement extends HorizontalLayout{
 			textF = new TextField();
 			fieldComponent = textF;
 		} else if(dataType.contains(TemplateField.DATA_TYPE_NUMBER)){
-
+			textF = new TextField();
+			fieldComponent = textF;
 		} else if(dataType.contains(TemplateField.DATA_TYPE_DATE)){
 			dateF = new PopupDateField();
 			dateF.addValueChangeListener(e -> Notification.show("Value changed:",
@@ -64,7 +70,7 @@ public class CustomFieldElement extends HorizontalLayout{
 		if (fieldComponent != null) 
 			this.addComponent(fieldComponent);
 	}
-	
+
 	public void setFieldName(String fieldName) {
 		// TODO Auto-generated method stub
 		//Tried replaceStringSpaces() here and it will not work
@@ -84,10 +90,14 @@ public class CustomFieldElement extends HorizontalLayout{
 	 * @param customFieldValue
 	 */
 	public void setFieldValue(Object customFieldValue) {
-		
-	if (fieldComponent instanceof TextField) {
+
+		if (fieldComponent instanceof TextField) {
 			TextField textField = (TextField) fieldComponent;
 			textField.setValue((String)customFieldValue);
+		}
+		if (fieldComponent instanceof DateField) {
+			DateField dateField = (DateField) fieldComponent;
+			dateField.setValue((Date)customFieldValue);
 		}
 	}
 }
