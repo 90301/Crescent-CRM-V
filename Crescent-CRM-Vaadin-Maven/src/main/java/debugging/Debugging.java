@@ -149,6 +149,7 @@ public class Debugging {
 	public static final DebugObject OLD_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Old-Output: ");
 	public static final DebugObject DATABASE_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Database: ");
 	public static final DebugObject DATABASE_OUTPUT_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "Database (Error): ");
+    public static final DebugObject STRESS_TEST = new DebugObject(CONSOLE_OUTPUT, true, true, "Stress Test: ");
 	
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
