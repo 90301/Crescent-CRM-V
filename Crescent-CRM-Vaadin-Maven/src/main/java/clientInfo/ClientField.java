@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+
 import ccrmV.MasterUI;
 import debugging.Debugging;
 
@@ -118,7 +121,10 @@ public class ClientField {
 			try {
 				stringDate = TemplateField.DATE_FORMAT.format(fieldValue);
 			} catch (Exception e) {
+				//When running this try catch it seems to make several error messages meaning this is called several 
+				//times for the first client selected.
 				Debugging.output("Error converting date: " + this.fieldValue, Debugging.CUSTOM_FIELD_DEBUG);
+				Notification.show("Error when converting date. \n Click to remove message", Type.ERROR_MESSAGE);
 				this.fieldValue = TemplateField.DEFAULT_DATE;
 				stringDate = TemplateField.DATE_FORMAT.format(fieldValue);
 			}
@@ -171,6 +177,7 @@ public class ClientField {
 				// TODO Auto-generated catch block
 				if (MasterUI.DEVELOPER_MODE) {
 					//TODO error message
+					Notification.show("Error when parsing date. \n Click to remove message", Type.ERROR_MESSAGE);
 				}
 				//e.printStackTrace();
 				

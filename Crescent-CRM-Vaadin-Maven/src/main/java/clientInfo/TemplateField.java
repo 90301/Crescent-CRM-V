@@ -18,9 +18,9 @@ public class TemplateField extends MaxObject{
 	public static final String DATA_TYPE_TEXT = "Text";
 	public static final String DATA_TYPE_LINK = "Link";
 	public static final String[] DataTypes = {DATA_TYPE_NUMBER,DATA_TYPE_DATE, DATA_TYPE_TEXT};
-	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd"); //Or whatever format fits best your needs.
-	public static final String DEFAULT_DATE_STRING = DATE_FORMAT.format(new Date(946684800)); //Default date is 1/1/2000
-	public static final Date DEFAULT_DATE = new Date(946684800); //Default date is 1/1/2000
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy/MM/dd"); //Or whatever format fits best your needs.
+	public static final String DEFAULT_DATE_STRING = DATE_FORMAT.format(new Date()); //Default date is 1/1/2000
+	public static final Date DEFAULT_DATE = new Date(); //Default date is 1/1/2000
 	
 	
 	MaxField<String> fieldName = new MaxField<String>("fieldName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
