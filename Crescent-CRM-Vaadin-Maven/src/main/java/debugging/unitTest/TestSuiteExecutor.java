@@ -36,7 +36,7 @@ public abstract class TestSuiteExecutor {
 		}
 	}
 	
-	static Random rand = new Random();
+	public static Random rand = new Random();
 	public String genRandomString() {
 		String randString = "" + UUID.randomUUID();;
 		return randString;

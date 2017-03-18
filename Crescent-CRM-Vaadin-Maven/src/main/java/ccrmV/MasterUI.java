@@ -30,6 +30,7 @@ import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
 import debugging.profiling.ProfilingTimer;
 import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
+import debugging.unitTest.testSuiteExecutors.CrmStressTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
@@ -46,8 +47,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.43;
-	public static final String versionDescription = " More Efficient Filtering";
+	public static final double versionNumber = 1.44;
+	public static final String versionDescription = " High Performance";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -91,6 +92,7 @@ public class MasterUI extends UI {
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	
 	public static final Boolean DEV_TEST_CODE = true; //UNIT TESTING
+	public static final Boolean DEV_STRESS_TEST = false;//stress testing.
 	
 	public static Boolean unitTestsAlreadyRan = false;
 	
@@ -407,6 +409,8 @@ public class MasterUI extends UI {
 			TestSuiteMetaExecutor metaTests = new TestSuiteMetaExecutor();
 			LoginTestExecutor loginTests = new LoginTestExecutor(loginView,this);
 			CRMTestExecutor crmTests = new CRMTestExecutor(mainApp,this);
+			CrmStressTestExecutor crmStressTest = new CrmStressTestExecutor(mainApp,this);
+			
 			
 			dTestExecutor.runTests();
 			dTestExecutor.debugOutputTestCases();
@@ -421,6 +425,10 @@ public class MasterUI extends UI {
 			
 			crmTests.runTests();
 			crmTests.debugOutputTestCases();
+			
+			if (DEV_STRESS_TEST) {
+				crmStressTest.runTests();
+			}
 			
 			unitTestsAlreadyRan = true;
 		}
