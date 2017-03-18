@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import debugging.Debugging;
 import inventory.InventoryCategory;
@@ -21,9 +22,14 @@ import inventory.InventoryItem;
 //TODO: make this extend max object, and have a table of available databases
 public class UserDataHolder extends MaxObject {
 
-	public static final String databasePrefixField = "DatabasePrefix";
+	//public static final String databasePrefixField = "DatabasePrefix";
+	
+	
 	//private String user;
-	private String databasePrefix;
+	//private String databasePrefix;
+	
+	MaxField<String> databasePrefix = new MaxField<String>("DatabasePrefix",MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING,"","",this);
+	
 	// will not be after the transition
 	private ConcurrentHashMap<String, Client> userClientMap = new ConcurrentHashMap<String, Client>();
 	private ConcurrentHashMap<String, Location> userLocationMap = new ConcurrentHashMap<String, Location>();
@@ -52,7 +58,12 @@ public class UserDataHolder extends MaxObject {
 	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 
 	public Client templateClient;
-
+	
+	{
+		addMaxField(databasePrefix);
+		this.setKeyField(databasePrefix);
+	}
+	
 	/**
 	 * Holds data which is user speciific. Will implement data structures and be
 	 * a sub section of the dataholder class.
@@ -273,12 +284,11 @@ public class UserDataHolder extends MaxObject {
 	
 
 	public String getDatabasePrefix() {
-		return databasePrefix;
+		return databasePrefix.getFieldValue();
 	}
 
 	public void setDatabasePrefix(String databasePrefix) {
-		this.databasePrefix = databasePrefix;
-		updateDBMap();
+		this.databasePrefix.setFieldValue(databasePrefix);
 	}
 
 	public Client getClient(String id) {
@@ -346,25 +356,28 @@ public class UserDataHolder extends MaxObject {
 		return removeTemplate(userGroupMap.values());
 	}
 	public ConcurrentHashMap<String, Location> getLocationMap() {
-		// TODO Auto-generated method stub
 		return userLocationMap;
 	}
 
 	public ConcurrentHashMap<String, Status> getStatusMap() {
-		// TODO Auto-generated method stub
 		return userStatusMap;
 	}
 
 	public ConcurrentHashMap<String, Group> getGroupMap() {
-		// TODO Auto-generated method stub
 		return userGroupMap;
 	}
 	
 	public ConcurrentHashMap<String, Client> getClientMap() {
-		// TODO Auto-generated method stub
 		return userClientMap;
 	}
 
+	@Override
+	public String getPrimaryKey() {
+		return this.getDatabasePrefix();
+	}
+
+	
+	/*
 	@Override
 	public void loadInternalFromMap() {
 		this.databasePrefix = (String) dbMap.get(databasePrefixField);
@@ -412,4 +425,5 @@ public class UserDataHolder extends MaxObject {
 		}
 		
 	}
+	*/
 }
