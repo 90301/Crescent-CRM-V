@@ -32,6 +32,7 @@ import java.util.zip.*;
  * @author bentonjc
  *
  */
+@Deprecated
 public class BackupManager {
 
 	private static final String END_OF_LINE_DELIMITER = "<Next>";

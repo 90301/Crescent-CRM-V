@@ -390,7 +390,7 @@ public class UserDataHolder extends MaxObject {
 	@Override
 	public void createTableForClass(MaxDBTable table) {
 
-		table.addDatatype(databasePrefixField, MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING);
+		table.addDatatype(this.getClass(),databasePrefixField, MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING);
 		table.setPrimaryKeyName(databasePrefixField);
 		table.createTable();
 		
@@ -401,7 +401,15 @@ public class UserDataHolder extends MaxObject {
 		if (dbDatatypes == null) {
 			dbDatatypes = new HashMap<String, Class<?>>();
 		}
-		dbDatatypes.put(databasePrefixField, String.class);
+		if (USE_BETTER_DB_DATATYPES) {
+			if (!betterDbDatatypes.containsKey(this.getClass())) {
+				betterDbDatatypes.put(this.getClass(), new HashMap<>());
+			}
+			
+			betterDbDatatypes.get(this.getClass()).put(databasePrefixField, String.class);
+		} else {
+			dbDatatypes.put(databasePrefixField, String.class);
+		}
 		
 	}
 }

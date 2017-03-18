@@ -34,6 +34,10 @@ public abstract class MaxObject {
 	public Map<String, Object> dbMap = new HashMap<String, Object>();
 	public static Map<String, Class<?>> dbDatatypes = null;
 	
+	public static final Boolean USE_BETTER_DB_DATATYPES = true;
+	
+	public static HashMap<Class<? extends MaxObject>,HashMap<String,Class<?>>> betterDbDatatypes = new HashMap<>();
+	
 	
 	/**
 	 * A list that contains all the MaxFields to be passed into functions.
@@ -229,7 +233,15 @@ public abstract class MaxObject {
 		
 		Debugging.output("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.",Debugging.DATABASE_OUTPUT);
 		//for (String key : dbMap.keySet()) {
-		for (String key : dbDatatypes.keySet()) {
+		
+		Collection<String> keysToUse = null;
+		if (USE_BETTER_DB_DATATYPES) {
+			keysToUse = betterDbDatatypes.get(this.getClass()).keySet();
+		} else {
+			keysToUse = dbDatatypes.keySet();
+		}
+		
+		for (String key : keysToUse) {
 			Debugging.output("Key: " + key,Debugging.DATABASE_OUTPUT);
 			try {
 				Object value = rs.getObject(key);
@@ -428,8 +440,15 @@ public abstract class MaxObject {
 		
 		for (MaxField<?> m : maxFields) {
 			
-				dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
-			 
+				
+				if (USE_BETTER_DB_DATATYPES) {
+					if (!betterDbDatatypes.containsKey(this.getClass())) {
+					betterDbDatatypes.put(this.getClass(), new HashMap<>());
+					}
+					betterDbDatatypes.get(this.getClass()).put(m.getFieldName(), m.getExtendedClass());
+				} else {
+					dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
+				}
 		}
 	}
 	
@@ -483,7 +502,7 @@ public abstract class MaxObject {
 	public MaxDBTable autoGenCreateTableForClass(Collection<MaxField<?>> maxFields,MaxField<?> primaryKey, MaxDBTable table) {
 		
 		for (MaxField<?> m : maxFields) {
-			table.addDatatype(m.getFieldName(), m.getFieldDBType());
+			table.addDatatype(this.getClass(),m.getFieldName(), m.getFieldDBType());
 		}
 		table.setPrimaryKeyName(primaryKey.getFieldName());
 		table.createTable();

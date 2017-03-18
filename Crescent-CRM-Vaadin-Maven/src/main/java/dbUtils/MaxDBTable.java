@@ -28,7 +28,16 @@ public class MaxDBTable extends MaxDB {
 	protected MaxDB parentDB;
 	// Stores information as a key (variable name) value (variable type)
 	// TODO: make this ordered
+	
+	//This is used exclusively in table creation...
 	HashMap<String, String> dataTypes = new HashMap<String, String>();
+	
+	//A hash map containing the field names and datatypes for Max Object Classes
+	static HashMap<Class<? extends MaxObject>,HashMap<String,String>> betterDataTypes = new HashMap<>();
+	
+	static final Boolean USE_BETTER_DATATYPES = false;//Keep this false, this feature does not ever need
+	//to be turned on, table creation doesn't currently use this, and probably won't
+	
 	protected String tableName;
 	protected String tableString;
 	protected String primaryKeyName;
@@ -53,19 +62,18 @@ public class MaxDBTable extends MaxDB {
 		// TODO Auto-generated constructor stub
 	}
 
-	public void addDatatype(String name, String datatype) {
-
-		this.dataTypes.put(name, datatype);
-	}
-
-	/**
-	 * @deprecated A safer (but slower) way of adding a datatype. UPDATE: Just
-	 *             called add datatype
-	 * @param name
-	 * @param datatype
-	 */
-	public void addDatatypeSafe(String name, String datatype) {
-		addDatatype(name, datatype);
+	public <T extends MaxObject>void addDatatype(Class<T> classValue,String name, String datatype) {
+		if (USE_BETTER_DATATYPES) {
+			//if the class isn't registered, register it:
+			if (!this.betterDataTypes.containsKey(classValue)) {
+				this.betterDataTypes.put(classValue, new HashMap<String,String>());
+			}
+			this.betterDataTypes.get(classValue).put(name, datatype);
+			
+			
+		} else {
+			this.dataTypes.put(name, datatype);
+		}
 	}
 
 	public MaxDBTable(String tableName) {
@@ -288,10 +296,12 @@ public class MaxDBTable extends MaxDB {
 		return parentDB;
 	}
 
+	@Deprecated
 	public HashMap<String, String> getDataTypes() {
 		return dataTypes;
 	}
-
+	
+	@Deprecated
 	public void setDataTypes(HashMap<String, String> dataTypes) {
 		this.dataTypes = dataTypes;
 	}
