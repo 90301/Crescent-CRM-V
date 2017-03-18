@@ -45,8 +45,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.39;
-	public static final String versionDescription = " Meta Profiling Start";
+	public static final double versionNumber = 1.40;
+	public static final String versionDescription = " User Registration";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -308,7 +308,7 @@ public class MasterUI extends UI {
 	public void startMainApp() {
 		loggedIn = true;
 		authenicatedHosts.add(userHost);
-		System.out.println("Attempting to navigate to the main application.");
+		Debugging.output("Attempting to navigate to the main application.",Debugging.OLD_OUTPUT);
 		//Change theme
 		if (user!=null) {
 			if (Stream.of(avaliableThemes).anyMatch(x -> x.equals(user.getTheme()))) {

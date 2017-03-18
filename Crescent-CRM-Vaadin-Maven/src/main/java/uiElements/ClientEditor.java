@@ -242,7 +242,7 @@ public class ClientEditor extends VerticalLayout {
 		if (c != null) {
 
 		} else {
-			System.out.println("Null value made it to selectClient: " + c);
+			Debugging.output("Null value made it to selectClient: " + c,Debugging.OLD_OUTPUT);
 			return;
 		}
 		//Set the user data holder
@@ -260,7 +260,7 @@ public class ClientEditor extends VerticalLayout {
 			customFieldEditor.setVisible(true);
 		}
 
-		System.out.println("showing client information for: " + c);
+		Debugging.output("showing client information for: " + c,Debugging.OLD_OUTPUT);
 		// TODO: load information into the ui.
 		// LOAD INFORMATION
 		clientNameLabel.setValue(c.getName());

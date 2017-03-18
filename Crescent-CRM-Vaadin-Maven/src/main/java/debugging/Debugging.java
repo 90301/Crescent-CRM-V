@@ -127,7 +127,7 @@ public class Debugging {
 	public static final Boolean DELETE_OUTPUT_ENABLED = true;
 	
 	public static final String CONVERSION_DEBUG = CONSOLE_OUTPUT;
-	public static final Boolean CONVERSION_DEBUG_ENABLED = true;
+	public static final Boolean CONVERSION_DEBUG_ENABLED = false;
 	
 	public static final String CUSTOM_FIELD = CONSOLE_OUTPUT;
 	public static final Boolean CUSTOM_FIELD_ENABLED = true;
@@ -146,6 +146,10 @@ public class Debugging {
 	public static final DebugObject FILTER2 = new DebugObject(CONSOLE_OUTPUT, true, true, "Filter2: ");
 	public static final DebugObject CONFIG_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Configuration: ");
 	public static final DebugObject PROFILING = new DebugObject(CONSOLE_OUTPUT, true, true, "Profiling: ");
+	public static final DebugObject OLD_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Old-Output: ");
+	public static final DebugObject DATABASE_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Database: ");
+	public static final DebugObject DATABASE_OUTPUT_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "Database (Error): ");
+    public static final DebugObject STRESS_TEST = new DebugObject(CONSOLE_OUTPUT, true, true, "Stress Test: ");
 	
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables

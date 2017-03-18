@@ -8,6 +8,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import debugging.Debugging;
+
 //import org.yaml.snakeyaml.introspector.PropertyUtils;
 
 /**
@@ -70,7 +72,7 @@ public class MaxDB extends MaxDBTopLevel {
 			if (!e.getMessage().contains("exist")) {
 			e.printStackTrace();
 			} else {
-				System.out.println("database: " + dbName + " Already exists!");
+				Debugging.output("database: " + dbName + " Already exists!",Debugging.DATABASE_OUTPUT);
 			}
 		}
 	}
@@ -81,10 +83,10 @@ public class MaxDB extends MaxDBTopLevel {
 	public void checkOrEstablishConnection() {
 		try {
 			if (dbConnection.isValid(0)) {
-				System.out.println("Database connection already established.");
+				Debugging.output("Database connection already established.",Debugging.DATABASE_OUTPUT);
 				return;
 			} else {
-				System.out.println("Connection not valid, reconnecting.");
+				Debugging.output("Connection not valid, reconnecting.",Debugging.DATABASE_OUTPUT);
 				connectDB();
 			}
 		} catch (SQLException e) {
@@ -102,11 +104,11 @@ public class MaxDB extends MaxDBTopLevel {
 	public Boolean connectDB() {
 		Boolean sucsess = false;
 		genDBConnectionString();
-		System.out.println("Connecting to: " + this);
+		Debugging.output("Connecting to: " + this,Debugging.DATABASE_OUTPUT);
 		try {
 			dbConnection = DriverManager.getConnection(dbConnectionString, user, pass);
 			 sucsess = true;
-			 System.out.println("connected to: " +this +" sucsessfully!");
+			 Debugging.output("connected to: " +this +" sucsessfully!",Debugging.DATABASE_OUTPUT);
 		} catch (SQLException e) {
 			//failed to connect
 			System.err.println("failed to connect to: " +this);

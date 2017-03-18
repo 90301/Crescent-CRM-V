@@ -45,6 +45,7 @@ public class BackupManager {
 	private static final String RESTORE_FOLDER = "restore/";
 	private static final boolean LOCAL_ONLY_RESTORE = false;
 
+	/*
 	public static <T extends MaxObject> void backupToCSV(String fileNameAddion, Collection<T> col) {
 		// create MAP (arraylist is ordered by nature, if nothing is found
 		// A blank value MUST be entered.
@@ -120,14 +121,16 @@ public class BackupManager {
 			return;
 		}
 	}
+	*/
 
-	@SuppressWarnings("unchecked")
+	//@SuppressWarnings("unchecked")
 	/**
 	 * 
 	 * @param localFileName
 	 * @param ref
 	 * @param storeIn
 	 */
+	/*
 	public static <T extends MaxObject> void restore(String localFileName, Class<T> ref,
 			AbstractMap<String, T> storeIn) {
 		// TODO: PROGRAM THE RESTORE FUNCTION
@@ -246,6 +249,7 @@ public class BackupManager {
 		}
 
 	}
+	*/
 
 	/**
 	 * Zips up a collection of files into a single zip file. this AUTOMATICALLY

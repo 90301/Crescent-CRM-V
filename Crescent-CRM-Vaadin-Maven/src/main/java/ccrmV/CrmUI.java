@@ -322,15 +322,16 @@ public class CrmUI extends HorizontalLayout implements View {
 	 */
 	public void selectItem() {
 
-		System.out.println("SELECTED AN ITEM." + clientGrid.getSelectedRow());
+		Debugging.output("SELECTED AN ITEM." + clientGrid.getSelectedRow(),Debugging.OLD_OUTPUT);
 		// TODO: ASK before switching
 
 		// null check
 		if (clientGrid.getSelectedRow() != null) {
 			localSelClient = masterUi.userDataHolder.getClient(((Client) clientGrid.getSelectedRow()).getPrimaryKey());
 			if (localSelClient == null) {
-				System.out.println(
-						"Null value: " + localSelClient + " found for client: " + ((Client) clientGrid.getSelectedRow()).getPrimaryKey());
+				Debugging.output(
+						"Null value: " + localSelClient + " found for client: " + ((Client) clientGrid.getSelectedRow()).getPrimaryKey()
+						,Debugging.OLD_OUTPUT);
 				return;
 			}
 
@@ -363,7 +364,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		if (c != null) {
 
 		} else {
-			System.out.println("Null value made it to selectClient: " + c);
+			Debugging.output("Null value made it to selectClient: " + c,Debugging.OLD_OUTPUT);
 			clientEditor.setVisible(false);
 			return;
 		}
@@ -528,7 +529,7 @@ public class CrmUI extends HorizontalLayout implements View {
 			c.setNotes("Notes:");
 		}
 
-		System.out.println("Created Client: " + c);
+		Debugging.output("Created Client: " + c,Debugging.OLD_OUTPUT);
 
 		masterUi.userDataHolder.store(c, Client.class);
 		

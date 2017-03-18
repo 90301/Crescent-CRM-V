@@ -24,29 +24,6 @@ import debugging.Debugging;
 
 public class Client extends MaxObject implements Item {
 
-	/*
-	 * private Location location; public static final String locationField =
-	 * "locationName"; private Status status; public static final String
-	 * statusField = "statusName"; private Group group; public static final
-	 * String groupField = "groupName"; private String name; public static final
-	 * String nameField = "name"; private String notes; public static final
-	 * String notesField = "notes"; private Boolean contactNow = false; public
-	 * static final String contactNowField = "contactNow"; // Dates private
-	 * java.util.Date lastUpdated = new Date(); public static final String
-	 * lastUpdatedField = "lastUpdated";
-	 * 
-	 * 
-	 * // CUSTOM FIELDS
-	 * 
-	 * private Map<String, ClientField> clientFields = new HashMap<String,
-	 * ClientField>(); public static final String clientFieldsField =
-	 * "clientFields";
-	 */
-	// The ID for the map that will hold all this information (or the id for the
-	// item in the database)
-	// private String id;
-	// public static final String idField = "id";
-
 	private Boolean mutex = false;// Do not update internal db if true
 
 	MaxField<String> name = new MaxField<String>("name", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
@@ -145,144 +122,6 @@ public class Client extends MaxObject implements Item {
 		return "Client [location=" + location + ", status=" + status + ", group=" + group + ", name=" + name
 				+ ", notes=" + notes + ", mutex=" + mutex + "]";
 	}
-
-
-	/*
-	@Override
-	public void loadInternalFromMap() {
-		mutex = true;
-		this.setLocation((String) dbMap.get(locationField));
-		this.setStatus((String) dbMap.get(statusField));
-		this.setGroup((String) dbMap.get(groupField));
-		this.name = (String) dbMap.get(nameField);
-		this.notes = (String) dbMap.get(notesField);
-		this.id = (String) dbMap.get(idField);
-		// null check everything
-		lastUpdated = safeLoadFromInternalMap(lastUpdatedField, new Date());
-		contactNow = safeLoadFromInternalMap(contactNowField, false);
-
-		String clientXML = safeLoadFromInternalMap(clientFieldsField, "");
-		loadCustomFields(clientXML);
-
-		mutex = false;
-	}
-
-
-	@Override
-	public void updateDBMap() {
-		if (!mutex) {
-			this.dbMap.put(locationField, this.getLocationName());
-			this.dbMap.put(statusField, this.getStatusName());
-			this.dbMap.put(groupField, this.getGroupName());
-			this.dbMap.put(nameField, this.name);
-			this.dbMap.put(notesField, this.notes);
-			this.dbMap.put(idField, this.id);
-			this.dbMap.put(lastUpdatedField, this.lastUpdated);
-			this.dbMap.put(contactNowField, this.contactNow);
-
-			this.dbMap.put(clientFieldsField, this.genFieldXml());
-		}
-
-	}
-
-	@Override
-	public void setupDBDatatypes() {
-		if (dbDatatypes == null) {
-			dbDatatypes = new HashMap<String, Class<?>>();
-		}
-
-		System.out.println("generated db type for: " + this.getClass());
-		dbDatatypes.put(locationField, String.class);
-		dbDatatypes.put(statusField, String.class);
-		dbDatatypes.put(groupField, String.class);
-
-		dbDatatypes.put(nameField, String.class);
-		dbDatatypes.put(notesField, String.class);
-		dbDatatypes.put(idField, String.class);
-		dbDatatypes.put(lastUpdatedField, java.util.Date.class);
-		dbDatatypes.put(contactNowField, Boolean.class);
-
-		dbDatatypes.put(clientFieldsField, String.class);
-
-	}
-
-	public void createTableForClass(MaxDBTable table) {
-		table.addDatatype(nameField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		table.addDatatype(idField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		table.addDatatype(notesField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
-		table.addDatatype(groupField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
-		table.addDatatype(statusField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		table.addDatatype(locationField, MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING);
-		table.addDatatype(lastUpdatedField, MaxDBTable.DATA_MYSQL_TYPE_DATE_TIME);
-		table.addDatatype(contactNowField, MaxDBTable.DATA_MYSQL_TYPE_BOOLEAN);
-
-		table.addDatatype(clientFieldsField, MaxDBTable.DATA_MYSQL_TYPE_STRING);
-
-		table.setPrimaryKeyName(nameField);
-		table.createTable();
-	}
-	*/
-
-	// ----[ Custom Fields ]
-	// -------------------------------------------------------------------
-
-	/**
-	 * Generates xml to serialize the custom fields
-	 * 
-	 * @return
-	 */
-	/*
-	public String genFieldXml() {
-		String xml = "";
-
-		// Convert to a map of strings
-		HashMap<String, String> tempMap = new HashMap<String, String>();
-
-		for (ClientField cf : clientFields.values()) {
-			tempMap.put(cf.getFieldName(), cf.getStringFieldValue());
-		}
-
-		xml = InhalerUtils.mapToXML(tempMap);
-
-		return xml;
-	}
-	*/
-
-	/**
-	 * Loads custom fields from the xml data.
-	 * 
-	 * @param xml
-	 */
-	/*
-	public void loadCustomFields(String xml) {
-
-		HashMap<String, String> tempMap = new HashMap<String, String>();
-
-		tempMap = InhalerUtils.xmlToMap(xml);
-		// TODO finish this method
-		for (String key : tempMap.keySet()) {
-
-			String value = tempMap.get(key);
-			// create a new client field
-			ClientField cf = new ClientField();
-			cf.setUserDataHolder(userDataHolder);
-
-			// Check to see if a template field of the same name exists
-
-			TemplateField tf = userDataHolder.getMap(TemplateField.class).get(key);
-
-			if (tf != null) {
-				cf.setCurrentDataType(tf.getDataType());
-				cf.setFieldName(key);
-				cf.setFieldValue(value);
-
-				clientFields.put(key, cf);
-			}
-
-		}
-
-	}
-	*/
 
 	public void setupCustomFieldsFromTemplate() {
 		
@@ -397,7 +236,7 @@ public class Client extends MaxObject implements Item {
 		// Math.toIntExact(System.currentTimeMillis()/DATE_MULTIPLIER);
 		this.lastUpdated.setFieldValue(new Date());
 
-		System.out.println("Last updated: " + lastUpdated);
+		Debugging.output("Last updated: " + lastUpdated,Debugging.OLD_OUTPUT);
 	}
 
 	public String getLocationName() {

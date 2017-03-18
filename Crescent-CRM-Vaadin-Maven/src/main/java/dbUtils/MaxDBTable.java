@@ -130,8 +130,8 @@ public class MaxDBTable extends MaxDB {
 		}
 		tableCreateString += ");";
 
-		System.out.println("Running SQL Command: ");
-		System.out.println(tableCreateString);
+		Debugging.output("Running SQL Command: ",Debugging.DATABASE_OUTPUT);
+		Debugging.output(tableCreateString,Debugging.DATABASE_OUTPUT);
 
 		try {
 			Statement createTableStatement = dbConnection.createStatement();
@@ -151,7 +151,7 @@ public class MaxDBTable extends MaxDB {
 		for (String upgradeQuery : tableUpgradeStrings) {
 			try {
 
-				System.out.println("Executing SQL Query: " + upgradeQuery);
+				Debugging.output("Executing SQL Query: " + upgradeQuery,Debugging.DATABASE_OUTPUT);
 				Statement createTableStatement = dbConnection.createStatement();
 				createTableStatement.execute(upgradeQuery);
 				sucsess = true;
@@ -179,7 +179,7 @@ public class MaxDBTable extends MaxDB {
 
 		checkOrEstablishConnection();
 
-		System.out.println("Adding: " + obj + " TO: " + this);
+		Debugging.output("Adding: " + obj + " TO: " + this,Debugging.DATABASE_OUTPUT);
 
 		Boolean sucsess = false;
 
@@ -205,7 +205,7 @@ public class MaxDBTable extends MaxDB {
 		 * 
 		 * 
 		 * 
-		 * System.out.println(insertString); Statement insertStatement = null;
+		 * Debugging.output(insertString); Statement insertStatement = null;
 		 * try { insertStatement = dbConnection.createStatement();
 		 * 
 		 * insertStatement.execute(insertString);
@@ -237,14 +237,14 @@ public class MaxDBTable extends MaxDB {
 	public ResultSet getAllRows() {
 		ResultSet rs = null;
 
-		System.out.println("Getting all rows for : " + this);
+		Debugging.output("Getting all rows for : " + this,Debugging.DATABASE_OUTPUT);
 		// TODO: check if connection is alive, if not create connection.
 		checkOrEstablishConnection();
 		Statement queryStatement = null;
 		try {
 			queryStatement = dbConnection.createStatement();
 			String queryString = "SELECT * FROM " + tableName + ";";
-			System.out.println(queryString);
+			Debugging.output(queryString,Debugging.DATABASE_OUTPUT);
 
 			rs = queryStatement.executeQuery(queryString);
 
