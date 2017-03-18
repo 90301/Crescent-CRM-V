@@ -274,6 +274,8 @@ public class CrmUI extends HorizontalLayout implements View {
 	 * Fill combo boxes
 	 */
 	public void updateAllComboBoxes() {
+		
+		ProfilingTimer updateBoxTimer = new ProfilingTimer("update crm comboBoxes");
 		// clear all combo boxes
 		createClientStatus.clear();
 		createClientLocation.clear();
@@ -285,27 +287,36 @@ public class CrmUI extends HorizontalLayout implements View {
 		createClientGroup.removeAllItems();
 		
 		// create clients
+		
 		fillComboBox(createClientStatus, masterUi.userDataHolder.getAllStatus());
 		fillComboBox(createClientLocation, masterUi.userDataHolder.getAllLocations());
 		fillComboBox(createClientGroup, masterUi.userDataHolder.getAllGroups());
-
+		
+		/*
+		createClientStatus.addItems(masterUi.userDataHolder.getAllStatus()());
+		createClientLocation.addItems(masterUi.userDataHolder.getAllLocations());
+		createClientGroup.addItems(masterUi.userDataHolder.getAllGroups());
+		*/
 		// filter
 		clientFilter.updateAllComboBoxes();
 
 		clientEditor.updateAllComboBoxes();
 		
+		
+		updateBoxTimer.stopTimer();
 		//fillComboBox(csvBackupSelect, BackupManager.getCsvBackups());
 	}
 
+	
 	public <T extends Object> void fillComboBox(ComboBox box, Collection<T> values) {
 		
 		RapidProfilingTimer rpt = new RapidProfilingTimer("CrmUI fillComboBox");
 		
 		for (Object val : values) {
 			// add any non template entity. (unless template is selected)
-			if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
+			//if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
 				box.addItem(val.toString());
-			}
+			//}
 			rpt.logTime();
 		}
 	}
@@ -579,6 +590,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		this.setSpacing(true);
 		this.addStyleName("topScreenPadding");
 		
+		//only runs if it hasn't already.
 		masterUi.userDataHolder.initalizeDatabases();
 
 		// Nav Bar Code
@@ -592,17 +604,12 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		if (PANNEL_ENABLED) {
 		panel.setContent(layout);
-		//panel.setSizeFull();
 		panel.setHeight(PANEL_HEIGHT);
 		panel.getContent().setSizeUndefined();
 		this.setSizeUndefined();
-		// panel.setHeight("100%");
-		// panel.setWidth("100%");
+
 		layout.setSizeUndefined();
-		// this.addStyleName("v-scrollable");
-		// this.addStyleName("h-scrollable");
-		// this.setHeight("100%");
-		// this.setWidth("100%");
+
 		this.addComponent(panel);
 		} else {
 			this.addComponent(layout);

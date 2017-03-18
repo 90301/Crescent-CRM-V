@@ -57,6 +57,8 @@ public class UserDataHolder extends MaxObject {
 	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
 	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 
+	Boolean databaseSetup = false;
+	
 	public Client templateClient;
 	
 	{
@@ -74,7 +76,7 @@ public class UserDataHolder extends MaxObject {
 
 	public void initalizeDatabases() {
 		// setup the tables
-		
+		if (!databaseSetup) {
 		setupTable(userTemplateFieldMap,userTemplateFieldTable,TEMPLATE_FIELD_TABLE_TITLE,TemplateField.class);
 		setupTable(userGroupMap,userGroupTable,GROUP_TABLE_TITLE,Group.class);
 		setupTable(userStatusMap,userStatusTable,STATUS_TABLE_TITLE,Status.class);
@@ -85,6 +87,11 @@ public class UserDataHolder extends MaxObject {
 		
 		
 		setupTemplate();
+		
+		databaseSetup = true;
+		}
+		
+		
 
 	}
 	

@@ -22,6 +22,11 @@ import debugging.profiling.ProfilingTimer;
 
 public class ClientFilter extends HorizontalLayout implements Filter {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private static final boolean DEFAULT_FILTER_SHOW = true;
 
 	private static final boolean MORE_EFFICIENT_FILTERING = true;

@@ -28,6 +28,7 @@ import configuration.Configuration;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
+import debugging.profiling.ProfilingTimer;
 import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
@@ -326,11 +327,15 @@ public class MasterUI extends UI {
 	}
 
 	public void enterCRM() {
-
+		ProfilingTimer crmTimer = new ProfilingTimer("enter CRM");
+		
+		
 		mainNavigator.navigateTo(MAIN_APP);
 		mainApp.updateClientGrid();
 		mainApp.updateCreationLists();
 		mainApp.updateAllComboBoxes();
+		
+		crmTimer.stopTimer();
 	}
 
 	public void enterUserEditor() {
@@ -377,6 +382,9 @@ public class MasterUI extends UI {
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
 		DataHolder.store(this.user, User.class);
+		this.userDataHolder.initalizeDatabases();
+		navBar.updateInfo();
+		
 	}
 
 	public void enterInventory() {
