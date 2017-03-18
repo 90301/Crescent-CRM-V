@@ -256,13 +256,15 @@ public class CrmUI extends HorizontalLayout implements View {
 		}
 		
 		//Filter 2.0
-		if (USE_VAADIN_FILTER){
+		if (USE_VAADIN_FILTER && clientFilter.getFilterHasChanged()){
 			ProfilingTimer filterTimer1 = new ProfilingTimer("filter timer1");
 			//Determine the time it takes to remove the old filter and add the new one.
 			//TODO
 			//It may be possible to move this code out to another method
 			clients.removeAllContainerFilters();
 			clients.addContainerFilter(clientFilter);
+			
+			clientFilter.setFilterHasChanged(false);
 			filterTimer1.stopTimer();
 		}
 

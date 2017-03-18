@@ -18,10 +18,13 @@ import clientInfo.Status;
 import dbUtils.InhalerUtils;
 import debugging.DebugObject;
 import debugging.Debugging;
+import debugging.profiling.ProfilingTimer;
 
 public class ClientFilter extends HorizontalLayout implements Filter {
 	
-	private static final boolean DEFAULT_FILTER_SHOW = false;
+	private static final boolean DEFAULT_FILTER_SHOW = true;
+
+	private static final boolean MORE_EFFICIENT_FILTERING = true;
 
 	CrmUI crmUi = null;
 	
@@ -41,8 +44,18 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 	Label filterLabel = new Label("Filter :");
 	CheckBox filterContactNowCheckBox = new CheckBox("Contact Now Only");
 
+	//Determine if Filter Has Changed
+	Boolean filterHasChanged = false;
 	
-	//constrcutor
+	
+	{
+		filterClientTextField.addValueChangeListener(e -> updateFilter());
+		filterStatus.addValueChangeListener(e -> updateFilter());
+		filterLocation.addValueChangeListener(e -> updateFilter());
+		filterGroup.addValueChangeListener(e -> updateFilter());
+		filterClientNotesField.addValueChangeListener(e -> updateFilter());
+		filterContactNowCheckBox.addValueChangeListener(e -> updateFilter());
+	}
 	
 	/**
 	 * Pulls in the crmUi to be used
@@ -73,7 +86,7 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		filterClientTextField.setValue("");
 		filterClientNotesField.setValue("");
 		filterContactNowCheckBox.setValue(false);
-		crmUi.updateClientGrid();
+		updateFilter();
 	}
 	
 	
@@ -128,12 +141,7 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		this.setDefaultComponentAlignment(Alignment.BOTTOM_LEFT);
 		this.addComponent(filterLabel);
 		
-		filterClientTextField.addValueChangeListener(e -> crmUi.updateClientGrid());
-		filterStatus.addValueChangeListener(e -> crmUi.updateClientGrid());
-		filterLocation.addValueChangeListener(e -> crmUi.updateClientGrid());
-		filterGroup.addValueChangeListener(e -> crmUi.updateClientGrid());
-		filterClientNotesField.addValueChangeListener(e -> crmUi.updateClientGrid());
-		filterContactNowCheckBox.addValueChangeListener(e -> crmUi.updateClientGrid());
+		
 
 		//filterClientTextField 
 		this.addComponent(filterShowFilter);
@@ -162,6 +170,42 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		
 	}
 	
+	public void updateFilter() {
+		ProfilingTimer updateFilterTime = new ProfilingTimer("Update Filter Time");
+		//TODO, may be able to make this more efficent by directly adding the filter to the grid
+		//instead of doing a full refresh
+		if (MORE_EFFICIENT_FILTERING) {
+			crmUi.clients.removeAllContainerFilters();
+			//ensure not everything is null
+			if (!isBlankFilter()) {
+				crmUi.clients.addContainerFilter(this);
+			}
+		} else {
+			this.filterHasChanged = true;
+			crmUi.updateClientGrid();
+		}
+		
+		updateFilterTime.stopTimer();
+	}
+	
+	/**
+	 * Tests to see if the filter is blank (no filter)
+	 * @return if the filter is default (no filter) (true)
+	 */
+	public boolean isBlankFilter() {
+		if (filterGroup.getValue()!=null
+				&& filterStatus.getValue()!=null
+				&& filterLocation.getValue()!=null
+				&& filterClientTextField.getValue()!=null
+				&& filterClientNotesField.getValue()!=null
+				&& filterContactNowCheckBox.getValue()!=false
+				) {
+		return true;	
+		}
+		
+		return false;
+	}
+
 	/**
 	 * Checks to see if a client meets the current filter
 	 * if it does, return true.
@@ -247,5 +291,13 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 	public boolean appliesToProperty(Object propertyId) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public Boolean getFilterHasChanged() {
+		return filterHasChanged;
+	}
+	
+	public void setFilterHasChanged(Boolean changed) {
+		this.filterHasChanged = changed;
 	}
 }
