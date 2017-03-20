@@ -47,7 +47,7 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.46;
+	public static final double versionNumber = 1.47;
 	public static final String versionDescription = " Small UI";
 
 	public MasterUI() {
