@@ -111,7 +111,9 @@ public class Debugging {
 	public static final Boolean INVENTORY_VIEW_OUTPUT_ENABLED = true;
 
 	// Inhaler Utils Debugging
+	@Deprecated
 	public static final String INHALER_UTILS_DEBUG = CONSOLE_OUTPUT;
+	@Deprecated
 	public static final Boolean INHALER_UTILS_DEBUG_ENABLED = true;
 
 	// Client Field Debugging
@@ -150,7 +152,10 @@ public class Debugging {
 	public static final DebugObject DATABASE_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Database: ");
 	public static final DebugObject DATABASE_OUTPUT_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "Database (Error): ");
     public static final DebugObject STRESS_TEST = new DebugObject(CONSOLE_OUTPUT, true, true, "Stress Test: ");
-	
+    public static final DebugObject NOTE_HISTORY = new DebugObject(CONSOLE_OUTPUT, true, true, "Note History: ");
+    public static final DebugObject XML_CONVERSION = new DebugObject(CONSOLE_OUTPUT, true, true, "XML Conversion: ");
+    public static final DebugObject XML_CONVERSION_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "XML Conversion Error: ");
+    
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
 	

@@ -3,10 +3,13 @@
  */
 package clientInfo;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.vaadin.data.Item;
@@ -19,6 +22,7 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import dbUtils.Conversions.ClientFieldMapToString;
+import dbUtils.Conversions.LinkedHashMapToString;
 import dbUtils.Conversions.UdhMaxObjectToString;
 import debugging.Debugging;
 
@@ -47,12 +51,19 @@ public class Client extends MaxObject implements Item {
 	
 	MaxField<String> profilePicture = new MaxField<String>("profilePicture", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "", this);
 	
+	MaxField<LinkedHashMap<String, String>> noteHistory = new MaxField<LinkedHashMap<String, String>>("noteHistory",
+			MaxDBTable.DATA_MYSQL_TYPE_STRING, new LinkedHashMap<String, String>(), new LinkedHashMap<String, String>(),
+			this);
+	
 	//Conversions
 	
 	UdhMaxObjectToString<Location> locationConversion = new UdhMaxObjectToString<Location>();
 	UdhMaxObjectToString<Status> statusConversion = new UdhMaxObjectToString<Status>();
 	UdhMaxObjectToString<Group> groupConversion = new UdhMaxObjectToString<Group>();
 	ClientFieldMapToString customFieldConversion = new ClientFieldMapToString();
+	LinkedHashMapToString noteHistoryConversion = new LinkedHashMapToString();
+
+	private String currentNoteHistoryKey;
 	
 	public static final String LOCATION_GRID_NAME = "Location";
 	public static final String STATUS_GRID_NAME = "Status";
@@ -84,10 +95,16 @@ public class Client extends MaxObject implements Item {
 		customFieldConversion.setUserDataHolder(userDataHolder);
 		customFieldConversion.setDefaultStoreValue("");
 		
+		//note history
+		noteHistoryConversion.setStoreRef(String.class);
+		noteHistoryConversion.setDefaultStoreValue("");
+		noteHistoryConversion.setUserDataHolder(userDataHolder);
+		
 		location.setConversion(locationConversion);
 		status.setConversion(statusConversion);
 		group.setConversion(groupConversion);
 		clientFields.setConversion(customFieldConversion);
+		noteHistory.setConversion(noteHistoryConversion);
 		
 		//Hide certain fields for the grid
 		
@@ -95,6 +112,7 @@ public class Client extends MaxObject implements Item {
 		contactNow.setShowField(false);
 		clientFields.setShowField(false);
 		profilePicture.setShowField(false);
+		noteHistory.setShowField(false);
 		
 		location.setGridName(LOCATION_GRID_NAME);
 		status.setGridName(STATUS_GRID_NAME);
@@ -112,6 +130,7 @@ public class Client extends MaxObject implements Item {
 		addMaxField(lastUpdated);
 		addMaxField(clientFields);
 		addMaxField(profilePicture);
+		addMaxField(noteHistory);
 		
 	}
 
@@ -293,6 +312,7 @@ public class Client extends MaxObject implements Item {
 
 	public void setNotes(String notes) {
 		this.notes.setFieldValue(notes);
+		updateNoteHistory();
 	}
 	
 	public void setContactNow(Boolean contactNow) {
@@ -356,7 +376,62 @@ public class Client extends MaxObject implements Item {
 	public Boolean getContactNow() {
 		return contactNow.getFieldValue();
 	}
-
+	
+	public LinkedHashMap<String,String> getNoteHistory() {
+		return noteHistory.getFieldValue();
+	}
+	
+	public void setNoteHistory(LinkedHashMap<String,String> noteHistory) {
+		this.noteHistory.setFieldValue(noteHistory);
+	}
+	
+	
+	
+	/*
+	 * Note History
+	 */
+	
+	public void updateNoteHistory() {
+		//check last note history, if it's not the same as the current notes add
+		//another entry to the history
+		//TODO
+		Debugging.output("Updating note history for: " + this.getName(), Debugging.NOTE_HISTORY);
+		
+		LinkedHashMap<String, String> his = this.getNoteHistory();
+		String currentNote = this.getNotes();
+		
+		for (String oldNoteKey : his.keySet()) {
+			String oldNote = his.get(oldNoteKey);
+			
+			Debugging.output("Checking for same text: " + currentNote + " | " +  oldNoteKey + " : " + oldNote, Debugging.NOTE_HISTORY);
+			
+			if (currentNote.equals(oldNote)) {
+				this.currentNoteHistoryKey = oldNoteKey;
+				
+				Debugging.output("Found matching note: " + oldNoteKey, Debugging.NOTE_HISTORY);
+				
+				return;
+			}
+		}
+		
+		Debugging.output("Note Change detected: " + currentNote, Debugging.NOTE_HISTORY);
+		//the current note is not in the history. add it, and set the pointer
+		String key = addNoteHistory(currentNote);
+		this.currentNoteHistoryKey = key;
+		
+	}
+	public static final SimpleDateFormat historyDateFormat = new SimpleDateFormat("MMM-dd-yyyy");
+	private String addNoteHistory(String note) {
+		String key = "V" +getNoteHistory().size() + "_" + historyDateFormat.format(new Date());
+		
+		Debugging.output("Adding note history: " + key + " | " + note, Debugging.NOTE_HISTORY);
+		
+		LinkedHashMap<String,String> nHis = getNoteHistory();
+		nHis.put(key, note);
+		
+		setNoteHistory(nHis);
+		return key;
+	}
 	/*
 	 * VAADIN ITEM Allows addition to special data-structures
 	 */
