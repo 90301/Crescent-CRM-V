@@ -150,12 +150,14 @@ public class CrmUI extends HorizontalLayout implements View {
 
 	public void createClientGrid() {
 		Client exampleClient = new Client();
-		
+		//TODO: do we really need to create a new container every time?
 		clients = new IndexedContainer();
 		
 		exampleClient.populateContainer(clients);
 		
 		clientGrid.setContainerDataSource(clients);
+		
+		clientGrid.setFrozenColumnCount(1);
 		
 	}
 	/**
