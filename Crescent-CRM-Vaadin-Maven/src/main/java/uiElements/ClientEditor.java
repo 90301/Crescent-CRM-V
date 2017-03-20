@@ -50,7 +50,7 @@ public class ClientEditor extends VerticalLayout {
 	Label clientNameLabel = new Label("Client Name");
 	Label clientLastUpdate = new Label("Last Updated: --/--/----");
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
-	ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
+	//ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
 
 	//Custom Fields
 	TemplateEditor templateEditor = new TemplateEditor();
@@ -108,7 +108,7 @@ public class ClientEditor extends VerticalLayout {
 		clientEditorActionLayout.addComponent(clientUpdateButton);
 		clientEditorActionLayout.addComponent(clientArchiveButton);
 		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
-		clientEditorActionLayout.addComponent(clientContactFrequency);
+		//clientEditorActionLayout.addComponent(clientContactFrequency);
 
 		//Profile Picture Horizontal Layout
 		uploadProfileLayout.setSpacing(true);

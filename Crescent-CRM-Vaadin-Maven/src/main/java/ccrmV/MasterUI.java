@@ -47,8 +47,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.45;
-	public static final String versionDescription = " Friendly Grid Names";
+	public static final double versionNumber = 1.46;
+	public static final String versionDescription = " Small UI";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -84,7 +84,7 @@ public class MasterUI extends UI {
 	// know
 	// exactly what you are doing with a setting, ask someone who does, or don't
 	// enable it.
-	public static Boolean DEVELOPER_MODE = true;
+	public static final Boolean DEVELOPER_MODE = true;
 	// auto login will be enabled if set to true, will attempt to login with
 	// DEV_AUTOLOGIN_USER
 	// if no such user exists, the application will crash.
@@ -150,8 +150,8 @@ public class MasterUI extends UI {
 		Debugging.output("Config loaded: " + Configuration.loadedConfig.get(Configuration.DOMAIN_NAME_KEY), Debugging.CONFIG_DEBUG);
 		
 		if (Configuration.loadedConfig.get(Configuration.DEVELOPER_MODE_OVERRIDE_KEY).equals("true")) {
-			System.out.println("Config turned off developer mode.");
-			DEVELOPER_MODE = false;
+			//System.out.println("Config turned off developer mode.");
+			//DEVELOPER_MODE = false;
 		}
 		
 		getPage().addUriFragmentChangedListener(
@@ -466,7 +466,7 @@ public class MasterUI extends UI {
 			mobileUser = false;
 		} else if (user.getViewMode().equals(User.VIEW_MODE_MOBILE)) {
 			mobileUser = true;
-		} else if (user.getViewMode().equals(User.VIEW_MODE_DEFAULT)) {
+		} else if (user.getViewMode().equals(User.VIEW_MODE_DEFAULT) || user.getViewMode().equals(User.VIEW_MODE_SMALL)) {
 			//TODO
 			//detect mobile
 			mobileUser = UserAgentProcessor.isAgentMobile(userAgent);

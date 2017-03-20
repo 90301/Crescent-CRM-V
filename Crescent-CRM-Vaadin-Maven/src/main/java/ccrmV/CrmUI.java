@@ -37,6 +37,7 @@ import uiElements.ClientEditor;
 import uiElements.ClientFilter;
 //import de.steinwedel.messagebox.MessageBox;
 import uiElements.NavBar;
+import users.User;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
@@ -75,7 +76,6 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final String PANEL_HEIGHT = "950px";
 	//private static final String NOTE_WIDTH = "600px";
 	private static final boolean PANNEL_ENABLED = false;
-	private static final boolean DEFAULT_FILTER_SHOW = false;
 	
 	public String gridWidth = "900px";
 	public String gridHeight = "600px";
@@ -90,23 +90,6 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final boolean USE_VAADIN_FILTER = true;
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
-	// filtering
-	/*
-	HorizontalLayout filterLayout = new HorizontalLayout();
-	Button filterShowFilter = new Button(">>",e -> showFilterClick());
-	Button filterHideFilter = new Button("<<", e -> hideFilterClick());
-	Boolean filterShowing = false;
-	
-	ComboBox filterStatus  = new ComboBox("Status");
-	ComboBox filterLocation = new ComboBox("Location");
-	ComboBox filterGroup = new ComboBox("Group");
-	//Button filterButton = new Button("Filter", event -> this.filterClick());
-	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
-	TextField filterClientTextField = new TextField(" Name ");
-	TextField filterClientNotesField = new TextField("Notes Include:");
-	Label filterLabel = new Label("Filter :");
-	CheckBox filterContactNowCheckBox = new CheckBox("Contact Now Only");
-	*/
 	//Filtering 2.0
 	public ClientFilter clientFilter = new ClientFilter(this);
 	
@@ -164,32 +147,6 @@ public class CrmUI extends HorizontalLayout implements View {
 	{
 		clientGrid.addSelectionListener(event -> this.selectItem());
 	}
-
-	/*
-	private void hideFilterClick() {
-		setFilterShow(false);
-	}
-
-	private void showFilterClick() {
-		setFilterShow(true);
-	}
-
-	public void setFilterShow(boolean showFilter) {
-		this.filterShowing = showFilter;
-		
-		filterStatus.setVisible(showFilter);
-		filterLocation.setVisible(showFilter);
-		filterGroup.setVisible(showFilter);
-		//filterButton.setVisible(showFilter);
-		resetFilterButton.setVisible(showFilter);
-		filterClientTextField.setVisible(showFilter);
-		filterClientNotesField.setVisible(showFilter);
-		filterContactNowCheckBox.setVisible(showFilter);
-		
-		filterShowFilter.setVisible(!showFilter);
-		filterHideFilter.setVisible(showFilter);
-	}
-	*/
 
 	public void createClientGrid() {
 		Client exampleClient = new Client();
@@ -769,8 +726,13 @@ public class CrmUI extends HorizontalLayout implements View {
 		 * 
 		 */
 		//Client Grid
-		clientGrid.setWidth(gridWidth);
-		clientGrid.setHeight(gridHeight);
+		if (masterUi.user.getViewMode().equals(User.VIEW_MODE_SMALL)) {
+			clientGrid.setWidth(smallGridWidth);
+			clientGrid.setHeight(smallGridHeight);
+		} else {
+			clientGrid.setWidth(gridWidth);
+			clientGrid.setHeight(gridHeight);
+		}
 		
 		midLayout.setSpacing(true);
 		layout.addComponent(midLayout);
