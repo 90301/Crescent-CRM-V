@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -557,6 +558,15 @@ public class InhalerUtils {
 			}
 		}
 		
+		}
+		
+		return output;
+	}
+	
+	public static Collection<String> reverseList(Collection<String> input) {
+		ArrayList<String> output = new ArrayList<String>();
+		for (String inputValue : input) {
+			output.add(0,inputValue);
 		}
 		
 		return output;
