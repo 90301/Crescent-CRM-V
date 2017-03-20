@@ -54,6 +54,11 @@ public class Client extends MaxObject implements Item {
 	UdhMaxObjectToString<Group> groupConversion = new UdhMaxObjectToString<Group>();
 	ClientFieldMapToString customFieldConversion = new ClientFieldMapToString();
 	
+	public static final String LOCATION_GRID_NAME = "Location";
+	public static final String STATUS_GRID_NAME = "Status";
+	public static final String GROUP_GRID_NAME = "Group";
+	public static final String LAST_UPDATED_GRID_NAME = "Last Updated";
+	
 	{
 		//set up conversions
 		
@@ -90,6 +95,12 @@ public class Client extends MaxObject implements Item {
 		contactNow.setShowField(false);
 		clientFields.setShowField(false);
 		profilePicture.setShowField(false);
+		
+		location.setGridName(LOCATION_GRID_NAME);
+		status.setGridName(STATUS_GRID_NAME);
+		group.setGridName(GROUP_GRID_NAME);
+		lastUpdated.setGridName(LAST_UPDATED_GRID_NAME);
+		
 		
 		this.setKeyField(name);
 		addMaxField(name);
@@ -355,14 +366,14 @@ public class Client extends MaxObject implements Item {
 		HashMap<String, MaxField<?>> fields = new HashMap<String, MaxField<?>>();
 		for (MaxField<?> mf : this.autoGenList) {
 			if (mf.getShowField())
-				fields.put(mf.getFieldName(), mf);
+				fields.put(mf.getGridName(), mf);
 		}
 
 		MaxField<?> f = fields.get(id);
 		Debugging.output("Item property from field: " + f,Debugging.CLIENT_GRID_DEBUG);
 
 		@SuppressWarnings({ "unchecked", "rawtypes" })
-		ObjectProperty prop = new ObjectProperty(f.getFieldValue(), f.getExtendedClass());
+		ObjectProperty prop = new ObjectProperty(f.getGridName(), f.getExtendedClass());
 		// prop.setValue(f.getFieldValue());
 
 		return prop;
@@ -373,7 +384,7 @@ public class Client extends MaxObject implements Item {
 		Collection<String> ids = new ArrayList<String>();
 		for (MaxField<?> mf : this.autoGenList) {
 			if (mf.getShowField())
-				ids.add(mf.getFieldName());
+				ids.add(mf.getGridName());
 		}
 
 		return ids;
@@ -394,11 +405,11 @@ public class Client extends MaxObject implements Item {
 	public IndexedContainer populateContainer(IndexedContainer indexedContainer) {
 		for (MaxField<?> field : this.getAutoGenList()) {
 			if (field.getShowField())
-				indexedContainer.addContainerProperty(field.getFieldName(), field.getExtendedClass(),
+				indexedContainer.addContainerProperty(field.getGridName(), field.getExtendedClass(),
 				field.getDefaultFieldValue());
 			
 				Debugging.output(" Populating indexContatiner with: " + field + 
-						" FieldName: " + field.getFieldName() + 
+						" FieldName: " + field.getGridName() + 
 						" Extended Class" + field.getExtendedClass()
 						,Debugging.CLIENT_GRID_DEBUG);
 			}
@@ -419,7 +430,7 @@ public class Client extends MaxObject implements Item {
 
 		for (MaxField<?> mf : this.getAutoGenList()) {
 			if (mf.getShowField()) {
-				Property p = item.getItemProperty(mf.getFieldName());
+				Property p = item.getItemProperty(mf.getGridName());
 				p.setValue(mf.getFieldValue());
 			}
 		}

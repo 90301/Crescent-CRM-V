@@ -77,8 +77,11 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final boolean PANNEL_ENABLED = false;
 	private static final boolean DEFAULT_FILTER_SHOW = false;
 	
-	public static final String gridWidth = "900px";
-	public static final String gridHeight = "600px";
+	public String gridWidth = "900px";
+	public String gridHeight = "600px";
+	
+	public String smallGridWidth = "600px";
+	public String smallGridHeight = "600px";
 	
 	
 	//Clears textboxes and combo boxes upon creating a client
@@ -336,7 +339,6 @@ public class CrmUI extends HorizontalLayout implements View {
 	public void selectItem() {
 
 		Debugging.output("SELECTED AN ITEM." + clientGrid.getSelectedRow(),Debugging.OLD_OUTPUT);
-		// TODO: ASK before switching
 
 		// null check
 		if (clientGrid.getSelectedRow() != null) {
@@ -352,7 +354,6 @@ public class CrmUI extends HorizontalLayout implements View {
 			return;
 		}
 		if (clientEditor.checkUpdate() && this.discard == false) {
-			// TODO: implement unsaved progress
 			this.discard = true;
 			Notification n = new Notification("You have unsaved changes! <br> Click message to dismiss.","", Notification.Type.WARNING_MESSAGE,true);
 			
@@ -476,7 +477,6 @@ public class CrmUI extends HorizontalLayout implements View {
 			return; // a null value was found
 		}
 		
-		//TODO: debugging
 		String locationName = createClientLocation.getValue().toString();
 		String statusName = createClientStatus.getValue().toString();
 		String groupName =  createClientGroup.getValue().toString();
@@ -582,7 +582,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent VCevent) {
 
-		//TODO START OF THE UI
+		
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
@@ -838,8 +838,8 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		clientGrid.setRowStyleGenerator(client -> {
 			
-			if (((Status)client.getItem().getItemProperty("statusName").getValue())!= null) {
-				String cssName = ((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+			if (((Status)client.getItem().getItemProperty(Client.STATUS_GRID_NAME).getValue())!= null) {
+				String cssName = ((Status)client.getItem().getItemProperty(Client.STATUS_GRID_NAME).getValue()).getStatusName();
 				
 				cssName = InhalerUtils.removeSpecialCharacters(cssName);
 				
@@ -853,7 +853,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 
 	public void updateCreationLists() {
-		// TODO Auto-generated method stub
 		createStatusListSelect.removeAllItems();
 		createStatusListSelect.addItems(masterUi.userDataHolder.getAllStatus());
 		createLocationListSelect.removeAllItems();

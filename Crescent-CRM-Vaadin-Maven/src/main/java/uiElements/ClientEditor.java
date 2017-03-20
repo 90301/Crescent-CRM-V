@@ -261,7 +261,6 @@ public class ClientEditor extends VerticalLayout {
 		}
 
 		Debugging.output("showing client information for: " + c,Debugging.OLD_OUTPUT);
-		// TODO: load information into the ui.
 		// LOAD INFORMATION
 		clientNameLabel.setValue(c.getName());
 		clientStatus.setValue(c.getStatusName());

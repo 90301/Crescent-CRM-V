@@ -47,8 +47,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.44;
-	public static final String versionDescription = " High Performance";
+	public static final double versionNumber = 1.45;
+	public static final String versionDescription = " Friendly Grid Names";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
