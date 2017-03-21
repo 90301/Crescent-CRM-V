@@ -26,6 +26,12 @@ public class Configuration {
 	
 	public static final String DEVELOPER_MODE_OVERRIDE_KEY = "DeveloperModeOverride";
 	public static final String DOMAIN_NAME_KEY = "DomainName";
+
+
+	private static final String EMAIL_KEY = "Email";
+
+
+	private static final String EMAIL_PASS_KEY = "Email-Password";
 	
 	
 	public static Boolean loadMutex = false;
@@ -152,8 +158,8 @@ public class Configuration {
 		
 		defaultConfig.put(DEVELOPER_MODE_OVERRIDE_KEY, ""+ false);
 		defaultConfig.put(DOMAIN_NAME_KEY, "localhost");
-		
-		
+		defaultConfig.put(EMAIL_KEY, "");
+		defaultConfig.put(EMAIL_PASS_KEY, "");
 		
 		
 	}
