@@ -33,6 +33,7 @@ import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
 import debugging.unitTest.testSuiteExecutors.CrmStressTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
+import debugging.unitTest.testSuiteExecutors.RestTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
 import integrations.ChatSocket;
 import themes.UserAgentProcessor;
@@ -410,7 +411,7 @@ public class MasterUI extends UI {
 			LoginTestExecutor loginTests = new LoginTestExecutor(loginView,this);
 			CRMTestExecutor crmTests = new CRMTestExecutor(mainApp,this);
 			CrmStressTestExecutor crmStressTest = new CrmStressTestExecutor(mainApp,this);
-			
+			RestTestExecutor restTest = new RestTestExecutor();
 			
 			dTestExecutor.runTests();
 			dTestExecutor.debugOutputTestCases();
@@ -429,6 +430,8 @@ public class MasterUI extends UI {
 			if (DEV_STRESS_TEST) {
 				crmStressTest.runTests();
 			}
+			
+			//restTest.runTests();
 			
 			unitTestsAlreadyRan = true;
 		}

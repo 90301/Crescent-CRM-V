@@ -155,6 +155,8 @@ public class Debugging {
     public static final DebugObject NOTE_HISTORY = new DebugObject(CONSOLE_OUTPUT, true, true, "Note History: ");
     public static final DebugObject XML_CONVERSION = new DebugObject(CONSOLE_OUTPUT, true, true, "XML Conversion: ");
     public static final DebugObject XML_CONVERSION_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "XML Conversion Error: ");
+    public static final DebugObject FIREBASE = new DebugObject(CONSOLE_OUTPUT, true, true, "Fire Base: ");
+    
     
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
@@ -166,6 +168,7 @@ public class Debugging {
 	
 	//Mark's Debug Variables
 	public static final DebugObject UNIT_TEST_TRACK_CHANGES = new DebugObject(CONSOLE_OUTPUT, true, true, "Unit Test Changes: ");
+	
 	
 	
 	

@@ -26,12 +26,9 @@ public class Configuration {
 	
 	public static final String DEVELOPER_MODE_OVERRIDE_KEY = "DeveloperModeOverride";
 	public static final String DOMAIN_NAME_KEY = "DomainName";
-
-
-	private static final String EMAIL_KEY = "Email";
-
-
-	private static final String EMAIL_PASS_KEY = "Email-Password";
+	public static final String EMAIL_KEY = "Email";
+	public static final String EMAIL_PASS_KEY = "Email-Password";
+	public static final String FIRE_BASE_KEY = "Firebase-Key";
 	
 	
 	public static Boolean loadMutex = false;
@@ -47,6 +44,7 @@ public class Configuration {
 	 * If one can not be loaded this method creates a config file.
 	 */
 	public static void loadConfig() {
+		setupDefaultConfig();
 		//ensure config is not already loaded and not currently loading
 		if (!loadMutex && !loadComplete) { 
 		//check to see if file exists
@@ -86,6 +84,19 @@ public class Configuration {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+			}// END FILE READING
+			
+			//add any new keys to the file
+			boolean addedValues = false;
+			for (String key : defaultConfig.keySet()) {
+				if (!loadedConfig.containsKey(key)) {
+					loadedConfig.put(key, defaultConfig.get(key));
+					addedValues = true;
+				}
+			}
+			//write the new version of the file
+			if (addedValues) {
+				writeConfig(configFile, loadedConfig);
 			}
 			
 				//end config file exists
@@ -160,7 +171,11 @@ public class Configuration {
 		defaultConfig.put(DOMAIN_NAME_KEY, "localhost");
 		defaultConfig.put(EMAIL_KEY, "");
 		defaultConfig.put(EMAIL_PASS_KEY, "");
+		defaultConfig.put(FIRE_BASE_KEY, "");
 		
-		
+	}
+
+	public static String get(String fireBaseKey) {
+		return loadedConfig.get(fireBaseKey);
 	}
 }
