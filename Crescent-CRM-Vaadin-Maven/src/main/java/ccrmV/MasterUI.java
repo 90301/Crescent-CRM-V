@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -40,6 +41,7 @@ import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
 @PreserveOnRefresh
+@JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","http://localhost/firebaseClient.js"})
 @Theme("darkTheme")
 public class MasterUI extends UI {
 
@@ -431,7 +433,7 @@ public class MasterUI extends UI {
 				crmStressTest.runTests();
 			}
 			
-			//restTest.runTests();
+			restTest.runTests();
 			
 			unitTestsAlreadyRan = true;
 		}

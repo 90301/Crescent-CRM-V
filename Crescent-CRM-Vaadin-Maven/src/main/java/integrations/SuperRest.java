@@ -9,9 +9,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.vaadin.ui.JavaScript;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.VerticalLayout;
+
 import configuration.Configuration;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
+import elemental.json.JsonArray;
 
 public class SuperRest {
 	
@@ -33,11 +38,26 @@ public class SuperRest {
 		
 		HttpEntity<Map<String,String>> request = new HttpEntity<Map<String,String>>(vars,headers);
 		
+		/*
 		ResponseEntity<String> response = firebaseConnection.
 				postForEntity("https://fcm.googleapis.com/fcm/send",
 						request, String.class);
+		*/
 		
-		Debugging.output("Response: " + response, Debugging.FIREBASE);
+		//Debugging.output("Response: " + response, Debugging.FIREBASE);
+		JavaScript.getCurrent().addFunction("javascript:getFirebaseDevice", e -> firebaseDevice(e));
+		
+		JavaScript.getCurrent().execute("messaging.requestPermission().then(javascript:getFirebaseDevice())");
+	}
+
+	/**
+	 * Handles the acquring of a firebase device.
+	 * @param e
+	 * @return
+	 */
+	private static void firebaseDevice(JsonArray e) {
+		Debugging.output("JSON ARRAY: " + e, Debugging.FIREBASE);
+		
 		
 	}
 
