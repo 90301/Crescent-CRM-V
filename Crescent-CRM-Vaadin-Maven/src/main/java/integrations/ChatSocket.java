@@ -1,6 +1,8 @@
 package integrations;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -35,8 +37,18 @@ public class ChatSocket {
 		}
 	}
 	
-	public static void sendCredentials(String user,String pass) {
+	public static void sendCredentials(String user,String pass) throws IOException {
 		
+		Socket socket = null;
+		@SuppressWarnings("null")
+		DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
+		dOut.writeByte(1);
+		dOut.writeUTF(user + " " + pass);
+		dOut.flush();
+		dOut.close();
+		
+		//OutputStream socketStream = socket.getOutputStream();
+		//socketStream.write((user + " " + pass).getBytes());		
 	}
 	/**
 	 * Update later to save the messages for the specified client
