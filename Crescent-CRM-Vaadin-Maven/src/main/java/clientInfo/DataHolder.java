@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import dbUtils.*;
+import debugging.Debugging;
 import users.User;
 
 /**
@@ -84,7 +85,7 @@ public class DataHolder {
 		mysqlDatabase.setConnectionInfo(DB_LOCATION, DB_PORT, DB_USER, DB_PASS);
 		mysqlDatabase.createDB();
 		mysqlDatabase.connectDB();
-		System.out.println("MYSQL DATABASE: " + mysqlDatabase);
+		Debugging.output("MYSQL DATABASE: " + mysqlDatabase,Debugging.DATABASE_OUTPUT);
 
 		/*
 		 * Set up the tables
@@ -98,9 +99,6 @@ public class DataHolder {
 		loadMaxObjects(localUserMap, userTable, User.class);
 		loadMaxObjects(userDataHolderMap, userDataHolderTable, UserDataHolder.class);
 		loadMaxObjects(localScheduleEventMap , scheduleEventTable, ScheduleEvent.class);
-		
-		// BACKUP all data to a CSV file
-		backupAllCsv();
 
 		/*
 		 * SET UP GENERIC MAPS
@@ -118,7 +116,7 @@ public class DataHolder {
 		tableLookup.put(ScheduleEvent.class, scheduleEventTable);
 		// OUTPUT GENERIC Maps
 
-		System.out.println("CREATED LOCAL LOOKUPS" + "\n" + localMapLookup + "\n" + tableLookup);
+		Debugging.output("CREATED LOCAL LOOKUPS" + "\n" + localMapLookup + "\n" + tableLookup,Debugging.DATABASE_OUTPUT);
 
 		
 		// try closing all the database connections
@@ -156,7 +154,7 @@ public class DataHolder {
 		if (userLoggingIn != null) {
 			boolean loginSucsess =  userLoggingIn.checkPassword(pass);
 			if (loginSucsess) {
-				System.out.println("Logged into: " + userLoggingIn);
+				Debugging.output("Logged into: " + userLoggingIn,Debugging.DATABASE_OUTPUT);
 				return SUCCESS_CODE;
 			} else {
 				return WRONG_PASS_CODE;
@@ -237,14 +235,14 @@ public class DataHolder {
 	@SuppressWarnings("unchecked")
 	public static <T extends MaxObject> void loadMaxObjects(Map<String, T> localMap, MaxDBTable table, Class<T> ref) {
 
-		System.out.println("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref);
+		Debugging.output("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref,Debugging.DATABASE_OUTPUT);
 		if (table == null) {
 			return;// This is a bug
 		}
 		ResultSet allObjects = table.getAllRows();
-		System.out.println("Result set: " + allObjects);
+		Debugging.output("Result set: " + allObjects,Debugging.DATABASE_OUTPUT);
 		if (allObjects == null) {
-			System.out.println("NO  objects found");
+			Debugging.output("NO  objects found",Debugging.DATABASE_OUTPUT);
 			return;// no results found
 		}
 		try {
@@ -252,7 +250,7 @@ public class DataHolder {
 				MaxObject obj;
 				obj = ref.newInstance();
 				obj.loadFromDB(allObjects);
-				System.out.println("Loaded: " + obj + " from database.");
+				Debugging.output("Loaded: " + obj + " from database.",Debugging.DATABASE_OUTPUT);
 				if (obj.getPrimaryKey() != null) {
 					localMap.put(obj.getPrimaryKey(), (T) obj);
 				}
@@ -288,7 +286,7 @@ public class DataHolder {
 
 		table.setParentDB(database);// use this database
 
-		System.out.println("Type T: ");
+		Debugging.output("Type T: ",Debugging.DATABASE_OUTPUT);
 		try {
 			MaxObject obj;
 			obj = ref.newInstance();
@@ -317,7 +315,7 @@ public class DataHolder {
 		@SuppressWarnings("unchecked")
 		ConcurrentHashMap<String, T> map = (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
 		
-		System.out.println("Storing in map: " + map);
+		Debugging.output("Storing in map: " + map,Debugging.DATABASE_OUTPUT);
 		map.put(obj.getPrimaryKey(), (T) obj);
 
 		MaxDBTable table = tableLookup.get(ref);
@@ -377,9 +375,9 @@ public class DataHolder {
 	 * @return if it was found (true / false)
 	 */
 	public static boolean containsClass(Class ref) {
-		System.out.println("Table: " + tableLookup + " Contains key: " + ref);
+		Debugging.output("Table: " + tableLookup + " Contains key: " + ref,Debugging.DATABASE_OUTPUT);
 		boolean result = tableLookup.containsKey(ref);
-		System.out.println("Table: " + tableLookup + " Contains key: " + ref + " = " + result);
+		Debugging.output("Table: " + tableLookup + " Contains key: " + ref + " = " + result,Debugging.DATABASE_OUTPUT);
 		
 		return result;
 	}

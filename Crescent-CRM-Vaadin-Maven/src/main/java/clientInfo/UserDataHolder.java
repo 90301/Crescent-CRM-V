@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import dbUtils.MaxDBTable;
+import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import debugging.Debugging;
 import inventory.InventoryCategory;
@@ -21,9 +22,14 @@ import inventory.InventoryItem;
 //TODO: make this extend max object, and have a table of available databases
 public class UserDataHolder extends MaxObject {
 
-	public static final String databasePrefixField = "DatabasePrefix";
+	//public static final String databasePrefixField = "DatabasePrefix";
+	
+	
 	//private String user;
-	private String databasePrefix;
+	//private String databasePrefix;
+	
+	MaxField<String> databasePrefix = new MaxField<String>("DatabasePrefix",MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING,"","",this);
+	
 	// will not be after the transition
 	private ConcurrentHashMap<String, Client> userClientMap = new ConcurrentHashMap<String, Client>();
 	private ConcurrentHashMap<String, Location> userLocationMap = new ConcurrentHashMap<String, Location>();
@@ -51,8 +57,15 @@ public class UserDataHolder extends MaxObject {
 	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
 	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 
+	Boolean databaseSetup = false;
+	
 	public Client templateClient;
-
+	
+	{
+		addMaxField(databasePrefix);
+		this.setKeyField(databasePrefix);
+	}
+	
 	/**
 	 * Holds data which is user speciific. Will implement data structures and be
 	 * a sub section of the dataholder class.
@@ -63,7 +76,7 @@ public class UserDataHolder extends MaxObject {
 
 	public void initalizeDatabases() {
 		// setup the tables
-		
+		if (!databaseSetup) {
 		setupTable(userTemplateFieldMap,userTemplateFieldTable,TEMPLATE_FIELD_TABLE_TITLE,TemplateField.class);
 		setupTable(userGroupMap,userGroupTable,GROUP_TABLE_TITLE,Group.class);
 		setupTable(userStatusMap,userStatusTable,STATUS_TABLE_TITLE,Status.class);
@@ -74,6 +87,11 @@ public class UserDataHolder extends MaxObject {
 		
 		
 		setupTemplate();
+		
+		databaseSetup = true;
+		}
+		
+		
 
 	}
 	
@@ -129,11 +147,11 @@ public class UserDataHolder extends MaxObject {
 			c.setStatus(status);
 			c.setNotes("");
 			
-			System.out.println("Template class created: " + c);
+			Debugging.output("Template class created: " + c,Debugging.DATABASE_OUTPUT);
 			store(c, Client.class);
 			this.templateClient = c;
 		} else {
-			System.out.println("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c);
+			Debugging.output("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c,Debugging.DATABASE_OUTPUT);
 			this.templateClient = c;
 		}
 	}
@@ -192,14 +210,14 @@ public class UserDataHolder extends MaxObject {
 	@SuppressWarnings("unchecked")
 	public <T extends MaxObject> void loadMaxObjects(Map<String, T> localMap, MaxDBTable table, Class<T> ref) {
 
-		System.out.println("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref);
+		Debugging.output("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref,Debugging.DATABASE_OUTPUT);
 		if (table == null) {
 			return;// This is a bug
 		}
 		ResultSet allObjects = table.getAllRows();
-		System.out.println("Result set: " + allObjects);
+		Debugging.output("Result set: " + allObjects,Debugging.DATABASE_OUTPUT);
 		if (allObjects == null) {
-			System.out.println("NO  objects found");
+			Debugging.output("NO  objects found",Debugging.DATABASE_OUTPUT);
 			return;// no results found
 		}
 		try {
@@ -208,7 +226,7 @@ public class UserDataHolder extends MaxObject {
 				obj = ref.newInstance();
 				obj.setUserDataHolder(this);
 				obj.loadFromDB(allObjects);
-				System.out.println("Loaded: " + obj + " from database.");
+				Debugging.output("Loaded: " + obj + " from database.",Debugging.DATABASE_OUTPUT);
 				if (obj.getPrimaryKey() != null) {
 					localMap.put(obj.getPrimaryKey(), (T) obj);
 				}
@@ -273,12 +291,11 @@ public class UserDataHolder extends MaxObject {
 	
 
 	public String getDatabasePrefix() {
-		return databasePrefix;
+		return databasePrefix.getFieldValue();
 	}
 
 	public void setDatabasePrefix(String databasePrefix) {
-		this.databasePrefix = databasePrefix;
-		updateDBMap();
+		this.databasePrefix.setFieldValue(databasePrefix);
 	}
 
 	public Client getClient(String id) {
@@ -346,25 +363,28 @@ public class UserDataHolder extends MaxObject {
 		return removeTemplate(userGroupMap.values());
 	}
 	public ConcurrentHashMap<String, Location> getLocationMap() {
-		// TODO Auto-generated method stub
 		return userLocationMap;
 	}
 
 	public ConcurrentHashMap<String, Status> getStatusMap() {
-		// TODO Auto-generated method stub
 		return userStatusMap;
 	}
 
 	public ConcurrentHashMap<String, Group> getGroupMap() {
-		// TODO Auto-generated method stub
 		return userGroupMap;
 	}
 	
 	public ConcurrentHashMap<String, Client> getClientMap() {
-		// TODO Auto-generated method stub
 		return userClientMap;
 	}
 
+	@Override
+	public String getPrimaryKey() {
+		return this.getDatabasePrefix();
+	}
+
+	
+	/*
 	@Override
 	public void loadInternalFromMap() {
 		this.databasePrefix = (String) dbMap.get(databasePrefixField);
@@ -390,7 +410,7 @@ public class UserDataHolder extends MaxObject {
 	@Override
 	public void createTableForClass(MaxDBTable table) {
 
-		table.addDatatype(databasePrefixField, MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING);
+		table.addDatatype(this.getClass(),databasePrefixField, MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING);
 		table.setPrimaryKeyName(databasePrefixField);
 		table.createTable();
 		
@@ -401,7 +421,16 @@ public class UserDataHolder extends MaxObject {
 		if (dbDatatypes == null) {
 			dbDatatypes = new HashMap<String, Class<?>>();
 		}
-		dbDatatypes.put(databasePrefixField, String.class);
+		if (USE_BETTER_DB_DATATYPES) {
+			if (!betterDbDatatypes.containsKey(this.getClass())) {
+				betterDbDatatypes.put(this.getClass(), new HashMap<>());
+			}
+			
+			betterDbDatatypes.get(this.getClass()).put(databasePrefixField, String.class);
+		} else {
+			dbDatatypes.put(databasePrefixField, String.class);
+		}
 		
 	}
+	*/
 }

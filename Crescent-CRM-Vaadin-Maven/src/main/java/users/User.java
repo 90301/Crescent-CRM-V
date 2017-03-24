@@ -94,8 +94,9 @@ public class User extends MaxObject {
 	public static final String VIEW_MODE_DEFAULT = "Default View";
 	public static final String VIEW_MODE_DESKTOP = "Desktop View";
 	public static final String VIEW_MODE_MOBILE = "Mobile View";
+	public static final String VIEW_MODE_SMALL = "Small View";
 	
-	public static final String[] VIEW_MODES = {VIEW_MODE_DEFAULT,VIEW_MODE_DESKTOP,VIEW_MODE_MOBILE};
+	public static final String[] VIEW_MODES = {VIEW_MODE_DEFAULT,VIEW_MODE_DESKTOP,VIEW_MODE_MOBILE,VIEW_MODE_SMALL};
 	/*
 	 * Database selection
 	 */

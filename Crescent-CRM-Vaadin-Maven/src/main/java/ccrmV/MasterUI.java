@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import javax.servlet.annotation.WebServlet;
 
+import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
@@ -28,15 +29,19 @@ import configuration.Configuration;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import debugging.DebuggingVaadinUI;
+import debugging.profiling.ProfilingTimer;
 import debugging.unitTest.testSuiteExecutors.CRMTestExecutor;
+import debugging.unitTest.testSuiteExecutors.CrmStressTestExecutor;
 import debugging.unitTest.testSuiteExecutors.DatabaseTestExecutor;
 import debugging.unitTest.testSuiteExecutors.LoginTestExecutor;
+import debugging.unitTest.testSuiteExecutors.RestTestExecutor;
 import debugging.unitTest.testSuiteExecutors.TestSuiteMetaExecutor;
 import integrations.ChatSocket;
 import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
 @PreserveOnRefresh
+@JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","http://localhost/firebaseClient.js"})
 @Theme("darkTheme")
 public class MasterUI extends UI {
 
@@ -45,8 +50,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.39;
-	public static final String versionDescription = " Meta Profiling Start";
+	public static final double versionNumber = 1.48;
+	public static final String versionDescription = " Note History";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -82,7 +87,7 @@ public class MasterUI extends UI {
 	// know
 	// exactly what you are doing with a setting, ask someone who does, or don't
 	// enable it.
-	public static Boolean DEVELOPER_MODE = true;
+	public static final Boolean DEVELOPER_MODE = true;
 	// auto login will be enabled if set to true, will attempt to login with
 	// DEV_AUTOLOGIN_USER
 	// if no such user exists, the application will crash.
@@ -90,6 +95,7 @@ public class MasterUI extends UI {
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	
 	public static final Boolean DEV_TEST_CODE = true; //UNIT TESTING
+	public static final Boolean DEV_STRESS_TEST = false;//stress testing.
 	
 	public static Boolean unitTestsAlreadyRan = false;
 	
@@ -147,8 +153,8 @@ public class MasterUI extends UI {
 		Debugging.output("Config loaded: " + Configuration.loadedConfig.get(Configuration.DOMAIN_NAME_KEY), Debugging.CONFIG_DEBUG);
 		
 		if (Configuration.loadedConfig.get(Configuration.DEVELOPER_MODE_OVERRIDE_KEY).equals("true")) {
-			System.out.println("Config turned off developer mode.");
-			DEVELOPER_MODE = false;
+			//System.out.println("Config turned off developer mode.");
+			//DEVELOPER_MODE = false;
 		}
 		
 		getPage().addUriFragmentChangedListener(
@@ -308,7 +314,7 @@ public class MasterUI extends UI {
 	public void startMainApp() {
 		loggedIn = true;
 		authenicatedHosts.add(userHost);
-		System.out.println("Attempting to navigate to the main application.");
+		Debugging.output("Attempting to navigate to the main application.",Debugging.OLD_OUTPUT);
 		//Change theme
 		if (user!=null) {
 			if (Stream.of(avaliableThemes).anyMatch(x -> x.equals(user.getTheme()))) {
@@ -326,11 +332,15 @@ public class MasterUI extends UI {
 	}
 
 	public void enterCRM() {
-
+		ProfilingTimer crmTimer = new ProfilingTimer("enter CRM");
+		
+		
 		mainNavigator.navigateTo(MAIN_APP);
 		mainApp.updateClientGrid();
 		mainApp.updateCreationLists();
 		mainApp.updateAllComboBoxes();
+		
+		crmTimer.stopTimer();
 	}
 
 	public void enterUserEditor() {
@@ -377,6 +387,9 @@ public class MasterUI extends UI {
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
 		DataHolder.store(this.user, User.class);
+		this.userDataHolder.initalizeDatabases();
+		navBar.updateInfo();
+		
 	}
 
 	public void enterInventory() {
@@ -399,6 +412,8 @@ public class MasterUI extends UI {
 			TestSuiteMetaExecutor metaTests = new TestSuiteMetaExecutor();
 			LoginTestExecutor loginTests = new LoginTestExecutor(loginView,this);
 			CRMTestExecutor crmTests = new CRMTestExecutor(mainApp,this);
+			CrmStressTestExecutor crmStressTest = new CrmStressTestExecutor(mainApp,this);
+			RestTestExecutor restTest = new RestTestExecutor();
 			
 			dTestExecutor.runTests();
 			dTestExecutor.debugOutputTestCases();
@@ -413,6 +428,12 @@ public class MasterUI extends UI {
 			
 			crmTests.runTests();
 			crmTests.debugOutputTestCases();
+			
+			if (DEV_STRESS_TEST) {
+				crmStressTest.runTests();
+			}
+			
+			restTest.runTests();
 			
 			unitTestsAlreadyRan = true;
 		}
@@ -450,7 +471,7 @@ public class MasterUI extends UI {
 			mobileUser = false;
 		} else if (user.getViewMode().equals(User.VIEW_MODE_MOBILE)) {
 			mobileUser = true;
-		} else if (user.getViewMode().equals(User.VIEW_MODE_DEFAULT)) {
+		} else if (user.getViewMode().equals(User.VIEW_MODE_DEFAULT) || user.getViewMode().equals(User.VIEW_MODE_SMALL)) {
 			//TODO
 			//detect mobile
 			mobileUser = UserAgentProcessor.isAgentMobile(userAgent);

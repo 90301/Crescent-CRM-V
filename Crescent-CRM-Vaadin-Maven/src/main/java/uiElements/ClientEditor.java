@@ -3,6 +3,7 @@ package uiElements;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.vaadin.server.Resource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
@@ -19,6 +20,7 @@ import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
 import clientInfo.UserDataHolder;
+import dbUtils.InhalerUtils;
 import debugging.Debugging;
 
 public class ClientEditor extends VerticalLayout {
@@ -39,6 +41,7 @@ public class ClientEditor extends VerticalLayout {
 	HorizontalLayout clientEditorMetaLayout = new HorizontalLayout();
 	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
 	HorizontalLayout uploadProfileLayout = new HorizontalLayout();
+	HorizontalLayout noteHistoryLayout = new HorizontalLayout();
 
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
@@ -50,7 +53,7 @@ public class ClientEditor extends VerticalLayout {
 	Label clientNameLabel = new Label("Client Name");
 	Label clientLastUpdate = new Label("Last Updated: --/--/----");
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
-	ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
+	//ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
 
 	//Custom Fields
 	TemplateEditor templateEditor = new TemplateEditor();
@@ -59,11 +62,19 @@ public class ClientEditor extends VerticalLayout {
 	//Profile Picture
 	ProfilePicture pPicture = new ProfilePicture();
 	UploadProfilePicture uploadProfilePicture = new UploadProfilePicture();
+	
+	//Note History
+	ComboBox noteHistoryComboBox = new ComboBox("Note History");
+	Button noteHistoryPreviewButton = new Button("Preview",e ->this.noteHistoryPreviewClick());
+	Button noteHistoryLoadButton = new Button("Load",e -> this.noteHistoryLoadClick());
+	TextArea notePreviewBox = new TextArea("Preview");
 
 	public ClientEditor(CrmUI crmUi) {
 		this.crmUi = crmUi;
 		genClientEditor();
 	}
+
+
 
 	/**
 	 * Adds all the components for the clientEditor
@@ -91,6 +102,10 @@ public class ClientEditor extends VerticalLayout {
 		clientStatus.setInvalidAllowed(false);
 
 		clientLastUpdate.setSizeFull();
+		
+		notePreviewBox.setWidth(NOTE_WIDTH);
+		notePreviewBox.setEnabled(false);
+		notePreviewBox.setVisible(false);
 		// client editing events
 
 		//Editor for the client meta data (location status group)
@@ -108,7 +123,7 @@ public class ClientEditor extends VerticalLayout {
 		clientEditorActionLayout.addComponent(clientUpdateButton);
 		clientEditorActionLayout.addComponent(clientArchiveButton);
 		clientEditorActionLayout.addComponent(clientContactNowCheckBox);
-		clientEditorActionLayout.addComponent(clientContactFrequency);
+		//clientEditorActionLayout.addComponent(clientContactFrequency);
 
 		//Profile Picture Horizontal Layout
 		uploadProfileLayout.setSpacing(true);
@@ -116,6 +131,12 @@ public class ClientEditor extends VerticalLayout {
 		uploadProfileLayout.addComponent(pPicture);
 		uploadProfileLayout.addComponent(uploadProfilePicture);
 		
+		
+		noteHistoryLayout.setSpacing(true);
+		noteHistoryLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		noteHistoryLayout.addComponent(noteHistoryComboBox);
+		noteHistoryLayout.addComponent(noteHistoryPreviewButton);
+		noteHistoryLayout.addComponent(noteHistoryLoadButton);
 		
 		
 		
@@ -142,6 +163,10 @@ public class ClientEditor extends VerticalLayout {
 		this.addComponent(customFieldEditor);
 
 		this.addComponent(clientNoteBox);
+		this.addComponent(notePreviewBox);
+		
+		this.addComponent(noteHistoryLayout);
+		
 		this.addComponent(clientEditorActionLayout);
 	}
 
@@ -220,6 +245,21 @@ public class ClientEditor extends VerticalLayout {
 
 		Debugging.TEMPLATE_DEBUG.outputLog();
 	}
+	
+	private void noteHistoryLoadClick() {
+		if (noteHistoryComboBox.getValue()!=null && crmUi.selectedClient!=null) {
+			String key = "" + noteHistoryComboBox.getValue();
+			this.clientNoteBox.setValue(crmUi.selectedClient.getNoteHistory().get(key));
+		}
+	}
+
+	private void noteHistoryPreviewClick() {
+		if (noteHistoryComboBox.getValue()!=null && crmUi.selectedClient!=null) {
+			String key = "" + noteHistoryComboBox.getValue();
+			this.notePreviewBox.setValue(crmUi.selectedClient.getNoteHistory().get(key));
+			this.notePreviewBox.setVisible(true);
+		}
+	}
 
 	public void updateAllComboBoxes() {
 		clientStatus.clear();
@@ -242,7 +282,7 @@ public class ClientEditor extends VerticalLayout {
 		if (c != null) {
 
 		} else {
-			System.out.println("Null value made it to selectClient: " + c);
+			Debugging.output("Null value made it to selectClient: " + c,Debugging.OLD_OUTPUT);
 			return;
 		}
 		//Set the user data holder
@@ -260,8 +300,7 @@ public class ClientEditor extends VerticalLayout {
 			customFieldEditor.setVisible(true);
 		}
 
-		System.out.println("showing client information for: " + c);
-		// TODO: load information into the ui.
+		Debugging.output("showing client information for: " + c,Debugging.OLD_OUTPUT);
 		// LOAD INFORMATION
 		clientNameLabel.setValue(c.getName());
 		clientStatus.setValue(c.getStatusName());
@@ -285,7 +324,14 @@ public class ClientEditor extends VerticalLayout {
 
 		//Profile picture
 		pPicture.loadprofilePictureField(c);
-
+		
+		//note history
+		noteHistoryComboBox.removeAllItems();
+		noteHistoryComboBox.addItems(
+				InhalerUtils.reverseList(
+						c.getNoteHistory().keySet()));
+		
+		this.notePreviewBox.setVisible(false);
 	}
 
 	/**

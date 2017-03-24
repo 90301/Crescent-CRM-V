@@ -9,6 +9,8 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -111,7 +113,7 @@ public class InhalerUtils {
 	public static Collection<String> csvToList(String csv) {
 		ArrayList<String> list = new ArrayList<String>();
 		for (String s : csv.split("\\" + DELIMITER)) {
-			System.out.println("CSV ITEM: " + s);
+			Debugging.output("CSV ITEM: " + s,Debugging.DATABASE_OUTPUT);
 			list.add(s);
 		}
 
@@ -161,7 +163,7 @@ public class InhalerUtils {
 	public static String mapToXML(Map<String, String> map) {
 		//clean map
 		
-		Map<String,String> mapUsed = cleanMap(map);
+		Map<String,String> mapUsed = cleanLinkedMap(map);
 		
 		String xml = "";
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -177,11 +179,9 @@ public class InhalerUtils {
 
 			for (String key : mapUsed.keySet()) {
 				
-				Debugging.output("Writing (key): " + key, Debugging.INHALER_UTILS_DEBUG,
-						Debugging.INHALER_UTILS_DEBUG_ENABLED);
+				Debugging.output("Writing (key): " + key, Debugging.XML_CONVERSION);
 				
-				Debugging.output("Writing (Value): " + mapUsed.get(key), Debugging.INHALER_UTILS_DEBUG,
-						Debugging.INHALER_UTILS_DEBUG_ENABLED);
+				Debugging.output("Writing (Value): " + mapUsed.get(key), Debugging.XML_CONVERSION);
 				
 				Element child = doc.createElement(key);
 				// Attr child = doc.createAttribute(key);
@@ -210,16 +210,19 @@ public class InhalerUtils {
 			transformer.transform(source, result);
 
 			xml = sw.toString();
-			Debugging.output("Created XML: " + xml, Debugging.INHALER_UTILS_DEBUG,
-					Debugging.INHALER_UTILS_DEBUG_ENABLED);
+			Debugging.output("Created XML: " + xml, Debugging.XML_CONVERSION);
 
 		} catch (ParserConfigurationException e) {
-			
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION);
 			//e.printStackTrace();
 		} catch (TransformerException e) {
-			
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION);
 			//e.printStackTrace();
 		} catch (DOMException e) {
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
 			
 		}
 		return xml;
@@ -230,7 +233,25 @@ public class InhalerUtils {
 	 * @param map - used for storage
 	 * @return
 	 */
-	public static Map<String, String> cleanMap(Map<String, String> map) {
+	public static Map<String, String> cleanLinkedMap(Map<String, String> map) {
+		Map<String,String> cleanMap = new LinkedHashMap<String,String>();
+		for(String key : map.keySet()) {
+			String nKey = key;
+			String value = map.get(key);
+			String nValue = value;
+			//test if key is proper
+			if (key.contains(" ")) {
+				nKey = key.replace(' ', '-');
+				
+			}
+			//test if  body is correct
+
+			cleanMap.put(nKey, nValue);
+		}
+		return cleanMap;
+	}
+	
+	public static Map<String, String> cleanHashMap(Map<String, String> map) {
 		Map<String,String> cleanMap = new HashMap<String,String>();
 		for(String key : map.keySet()) {
 			String nKey = key;
@@ -242,8 +263,7 @@ public class InhalerUtils {
 				
 			}
 			//test if  body is correct
-			
-			
+
 			cleanMap.put(nKey, nValue);
 		}
 		return cleanMap;
@@ -258,6 +278,9 @@ public class InhalerUtils {
 	 */
 	public static HashMap<String, String> xmlToMap(String xml) {
 		HashMap<String,String> map = new HashMap<String,String>();
+		if (xml==null || xml.equals("")) {
+			return map;
+		}
 		try {
 			
 		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -282,8 +305,7 @@ public class InhalerUtils {
 				//String value1 = child.getNodeValue();
 				map.put(key, value);
 				
-				Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.INHALER_UTILS_DEBUG,
-						Debugging.INHALER_UTILS_DEBUG_ENABLED);
+				Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
 				}
 			}
 			
@@ -291,23 +313,91 @@ public class InhalerUtils {
 		} catch (SAXException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
 			} else {
 				
 			}
 		} catch (IOException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
 			} else {
 				
 			}
 		} catch (ParserConfigurationException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
 			} else {
 				
 			}
 		} catch (DOMException e) {
-			map = new HashMap<String,String>();
+			//map = new HashMap<String,String>();
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+		}
+		
+		return map;
+		
+	}
+	
+	public static HashMap<String, String> xmlToLinkedHashMap(String xml) {
+		HashMap<String,String> map = new LinkedHashMap<String,String>();
+		if (xml==null || xml.equals("")) {
+			return map;
+		}
+		try {
+			
+		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+		 InputSource is = new InputSource(new StringReader(xml));
+		    //builder.parse(is);
+		    
+			Document doc = dBuilder.parse(is);
+			
+			Element rootElement = doc.getDocumentElement();
+			
+			NodeList childElementList = rootElement.getChildNodes();
+			
+			for (int i=0;i<childElementList.getLength();i++) {
+				Node child = childElementList.item(i);
+				
+				if (child.getNodeType()== Node.ELEMENT_NODE) {
+				String key = child.getNodeName();
+				
+				String value = child.getTextContent();
+				
+				//String value1 = child.getNodeValue();
+				map.put(key, value);
+				
+				Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
+				}
+			}
+			
+
+		} catch (SAXException e) {
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			} else {
+				
+			}
+		} catch (IOException e) {
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			} else {
+				
+			}
+		} catch (ParserConfigurationException e) {
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			} else {
+				
+			}
+		} catch (DOMException e) {
+			//map = new HashMap<String,String>();
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
 		}
 		
 		return map;
@@ -344,7 +434,7 @@ public class InhalerUtils {
 			rtrn = true;
 		}
 
-		System.out.println("Tested: " + testingString + " Null?: " + rtrn);
+		Debugging.output("Tested: " + testingString + " Null?: " + rtrn,Debugging.DATABASE_OUTPUT);
 		return rtrn;
 	}
 	
@@ -468,6 +558,15 @@ public class InhalerUtils {
 			}
 		}
 		
+		}
+		
+		return output;
+	}
+	
+	public static Collection<String> reverseList(Collection<String> input) {
+		ArrayList<String> output = new ArrayList<String>();
+		for (String inputValue : input) {
+			output.add(0,inputValue);
 		}
 		
 		return output;

@@ -27,6 +27,8 @@ public class MaxField<T> {
 	MaxObject refClass;
 	Boolean showField = true;
 	
+	String gridName;
+	
 	MaxConversion<?,?> conversion;
 	
 	
@@ -45,6 +47,9 @@ public class MaxField<T> {
 		this.fieldValue = fieldValue;
 		this.defaultFieldValue = defaultFieldValue;
 		this.refClass = refClass;
+		
+		//default value for grid name is just field name
+		this.gridName = this.fieldName;
 	}
 
 	/*
@@ -196,6 +201,14 @@ public class MaxField<T> {
 
 	public void setShowField(Boolean showField) {
 		this.showField = showField;
+	}
+
+	public String getGridName() {
+		return gridName;
+	}
+
+	public void setGridName(String gridName) {
+		this.gridName = gridName;
 	}
 
 	/**

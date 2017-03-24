@@ -37,6 +37,7 @@ import uiElements.ClientEditor;
 import uiElements.ClientFilter;
 //import de.steinwedel.messagebox.MessageBox;
 import uiElements.NavBar;
+import users.User;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
@@ -75,10 +76,12 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final String PANEL_HEIGHT = "950px";
 	//private static final String NOTE_WIDTH = "600px";
 	private static final boolean PANNEL_ENABLED = false;
-	private static final boolean DEFAULT_FILTER_SHOW = false;
 	
-	public static final String gridWidth = "900px";
-	public static final String gridHeight = "600px";
+	public String gridWidth = "900px";
+	public String gridHeight = "600px";
+	
+	public String smallGridWidth = "600px";
+	public String smallGridHeight = "600px";
 	
 	
 	//Clears textboxes and combo boxes upon creating a client
@@ -87,23 +90,6 @@ public class CrmUI extends HorizontalLayout implements View {
 	private static final boolean USE_VAADIN_FILTER = true;
 	public static Boolean CREATION_ALLOW_NEW_VALUES = true;
 	
-	// filtering
-	/*
-	HorizontalLayout filterLayout = new HorizontalLayout();
-	Button filterShowFilter = new Button(">>",e -> showFilterClick());
-	Button filterHideFilter = new Button("<<", e -> hideFilterClick());
-	Boolean filterShowing = false;
-	
-	ComboBox filterStatus  = new ComboBox("Status");
-	ComboBox filterLocation = new ComboBox("Location");
-	ComboBox filterGroup = new ComboBox("Group");
-	//Button filterButton = new Button("Filter", event -> this.filterClick());
-	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
-	TextField filterClientTextField = new TextField(" Name ");
-	TextField filterClientNotesField = new TextField("Notes Include:");
-	Label filterLabel = new Label("Filter :");
-	CheckBox filterContactNowCheckBox = new CheckBox("Contact Now Only");
-	*/
 	//Filtering 2.0
 	public ClientFilter clientFilter = new ClientFilter(this);
 	
@@ -162,40 +148,16 @@ public class CrmUI extends HorizontalLayout implements View {
 		clientGrid.addSelectionListener(event -> this.selectItem());
 	}
 
-	/*
-	private void hideFilterClick() {
-		setFilterShow(false);
-	}
-
-	private void showFilterClick() {
-		setFilterShow(true);
-	}
-
-	public void setFilterShow(boolean showFilter) {
-		this.filterShowing = showFilter;
-		
-		filterStatus.setVisible(showFilter);
-		filterLocation.setVisible(showFilter);
-		filterGroup.setVisible(showFilter);
-		//filterButton.setVisible(showFilter);
-		resetFilterButton.setVisible(showFilter);
-		filterClientTextField.setVisible(showFilter);
-		filterClientNotesField.setVisible(showFilter);
-		filterContactNowCheckBox.setVisible(showFilter);
-		
-		filterShowFilter.setVisible(!showFilter);
-		filterHideFilter.setVisible(showFilter);
-	}
-	*/
-
 	public void createClientGrid() {
 		Client exampleClient = new Client();
-		
+		//TODO: do we really need to create a new container every time?
 		clients = new IndexedContainer();
 		
 		exampleClient.populateContainer(clients);
 		
 		clientGrid.setContainerDataSource(clients);
+		
+		clientGrid.setFrozenColumnCount(1);
 		
 	}
 	/**
@@ -256,13 +218,15 @@ public class CrmUI extends HorizontalLayout implements View {
 		}
 		
 		//Filter 2.0
-		if (USE_VAADIN_FILTER){
+		if (USE_VAADIN_FILTER && clientFilter.getFilterHasChanged()){
 			ProfilingTimer filterTimer1 = new ProfilingTimer("filter timer1");
 			//Determine the time it takes to remove the old filter and add the new one.
 			//TODO
 			//It may be possible to move this code out to another method
 			clients.removeAllContainerFilters();
 			clients.addContainerFilter(clientFilter);
+			
+			clientFilter.setFilterHasChanged(false);
 			filterTimer1.stopTimer();
 		}
 
@@ -272,6 +236,8 @@ public class CrmUI extends HorizontalLayout implements View {
 	 * Fill combo boxes
 	 */
 	public void updateAllComboBoxes() {
+		
+		ProfilingTimer updateBoxTimer = new ProfilingTimer("update crm comboBoxes");
 		// clear all combo boxes
 		createClientStatus.clear();
 		createClientLocation.clear();
@@ -283,27 +249,36 @@ public class CrmUI extends HorizontalLayout implements View {
 		createClientGroup.removeAllItems();
 		
 		// create clients
+		
 		fillComboBox(createClientStatus, masterUi.userDataHolder.getAllStatus());
 		fillComboBox(createClientLocation, masterUi.userDataHolder.getAllLocations());
 		fillComboBox(createClientGroup, masterUi.userDataHolder.getAllGroups());
-
+		
+		/*
+		createClientStatus.addItems(masterUi.userDataHolder.getAllStatus()());
+		createClientLocation.addItems(masterUi.userDataHolder.getAllLocations());
+		createClientGroup.addItems(masterUi.userDataHolder.getAllGroups());
+		*/
 		// filter
 		clientFilter.updateAllComboBoxes();
 
 		clientEditor.updateAllComboBoxes();
 		
+		
+		updateBoxTimer.stopTimer();
 		//fillComboBox(csvBackupSelect, BackupManager.getCsvBackups());
 	}
 
+	
 	public <T extends Object> void fillComboBox(ComboBox box, Collection<T> values) {
 		
 		RapidProfilingTimer rpt = new RapidProfilingTimer("CrmUI fillComboBox");
 		
 		for (Object val : values) {
 			// add any non template entity. (unless template is selected)
-			if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
+			//if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
 				box.addItem(val.toString());
-			}
+			//}
 			rpt.logTime();
 		}
 	}
@@ -322,15 +297,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	 */
 	public void selectItem() {
 
-		System.out.println("SELECTED AN ITEM." + clientGrid.getSelectedRow());
-		// TODO: ASK before switching
+		Debugging.output("SELECTED AN ITEM." + clientGrid.getSelectedRow(),Debugging.OLD_OUTPUT);
 
 		// null check
 		if (clientGrid.getSelectedRow() != null) {
 			localSelClient = masterUi.userDataHolder.getClient(((Client) clientGrid.getSelectedRow()).getPrimaryKey());
 			if (localSelClient == null) {
-				System.out.println(
-						"Null value: " + localSelClient + " found for client: " + ((Client) clientGrid.getSelectedRow()).getPrimaryKey());
+				Debugging.output(
+						"Null value: " + localSelClient + " found for client: " + ((Client) clientGrid.getSelectedRow()).getPrimaryKey()
+						,Debugging.OLD_OUTPUT);
 				return;
 			}
 
@@ -338,7 +313,6 @@ public class CrmUI extends HorizontalLayout implements View {
 			return;
 		}
 		if (clientEditor.checkUpdate() && this.discard == false) {
-			// TODO: implement unsaved progress
 			this.discard = true;
 			Notification n = new Notification("You have unsaved changes! <br> Click message to dismiss.","", Notification.Type.WARNING_MESSAGE,true);
 			
@@ -363,7 +337,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		if (c != null) {
 
 		} else {
-			System.out.println("Null value made it to selectClient: " + c);
+			Debugging.output("Null value made it to selectClient: " + c,Debugging.OLD_OUTPUT);
 			clientEditor.setVisible(false);
 			return;
 		}
@@ -462,7 +436,6 @@ public class CrmUI extends HorizontalLayout implements View {
 			return; // a null value was found
 		}
 		
-		//TODO: debugging
 		String locationName = createClientLocation.getValue().toString();
 		String statusName = createClientStatus.getValue().toString();
 		String groupName =  createClientGroup.getValue().toString();
@@ -528,7 +501,7 @@ public class CrmUI extends HorizontalLayout implements View {
 			c.setNotes("Notes:");
 		}
 
-		System.out.println("Created Client: " + c);
+		Debugging.output("Created Client: " + c,Debugging.OLD_OUTPUT);
 
 		masterUi.userDataHolder.store(c, Client.class);
 		
@@ -568,7 +541,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	@Override
 	public void enter(ViewChangeEvent VCevent) {
 
-		//TODO START OF THE UI
+		
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
@@ -576,6 +549,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		this.setSpacing(true);
 		this.addStyleName("topScreenPadding");
 		
+		//only runs if it hasn't already.
 		masterUi.userDataHolder.initalizeDatabases();
 
 		// Nav Bar Code
@@ -589,17 +563,12 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		if (PANNEL_ENABLED) {
 		panel.setContent(layout);
-		//panel.setSizeFull();
 		panel.setHeight(PANEL_HEIGHT);
 		panel.getContent().setSizeUndefined();
 		this.setSizeUndefined();
-		// panel.setHeight("100%");
-		// panel.setWidth("100%");
+
 		layout.setSizeUndefined();
-		// this.addStyleName("v-scrollable");
-		// this.addStyleName("h-scrollable");
-		// this.setHeight("100%");
-		// this.setWidth("100%");
+
 		this.addComponent(panel);
 		} else {
 			this.addComponent(layout);
@@ -759,8 +728,13 @@ public class CrmUI extends HorizontalLayout implements View {
 		 * 
 		 */
 		//Client Grid
-		clientGrid.setWidth(gridWidth);
-		clientGrid.setHeight(gridHeight);
+		if (masterUi.user.getViewMode().equals(User.VIEW_MODE_SMALL)) {
+			clientGrid.setWidth(smallGridWidth);
+			clientGrid.setHeight(smallGridHeight);
+		} else {
+			clientGrid.setWidth(gridWidth);
+			clientGrid.setHeight(gridHeight);
+		}
 		
 		midLayout.setSpacing(true);
 		layout.addComponent(midLayout);
@@ -828,8 +802,8 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		clientGrid.setRowStyleGenerator(client -> {
 			
-			if (((Status)client.getItem().getItemProperty("statusName").getValue())!= null) {
-				String cssName = ((Status)client.getItem().getItemProperty("statusName").getValue()).getStatusName();
+			if (((Status)client.getItem().getItemProperty(Client.STATUS_GRID_NAME).getValue())!= null) {
+				String cssName = ((Status)client.getItem().getItemProperty(Client.STATUS_GRID_NAME).getValue()).getStatusName();
 				
 				cssName = InhalerUtils.removeSpecialCharacters(cssName);
 				
@@ -843,7 +817,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 
 	public void updateCreationLists() {
-		// TODO Auto-generated method stub
 		createStatusListSelect.removeAllItems();
 		createStatusListSelect.addItems(masterUi.userDataHolder.getAllStatus());
 		createLocationListSelect.removeAllItems();

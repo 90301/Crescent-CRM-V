@@ -34,6 +34,10 @@ public abstract class MaxObject {
 	public Map<String, Object> dbMap = new HashMap<String, Object>();
 	public static Map<String, Class<?>> dbDatatypes = null;
 	
+	public static final Boolean USE_BETTER_DB_DATATYPES = true;
+	
+	public static HashMap<Class<? extends MaxObject>,HashMap<String,Class<?>>> betterDbDatatypes = new HashMap<>();
+	
 	
 	/**
 	 * A list that contains all the MaxFields to be passed into functions.
@@ -64,7 +68,7 @@ public abstract class MaxObject {
 		String keys = "(";
 		String values = "(";
 		Boolean firstLoop = true;
-		System.out.println("Generating insert values for: " + this + " " + dbMap.size());
+		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
 		for (String key : dbMap.keySet()) {
 			Object value = dbMap.get(key);
 			// special case for first loop (doesn't have a comma)
@@ -80,7 +84,7 @@ public abstract class MaxObject {
 				//special case for dates
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String modValue = sdf.format(value);
-				System.out.println("date: " + modValue);
+				Debugging.output("date: " + modValue,Debugging.DATABASE_OUTPUT);
 				values += "'" + modValue + "'";
 			} else if (value instanceof Boolean) {
 				//MYSQL requires no quotes for a true/false value
@@ -116,7 +120,7 @@ public abstract class MaxObject {
 		String values = "(";
 		
 		Boolean firstLoop = true;
-		System.out.println("Generating insert values for: " + this + " " + dbMap.size());
+		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
 		for (String key : dbMap.keySet()) {
 			Object value = dbMap.get(key);
 			// special case for first loop (doesn't have a comma)
@@ -147,7 +151,7 @@ public abstract class MaxObject {
 		// SQL representation
 		//TODO: escape  commas in notes to prevent issues
 		//this.updateDBMap();
-		System.out.println("Generating insert values for: " + this + " " + dbMap.size());
+		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
 		
 		//Loops through the DB map in the order the statement was prepared.
 		int currentValue = 1;
@@ -159,7 +163,7 @@ public abstract class MaxObject {
 				//special case for dates
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String modValue = sdf.format(value);
-				System.out.println("date: " + modValue);
+				Debugging.output("date: " + modValue,Debugging.DATABASE_OUTPUT);
 				//values += "'" + modValue + "'";
 				//Experimental Date Storage
 				//updateStatement.setDate(currentValue, (Date) value);
@@ -227,24 +231,32 @@ public abstract class MaxObject {
 		}
 		
 		
-		System.out.println("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.");
+		Debugging.output("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.",Debugging.DATABASE_OUTPUT);
 		//for (String key : dbMap.keySet()) {
-		for (String key : dbDatatypes.keySet()) {
-			System.out.println("Key: " + key);
+		
+		Collection<String> keysToUse = null;
+		if (USE_BETTER_DB_DATATYPES) {
+			keysToUse = betterDbDatatypes.get(this.getClass()).keySet();
+		} else {
+			keysToUse = dbDatatypes.keySet();
+		}
+		
+		for (String key : keysToUse) {
+			Debugging.output("Key: " + key,Debugging.DATABASE_OUTPUT);
 			try {
 				Object value = rs.getObject(key);
-				System.out.println("Attempting to Load value: " + key + " , " + value);
+				Debugging.output("Attempting to Load value: " + key + " , " + value,Debugging.DATABASE_OUTPUT);
 				dbMap.put(key, value);
-				System.out.println("Loaded value: " + key + " , " + value + " into: " + dbMap);
+				Debugging.output("Loaded value: " + key + " , " + value + " into: " + dbMap,Debugging.DATABASE_OUTPUT);
 
 			} catch (SQLException e) {
 				
-				System.err.println("Error code: " + e.getErrorCode() +" SQL EXCEPTION!");
-				System.err.println("Error Message: " + e.getMessage());
+				Debugging.output("Error code: " + e.getErrorCode() +" SQL EXCEPTION!",Debugging.DATABASE_OUTPUT_ERROR);
+				Debugging.output("Error Message: " + e.getMessage(),Debugging.DATABASE_OUTPUT_ERROR);
 				if (e.getMessage().contains("Column") && e.getMessage().contains("not found.")) {
 					//Special debugging
 					//This should be fixed later
-					System.err.println("key not found: " + key + " in: " + this);
+					Debugging.output("key not found: " + key + " in: " + this,Debugging.DATABASE_OUTPUT_ERROR);
 					
 				} else {
 					e.printStackTrace();
@@ -321,22 +333,22 @@ public abstract class MaxObject {
 		//TODO: comment and debug this method
 		setupDBDatatypes();
 		//setup the variables and their types. this must be done for every subclass (IE client/status)
-		System.out.println("MaxObject.loadFromCSV()");
+		Debugging.output("MaxObject.loadFromCSV()",Debugging.DATABASE_OUTPUT);
 		try {
 			//go through every field, and get the respective name
 			// [Name:Jessie] -> get all fields (Name,id,...ect)
 			for (String key : entity.keySet()) {
-				System.out.println("Loading: " + key + " from csv with value: " + entity.get(key));
+				Debugging.output("Loading: " + key + " from csv with value: " + entity.get(key),Debugging.DATABASE_OUTPUT);
 
 				//reference class, used to create an object
 				Class<?> ref = dbDatatypes.get(key);
 
-				System.out.println("loaded ref: " + ref);
+				Debugging.output("loaded ref: " + ref,Debugging.DATABASE_OUTPUT);
 				Object obj;
 				
 				if (ref==null) {
 					//null checking
-					System.out.println("Null value encountered.");
+					Debugging.output("Null value encountered.",Debugging.DATABASE_OUTPUT);
 				}
 				
 				
@@ -355,7 +367,7 @@ public abstract class MaxObject {
 				} else if (obj.getClass() == java.util.Date.class) {
 					obj = Client.SIMPLE_DATE_FORMAT.parse(entity.get(key));
 				}else {
-					System.out.println("Class: " + obj.getClass() + " WAS NOT PROGRAMED!");
+					Debugging.output("Class: " + obj.getClass() + " WAS NOT PROGRAMED!",Debugging.DATABASE_OUTPUT);
 				}
 
 				dbMap.put(key, obj);
@@ -428,8 +440,15 @@ public abstract class MaxObject {
 		
 		for (MaxField<?> m : maxFields) {
 			
-				dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
-			 
+				
+				if (USE_BETTER_DB_DATATYPES) {
+					if (!betterDbDatatypes.containsKey(this.getClass())) {
+					betterDbDatatypes.put(this.getClass(), new HashMap<>());
+					}
+					betterDbDatatypes.get(this.getClass()).put(m.getFieldName(), m.getExtendedClass());
+				} else {
+					dbDatatypes.put(m.getFieldName(), m.getExtendedClass());
+				}
 		}
 	}
 	
@@ -483,7 +502,7 @@ public abstract class MaxObject {
 	public MaxDBTable autoGenCreateTableForClass(Collection<MaxField<?>> maxFields,MaxField<?> primaryKey, MaxDBTable table) {
 		
 		for (MaxField<?> m : maxFields) {
-			table.addDatatype(m.getFieldName(), m.getFieldDBType());
+			table.addDatatype(this.getClass(),m.getFieldName(), m.getFieldDBType());
 		}
 		table.setPrimaryKeyName(primaryKey.getFieldName());
 		table.createTable();
