@@ -45,7 +45,7 @@ public class SuperRest {
 		*/
 		
 		//Debugging.output("Response: " + response, Debugging.FIREBASE);
-		JavaScript.getCurrent().addFunction("javascript:getFirebaseDevice", e -> firebaseDevice(e));
+		JavaScript.getCurrent().addFunction("serverTokenFunction", e -> firebaseDevice(e));
 		
 		JavaScript.getCurrent().execute("permRequest()");
 	}
