@@ -15,6 +15,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -48,7 +49,7 @@ public class LoginView extends VerticalLayout implements View {
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public Button registerButton = new Button("Register", event -> createNewUserClick());
 	public Layout userCreatorLayout = new VerticalLayout();
-	public Layout buttonLayout = new HorizontalLayout();
+	public HorizontalLayout buttonLayout = new HorizontalLayout();
 	private static final int PASS_MIN_LENGTH = 5;
 	public String host;
 	//public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
@@ -86,10 +87,10 @@ public class LoginView extends VerticalLayout implements View {
 	    this.setSpacing(true);
 		this.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		if (masterUi.currentTheme.equals(MasterUI.avaliableThemes[0])) {
-			//Black Logo
+			//Black Style Connect Logo for light theme
 			this.addComponent(logo);
 		} else {
-			//white logo
+			//White Style Connect Logo for dark theme
 			this.addComponent(logo2);
 		}
 		//this.addComponent(welcomeLabel);
@@ -102,6 +103,7 @@ public class LoginView extends VerticalLayout implements View {
 		//this.addComponent(hLayoutUser);
 		//hLayoutIncorrect.addComponent(loginError);
 		//hLayoutUser.addComponent(userError);
+		buttonLayout.setSpacing(true);
 		buttonLayout.addComponent(loginButton);
 		buttonLayout.addComponent(registerButton);
 		this.addComponent(buttonLayout);
