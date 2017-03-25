@@ -68,4 +68,8 @@ public class SuperRest {
 		
 	}
 
+	public static void requestPermission() {
+		JavaScript.getCurrent().execute("permRequest()");
+	}
+
 }

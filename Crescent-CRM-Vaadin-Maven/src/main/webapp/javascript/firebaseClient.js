@@ -25,6 +25,8 @@
 		  console.log('Notification permission granted.');
 		  // TODO(developer): Retrieve an Instance ID token for use with FCM.
 		  this.permissionRequested=true;
+		  
+		  tokenAcquire();
 	  	})
 	  	.catch(function(err) {
 	  		console.log('Unable to get permission to notify.', err);
@@ -46,7 +48,7 @@
 	  })
 	  .catch(function(err) {
 	    console.log('An error occurred while retrieving token. ', err);
-	    showToken('Error retrieving Instance ID token. ', err);
+	    console.log('Error retrieving Instance ID token. ', err);
 	    setTokenSentToServer(false);
 	  });
 	}
