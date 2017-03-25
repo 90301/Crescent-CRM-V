@@ -128,7 +128,7 @@ public class MasterUI extends UI {
 	// everywhere dataholder used to be called.
 	public UserDataHolder userDataHolder;// Set when logging in
 
-	public static final String[] avaliableThemes = { "mytheme", "darkTheme" };
+	public static final String[] avaliableThemes = { "lightTheme", "darkTheme" };
 
 	public static final String DEFAULT_THEME = avaliableThemes[1];
 

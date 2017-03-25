@@ -1,4 +1,4 @@
-$v-app-loading-text: "my theme Updated3";
+$v-app-loading-text: "Light Theme Updated3";
 
 
 // If you edit this file you need to compile the theme. See README.md for details.
@@ -34,7 +34,7 @@ $v-app-loading-text: "my theme Updated3";
 
 @import "../valo/valo";
 
-@mixin mytheme {
+@mixin lightTheme {
   @include valo;
   // Insert your own theme rules here
   .filterBorder {
