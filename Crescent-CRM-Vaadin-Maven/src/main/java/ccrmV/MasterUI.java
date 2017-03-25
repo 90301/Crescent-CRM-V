@@ -41,7 +41,7 @@ import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
 @PreserveOnRefresh
-@JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","http://localhost/firebaseClient.js"})
+@JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","javascript/firebaseClient.js"})
 @Theme("darkTheme")
 public class MasterUI extends UI {
 

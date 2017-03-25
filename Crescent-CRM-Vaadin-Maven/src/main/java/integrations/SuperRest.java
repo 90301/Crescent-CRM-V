@@ -71,5 +71,9 @@ public class SuperRest {
 	public static void requestPermission() {
 		JavaScript.getCurrent().execute("permRequest()");
 	}
+	
+	public static void regServiceWorker() {
+		JavaScript.getCurrent().execute("regServiceWorker()");
+	}
 
 }

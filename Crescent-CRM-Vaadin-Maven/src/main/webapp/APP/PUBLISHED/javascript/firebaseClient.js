@@ -49,6 +49,30 @@
 	  .catch(function(err) {
 	    console.log('An error occurred while retrieving token. ', err);
 	    console.log('Error retrieving Instance ID token. ', err);
-	    setTokenSentToServer(false);
 	  });
 	}
+  
+  function regServiceWorker() {
+	  if ('serviceWorker' in navigator) {
+		  navigator.serviceWorker.register('/Crescent-CRM-Vaadin-Maven/APP/PUBLISHED/javascript/firebaseServiceWorker.js').then(function(registration) {
+		    // Registration was successful
+		    console.log('ServiceWorker registration successful with scope: ',    registration.scope);
+		    
+		    //attempt to register the service worker.
+		    messaging.useServiceWorker(registration);
+		    
+		    registration.pushManager.subscribe({
+		      userVisibleOnly: true
+		    }).then(function(sub) {
+		      console.log('endpoint:', sub.endpoint);
+		    }).catch(function(e) {
+
+		    });
+		  }).catch(function(err) {
+		    // registration failed :(
+		    console.log('ServiceWorker registration failed: ', err);
+		  });
+		}
+	  
+  }
+  

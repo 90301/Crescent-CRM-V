@@ -25,6 +25,7 @@ public class DevPlayground extends CrescentView {
 
 
 	private void firebaseGetTokenClick() {
+		SuperRest.regServiceWorker();
 		SuperRest.requestPermission();
 		SuperRest.getToken();
 	}
