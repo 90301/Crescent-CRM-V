@@ -156,6 +156,7 @@ public class Debugging {
     public static final DebugObject XML_CONVERSION = new DebugObject(CONSOLE_OUTPUT, true, true, "XML Conversion: ");
     public static final DebugObject XML_CONVERSION_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "XML Conversion Error: ");
     public static final DebugObject FIREBASE = new DebugObject(CONSOLE_OUTPUT, true, true, "Fire Base: ");
+    public static final DebugObject NAV_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Nav Debug: ");
     
     
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();

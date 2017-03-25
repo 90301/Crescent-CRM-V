@@ -3,20 +3,30 @@
  */
 package uiElements;
 
+import java.util.LinkedHashMap;
+
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.VerticalLayout;
 
+import ccrmV.CrescentView;
 import ccrmV.MasterUI;
+import debugging.Debugging;
 
-public class NavBar {
+public class NavBar extends VerticalLayout {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	public NavBar() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public VerticalLayout sidebarLayout = new VerticalLayout();
+	//public VerticalLayout sidebarLayout = new VerticalLayout();
 	
 	public Boolean generatedLayout = false;//Intended to prevent generating the nav bar multiple times for the same user
 	
@@ -32,10 +42,18 @@ public class NavBar {
 	Button debugButton;
 	Button logoutButton;
 	Label statusLabel;
+	
+	VerticalLayout navButtonLayout = new VerticalLayout();
+	
+	LinkedHashMap<String,Button> navButtons = new LinkedHashMap<String,Button>();
+	
 	public static String BUTTON_WIDTH = "120px";
 	public static String BUTTON_HEIGHT = "60px";
 	
 	{
+		
+		navButtonLayout.setSpacing(true);
+		
 		crmButton = new Button("Clients", event -> this.crmClick() );
 		
 		categoryEditorButton = new Button("Categories", event -> this.categoryEditorClick() );
@@ -45,8 +63,6 @@ public class NavBar {
 		schedulerButton = new Button("Scheduler", event -> this.schedulerClick() );
 		
 		inventoryButton = new Button("Inventory", event -> this.inventoryClick() );
-		
-		
 		
 		debugButton = new Button("Debugging", event -> this.debugClick() );
 		
@@ -64,28 +80,18 @@ public class NavBar {
 			BUTTON_HEIGHT = "60px";
 		}
 		
-		sidebarLayout.addStyleName("navBarMargin");
+		this.addStyleName("navBarMargin");
 		
-		//sidebarLayout.setMargin(true);
+		this.removeAllComponents();
 		
-		sidebarLayout.removeAllComponents();
-		
-		sidebarLayout.setSpacing(true);
+		this.setSpacing(true);
 		
 		
 		statusLabel = new Label("NavBar");
 		
 
-		sidebarLayout.addComponent(statusLabel);
-		
-		/*
-		sidebarLayout.addComponent(crmButton);
-		sidebarLayout.addComponent(userEditorButton);
-		sidebarLayout.addComponent(schedulerButton);
-		sidebarLayout.addComponent(inventoryButton);
-		sidebarLayout.addComponent(logoutButton);
-		*/
-		
+		this.addComponent(statusLabel);
+
 		setupButton(crmButton);
 		setupButton(categoryEditorButton);
 		setupButton(userEditorButton);
@@ -96,24 +102,47 @@ public class NavBar {
 		if (MasterUI.DEVELOPER_MODE) {
 			setupButton(debugButton);
 		}
+		this.addComponent(navButtonLayout);
 		setupButton(logoutButton);
         
 		generatedLayout = true;
 		
-		return sidebarLayout;
+		return this;
 		
 	}
 	
 
 
 
+	public void addNavButton(CrescentView cView) {
+		if (!navButtons.containsKey(cView.getViewName())) {
+			//generate a button for the view
+			Button linkButton = new Button(cView.getViewName(),e -> navButtonClick(cView.getViewLink(),e));
+			setupNavButton(linkButton);
+			navButtons.put(cView.getViewName(), linkButton);
+			navButtonLayout.addComponent(linkButton);
+			
+		}
+	}
 
+
+
+
+	private void navButtonClick(String viewLink, ClickEvent e) {
+		 Debugging.output("Nav Button Clicked: " + viewLink, Debugging.NAV_DEBUG);
+		 masterUi.enterView(viewLink);
+	}
+
+	public void setupNavButton(Button b) {
+		b.setWidth(BUTTON_WIDTH);
+        b.setHeight(BUTTON_HEIGHT);
+	}
 
 
 	public void setupButton(Button b) {
 		b.setWidth(BUTTON_WIDTH);
         b.setHeight(BUTTON_HEIGHT);
-        sidebarLayout.addComponent(b);
+        this.addComponent(b);
 	}
 	
 		private void categoryEditorClick() {

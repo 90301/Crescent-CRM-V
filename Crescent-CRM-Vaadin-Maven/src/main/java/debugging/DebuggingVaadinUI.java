@@ -117,7 +117,7 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 
 		this.removeAllComponents();
 
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 
 		this.addComponent(buttonLayout);
 

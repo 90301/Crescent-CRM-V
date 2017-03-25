@@ -555,7 +555,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Nav Bar Code
 		navBar.updateInfo();
 		
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 		
 
 		((AbstractOrderedLayout) layout).setMargin(false);

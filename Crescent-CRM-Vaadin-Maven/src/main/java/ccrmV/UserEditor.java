@@ -396,7 +396,7 @@ public class UserEditor extends HorizontalLayout implements View {
 
 		// this.addComponent(welcomeLabel);
 
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 
 		this.addComponent(userEditorAccordion);
 

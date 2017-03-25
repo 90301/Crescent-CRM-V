@@ -223,7 +223,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 			this.removeAllComponents();
 			// return;
 		}
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 		
 		
 		//LOCATION

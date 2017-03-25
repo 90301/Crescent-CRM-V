@@ -207,7 +207,7 @@ public class SchedulerView extends HorizontalLayout implements View {
 		 * Add components here
 		 */
 
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 		// this.addComponent(new Label("Scheduler"));
 
 		// this.addComponent(cal);

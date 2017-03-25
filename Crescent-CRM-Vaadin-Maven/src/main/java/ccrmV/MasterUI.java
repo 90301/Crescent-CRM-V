@@ -118,6 +118,7 @@ public class MasterUI extends UI {
 	LoginView loginView = new LoginView();
 	InventoryView inventoryView = new InventoryView();
 	DebuggingVaadinUI debugView = new DebuggingVaadinUI();
+	DevPlayground devPlayground = new DevPlayground();
 	
 	CategoryEditorView categoryEditorView = new CategoryEditorView();
 
@@ -210,6 +211,10 @@ public class MasterUI extends UI {
 
 		debugView.masterUi = this;
 		debugView.navBar = navBar;
+		
+		devPlayground.setVitals(this, navBar, "Dev", "devPlay");
+		
+		
 
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
@@ -329,6 +334,10 @@ public class MasterUI extends UI {
 		
 		mainNavigator.navigateTo(MAIN_APP);
 
+	}
+	
+	public void enterView(String viewLink) {
+		this.mainNavigator.navigateTo(viewLink);
 	}
 
 	public void enterCRM() {

@@ -129,7 +129,7 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		populateData();
 
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 
 		this.addComponent(inventoryAccordion);
 		
