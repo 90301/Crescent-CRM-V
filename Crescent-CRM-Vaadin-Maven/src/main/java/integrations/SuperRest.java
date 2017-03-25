@@ -63,4 +63,9 @@ public class SuperRest {
 		
 	}
 
+	public static void getToken() {
+		JavaScript.getCurrent().execute("tokenAquire()");
+		
+	}
+
 }
