@@ -35,6 +35,7 @@ public abstract class CrescentView extends HorizontalLayout implements View {
 		//styling
 		this.setSpacing(true);
 		this.addStyleName("topScreenPadding");
+		this.addStyleName("rightPadding");
 		
 		//adding components
 		this.addComponent(navBar);

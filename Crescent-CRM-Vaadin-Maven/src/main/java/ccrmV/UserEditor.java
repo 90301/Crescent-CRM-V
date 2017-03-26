@@ -41,12 +41,11 @@ import integrations.OauthUtils;
 import uiElements.NavBar;
 import users.User;
 
-public class UserEditor extends HorizontalLayout implements View {
+public class UserEditor extends CrescentView {
 
-	public MasterUI masterUi;
+	//public MasterUI masterUi;
 	Label welcomeLabel;
-	public NavBar navBar;
-	private boolean alreadyGenerated = false;
+	//public NavBar navBar;
 
 	Accordion userEditorAccordion = new Accordion();
 
@@ -244,7 +243,7 @@ public class UserEditor extends HorizontalLayout implements View {
 	 * 
 	 */
 	@Override
-	public void enter(ViewChangeEvent event) {
+	public void enterView(ViewChangeEvent event) {
 		
 		// Ensure the user is logged in
 		if (masterUi.loggedIn == false) {
@@ -255,9 +254,6 @@ public class UserEditor extends HorizontalLayout implements View {
 		// return;
 
 		// if (this.alreadyGenerated) {
-		this.removeAllComponents();
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
 		// return;
 		// }
 		// userEditorAccordion
@@ -396,11 +392,9 @@ public class UserEditor extends HorizontalLayout implements View {
 
 		// this.addComponent(welcomeLabel);
 
-		this.addComponent(navBar);
+		//this.addComponent(navBar);
 
 		this.addComponent(userEditorAccordion);
-
-		this.alreadyGenerated = true;
 
 		checkAdmin();
 	}

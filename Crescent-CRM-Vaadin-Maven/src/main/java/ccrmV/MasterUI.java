@@ -194,23 +194,23 @@ public class MasterUI extends UI {
 		navBar.masterUi = this;
 		navBar.generateNavBar();
 
+		/*
 		mainApp.masterUi = this;
 		mainApp.navBar = navBar;
-
-		userEditor.masterUi = this;
-		userEditor.navBar = navBar;
-
-		schedulerView.masterUi = this;
-		schedulerView.navBar = navBar;
-
-		inventoryView.masterUi = this;
-		inventoryView.navBar = navBar;
+		*/
+		mainApp.setVitals(this, navBar, "Clients", MAIN_APP);
 		
-		categoryEditorView.masterUi = this;
-		categoryEditorView.navBar = navBar;
-
-		debugView.masterUi = this;
-		debugView.navBar = navBar;
+		categoryEditorView.setVitals(this, navBar, "Categories", CATEGORY_EDITOR);
+		
+		userEditor.setVitals(this, navBar, "Settings", USER_EDITOR);
+		
+		schedulerView.setVitals(this, navBar, "Scheduler", SCHEDULER);
+		
+		inventoryView.setVitals(this, navBar, "Inventory", INVENTORY);
+		
+		if (DEVELOPER_MODE) {
+			debugView.setVitals(this, navBar, "Debugging", DEBUGGING);
+		}
 		
 		devPlayground.setVitals(this, navBar, "Dev", "devPlay");
 		
@@ -219,7 +219,9 @@ public class MasterUI extends UI {
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
 		}
+		
 		mainNavigator.addView(LOGIN, loginView);
+		/*
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		mainNavigator.addView("", userEditor);//attempting to fix a bug 
@@ -227,7 +229,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(INVENTORY, inventoryView);
 		mainNavigator.addView(DEBUGGING, debugView);
 		mainNavigator.addView(CATEGORY_EDITOR, categoryEditorView);
-		
+		*/
 		
 		enterLogin();
 

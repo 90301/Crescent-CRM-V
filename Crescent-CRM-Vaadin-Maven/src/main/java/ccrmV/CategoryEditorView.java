@@ -29,10 +29,10 @@ import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import uiElements.NavBar;
 
-public class CategoryEditorView extends HorizontalLayout implements View {
+public class CategoryEditorView extends CrescentView {
 	
-	MasterUI masterUi;
-	NavBar navBar;
+	//MasterUI masterUi;
+	//NavBar navBar;
 	Boolean alreadyGenerated = false;
 	
 	/*
@@ -143,8 +143,6 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 	 */
 	
 	{
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
 		
 		setupUI(newLocationLayout, editExistingLocationLayout);
 		setupUI(newStatusLayout, editExistingStatusLayout);
@@ -214,17 +212,10 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 
 
 	@Override
-	public void enter(ViewChangeEvent event) {
+	public void enterView(ViewChangeEvent event) {
 		
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
-
-		if (this.alreadyGenerated) {
-			this.removeAllComponents();
-			// return;
-		}
-		this.addComponent(navBar);
-		
 		
 		//LOCATION
 		
@@ -305,7 +296,7 @@ public class CategoryEditorView extends HorizontalLayout implements View {
 		populateAllStatusBoxes();
 		populateAllGroupBoxes();
 		
-		alreadyGenerated = true;
+		//alreadyGenerated = true;
 	}
 	
 

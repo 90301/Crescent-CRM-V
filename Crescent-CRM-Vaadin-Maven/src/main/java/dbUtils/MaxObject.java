@@ -19,6 +19,7 @@ import javax.annotation.Generated;
 import clientInfo.Client;
 import clientInfo.UserDataHolder;
 import debugging.Debugging;
+import debugging.profiling.RapidProfilingTimer;
 
 /**
  * A serialization for objects SUBCLASSES MUST IMPLEMENT A NO ARGUMENT
@@ -478,7 +479,8 @@ public abstract class MaxObject {
 	 * @return
 	 */
 	public Collection<MaxField<?>> autoGenLoadInternalFromMap(Collection<MaxField<?>> maxFields) {
-		
+		RapidProfilingTimer rpt = new RapidProfilingTimer("auto gen load internal");
+		rpt.logTime();
 		for (MaxField<?> m : maxFields) {
 			if (m.getConversion()==null) {
 				m.safeLoadValue(this);
@@ -486,6 +488,7 @@ public abstract class MaxObject {
 				//if a conversion is available, use it
 				m.safeConversionLoad(this);
 			}
+			rpt.logTime();
 			
 		}
 		

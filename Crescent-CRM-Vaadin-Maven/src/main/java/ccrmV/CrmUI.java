@@ -41,7 +41,7 @@ import users.User;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
-public class CrmUI extends HorizontalLayout implements View {
+public class CrmUI extends CrescentView {
 
 	/*
 	 * in order for databases to work, The driver must be added to the server.
@@ -100,7 +100,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	public IndexedContainer clients = new IndexedContainer();
 
 	//nav bar
-	public NavBar navBar;
+	//public NavBar navBar;
 	
 	VerticalLayout linkLayout = new VerticalLayout();
 
@@ -110,11 +110,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 	Label versionLabel = new Label("Version");
 
-
-
-	
-
-
 	public Client selectedClient;
 	Boolean discard = false;
 	boolean unsavedProgress = false;
@@ -122,7 +117,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	private String cacheDatabaseName = "";
 	// holds all possible values that mean null.
 	HashSet<String> nullStrings = new HashSet<String>();
-	public MasterUI masterUi;
+	//public MasterUI masterUi;
 
 	
 	Layout layout = new VerticalLayout();
@@ -543,15 +538,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	}
 
 	@Override
-	public void enter(ViewChangeEvent VCevent) {
+	public void enterView(ViewChangeEvent VCevent) {
 
 		
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
 		
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
+		//this.setSpacing(true);
+		//this.addStyleName("topScreenPadding");
 		
 		//only runs if it hasn't already.
 		masterUi.userDataHolder.initalizeDatabases();
