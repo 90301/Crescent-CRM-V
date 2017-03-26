@@ -34,14 +34,16 @@ public class NavBar extends VerticalLayout {
 	public MasterUI masterUi;//This provides the link to the master UI, which allows switching pages
 	
 	//public Layout sideBarLayout;
+	/*
 	Button crmButton;
 	Button userEditorButton;
 	Button schedulerButton;
 	Button inventoryButton;
 	Button categoryEditorButton;
 	Button debugButton;
+	*/
 	Button logoutButton;
-	Label statusLabel;
+	Label statusLabel = new Label();
 	
 	VerticalLayout navButtonLayout = new VerticalLayout();
 	
@@ -54,6 +56,7 @@ public class NavBar extends VerticalLayout {
 		
 		navButtonLayout.setSpacing(true);
 		
+		/*
 		crmButton = new Button("Clients", event -> this.crmClick() );
 		
 		categoryEditorButton = new Button("Categories", event -> this.categoryEditorClick() );
@@ -65,6 +68,7 @@ public class NavBar extends VerticalLayout {
 		inventoryButton = new Button("Inventory", event -> this.inventoryClick() );
 		
 		debugButton = new Button("Debugging", event -> this.debugClick() );
+		*/
 		
 		logoutButton = new Button("Log Out", event -> this.logoutClick());
 		
@@ -73,8 +77,8 @@ public class NavBar extends VerticalLayout {
 	public Layout generateNavBar() {
 		
 		if (masterUi.getMobileUser()) {
-			BUTTON_WIDTH = "140px";
-			BUTTON_HEIGHT = "140px";
+			BUTTON_WIDTH = "120px";
+			BUTTON_HEIGHT = "120px";
 		} else {
 			BUTTON_WIDTH = "120px";
 			BUTTON_HEIGHT = "60px";
@@ -82,27 +86,31 @@ public class NavBar extends VerticalLayout {
 		
 		this.addStyleName("navBarMargin");
 		
-		this.removeAllComponents();
+		//this.removeAllComponents();
 		
-		this.setSpacing(true);
+		for (Button b : navButtons.values()) {
+			b.setWidth(BUTTON_WIDTH);
+			b.setHeight(BUTTON_HEIGHT);
+		}
 		
-		
-		statusLabel = new Label("NavBar");
-		
+		this.setSpacing(true);		
 
 		this.addComponent(statusLabel);
 
+		/*
 		setupButton(crmButton);
 		setupButton(categoryEditorButton);
 		setupButton(userEditorButton);
 		setupButton(schedulerButton);
 		setupButton(inventoryButton);
 		
-		
 		if (MasterUI.DEVELOPER_MODE) {
 			setupButton(debugButton);
 		}
+		*/
+		
 		this.addComponent(navButtonLayout);
+		//add logout button
 		setupButton(logoutButton);
         
 		generatedLayout = true;
@@ -145,6 +153,7 @@ public class NavBar extends VerticalLayout {
         this.addComponent(b);
 	}
 	
+	/*
 		private void categoryEditorClick() {
 		masterUi.enterCategoryEditor();
 	}
@@ -154,6 +163,7 @@ public class NavBar extends VerticalLayout {
 	private void inventoryClick() {
 		masterUi.enterInventory();
 	}
+	*/
 
 	public void updateInfo() {
 		statusLabel.setCaption("" + masterUi.getUser().getPrimaryKey());
@@ -164,7 +174,7 @@ public class NavBar extends VerticalLayout {
 		// TODO Auto-generated method stub
 		masterUi.logout();
 	}
-
+/*
 	private void schedulerClick() {
 		masterUi.enterScheduler();
 	}
@@ -176,5 +186,6 @@ public class NavBar extends VerticalLayout {
 	private void crmClick() {
 		masterUi.enterCRM();
 	}
+	*/
 
 }

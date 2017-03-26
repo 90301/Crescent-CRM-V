@@ -210,10 +210,10 @@ public class MasterUI extends UI {
 		
 		if (DEVELOPER_MODE) {
 			debugView.setVitals(this, navBar, "Debugging", DEBUGGING);
-		}
+		
 		
 		devPlayground.setVitals(this, navBar, "Dev", "devPlay");
-		
+		}
 		
 
 		if (authenicatedHosts.contains(userHost)) {
