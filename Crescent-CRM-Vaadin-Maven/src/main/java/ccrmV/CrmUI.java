@@ -423,16 +423,20 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Null checking
 		try {
 			if (InhalerUtils.stringNullCheck(createClientLocation.getValue().toString())) {
+				Debugging.output("Null value detected for client location", Debugging.CRM_ERROR);
 				return;
 			}
 			if (InhalerUtils.stringNullCheck(createClientStatus.getValue().toString())) {
+				Debugging.output("Null value detected for client status", Debugging.CRM_ERROR);
 				return;
 			}
 			if (InhalerUtils.stringNullCheck(createClientGroup.getValue().toString())) {
+				Debugging.output("Null value detected for client group", Debugging.CRM_ERROR);
 				return;
 			}
 		} catch (NullPointerException e) {
-			System.err.println("Null value was entered: " + e.getMessage());
+			
+			Debugging.output("Null value detected for client: " + e.getMessage(), Debugging.CRM_ERROR);
 			return; // a null value was found
 		}
 		
@@ -795,9 +799,12 @@ public class CrmUI extends HorizontalLayout implements View {
 			String statusName = InhalerUtils.removeSpecialCharacters(s.getStatusName());
 			
 			//convert int color to hex for use with  CSS
+			if (s.getColor()!=0) {
 			String statusColor = String.format("#%06X", (0xFFFFFF & s.getColor()));
 			
+			
 			styles.add("."+ statusName+ " { color: " + statusColor + "; }");
+			}
 		}
 		
 		clientGrid.setRowStyleGenerator(client -> {

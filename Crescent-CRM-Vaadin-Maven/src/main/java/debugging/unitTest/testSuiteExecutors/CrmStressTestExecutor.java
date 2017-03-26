@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import ccrmV.CrmUI;
 import ccrmV.MasterUI;
 import clientInfo.*;
+import debugging.Debugging;
 import debugging.profiling.RapidProfilingTimer;
 import debugging.unitTest.TestSuiteExecutor;
 import uiElements.NavBar;
@@ -20,7 +21,7 @@ public class CrmStressTestExecutor extends TestSuiteExecutor {
 	private MasterUI masterUi;
 	private CrmUI crmUi;
 	
-	public int ClientsToCreate = 200;
+	public int ClientsToCreate = 50;
 	
 	public CrmStressTestExecutor(CrmUI crmUi, MasterUI masterUi)  {
 		super();
@@ -58,9 +59,17 @@ public class CrmStressTestExecutor extends TestSuiteExecutor {
 			int groupNum = TestSuiteExecutor.rand.nextInt(allGroupNames.size());
 			int locationNum = TestSuiteExecutor.rand.nextInt(allLocationNames.size());
 			
+			String name = genSmallRandomString("Rapid");
+			
+			this.crmUi.createClientName.setValue(name);
+			
 			this.crmUi.createClientStatus.setValue(allStatusNames.get(statusNum));
 			this.crmUi.createClientGroup.setValue(allGroupNames.get(groupNum));
 			this.crmUi.createClientLocation.setValue(allLocationNames.get(locationNum));
+			
+			Debugging.output("status: " + this.crmUi.createClientStatus.getValue(), Debugging.RAPID_CLIENT);
+			Debugging.output("location: " + this.crmUi.createClientLocation.getValue(), Debugging.RAPID_CLIENT);
+			Debugging.output("group: " + this.crmUi.createClientGroup.getValue(), Debugging.RAPID_CLIENT);
 			
 			this.crmUi.createClientClick();
 			

@@ -29,6 +29,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
+import debugging.profiling.ProfilingTimer;
 import users.User;
 
 public class LoginView extends VerticalLayout implements View {
@@ -150,30 +151,29 @@ public class LoginView extends VerticalLayout implements View {
 	        
 	    }
 	   
-public boolean loginSucsess = false;
+public boolean loginSuccess = false;
 public MasterUI masterUi; 
 	public void attemptLogin() {
-		//welcomeLabel.setValue("U: " + userField.getValue() + " P: " + passField.getValue());
-		// TODO Auto-generated method stub
-		//if (userField.getValue().contains("ccrmUser") && passField.getValue().contains("ccrmPass") || MasterUI.authenicatedHosts.contains(host)) {
+		ProfilingTimer loginTime = new ProfilingTimer("Login Time");
 		String code = "";
 		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE ||
 				(MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			if ((MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			//dev mode auto login	
-				loginSucsess = true;
+				loginSuccess = true;
 				User loggedInUser = DataHolder.getUser(MasterUI.DEV_AUTOLOGIN_USER);
 				masterUi.user = loggedInUser;
 				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			} else {
-			loginSucsess = true;
+			loginSuccess = true;
 			User loggedInUser = DataHolder.getUser(userField.getValue());
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			}
 			//hLayoutIncorrect.setVisible(false);
 			//hLayoutUser.setVisible(false);
-
+			
+			
 			masterUi.startMainApp();
 			
 		} else {
@@ -190,6 +190,7 @@ public MasterUI masterUi;
 			}
 			welcomeLabel.setData(code);
 		}
+		loginTime.stopTimer();
 	}
 	
 	private void createNewUserClick() {

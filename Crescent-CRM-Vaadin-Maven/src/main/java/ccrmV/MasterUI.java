@@ -317,6 +317,7 @@ public class MasterUI extends UI {
 	}
 
 	public void startMainApp() {
+		ProfilingTimer startTime = new ProfilingTimer("Start Main App");
 		loggedIn = true;
 		authenicatedHosts.add(userHost);
 		Debugging.output("Attempting to navigate to the main application.",Debugging.OLD_OUTPUT);
@@ -333,7 +334,8 @@ public class MasterUI extends UI {
 		}
 		
 		mainNavigator.navigateTo(MAIN_APP);
-
+		
+		startTime.stopTimer();
 	}
 	
 	public void enterView(String viewLink) {
@@ -392,12 +394,15 @@ public class MasterUI extends UI {
 	 *            - the user data holder to select
 	 */
 	public void setUserDataHolder(String databaseName) {
+		ProfilingTimer databaseSwitchTime = new ProfilingTimer("Database Switch");
 		// TODO make sure user actually can access the database
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
 		DataHolder.store(this.user, User.class);
 		this.userDataHolder.initalizeDatabases();
 		navBar.updateInfo();
+		
+		databaseSwitchTime.stopTimer();
 		
 	}
 

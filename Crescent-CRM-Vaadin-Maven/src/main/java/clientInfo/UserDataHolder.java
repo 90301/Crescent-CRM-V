@@ -16,6 +16,7 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import debugging.Debugging;
+import debugging.profiling.ProfilingTimer;
 import inventory.InventoryCategory;
 import inventory.InventoryItem;
 
@@ -75,6 +76,7 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public void initalizeDatabases() {
+		ProfilingTimer initTime = new ProfilingTimer("Initalize UserDataHolder");
 		// setup the tables
 		if (!databaseSetup) {
 		setupTable(userTemplateFieldMap,userTemplateFieldTable,TEMPLATE_FIELD_TABLE_TITLE,TemplateField.class);
@@ -91,7 +93,7 @@ public class UserDataHolder extends MaxObject {
 		databaseSetup = true;
 		}
 		
-		
+		initTime.stopTimer();
 
 	}
 	

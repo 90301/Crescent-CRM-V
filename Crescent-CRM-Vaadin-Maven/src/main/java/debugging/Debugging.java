@@ -169,8 +169,8 @@ public class Debugging {
 	
 	//Mark's Debug Variables
 	public static final DebugObject UNIT_TEST_TRACK_CHANGES = new DebugObject(CONSOLE_OUTPUT, true, true, "Unit Test Changes: ");
-	
-	
+	public static final DebugObject CRM_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "CRM (Error): ");
+	public static final DebugObject RAPID_CLIENT = new DebugObject(CONSOLE_OUTPUT, true, true, "Rapid Client Creation: ");
 	
 	
 	
