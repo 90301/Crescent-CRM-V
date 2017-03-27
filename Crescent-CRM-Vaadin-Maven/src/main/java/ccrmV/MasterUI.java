@@ -50,8 +50,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.49;
-	public static final String versionDescription = " Dev Playground";
+	public static final double versionNumber = 1.50;
+	public static final String versionDescription = " Crescent View";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -94,7 +94,7 @@ public class MasterUI extends UI {
 	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	
-	public static final Boolean DEV_TEST_CODE = true; //UNIT TESTING
+	public static final Boolean DEV_TEST_CODE = false; //UNIT TESTING
 	public static final Boolean DEV_STRESS_TEST = false;//stress testing.
 	
 	public static Boolean unitTestsAlreadyRan = false;
