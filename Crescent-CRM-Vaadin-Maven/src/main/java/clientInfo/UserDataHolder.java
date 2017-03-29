@@ -302,7 +302,7 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public Client getClient(String id) {
-		return userClientMap.get(id);
+		return retrieve(id, Client.class);
 	}
 
 	public Collection<Client> getAllClients() {
