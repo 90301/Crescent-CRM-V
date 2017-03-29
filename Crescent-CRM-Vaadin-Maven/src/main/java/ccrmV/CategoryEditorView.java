@@ -631,6 +631,8 @@ public class CategoryEditorView extends CrescentView {
 		
 		Group g = udh.getGroup(groupName);
 		
+		g.setUserDataHolder(udh);
+		
 		loadGroup(g);
 		
 		selectedGroup = g;
