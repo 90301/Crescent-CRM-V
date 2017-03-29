@@ -193,12 +193,13 @@ public class UserDataHolder extends MaxObject {
 	 * @param ref - The class (EX User.class)
 	 * @return the object if it exists, or null
 	 */
-	public <T extends MaxObject> MaxObject retrieve(String itemName, Class<T> ref) {
-		// TODO Auto-generated method stub
-		MaxObject item;
+	public <T extends MaxObject> T retrieve(String itemName, Class<T> ref) {
+		T item;
 		@SuppressWarnings("unchecked")
 		Map<String,T> lMap = (Map<String, T>) localMapLookup.get(ref);
 		item = lMap.get(itemName);
+		if (item!=null)
+		item.setUserDataHolder(this);
 		
 		return item;
 	}
@@ -332,7 +333,7 @@ public class UserDataHolder extends MaxObject {
 	 */
 
 	public Location getLocation(String id) {
-		return userLocationMap.get(id);
+		return retrieve(id,Location.class);
 	}
 
 	public Collection<Location> getAllLocations() {
@@ -344,7 +345,7 @@ public class UserDataHolder extends MaxObject {
 	 */
 
 	public Status getStatus(String id) {
-		return userStatusMap.get(id);
+		return retrieve(id,Status.class);
 	}
 
 	public Collection<Status> getAllStatus() {
@@ -358,7 +359,7 @@ public class UserDataHolder extends MaxObject {
 	 */
 
 	public Group getGroup(String id) {
-		return userGroupMap.get(id);
+		return retrieve(id,Group.class);
 	}
 
 	public Collection<Group> getAllGroups() {
