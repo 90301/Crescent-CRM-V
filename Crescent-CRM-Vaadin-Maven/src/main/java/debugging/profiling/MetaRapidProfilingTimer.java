@@ -73,6 +73,7 @@ public class MetaRapidProfilingTimer {
 			totalCycles += timer.timeElapsed.size();
 		}
 		
+		if (totalCycles > 1)
 		avgCycleTime = totalRunTime / totalCycles;
 		
 		avgRunTime = totalRunTime / timers.size();
