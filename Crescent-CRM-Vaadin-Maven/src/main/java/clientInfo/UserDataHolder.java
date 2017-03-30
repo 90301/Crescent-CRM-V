@@ -16,6 +16,7 @@ import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
 import dbUtils.MaxObject;
 import debugging.Debugging;
+import debugging.profiling.ProfilingTimer;
 import inventory.InventoryCategory;
 import inventory.InventoryItem;
 
@@ -23,13 +24,13 @@ import inventory.InventoryItem;
 public class UserDataHolder extends MaxObject {
 
 	//public static final String databasePrefixField = "DatabasePrefix";
-	
-	
+
 	//private String user;
 	//private String databasePrefix;
-	
-	MaxField<String> databasePrefix = new MaxField<String>("DatabasePrefix",MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING,"","",this);
-	
+
+	MaxField<String> databasePrefix = new MaxField<String>("DatabasePrefix", MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING,
+			"", "", this);
+
 	// will not be after the transition
 	private ConcurrentHashMap<String, Client> userClientMap = new ConcurrentHashMap<String, Client>();
 	private ConcurrentHashMap<String, Location> userLocationMap = new ConcurrentHashMap<String, Location>();
@@ -39,6 +40,8 @@ public class UserDataHolder extends MaxObject {
 	private ConcurrentHashMap<String, InventoryCategory> userInventoryCategoryMap = new ConcurrentHashMap<String, InventoryCategory>();
 	private ConcurrentHashMap<String, TemplateField> userTemplateFieldMap = new ConcurrentHashMap<String, TemplateField>();
 	
+	private ConcurrentHashMap<String, Client> userArchiveMap = new ConcurrentHashMap<String, Client>();
+
 	MaxDBTable userStatusTable;
 	public String STATUS_TABLE_TITLE = "statusTable";
 	MaxDBTable userLocationTable;
@@ -53,19 +56,23 @@ public class UserDataHolder extends MaxObject {
 	public String INVENTORY_CATEGORY_TABLE_TITLE = "inventoryCategoryTable";
 	MaxDBTable userTemplateFieldTable;
 	public String TEMPLATE_FIELD_TABLE_TITLE = "templateFieldTable";
+	
+	
+	MaxDBTable userArchiveTable;
+	public String ARCHIVE_TABLE_TITLE = "archiveTable";
 
-	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
-	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup  = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
+	ConcurrentMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>> localMapLookup = new ConcurrentHashMap<Class<? extends MaxObject>, ConcurrentHashMap<String, ? extends MaxObject>>();
+	ConcurrentMap<Class<? extends MaxObject>, MaxDBTable> tableLookup = new ConcurrentHashMap<Class<? extends MaxObject>, MaxDBTable>();
 
 	Boolean databaseSetup = false;
-	
+
 	public Client templateClient;
-	
+
 	{
 		addMaxField(databasePrefix);
 		this.setKeyField(databasePrefix);
 	}
-	
+
 	/**
 	 * Holds data which is user speciific. Will implement data structures and be
 	 * a sub section of the dataholder class.
@@ -75,40 +82,70 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public void initalizeDatabases() {
+		ProfilingTimer initTime = new ProfilingTimer("Initalize UserDataHolder");
 		// setup the tables
 		if (!databaseSetup) {
-		setupTable(userTemplateFieldMap,userTemplateFieldTable,TEMPLATE_FIELD_TABLE_TITLE,TemplateField.class);
-		setupTable(userGroupMap,userGroupTable,GROUP_TABLE_TITLE,Group.class);
-		setupTable(userStatusMap,userStatusTable,STATUS_TABLE_TITLE,Status.class);
-		setupTable(userLocationMap,userLocationTable,LOCATION_TABLE_TITLE,Location.class);
-		setupTable(userInventoryCategoryMap,userInventoryCategoryTable,INVENTORY_CATEGORY_TABLE_TITLE,InventoryCategory.class);
-		setupTable(userInventoryMap,userInventoryTable,INVENTORY_TABLE_TITLE,InventoryItem.class);
-		setupTable(userClientMap,userClientTable,CLIENT_TABLE_TITLE,Client.class); // must be added last
-		
-		
-		setupTemplate();
-		
-		databaseSetup = true;
+			setupTable(userTemplateFieldMap, userTemplateFieldTable, TEMPLATE_FIELD_TABLE_TITLE, TemplateField.class);
+			setupTable(userGroupMap, userGroupTable, GROUP_TABLE_TITLE, Group.class);
+			setupTable(userStatusMap, userStatusTable, STATUS_TABLE_TITLE, Status.class);
+			setupTable(userLocationMap, userLocationTable, LOCATION_TABLE_TITLE, Location.class);
+			setupTable(userInventoryCategoryMap, userInventoryCategoryTable, INVENTORY_CATEGORY_TABLE_TITLE,
+					InventoryCategory.class);
+			setupTable(userInventoryMap, userInventoryTable, INVENTORY_TABLE_TITLE, InventoryItem.class);
+			setupTable(userClientMap, userClientTable, CLIENT_TABLE_TITLE, Client.class); // must be added last
+			
+			userArchiveTable = setupArchiveTable(userArchiveMap, userArchiveTable, ARCHIVE_TABLE_TITLE, Client.class); // must be added last
+
+			setupTemplate();
+
+			databaseSetup = true;
 		}
-		
-		
+
+		initTime.stopTimer();
 
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public MaxDBTable setupTable(ConcurrentHashMap<String,? extends MaxObject> userMap, MaxDBTable table, String tableTitle, Class c) {
+	public MaxDBTable setupTable(ConcurrentHashMap<String, ? extends MaxObject> userMap, MaxDBTable table,
+			String tableTitle, Class c) {
 		//DEBUG THIS
-		Debugging.output("Setting up table: " + table + " " + tableTitle, Debugging.USER_EDITOR_OUTPUT, Debugging.USER_EDITOR_OUTPUT_ENABLED);
-		
-		
-		table = DataHolder.setupDatabaseTable(table, databasePrefix + tableTitle,
-				DataHolder.mysqlDatabase, c);
-		
+		Debugging.output("Setting up table: " + table + " " + tableTitle, Debugging.USER_EDITOR_OUTPUT,
+				Debugging.USER_EDITOR_OUTPUT_ENABLED);
+
+		table = DataHolder.setupDatabaseTable(table, databasePrefix + tableTitle, DataHolder.mysqlDatabase, c);
+
 		loadMaxObjects(userMap, table, c);
-		
+
 		tableLookup.put(c, table);
 		localMapLookup.put(c, userMap);
+
+		return table;
+	}
+
+	/**
+	 * Sets up an archive table, which is not added to the localMapLookup.
+	 * 
+	 * @param userMap
+	 * @param table
+	 * @param tableTitle
+	 * @param c
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public MaxDBTable setupArchiveTable(ConcurrentHashMap<String, ? extends MaxObject> userMap, MaxDBTable table,
+			String tableTitle, Class c) {
+		//DEBUG THIS
 		
+
+		table = DataHolder.setupDatabaseTable(table, databasePrefix + tableTitle, DataHolder.mysqlDatabase, c);
+		
+		Debugging.output("Setting up table: " + table + " " + tableTitle, Debugging.TABLE_SETUP);
+		
+		loadMaxObjects(userMap, table, c);
+
+		//tableLookup.put(c, table);
+		//localMapLookup.put(c, userMap);
+
 		return table;
 	}
 
@@ -146,12 +183,13 @@ public class UserDataHolder extends MaxObject {
 			c.setLocation(loc);
 			c.setStatus(status);
 			c.setNotes("");
-			
-			Debugging.output("Template class created: " + c,Debugging.DATABASE_OUTPUT);
+
+			Debugging.output("Template class created: " + c, Debugging.DATABASE_OUTPUT);
 			store(c, Client.class);
 			this.templateClient = c;
 		} else {
-			Debugging.output("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c,Debugging.DATABASE_OUTPUT);
+			Debugging.output("TEMPLATE: " + DataHolder.TEMPLATE_STRING + " already found" + c,
+					Debugging.DATABASE_OUTPUT);
 			this.templateClient = c;
 		}
 	}
@@ -166,43 +204,46 @@ public class UserDataHolder extends MaxObject {
 
 		table.insertInTable(obj);
 	}
-	
+
 	/**
 	 * Attempts to delete Object from the database and the local map
+	 * 
 	 * @param obj
 	 * @param ref
 	 */
 	public <T extends MaxObject> void delete(T obj, Class<T> ref) {
 		MaxDBTable table = tableLookup.get(ref);
 		ConcurrentHashMap<String, T> map = (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
-		
+
 		table.deleteRow(obj);
 		map.remove(obj.getPrimaryKey());
-		
+
 	}
-	
 
 	/**
-	 * Retrieves an item based on a class ref.
-	 * May be volatile if you give it a class not found in
-	 * localMapLookup
+	 * Retrieves an item based on a class ref. May be volatile if you give it a
+	 * class not found in localMapLookup
 	 * 
-	 * @param itemName - the item name (primary key)
-	 * @param ref - The class (EX User.class)
+	 * @param itemName
+	 *            - the item name (primary key)
+	 * @param ref
+	 *            - The class (EX User.class)
 	 * @return the object if it exists, or null
 	 */
-	public <T extends MaxObject> MaxObject retrieve(String itemName, Class<T> ref) {
-		// TODO Auto-generated method stub
-		MaxObject item;
+	public <T extends MaxObject> T retrieve(String itemName, Class<T> ref) {
+		T item;
 		@SuppressWarnings("unchecked")
-		Map<String,T> lMap = (Map<String, T>) localMapLookup.get(ref);
+		Map<String, T> lMap = (Map<String, T>) localMapLookup.get(ref);
 		item = lMap.get(itemName);
-		
+		if (item != null)
+			item.setUserDataHolder(this);
+
 		return item;
 	}
-	
+
 	/**
 	 * Version of loadMaxObjects that sets the user data holder
+	 * 
 	 * @param localMap
 	 * @param table
 	 * @param ref
@@ -210,14 +251,15 @@ public class UserDataHolder extends MaxObject {
 	@SuppressWarnings("unchecked")
 	public <T extends MaxObject> void loadMaxObjects(Map<String, T> localMap, MaxDBTable table, Class<T> ref) {
 
-		Debugging.output("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref,Debugging.DATABASE_OUTPUT);
+		Debugging.output("Loading objects from: " + table + " To: " + localMap + " of Class: " + ref,
+				Debugging.DATABASE_OUTPUT);
 		if (table == null) {
 			return;// This is a bug
 		}
 		ResultSet allObjects = table.getAllRows();
-		Debugging.output("Result set: " + allObjects,Debugging.DATABASE_OUTPUT);
+		Debugging.output("Result set: " + allObjects, Debugging.DATABASE_OUTPUT);
 		if (allObjects == null) {
-			Debugging.output("NO  objects found",Debugging.DATABASE_OUTPUT);
+			Debugging.output("NO  objects found", Debugging.DATABASE_OUTPUT);
 			return;// no results found
 		}
 		try {
@@ -226,7 +268,7 @@ public class UserDataHolder extends MaxObject {
 				obj = ref.newInstance();
 				obj.setUserDataHolder(this);
 				obj.loadFromDB(allObjects);
-				Debugging.output("Loaded: " + obj + " from database.",Debugging.DATABASE_OUTPUT);
+				Debugging.output("Loaded: " + obj + " from database.", Debugging.DATABASE_OUTPUT);
 				if (obj.getPrimaryKey() != null) {
 					localMap.put(obj.getPrimaryKey(), (T) obj);
 				}
@@ -241,34 +283,32 @@ public class UserDataHolder extends MaxObject {
 			e.printStackTrace();
 		} finally {
 			try {
-			allObjects.close();
+				allObjects.close();
 			} catch (SQLException e) {
-			// TODO Auto-generated catch block
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends MaxObject> ConcurrentHashMap<String, T> getMap (Class<T> ref) {
+	public <T extends MaxObject> ConcurrentHashMap<String, T> getMap(Class<T> ref) {
 		return (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
-		
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends MaxObject> Collection<T> getMaxObjects (Class<T> ref) {
+	public <T extends MaxObject> Collection<T> getMaxObjects(Class<T> ref) {
 		return (Collection<T>) localMapLookup.get(ref).values();
-		
+
 	}
-	
+
 	public <T extends MaxObject> Collection<T> removeTemplate(Collection<T> list) {
-		
+
 		Collection<T> outputList = new ArrayList<T>();
 		//NOTE, this is only being done this way because 
 		MaxObject templateObject = null;
-		
-		
-		
+
 		for (T obj : list) {
 			if (obj.getPrimaryKey().equals(DataHolder.TEMPLATE_STRING)) {
 				templateObject = obj;
@@ -277,18 +317,15 @@ public class UserDataHolder extends MaxObject {
 				outputList.add(obj);
 			}
 		}
-		
+
 		//outputList.remove(templateObject);
-		
+
 		return outputList;
 	}
-	
-
 
 	/*
 	 * Getters and Setters
 	 */
-	
 
 	public String getDatabasePrefix() {
 		return databasePrefix.getFieldValue();
@@ -299,21 +336,25 @@ public class UserDataHolder extends MaxObject {
 	}
 
 	public Client getClient(String id) {
-		return userClientMap.get(id);
+		return retrieve(id, Client.class);
 	}
 
 	public Collection<Client> getAllClients() {
 		return userClientMap.values();
 	}
+
 	/**
 	 * Removes the template client
+	 * 
 	 * @return
 	 */
 	public Collection<Client> getAllRealClients() {
 		return removeTemplate(getAllClients());
 	}
+
 	/**
 	 * Gets the primary key of all REAL clients
+	 * 
 	 * @return
 	 */
 	public Collection<String> getAllStringClients() {
@@ -323,14 +364,13 @@ public class UserDataHolder extends MaxObject {
 		}
 		return allStringClients;
 	}
-	
 
 	/*
 	 * LOCATION
 	 */
 
 	public Location getLocation(String id) {
-		return userLocationMap.get(id);
+		return retrieve(id, Location.class);
 	}
 
 	public Collection<Location> getAllLocations() {
@@ -342,13 +382,13 @@ public class UserDataHolder extends MaxObject {
 	 */
 
 	public Status getStatus(String id) {
-		return userStatusMap.get(id);
+		return retrieve(id, Status.class);
 	}
 
 	public Collection<Status> getAllStatus() {
-				
+
 		return removeTemplate(userStatusMap.values());
-		
+
 	}
 
 	/*
@@ -356,12 +396,13 @@ public class UserDataHolder extends MaxObject {
 	 */
 
 	public Group getGroup(String id) {
-		return userGroupMap.get(id);
+		return retrieve(id, Group.class);
 	}
 
 	public Collection<Group> getAllGroups() {
 		return removeTemplate(userGroupMap.values());
 	}
+
 	public ConcurrentHashMap<String, Location> getLocationMap() {
 		return userLocationMap;
 	}
@@ -373,7 +414,7 @@ public class UserDataHolder extends MaxObject {
 	public ConcurrentHashMap<String, Group> getGroupMap() {
 		return userGroupMap;
 	}
-	
+
 	public ConcurrentHashMap<String, Client> getClientMap() {
 		return userClientMap;
 	}
@@ -383,54 +424,23 @@ public class UserDataHolder extends MaxObject {
 		return this.getDatabasePrefix();
 	}
 
-	
 	/*
-	@Override
-	public void loadInternalFromMap() {
-		this.databasePrefix = (String) dbMap.get(databasePrefixField);
-		
-	}
+	 * Archive functionality
+	 */
 
-	@Override
-	public void updateDBMap() {
-		
-		if (this.databasePrefix == null) {
-			this.databasePrefix = "";
-		}
-		dbMap.put(databasePrefixField, this.databasePrefix);
-		
-	}
+	public void archiveClient(Client c) {
+		if (c != null) {
+			this.userArchiveMap.put(c.getPrimaryKey(), c);
 
-	@Override
-	public String getPrimaryKey() {
-		// TODO Auto-generated method stub
-		return this.databasePrefix;
-	}
-
-	@Override
-	public void createTableForClass(MaxDBTable table) {
-
-		table.addDatatype(this.getClass(),databasePrefixField, MaxDBTable.DATA_MYSQL_TYPE_HUGE_KEY_STRING);
-		table.setPrimaryKeyName(databasePrefixField);
-		table.createTable();
-		
-	}
-
-	@Override
-	public void setupDBDatatypes() {
-		if (dbDatatypes == null) {
-			dbDatatypes = new HashMap<String, Class<?>>();
-		}
-		if (USE_BETTER_DB_DATATYPES) {
-			if (!betterDbDatatypes.containsKey(this.getClass())) {
-				betterDbDatatypes.put(this.getClass(), new HashMap<>());
+			//MaxDBTable table = userArchiveTable;
+			if (this.userArchiveTable==null) {
+				Debugging.output("Archive table null: " + this.userArchiveTable,Debugging.TABLE_SETUP);
+				return;
 			}
-			
-			betterDbDatatypes.get(this.getClass()).put(databasePrefixField, String.class);
-		} else {
-			dbDatatypes.put(databasePrefixField, String.class);
+			this.userArchiveTable.insertInTable(c);
+
+			this.delete(c, Client.class);
 		}
-		
 	}
-	*/
+
 }

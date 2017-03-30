@@ -1,4 +1,4 @@
-$v-app-loading-text: "my theme Updated3";
+$v-app-loading-text: "Light Theme Updated3";
 
 
 // If you edit this file you need to compile the theme. See README.md for details.
@@ -34,11 +34,36 @@ $v-app-loading-text: "my theme Updated3";
 
 @import "../valo/valo";
 
-@mixin mytheme {
+@mixin lightTheme {
   @include valo;
   // Insert your own theme rules here
   .filterBorder {
   border-style: dotted;
-  border-width: 5px;
+  border-width: 1px;
+  }
+  
+    .createClientBorder {
+  border-style: solid;
+  border-width: 2px;
+  border-color: #c5c5c5;
+  
+  } 
+  
+   .topScreenPadding {padding-top:   15px;}
+   .topPadding {padding-top:   5px;}
+   .bottomPadding {padding-bottom:   5px;}
+   .leftPadding {padding-left:   5px;}
+   .rightPadding {padding-right:   5px;}
+     
+   .navBarMargin   {padding-left:   10px;}
+   
+  
+   .lighterSelection {
+  background-color: rgba(103, 117, 121, 0.99);
+  
+  }
+ 
+  .lighterSelection:hover {
+  background-color: rgba(103, 117, 121, 0.25);
   }
 }

@@ -15,6 +15,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
+import ccrmV.CrescentView;
 import ccrmV.MasterUI;
 import debugging.profiling.MasterTimer;
 import uiElements.NavBar;
@@ -27,11 +28,11 @@ import uiElements.NavBar;
  * @author Inhaler
  *
  */
-public class DebuggingVaadinUI extends HorizontalLayout implements View {
+public class DebuggingVaadinUI extends CrescentView{
 
 	private static final boolean RICHTEXT = false;
-	public NavBar navBar;
-	public MasterUI masterUi;
+	//public NavBar navBar;
+	//public MasterUI masterUi;
 
 	VerticalLayout buttonLayout = new VerticalLayout();
 
@@ -50,30 +51,20 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 	static String consoleHeight = "800px";
 
 	{
-		
-		
-		
-		
+
 		mainConsole = createConsole("Main Console");
-		
-		
 
 		DebuggingVaadinRichTextConsole mainRichConsole = new DebuggingVaadinRichTextConsole();
 
 		mainRichConsole.genConsole();
 
 		richTextConsoles.add(mainRichConsole);
-		/*
-		 * createLogOutputButton(Debugging.CLIENT_GRID_DEBUG, mainConsole);
-		 * createLogOutputButton(Debugging.FRONT_DESK_DEBUGGING, mainConsole);
-		 * createLogOutputButton(Debugging.OAUTH2, mainConsole);
-		 * createLogOutputButton(Debugging.CONVERSION_DEBUG2, mainConsole);
-		 * createLogOutputButton(Debugging.TEMPLATE_DEBUG, mainConsole);
-		 */
+		
+		buttonLayout.setSpacing(true);
 	}
 
 	@Override
-	public void enter(ViewChangeEvent event) {
+	public void enterView(ViewChangeEvent event) {
 		
 		MasterTimer.outputAllTimers();
 		
@@ -85,10 +76,6 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 		styles.add(".v-app .v-textarea { font-family:" + "monospace" + "; }");
 		
 		mainConsole.addStyleName("consoleOutput");
-		// this.setSizeFull();
-		// consoleLayout.setWidth("80%");
-		// buttonLayout.setWidth("10%");
-		// consoleLayout.setWidth("100%");
 
 		genLogButtons();
 
@@ -115,9 +102,9 @@ public class DebuggingVaadinUI extends HorizontalLayout implements View {
 			buttonLayout.addComponent(b);
 		}
 
-		this.removeAllComponents();
+		//this.removeAllComponents();
 
-		this.addComponent(navBar.sidebarLayout);
+		//this.addComponent(navBar);
 
 		this.addComponent(buttonLayout);
 

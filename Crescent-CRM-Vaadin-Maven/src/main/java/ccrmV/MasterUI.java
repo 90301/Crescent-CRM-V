@@ -41,7 +41,7 @@ import themes.UserAgentProcessor;
 import uiElements.NavBar;
 import users.User;
 @PreserveOnRefresh
-@JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","http://localhost/firebaseClient.js"})
+@JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","javascript/firebaseClient.js"})
 @Theme("darkTheme")
 public class MasterUI extends UI {
 
@@ -50,8 +50,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.48;
-	public static final String versionDescription = " Note History";
+	public static final double versionNumber = 1.51;
+	public static final String versionDescription = " Archive Functionality";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -94,7 +94,7 @@ public class MasterUI extends UI {
 	public static final Boolean DEV_AUTO_LOGIN = false;
 	public static final String DEV_AUTOLOGIN_USER = "ccrmUser";
 	
-	public static final Boolean DEV_TEST_CODE = true; //UNIT TESTING
+	public static final Boolean DEV_TEST_CODE = false; //UNIT TESTING
 	public static final Boolean DEV_STRESS_TEST = false;//stress testing.
 	
 	public static Boolean unitTestsAlreadyRan = false;
@@ -118,6 +118,7 @@ public class MasterUI extends UI {
 	LoginView loginView = new LoginView();
 	InventoryView inventoryView = new InventoryView();
 	DebuggingVaadinUI debugView = new DebuggingVaadinUI();
+	DevPlayground devPlayground = new DevPlayground();
 	
 	CategoryEditorView categoryEditorView = new CategoryEditorView();
 
@@ -127,7 +128,7 @@ public class MasterUI extends UI {
 	// everywhere dataholder used to be called.
 	public UserDataHolder userDataHolder;// Set when logging in
 
-	public static final String[] avaliableThemes = { "mytheme", "darkTheme" };
+	public static final String[] avaliableThemes = { "lightTheme", "darkTheme" };
 
 	public static final String DEFAULT_THEME = avaliableThemes[1];
 
@@ -193,28 +194,34 @@ public class MasterUI extends UI {
 		navBar.masterUi = this;
 		navBar.generateNavBar();
 
+		/*
 		mainApp.masterUi = this;
 		mainApp.navBar = navBar;
-
-		userEditor.masterUi = this;
-		userEditor.navBar = navBar;
-
-		schedulerView.masterUi = this;
-		schedulerView.navBar = navBar;
-
-		inventoryView.masterUi = this;
-		inventoryView.navBar = navBar;
+		*/
+		mainApp.setVitals(this, navBar, "Clients", MAIN_APP);
 		
-		categoryEditorView.masterUi = this;
-		categoryEditorView.navBar = navBar;
-
-		debugView.masterUi = this;
-		debugView.navBar = navBar;
+		categoryEditorView.setVitals(this, navBar, "Categories", CATEGORY_EDITOR);
+		
+		userEditor.setVitals(this, navBar, "Settings", USER_EDITOR);
+		
+		schedulerView.setVitals(this, navBar, "Scheduler", SCHEDULER);
+		
+		inventoryView.setVitals(this, navBar, "Inventory", INVENTORY);
+		
+		if (DEVELOPER_MODE) {
+			debugView.setVitals(this, navBar, "Debugging", DEBUGGING);
+		
+		
+		devPlayground.setVitals(this, navBar, "Dev", "devPlay");
+		}
+		
 
 		if (authenicatedHosts.contains(userHost)) {
 			loggedIn = true;
 		}
+		
 		mainNavigator.addView(LOGIN, loginView);
+		/*
 		mainNavigator.addView(MAIN_APP, mainApp);
 		mainNavigator.addView(USER_EDITOR, userEditor);
 		mainNavigator.addView("", userEditor);//attempting to fix a bug 
@@ -222,7 +229,7 @@ public class MasterUI extends UI {
 		mainNavigator.addView(INVENTORY, inventoryView);
 		mainNavigator.addView(DEBUGGING, debugView);
 		mainNavigator.addView(CATEGORY_EDITOR, categoryEditorView);
-		
+		*/
 		
 		enterLogin();
 
@@ -312,6 +319,7 @@ public class MasterUI extends UI {
 	}
 
 	public void startMainApp() {
+		ProfilingTimer startTime = new ProfilingTimer("Start Main App");
 		loggedIn = true;
 		authenicatedHosts.add(userHost);
 		Debugging.output("Attempting to navigate to the main application.",Debugging.OLD_OUTPUT);
@@ -328,7 +336,12 @@ public class MasterUI extends UI {
 		}
 		
 		mainNavigator.navigateTo(MAIN_APP);
-
+		
+		startTime.stopTimer();
+	}
+	
+	public void enterView(String viewLink) {
+		this.mainNavigator.navigateTo(viewLink);
 	}
 
 	public void enterCRM() {
@@ -383,12 +396,15 @@ public class MasterUI extends UI {
 	 *            - the user data holder to select
 	 */
 	public void setUserDataHolder(String databaseName) {
+		ProfilingTimer databaseSwitchTime = new ProfilingTimer("Database Switch");
 		// TODO make sure user actually can access the database
 		this.userDataHolder = DataHolder.getUserDataHolder(databaseName);
 		this.user.setDatabaseSelected(databaseName);
 		DataHolder.store(this.user, User.class);
 		this.userDataHolder.initalizeDatabases();
 		navBar.updateInfo();
+		
+		databaseSwitchTime.stopTimer();
 		
 	}
 

@@ -15,6 +15,7 @@ import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
@@ -28,6 +29,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
+import debugging.profiling.ProfilingTimer;
 import users.User;
 
 public class LoginView extends VerticalLayout implements View {
@@ -48,7 +50,7 @@ public class LoginView extends VerticalLayout implements View {
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public Button registerButton = new Button("Register", event -> createNewUserClick());
 	public Layout userCreatorLayout = new VerticalLayout();
-	public Layout buttonLayout = new HorizontalLayout();
+	public HorizontalLayout buttonLayout = new HorizontalLayout();
 	private static final int PASS_MIN_LENGTH = 5;
 	public String host;
 	//public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
@@ -86,10 +88,10 @@ public class LoginView extends VerticalLayout implements View {
 	    this.setSpacing(true);
 		this.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
 		if (masterUi.currentTheme.equals(MasterUI.avaliableThemes[0])) {
-			//Black Logo
+			//Black Style Connect Logo for light theme
 			this.addComponent(logo);
 		} else {
-			//white logo
+			//White Style Connect Logo for dark theme
 			this.addComponent(logo2);
 		}
 		//this.addComponent(welcomeLabel);
@@ -102,6 +104,7 @@ public class LoginView extends VerticalLayout implements View {
 		//this.addComponent(hLayoutUser);
 		//hLayoutIncorrect.addComponent(loginError);
 		//hLayoutUser.addComponent(userError);
+		buttonLayout.setSpacing(true);
 		buttonLayout.addComponent(loginButton);
 		buttonLayout.addComponent(registerButton);
 		this.addComponent(buttonLayout);
@@ -148,30 +151,29 @@ public class LoginView extends VerticalLayout implements View {
 	        
 	    }
 	   
-public boolean loginSucsess = false;
+public boolean loginSuccess = false;
 public MasterUI masterUi; 
 	public void attemptLogin() {
-		//welcomeLabel.setValue("U: " + userField.getValue() + " P: " + passField.getValue());
-		// TODO Auto-generated method stub
-		//if (userField.getValue().contains("ccrmUser") && passField.getValue().contains("ccrmPass") || MasterUI.authenicatedHosts.contains(host)) {
+		ProfilingTimer loginTime = new ProfilingTimer("Login Time");
 		String code = "";
 		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE ||
 				(MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			if ((MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			//dev mode auto login	
-				loginSucsess = true;
+				loginSuccess = true;
 				User loggedInUser = DataHolder.getUser(MasterUI.DEV_AUTOLOGIN_USER);
 				masterUi.user = loggedInUser;
 				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			} else {
-			loginSucsess = true;
+			loginSuccess = true;
 			User loggedInUser = DataHolder.getUser(userField.getValue());
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
 			}
 			//hLayoutIncorrect.setVisible(false);
 			//hLayoutUser.setVisible(false);
-
+			
+			
 			masterUi.startMainApp();
 			
 		} else {
@@ -188,6 +190,7 @@ public MasterUI masterUi;
 			}
 			welcomeLabel.setData(code);
 		}
+		loginTime.stopTimer();
 	}
 	
 	private void createNewUserClick() {

@@ -137,7 +137,7 @@ public class Debugging {
 	//Version 2 of debugging variables
 	public static final DebugObject FRONT_DESK_DEBUGGING = new DebugObject(CONSOLE_OUTPUT, true, true, "Front Desk Debugging: ");
 	public static final DebugObject OAUTH2 = new DebugObject(CONSOLE_OUTPUT, true, true, "OAUTH2: ");
-	public static final DebugObject CONVERSION_DEBUG2 = new DebugObject(CONSOLE_OUTPUT, true, true, "Conversion Debug2: ");
+	public static final DebugObject CONVERSION_DEBUG2 = new DebugObject(CONSOLE_OUTPUT, false, true, "Conversion Debug2: ");
 	public static final DebugObject TEMPLATE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Template Debug: ");
 	public static final DebugObject CLIENT_GRID_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Client Grid: ");
 	public static final DebugObject CATEGORY_EDITOR_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Category Editor: ");
@@ -149,14 +149,15 @@ public class Debugging {
 	public static final DebugObject CONFIG_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Configuration: ");
 	public static final DebugObject PROFILING = new DebugObject(CONSOLE_OUTPUT, true, true, "Profiling: ");
 	public static final DebugObject OLD_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Old-Output: ");
-	public static final DebugObject DATABASE_OUTPUT = new DebugObject(CONSOLE_OUTPUT, true, true, "Database: ");
+	public static final DebugObject DATABASE_OUTPUT = new DebugObject(CONSOLE_OUTPUT, false, true, "Database: ");
 	public static final DebugObject DATABASE_OUTPUT_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "Database (Error): ");
     public static final DebugObject STRESS_TEST = new DebugObject(CONSOLE_OUTPUT, true, true, "Stress Test: ");
     public static final DebugObject NOTE_HISTORY = new DebugObject(CONSOLE_OUTPUT, true, true, "Note History: ");
     public static final DebugObject XML_CONVERSION = new DebugObject(CONSOLE_OUTPUT, true, true, "XML Conversion: ");
     public static final DebugObject XML_CONVERSION_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "XML Conversion Error: ");
     public static final DebugObject FIREBASE = new DebugObject(CONSOLE_OUTPUT, true, true, "Fire Base: ");
-    
+    public static final DebugObject NAV_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Nav Debug: ");
+    public static final DebugObject TABLE_SETUP = new DebugObject(CONSOLE_OUTPUT, true, true, "Table Setup: ");
     
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
@@ -170,8 +171,9 @@ public class Debugging {
 	
 	//Mark's Debug Variables
 	public static final DebugObject UNIT_TEST_TRACK_CHANGES = new DebugObject(CONSOLE_OUTPUT, true, true, "Unit Test Changes: ");
-	
-	
+	public static final DebugObject CRM_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "CRM (Error): ");
+	public static final DebugObject RAPID_CLIENT = new DebugObject(CONSOLE_OUTPUT, true, true, "Rapid Client Creation: ");
+
 	
 	
 	

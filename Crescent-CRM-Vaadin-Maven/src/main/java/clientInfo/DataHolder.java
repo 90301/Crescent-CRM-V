@@ -18,6 +18,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import dbUtils.*;
 import debugging.Debugging;
+import debugging.profiling.ProfilingTimer;
 import users.User;
 
 /**
@@ -311,6 +312,8 @@ public class DataHolder {
 	 * @param ref - the class reference of obj
 	 */
 	public static <T extends MaxObject> void store(T obj, Class<T> ref) {
+		
+		ProfilingTimer storeTime = new ProfilingTimer("DataHolder Store Time");
 		// get data-structure based on ref
 		@SuppressWarnings("unchecked")
 		ConcurrentHashMap<String, T> map = (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
@@ -321,6 +324,8 @@ public class DataHolder {
 		MaxDBTable table = tableLookup.get(ref);
 
 		table.insertInTable(obj);
+		
+		storeTime.stopTimer();
 	}
 
 

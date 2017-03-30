@@ -25,6 +25,8 @@
 		  console.log('Notification permission granted.');
 		  // TODO(developer): Retrieve an Instance ID token for use with FCM.
 		  this.permissionRequested=true;
+		  
+		  //tokenAcquire();
 	  	})
 	  	.catch(function(err) {
 	  		console.log('Unable to get permission to notify.', err);
@@ -46,7 +48,50 @@
 	  })
 	  .catch(function(err) {
 	    console.log('An error occurred while retrieving token. ', err);
-	    showToken('Error retrieving Instance ID token. ', err);
-	    setTokenSentToServer(false);
+	    console.log('Error retrieving Instance ID token. ', err);
 	  });
 	}
+  
+  function regServiceWorker() {
+	  if ('serviceWorker' in navigator) {
+		  var reg = navigator.serviceWorker.register('/Crescent-CRM-Vaadin-Maven/APP/PUBLISHED/javascript/firebaseServiceWorker.js').then(function(registration) {
+		    // Registration was successful
+		    console.log('ServiceWorker registration successful with scope: ',    registration.scope);
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    registration.pushManager.subscribe({
+		      userVisibleOnly: true
+		    }).then(function(sub) {
+		      console.log('endpoint:', sub.endpoint);
+		    }).catch(function(e) {
+
+		    });
+		    
+		    console.log('Attempting to set registration to: ',    registration);
+		    //attempt to register the service worker.
+		  messaging.useServiceWorker(registration);
+		  console.log('REGISTERED: ',    registration);
+		  
+		    
+		  }).catch(function(err) {
+		    // registration failed :(
+		    console.log('ServiceWorker registration failed: ', err);
+		  });
+		  
+		  
+		  /*
+		   console.log('useServiceWorker REG: ',    reg);
+		  messaging.useServiceWorker(reg);
+		 requestPermission();
+		  tokenAquire();
+		  */
+		  //tokenAcquire();
+		}
+	  
+  }
+  

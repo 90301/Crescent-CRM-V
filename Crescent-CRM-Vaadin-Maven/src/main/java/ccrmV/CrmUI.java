@@ -41,7 +41,7 @@ import users.User;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
-public class CrmUI extends HorizontalLayout implements View {
+public class CrmUI extends CrescentView {
 
 	/*
 	 * in order for databases to work, The driver must be added to the server.
@@ -100,7 +100,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	public IndexedContainer clients = new IndexedContainer();
 
 	//nav bar
-	public NavBar navBar;
+	//public NavBar navBar;
 	
 	VerticalLayout linkLayout = new VerticalLayout();
 
@@ -110,11 +110,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 	Label versionLabel = new Label("Version");
 
-
-
-	
-
-
 	public Client selectedClient;
 	Boolean discard = false;
 	boolean unsavedProgress = false;
@@ -122,7 +117,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	private String cacheDatabaseName = "";
 	// holds all possible values that mean null.
 	HashSet<String> nullStrings = new HashSet<String>();
-	public MasterUI masterUi;
+	//public MasterUI masterUi;
 
 	
 	Layout layout = new VerticalLayout();
@@ -423,16 +418,20 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Null checking
 		try {
 			if (InhalerUtils.stringNullCheck(createClientLocation.getValue().toString())) {
+				Debugging.output("Null value detected for client location", Debugging.CRM_ERROR);
 				return;
 			}
 			if (InhalerUtils.stringNullCheck(createClientStatus.getValue().toString())) {
+				Debugging.output("Null value detected for client status", Debugging.CRM_ERROR);
 				return;
 			}
 			if (InhalerUtils.stringNullCheck(createClientGroup.getValue().toString())) {
+				Debugging.output("Null value detected for client group", Debugging.CRM_ERROR);
 				return;
 			}
 		} catch (NullPointerException e) {
-			System.err.println("Null value was entered: " + e.getMessage());
+			
+			Debugging.output("Null value detected for client: " + e.getMessage(), Debugging.CRM_ERROR);
 			return; // a null value was found
 		}
 		
@@ -539,15 +538,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	}
 
 	@Override
-	public void enter(ViewChangeEvent VCevent) {
+	public void enterView(ViewChangeEvent VCevent) {
 
 		
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
 		
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
+		//this.setSpacing(true);
+		//this.addStyleName("topScreenPadding");
 		
 		//only runs if it hasn't already.
 		masterUi.userDataHolder.initalizeDatabases();
@@ -555,7 +554,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Nav Bar Code
 		navBar.updateInfo();
 		
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 		
 
 		((AbstractOrderedLayout) layout).setMargin(false);
@@ -795,9 +794,12 @@ public class CrmUI extends HorizontalLayout implements View {
 			String statusName = InhalerUtils.removeSpecialCharacters(s.getStatusName());
 			
 			//convert int color to hex for use with  CSS
+			if (s.getColor()!=0) {
 			String statusColor = String.format("#%06X", (0xFFFFFF & s.getColor()));
 			
+			
 			styles.add("."+ statusName+ " { color: " + statusColor + "; }");
+			}
 		}
 		
 		clientGrid.setRowStyleGenerator(client -> {

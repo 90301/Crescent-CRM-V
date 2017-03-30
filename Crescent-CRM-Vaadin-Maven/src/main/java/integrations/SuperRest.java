@@ -45,9 +45,11 @@ public class SuperRest {
 		*/
 		
 		//Debugging.output("Response: " + response, Debugging.FIREBASE);
-		JavaScript.getCurrent().addFunction("javascript:getFirebaseDevice", e -> firebaseDevice(e));
+		JavaScript.getCurrent().addFunction("serverTokenFunction(e)", e -> firebaseDevice(e));
 		
 		JavaScript.getCurrent().execute("permRequest()");
+		
+		JavaScript.getCurrent().execute("tokenAquire()");
 	}
 
 	/**
@@ -59,6 +61,19 @@ public class SuperRest {
 		Debugging.output("JSON ARRAY: " + e, Debugging.FIREBASE);
 		
 		
+	}
+
+	public static void getToken() {
+		JavaScript.getCurrent().execute("tokenAquire()");
+		
+	}
+
+	public static void requestPermission() {
+		JavaScript.getCurrent().execute("permRequest()");
+	}
+	
+	public static void regServiceWorker() {
+		JavaScript.getCurrent().execute("regServiceWorker()");
 	}
 
 }

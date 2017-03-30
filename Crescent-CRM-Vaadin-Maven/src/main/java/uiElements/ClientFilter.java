@@ -42,7 +42,7 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 	ComboBox filterStatus  = new ComboBox("Status");
 	ComboBox filterLocation = new ComboBox("Location");
 	ComboBox filterGroup = new ComboBox("Group");
-	//Button filterButton = new Button("Filter", event -> this.filterClick());
+	Button filterButton = new Button("Filter", event -> this.updateFilter());
 	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
 	TextField filterClientTextField = new TextField(" Name ");
 	TextField filterClientNotesField = new TextField("Notes Include:");
@@ -94,16 +94,6 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		updateFilter();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void updateAllComboBoxes() {
 		filterStatus.clear();
 		filterLocation.clear();
@@ -124,7 +114,9 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		filterStatus.setVisible(showFilter);
 		filterLocation.setVisible(showFilter);
 		filterGroup.setVisible(showFilter);
-		//filterButton.setVisible(showFilter);
+		
+		filterButton.setVisible(showFilter);
+		
 		resetFilterButton.setVisible(showFilter);
 		filterClientTextField.setVisible(showFilter);
 		filterClientNotesField.setVisible(showFilter);
@@ -165,7 +157,7 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		this.addComponent(filterContactNowCheckBox);
 
 		//filterButton
-		//this.addComponent(filterButton);
+		this.addComponent(filterButton);
 		//resetFilterButton 
 		this.addComponent(resetFilterButton);
 		

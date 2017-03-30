@@ -42,14 +42,14 @@ import uiElements.NavBar;
 import uiElements.SchedulerModule;
 import users.User;
 
-public class SchedulerView extends HorizontalLayout implements View {
+public class SchedulerView extends CrescentView {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5854568268650533061L;
-	public MasterUI masterUi;
-	public NavBar navBar;
+	//public MasterUI masterUi;
+	//public NavBar navBar;
 
 	public HorizontalLayout createEventLayout = new HorizontalLayout();
 	public VerticalLayout schedulerLayout = new VerticalLayout();
@@ -129,9 +129,9 @@ public class SchedulerView extends HorizontalLayout implements View {
 	}
 
 	@Override
-	public void enter(ViewChangeEvent event) {
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
+	public void enterView(ViewChangeEvent event) {
+		//this.setSpacing(true);
+		//this.addStyleName("topScreenPadding");
 		// TODO
 		if (!masterUi.loggedIn || masterUi.user == null)
 			masterUi.enterLogin();
@@ -206,11 +206,6 @@ public class SchedulerView extends HorizontalLayout implements View {
 		/*
 		 * Add components here
 		 */
-
-		this.addComponent(navBar.sidebarLayout);
-		// this.addComponent(new Label("Scheduler"));
-
-		// this.addComponent(cal);
 
 		switchToSingleModeClick();
 
