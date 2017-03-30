@@ -50,8 +50,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.50;
-	public static final String versionDescription = " Crescent View";
+	public static final double versionNumber = 1.51;
+	public static final String versionDescription = " Archive Functionality";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

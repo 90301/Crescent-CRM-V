@@ -49,7 +49,7 @@ public class ClientEditor extends VerticalLayout {
 	ComboBox clientLocation = new ComboBox("Location");
 	ComboBox clientGroup = new ComboBox("Group");
 	Button clientUpdateButton = new Button("Update", event -> this.updateClientClick());
-	Button clientArchiveButton = new Button("Archive");
+	Button clientArchiveButton = new Button("Archive", e-> this.archiveClick());
 	Label clientNameLabel = new Label("Client Name");
 	Label clientLastUpdate = new Label("Last Updated: --/--/----");
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
@@ -73,6 +73,10 @@ public class ClientEditor extends VerticalLayout {
 		this.crmUi = crmUi;
 		genClientEditor();
 	}
+
+
+
+	
 
 
 
@@ -246,19 +250,29 @@ public class ClientEditor extends VerticalLayout {
 		Debugging.TEMPLATE_DEBUG.outputLog();
 	}
 	
-	private void noteHistoryLoadClick() {
+	public void noteHistoryLoadClick() {
 		if (noteHistoryComboBox.getValue()!=null && crmUi.selectedClient!=null) {
 			String key = "" + noteHistoryComboBox.getValue();
 			this.clientNoteBox.setValue(crmUi.selectedClient.getNoteHistory().get(key));
 		}
 	}
 
-	private void noteHistoryPreviewClick() {
+	public void noteHistoryPreviewClick() {
 		if (noteHistoryComboBox.getValue()!=null && crmUi.selectedClient!=null) {
 			String key = "" + noteHistoryComboBox.getValue();
 			this.notePreviewBox.setValue(crmUi.selectedClient.getNoteHistory().get(key));
 			this.notePreviewBox.setVisible(true);
 		}
+	}
+	
+	public void archiveClick() {
+		UserDataHolder udh = crmUi.masterUi.userDataHolder;
+		if (crmUi.selectedClient!=null) {
+			udh.archiveClient(crmUi.selectedClient);
+		}
+		crmUi.selectClient(null);
+		crmUi.updateClientGrid();
+		
 	}
 
 	public void updateAllComboBoxes() {
