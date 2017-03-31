@@ -5,7 +5,7 @@ package clientInfo;
 
 import java.util.Collection;
 
-import com.vaadin.v7.shared.ui.colorpicker.Color;
+import com.vaadin.shared.ui.colorpicker.Color;
 
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
