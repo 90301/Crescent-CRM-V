@@ -79,6 +79,10 @@ public class User extends MaxObject {
 			this);
 	MaxField<String> googleKey = new MaxField<String>("googleKey", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "",
 			this);
+	
+	MaxField<String> pushBulletKey = new MaxField<String>("pushBulletKey", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "",
+			this);
+	
 	//private static final SecureRandom random = new SecureRandom();
 	PasswordAuthentication pa = new PasswordAuthentication();
 	
@@ -227,6 +231,14 @@ public class User extends MaxObject {
 
 	public void setGoogleKey(String googleKey) {
 		this.googleKey.setFieldValue(googleKey);
+	}
+	
+	public String getPushBulletKey() {
+		return pushBulletKey.getFieldValue();
+	}
+
+	public void setPushBulletKey(String pushBulletKey) {
+		this.pushBulletKey.setFieldValue(pushBulletKey);
 	}
 	
 	public String getTheme() {

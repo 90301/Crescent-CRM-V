@@ -50,6 +50,9 @@ public class MaxField<T> {
 		
 		//default value for grid name is just field name
 		this.gridName = this.fieldName;
+		
+		//automatic adding to maxobject
+		refClass.addMaxField(this);
 	}
 
 	/*

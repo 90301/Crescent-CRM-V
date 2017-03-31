@@ -406,8 +406,10 @@ public abstract class MaxObject {
 	 * @param mf the Max Field to add.
 	 */
 	public void addMaxField(MaxField<?> mf) {
+		if (!autoGenList.contains(mf) && !autoGenMap.containsKey(mf.getFieldName())) {
 		autoGenList.add(mf);
 		autoGenMap.put(mf.getFieldName(), mf);
+		}
 	}
 	
 	public MaxField<?> getField(String fieldName) {
