@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import ccrmV.SchedulerView;
 import clientInfo.DataHolder;

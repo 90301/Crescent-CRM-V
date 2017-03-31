@@ -1,14 +1,14 @@
 package uiElements;
 
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Item;
+import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.TextField;
 
 import ccrmV.CrmUI;
 import clientInfo.Client;

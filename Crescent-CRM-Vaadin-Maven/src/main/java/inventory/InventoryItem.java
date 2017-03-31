@@ -5,11 +5,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.AbstractProperty;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.ObjectProperty;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.AbstractProperty;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.data.util.ObjectProperty;
 
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
