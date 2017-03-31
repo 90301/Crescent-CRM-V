@@ -9,11 +9,11 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.Grid;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.ListSelect;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.TextField;
 
 import clientInfo.UserDataHolder;
 import dbUtils.MaxField;
@@ -65,7 +65,7 @@ public class InventoryView extends CrescentView {
 		inventoryAccordion.addStyleName("lighterSelection");
 
 		// create item categories
-		inventoryCategoryListSelect.setNullSelectionAllowed(false);
+		//inventoryCategoryListSelect.setNullSelectionAllowed(false);
 
 		createInventoryCategoryLayout.setCaption("Create Categories");
 		createInventoryCategoryLayout.setSpacing(true);
@@ -111,7 +111,7 @@ public class InventoryView extends CrescentView {
 
 		editInventoryGrid.setCaption("Inventory Grid");
 
-		editInventoryGrid.setEditorEnabled(true);
+		//editInventoryGrid.setEditorEnabled(true);
 
 		editInventoryGrid.setWidth("900px");
 		//editInventoryGrid.setSizeFull();

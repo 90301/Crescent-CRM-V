@@ -96,8 +96,8 @@ public class CrmUI extends CrescentView {
 	boolean alreadyGenerated = false;
 	
 	
-	public Grid clientGrid = new Grid();
-	public IndexedContainer clients = new IndexedContainer();
+	public Grid<Client> clientGrid = new Grid<Client>();
+	//public IndexedContainer clients = new IndexedContainer();
 
 	//nav bar
 	//public NavBar navBar;
@@ -146,11 +146,11 @@ public class CrmUI extends CrescentView {
 	public void createClientGrid() {
 		Client exampleClient = new Client();
 		//TODO: do we really need to create a new container every time?
-		clients = new IndexedContainer();
 		
-		exampleClient.populateContainer(clients);
 		
-		clientGrid.setContainerDataSource(clients);
+		//exampleClient.populateContainer();
+		
+		clientGrid.setItems(masterUi.userDataHolder.getAllClients());
 		
 		clientGrid.setFrozenColumnCount(1);
 		
@@ -185,7 +185,7 @@ public class CrmUI extends CrescentView {
 		}
 		
 		createClientGrid();
-		
+		/*
 		for (Client c : masterUi.userDataHolder.getAllClients()) {
 			
 			if (clients.containsId(c.getPrimaryKey())) {
@@ -211,6 +211,7 @@ public class CrmUI extends CrescentView {
 				c.genItem(clientItem);
 			}
 		}
+		*/
 		
 		//Filter 2.0
 		if (USE_VAADIN_FILTER && clientFilter.getFilterHasChanged()){
@@ -238,11 +239,11 @@ public class CrmUI extends CrescentView {
 		createClientLocation.clear();
 		createClientGroup.clear();
 		
-		
+		/*
 		createClientStatus.removeAllItems();
 		createClientLocation.removeAllItems();
 		createClientGroup.removeAllItems();
-		
+		*/
 		// create clients
 		
 		fillComboBox(createClientStatus, masterUi.userDataHolder.getAllStatus());
@@ -265,10 +266,11 @@ public class CrmUI extends CrescentView {
 	}
 
 	
-	public <T extends Object> void fillComboBox(ComboBox box, Collection<T> values) {
+	public <T extends Object> void fillComboBox(ComboBox<T> box, Collection<T> values) {
 		
-		RapidProfilingTimer rpt = new RapidProfilingTimer("CrmUI fillComboBox");
-		
+		box.setItems(values);
+		//RapidProfilingTimer rpt = new RapidProfilingTimer("CrmUI fillComboBox");
+		/*
 		for (Object val : values) {
 			// add any non template entity. (unless template is selected)
 			//if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
@@ -276,6 +278,7 @@ public class CrmUI extends CrescentView {
 			//}
 			rpt.logTime();
 		}
+		*/
 	}
 
 	// temp value to set the current client to
@@ -739,7 +742,7 @@ public class CrmUI extends CrescentView {
 		layout.addComponent(midLayout);
 		midLayout.addComponent(clientGrid);
 		//clientTable.setSelectionMode(true);
-		clientGrid.setImmediate(true);
+		//clientGrid.setImmediate(true);
 		//clientTable.addValueChangeListener(event -> this.selectItem(event));
 		
 
