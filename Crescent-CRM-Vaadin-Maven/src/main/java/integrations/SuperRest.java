@@ -106,8 +106,12 @@ public class SuperRest {
 			
 			Debugging.output("Headers: " +headers, Debugging.PUSH_BULLET);
 			
+			/*
 			ResponseEntity<String> response = pushBulletConnection.exchange("https://api.pushbullet.com/v2/users/me",
 							HttpMethod.GET,request, String.class);
+			*/
+			ResponseEntity<String> response = pushBulletConnection.exchange("https://api.pushbullet.com/v2/chats",
+					HttpMethod.GET,request, String.class);
 			
 			String resp = response.getBody();
 			
