@@ -1,7 +1,10 @@
 package uiElements;
 
+import java.text.ParseException;
 import java.util.Date;
 
+import com.vaadin.data.Property.ReadOnlyException;
+import com.vaadin.data.util.converter.Converter.ConversionException;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
@@ -12,6 +15,7 @@ import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 
 import dbUtils.InhalerUtils;
+import debugging.Debugging;
 import clientInfo.TemplateField;
 import clientInfo.UserDataHolder;
 
@@ -59,9 +63,6 @@ public class CustomFieldElement extends HorizontalLayout{
 			fieldComponent = textF;
 		} else if(dataType.contains(TemplateField.DATA_TYPE_DATE)){
 			dateF = new PopupDateField();
-			dateF.addValueChangeListener(e -> Notification.show("Value changed:",
-					String.valueOf(e.getProperty().getValue()),
-					Type.TRAY_NOTIFICATION));
 			fieldComponent = dateF;
 		}
 
@@ -92,12 +93,31 @@ public class CustomFieldElement extends HorizontalLayout{
 	public void setFieldValue(Object customFieldValue) {
 
 		if (fieldComponent instanceof TextField) {
-			TextField textField = (TextField) fieldComponent;
+			TextField textField = (TextField)fieldComponent;
 			textField.setValue((String)customFieldValue);
 		}
+		
 		if (fieldComponent instanceof DateField) {
-			DateField dateField = (DateField) fieldComponent;
+			
+			DateField dateField = (DateField)fieldComponent;
+			
+			if (customFieldValue.getClass().isInstance(Date.class)) {
+			
 			dateField.setValue((Date)customFieldValue);
+			} else if (customFieldValue.getClass().isInstance(String.class)) {
+				try {
+					dateField.setValue(TemplateField.DATE_FORMAT.parse((String) customFieldValue));
+				} catch (ReadOnlyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ConversionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 }

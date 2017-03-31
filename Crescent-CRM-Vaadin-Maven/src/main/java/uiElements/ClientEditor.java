@@ -232,6 +232,7 @@ public class ClientEditor extends VerticalLayout {
 
 		String uPP = uploadProfilePicture.updateProfilePicture();
 		if(uPP != null){
+			Debugging.output("Setting profile picture to: " + uPP, Debugging.UPLOAD_IMAGE);
 		crmUi.selectedClient.setProfilePicture(uPP);
 		
 		uploadProfilePicture.setLink(null);

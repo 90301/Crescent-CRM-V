@@ -343,6 +343,7 @@ public class Client extends MaxObject implements Item {
 	}
 	
 	public String getProfilePicture() {
+		Debugging.output("Prodile Picture in Client: " + profilePicture.getFieldValue(), Debugging.UPLOAD_IMAGE);
 		return profilePicture.getFieldValue();
 	}
 

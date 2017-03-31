@@ -106,7 +106,7 @@ public class MaxField<T> {
 		Debugging.output("database Loaded Value: " + databaseLoadedValue.toString(), Debugging.CONVERSION_DEBUG2);
 		
 		T convertedValue = (T) ((MaxConversion<T,STORE>) this.conversion).convertToUse(databaseLoadedValue);
-		
+		Debugging.output("converted value: " + convertedValue, Debugging.CUSTOM_FIELD, Debugging.CUSTOM_FIELD_ENABLED);
 		this.setFieldValue(convertedValue);
 	}
 	

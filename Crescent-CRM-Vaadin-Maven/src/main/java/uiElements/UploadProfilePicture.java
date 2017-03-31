@@ -50,12 +50,36 @@ Upload.FinishedListener, Receiver{
 	//Find home folder that contains all Client Photos
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
 	
-	ArrayList<String> allowedMimeTypes;
 	BufferedImage originalImage;
 	Client c;
 	FileResource resource;
 	String fileName = "";
 	Upload uploadPhoto = new Upload("Upload Image", this);
+	
+	@Override
+	public OutputStream receiveUpload(String filename, String mimeType) {
+		// TODO Auto-generated method stub
+		makeDirectory();
+		FileOutputStream fos = null;
+
+		//If upload button is selected and there isn't a file, break from method
+
+		try {
+			recentUpload = new File(filename);
+			//if(recentUpload == null){
+			//	return null;
+			//}
+
+			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + recentUpload);
+
+			this.fileName = recentUpload.getName();
+		} catch (final java.io.FileNotFoundException e){
+			new Notification("Couldn't open the file, please refresh the page", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
+
+			return null;
+		}
+		return fos;
+	}
 
 	public Boolean getHasUploaded() {
 		return hasUploaded;
@@ -84,9 +108,6 @@ Upload.FinishedListener, Receiver{
 	{
 		uploadPhoto.addFinishedListener(e->isFinished(e));
 		uploadPhoto.addStartedListener(e->uploadStarted(e));
-		ArrayList<String> allowedMimeTypes = new ArrayList<String>();
-		allowedMimeTypes.add("image/jpeg");
-		allowedMimeTypes.add("image/png");
 	}
 
 	//Constructor
@@ -99,13 +120,13 @@ Upload.FinishedListener, Receiver{
 	public String updateProfilePicture(){
 
 		String photoLink = getLink();
-		
-		setLink(null);
+		Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
+		//setLink(null);
 		
 		setHasUploaded(false);
 
 		if(photoLink == null){
-			Debugging.output("Photo Link: " + photoLink, Debugging.UPLOAD_IMAGE);
+			Debugging.output("Photo Link (null): " + photoLink, Debugging.UPLOAD_IMAGE);
 			return null;
 		}
 		else{
@@ -233,6 +254,7 @@ Upload.FinishedListener, Receiver{
 		resource = new FileResource(newFileName);
 
 		this.link = resizeImage(resource);
+		Debugging.output("Photo Link: " + this.link, Debugging.UPLOAD_IMAGE);
 		//setLink(link);
 		//Debugging.output("Resource: " + resource, Debugging.UPLOAD_IMAGE);
 		setHasUploaded(true);
@@ -245,7 +267,7 @@ Upload.FinishedListener, Receiver{
 	public void addUploadUI(){
 		setHasUploaded(false);
 		this.setSpacing(true);
-		this.removeAllComponents();
+		//this.removeAllComponents();
 		this.addComponent(uploadPhoto);
 		makeDirectory();
 	}
@@ -284,6 +306,7 @@ Upload.FinishedListener, Receiver{
 		// TODO Auto-generated method stub
 		
 		String fileName = event.getMIMEType();
+		Debugging.output("File has started to Upload: ",  Debugging.UPLOAD_IMAGE);
 		Debugging.output("File Type in UploadStarted: " + fileName,  Debugging.UPLOAD_IMAGE);
 		
 			if(fileName.contains("image")){
@@ -294,31 +317,6 @@ Upload.FinishedListener, Receiver{
 				uploadPhoto.interruptUpload();
 			}
 		
-	}
-
-	@Override
-	public OutputStream receiveUpload(String filename, String mimeType) {
-		// TODO Auto-generated method stub
-		makeDirectory();
-		FileOutputStream fos = null;
-
-		//If upload button is selected amd there isn'ta file, break from method
-
-		try {
-			recentUpload = new File(filename);
-			//if(recentUpload == null){
-			//	return null;
-			//}
-
-			fos = new FileOutputStream(PROFILE_PICTURE_FOLDER + recentUpload);
-
-			this.fileName = recentUpload.getName();
-		} catch (final java.io.FileNotFoundException e){
-			new Notification("Couldn't open the file, please refresh the page", e.getMessage(), Notification.Type.ERROR_MESSAGE).show(Page.getCurrent());
-
-			return null;
-		}
-		return fos;
 	}
 
 	public void makeDirectory() {

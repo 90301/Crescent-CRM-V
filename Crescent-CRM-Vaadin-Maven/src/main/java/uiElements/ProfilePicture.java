@@ -38,7 +38,10 @@ public class ProfilePicture extends HorizontalLayout{
 	public int DEFAULT_IMAGE_SIZE = 256;
 	public UploadProfilePicture uPP = new UploadProfilePicture();
 
-	//TODO 
+	/*
+	 * For the selected client, this method will find the most current photolink for the client and 
+	 * load the image. If there is not an image it will load the default image if their is one.
+	 */
 	public void loadprofilePictureField(Client c) {
 		this.removeAllComponents();
 
@@ -65,11 +68,9 @@ public class ProfilePicture extends HorizontalLayout{
 			}
 		}
 		else{
-			//Check if client has a profile picture stored and if so, show it for the client.
-
 			//Need to grab the link of the clients photo
 			String pictureLink = c.getProfilePicture();
-			Debugging.output("Profile Picture: " + pictureLink, Debugging.UPLOAD_IMAGE);
+			Debugging.output("Profile Picture here: " + pictureLink, Debugging.UPLOAD_IMAGE);
 			//If no link, then add the upload photo functionality
 			if(InhalerUtils.stringNullCheck(pictureLink)){
 				if(DEFAULT_PROFILE_PICTURE != null){

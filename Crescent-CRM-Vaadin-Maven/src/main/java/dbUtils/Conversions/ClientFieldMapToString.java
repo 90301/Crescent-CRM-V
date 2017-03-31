@@ -6,6 +6,7 @@ import java.util.Map;
 import clientInfo.ClientField;
 import clientInfo.TemplateField;
 import dbUtils.InhalerUtils;
+import debugging.Debugging;
 
 public class ClientFieldMapToString extends MaxConversion<Map<String, ClientField>,String> {
 
@@ -21,7 +22,6 @@ public class ClientFieldMapToString extends MaxConversion<Map<String, ClientFiel
 		}
 
 		xml = InhalerUtils.mapToXML(tempMap);
-
 		return xml;
 	}
 
@@ -32,6 +32,7 @@ public class ClientFieldMapToString extends MaxConversion<Map<String, ClientFiel
 		HashMap<String, String> tempMap = new HashMap<String, String>();
 
 		tempMap = InhalerUtils.xmlToMap(input);
+		//Debugging.output("tempMap is: " + tempMap, Debugging.CUSTOM_FIELD_DEBUG);
 		// TODO finish this method
 		for (String key : tempMap.keySet()) {
 
@@ -39,16 +40,17 @@ public class ClientFieldMapToString extends MaxConversion<Map<String, ClientFiel
 			// create a new client field
 			ClientField cf = new ClientField();
 			cf.setUserDataHolder(userDataHolder);
-
+			
 			// Check to see if a template field of the same name exists
-
+			
 			TemplateField tf = userDataHolder.getMap(TemplateField.class).get(key);
 
 			if (tf != null) {
 				cf.setCurrentDataType(tf.getDataType());
 				cf.setFieldName(key);
+				Debugging.output("fieldvalue is: " + value + "after String is seperated", Debugging.CUSTOM_FIELD, Debugging.CUSTOM_FIELD_ENABLED);
 				cf.setFieldValue(value);
-
+				//Debugging.output("fieldValue is: " + value, Debugging.CUSTOM_FIELD_DEBUG);
 				output.put(key, cf);
 			}
 

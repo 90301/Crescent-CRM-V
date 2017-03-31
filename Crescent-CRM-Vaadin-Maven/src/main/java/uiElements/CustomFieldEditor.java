@@ -83,7 +83,7 @@ public class CustomFieldEditor extends VerticalLayout {
 		Debugging.output("Attempting to store custom fields for client: " + selectedClient, Debugging.CUSTOM_FIELD, Debugging.CUSTOM_FIELD_ENABLED);
 
 		for(CustomFieldElement cF : customFieldElements){
-			
+			//Issue occurs here when setCustomFieldValue is called...
 			selectedClient.setCustomFieldValue(cF.getFieldName(), cF.getFieldValue());
 		}
 		
