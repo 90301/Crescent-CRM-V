@@ -158,6 +158,8 @@ public class Debugging {
     public static final DebugObject FIREBASE = new DebugObject(CONSOLE_OUTPUT, true, true, "Fire Base: ");
     public static final DebugObject NAV_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Nav Debug: ");
     public static final DebugObject TABLE_SETUP = new DebugObject(CONSOLE_OUTPUT, true, true, "Table Setup: ");
+    public static final DebugObject PUSH_BULLET = new DebugObject(CONSOLE_OUTPUT, true, true, "Push Bullet: ");
+    
     
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables
@@ -171,6 +173,7 @@ public class Debugging {
 	public static final DebugObject UNIT_TEST_TRACK_CHANGES = new DebugObject(CONSOLE_OUTPUT, true, true, "Unit Test Changes: ");
 	public static final DebugObject CRM_ERROR = new DebugObject(CONSOLE_ERROR_OUTPUT, true, true, "CRM (Error): ");
 	public static final DebugObject RAPID_CLIENT = new DebugObject(CONSOLE_OUTPUT, true, true, "Rapid Client Creation: ");
+	
 
 	
 	

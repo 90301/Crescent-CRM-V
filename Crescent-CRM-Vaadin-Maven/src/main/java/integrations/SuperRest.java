@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,9 +18,14 @@ import configuration.Configuration;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import elemental.json.JsonArray;
+import users.User;
 
 public class SuperRest {
 	
+	
+	/*
+	 * START Firebase
+	 */
 	public static void connectToFirebase() {
 		RestTemplate firebaseConnection = new RestTemplate();
 		
@@ -74,6 +80,40 @@ public class SuperRest {
 	
 	public static void regServiceWorker() {
 		JavaScript.getCurrent().execute("regServiceWorker()");
+	}
+	/*
+	 * END Firebase
+	 */
+	
+	/*
+	 * Start Push Bullet
+	 */
+	
+	public static void connectToPushBullet(User u) {
+		RestTemplate pushBulletConnection = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		Map<String,String> vars = new HashMap<String,String>();
+		
+		
+		
+		String key = u.getPushBulletKey();
+		if (key!="") {
+			headers.add("Access-Token",key);
+			
+			HttpEntity<Map<String,String>> request = new HttpEntity<Map<String,String>>(vars,headers);
+			
+			Debugging.output("Headers: " +headers, Debugging.PUSH_BULLET);
+			
+			ResponseEntity<String> response = pushBulletConnection.exchange("https://api.pushbullet.com/v2/users/me",
+							HttpMethod.GET,request, String.class);
+			
+			String resp = response.getBody();
+			
+			Debugging.output("Response: " +resp, Debugging.PUSH_BULLET);
+			
+		}
 	}
 
 }

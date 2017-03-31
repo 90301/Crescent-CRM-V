@@ -5,6 +5,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import clientInfo.DataHolder;
 import integrations.SuperRest;
 
 public class DevPlayground extends CrescentView {
@@ -13,8 +14,10 @@ public class DevPlayground extends CrescentView {
 	
 	Button firebaseGetTokenBtn = new Button("getToken",e -> firebaseGetTokenClick());
 	
+	//push bullet
 	TextField pushBulletKeyTextField = new TextField("Push Bullet Key: ");
 	Button pushBulletBtn = new Button("set Push Bullet key",e -> setPushBulletKeyClick());
+	Button pushBulletTestBtn = new Button("Push Bullet Test",e -> SuperRest.connectToPushBullet(masterUi.getUser()));
 	
 	@Override
 	public void enterView(ViewChangeEvent event) {
@@ -24,6 +27,7 @@ public class DevPlayground extends CrescentView {
 		
 		testBtns.addComponent(pushBulletKeyTextField);
 		testBtns.addComponent(pushBulletBtn);
+		testBtns.addComponent(pushBulletTestBtn);
 		
 		this.addComponent(testBtns);
 		
@@ -32,6 +36,8 @@ public class DevPlayground extends CrescentView {
 
 	private void setPushBulletKeyClick() {
 		this.masterUi.getUser().setPushBulletKey(pushBulletKeyTextField.getValue());
+		users.User u = this.masterUi.getUser();
+		DataHolder.store(u,users.User.class);
 	}
 
 
