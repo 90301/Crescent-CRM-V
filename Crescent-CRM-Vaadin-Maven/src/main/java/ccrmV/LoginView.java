@@ -6,27 +6,23 @@ package ccrmV;
 //import com.vaadin.client.ui.Action;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
-import com.vaadin.event.ShortcutAction;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.ui.MarginInfo;
-import com.vaadin.v7.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.v7.ui.PasswordField;
-import com.vaadin.v7.ui.TextField;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
 import debugging.profiling.ProfilingTimer;
@@ -41,12 +37,7 @@ public class LoginView extends VerticalLayout implements View {
 	public Label welcomeLabel = new Label();
 	public TextField userField = new TextField("User: ");
 	public PasswordField passField  = new PasswordField("Pass: ");
-	public Label loginError = new Label(
-			String.format("<font size = \"3\" color=\"red\"> Incorrect Username/Password!" )
-			, ContentMode.HTML);
-	public Label userError = new Label(
-			String.format("<font size = \"3\" color=\"red\"> No such user exists!" )
-			, ContentMode.HTML);
+
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public Button registerButton = new Button("Register", event -> createNewUserClick());
 	public Layout userCreatorLayout = new VerticalLayout();

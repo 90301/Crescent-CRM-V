@@ -12,11 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
-import com.vaadin.data.util.ObjectProperty;
-
 import dbUtils.InhalerUtils;
 import dbUtils.MaxDBTable;
 import dbUtils.MaxField;
@@ -26,7 +21,7 @@ import dbUtils.Conversions.LinkedHashMapToString;
 import dbUtils.Conversions.UdhMaxObjectToString;
 import debugging.Debugging;
 
-public class Client extends MaxObject implements Item {
+public class Client extends MaxObject {
 
 	private Boolean mutex = false;// Do not update internal db if true
 
@@ -436,7 +431,8 @@ public class Client extends MaxObject implements Item {
 	 * VAADIN ITEM Allows addition to special data-structures
 	 */
 
-	@Override
+	//@Override
+	/*
 	public Property getItemProperty(Object id) {
 		HashMap<String, MaxField<?>> fields = new HashMap<String, MaxField<?>>();
 		for (MaxField<?> mf : this.autoGenList) {
@@ -453,8 +449,9 @@ public class Client extends MaxObject implements Item {
 
 		return prop;
 	}
-
-	@Override
+	*/
+	//@Override
+	/*
 	public Collection<?> getItemPropertyIds() {
 		Collection<String> ids = new ArrayList<String>();
 		for (MaxField<?> mf : this.autoGenList) {
@@ -464,19 +461,9 @@ public class Client extends MaxObject implements Item {
 
 		return ids;
 	}
+	*/
 
-	@Override
-	public boolean addItemProperty(Object id, Property property) throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean removeItemProperty(Object id) throws UnsupportedOperationException {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
+	/*
 	public IndexedContainer populateContainer(IndexedContainer indexedContainer) {
 		for (MaxField<?> field : this.getAutoGenList()) {
 			if (field.getShowField())
@@ -493,6 +480,7 @@ public class Client extends MaxObject implements Item {
 		
 		return indexedContainer;
 	}
+	*/
 	
 	/**
 	 * Generates an item that can be added to a grid.
@@ -501,6 +489,7 @@ public class Client extends MaxObject implements Item {
 	 *            the item to generate data into
 	 * @return the item with data generated
 	 */
+	/*
 	public Item genItem(Item item) {
 
 		for (MaxField<?> mf : this.getAutoGenList()) {
@@ -511,4 +500,5 @@ public class Client extends MaxObject implements Item {
 		}
 		return item;
 	}
+	*/
 }

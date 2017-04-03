@@ -7,16 +7,15 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.v7.data.Item;
-import com.vaadin.v7.data.Property.ValueChangeEvent;
-import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
@@ -27,7 +26,6 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.*;
 import clientInfo.*;
-import dbUtils.BackupManager;
 import dbUtils.InhalerUtils;
 import dbUtils.MaxObject;
 import debugging.Debugging;
@@ -62,14 +60,14 @@ public class CrmUI extends CrescentView {
 	public TextField createGroupName = new TextField();//"Group Name");
 	public TextField createClientName = new TextField("Name");
 	
-	public ComboBox createClientStatus = new ComboBox("Status");
-	public ComboBox createClientLocation = new ComboBox("Location");
-	public ComboBox createClientGroup = new ComboBox("Group");
+	public ComboBox<Status> createClientStatus = new ComboBox<Status>("Status");
+	public ComboBox<Location> createClientLocation = new ComboBox<Location>("Location");
+	public ComboBox<Group> createClientGroup = new ComboBox<Group>("Group");
 	
 	//ListBox is containing current statuses...
-	ListSelect createLocationListSelect = new ListSelect();
-	ListSelect createStatusListSelect = new ListSelect();
-	ListSelect createGroupListSelect = new ListSelect();
+	ListSelect<Location> createLocationListSelect = new ListSelect<Location>();
+	ListSelect<Status> createStatusListSelect = new ListSelect<Status>();
+	ListSelect<Group> createGroupListSelect = new ListSelect<Group>();
 	
 	public static final int CREATE_LIST_SELECT_ROWS = 4;
  	//private static final int MAX_NOTE_ROWS = 20;
@@ -96,9 +94,9 @@ public class CrmUI extends CrescentView {
 	boolean alreadyGenerated = false;
 	
 	
-	public Grid<Client> clientGrid = new Grid<Client>();
+	public Grid<Client> clientGrid = new Grid<Client>(Client.class);
 	//public IndexedContainer clients = new IndexedContainer();
-
+	public List<Client> clients;
 	//nav bar
 	//public NavBar navBar;
 	
@@ -144,13 +142,13 @@ public class CrmUI extends CrescentView {
 	}
 
 	public void createClientGrid() {
-		Client exampleClient = new Client();
+		//Client exampleClient = new Client();
 		//TODO: do we really need to create a new container every time?
 		
 		
 		//exampleClient.populateContainer();
 		
-		clientGrid.setItems(masterUi.userDataHolder.getAllClients());
+		//clientGrid.setItems(masterUi.userDataHolder.getAllClients());
 		
 		clientGrid.setFrozenColumnCount(1);
 		
@@ -185,6 +183,9 @@ public class CrmUI extends CrescentView {
 		}
 		
 		createClientGrid();
+		
+		clients = masterUi.userDataHolder.getAllClients().stream().filter(c -> clientFilter.checkClientMeetsFilter(c)).collect(Collectors.toList());
+		clientGrid.setItems(clients);
 		/*
 		for (Client c : masterUi.userDataHolder.getAllClients()) {
 			
@@ -214,17 +215,19 @@ public class CrmUI extends CrescentView {
 		*/
 		
 		//Filter 2.0
+		/*
 		if (USE_VAADIN_FILTER && clientFilter.getFilterHasChanged()){
 			ProfilingTimer filterTimer1 = new ProfilingTimer("filter timer1");
 			//Determine the time it takes to remove the old filter and add the new one.
 			//TODO
 			//It may be possible to move this code out to another method
-			clients.removeAllContainerFilters();
-			clients.addContainerFilter(clientFilter);
+			//clients.removeAllContainerFilters();
+			//clients.addContainerFilter(clientFilter);
 			
 			clientFilter.setFilterHasChanged(false);
 			filterTimer1.stopTimer();
 		}
+		*/
 
 	}
 
@@ -295,14 +298,16 @@ public class CrmUI extends CrescentView {
 	 */
 	public void selectItem() {
 
-		Debugging.output("SELECTED AN ITEM." + clientGrid.getSelectedRow(),Debugging.OLD_OUTPUT);
+		Debugging.output("SELECTED AN ITEM." + clientGrid.getSelectedItems(),Debugging.OLD_OUTPUT);
 
+		if (!clientGrid.getSelectedItems().isEmpty()) {
+		Client selectedClient = (Client) clientGrid.getSelectedItems().toArray()[0];
 		// null check
-		if (clientGrid.getSelectedRow() != null) {
-			localSelClient = masterUi.userDataHolder.getClient(((Client) clientGrid.getSelectedRow()).getPrimaryKey());
+		if (selectedClient != null) {
+			localSelClient = masterUi.userDataHolder.getClient(selectedClient.getPrimaryKey());
 			if (localSelClient == null) {
 				Debugging.output(
-						"Null value: " + localSelClient + " found for client: " + ((Client) clientGrid.getSelectedRow()).getPrimaryKey()
+						"Null value: " + localSelClient + " found for client: " + ((Client)selectedClient).getPrimaryKey()
 						,Debugging.OLD_OUTPUT);
 				return;
 			}
@@ -318,6 +323,7 @@ public class CrmUI extends CrescentView {
 		} else {
 			selectClient(localSelClient);
 			
+		}
 		}
 
 	}
@@ -585,7 +591,7 @@ public class CrmUI extends CrescentView {
 		
 		//createLocationName 
 	
-		createLocationListSelect.setNullSelectionAllowed(false);
+		//createLocationListSelect.setNullSelectionAllowed(false);
 		createLocationListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createLocationLayout.addComponent(createLocationName);
@@ -600,7 +606,7 @@ public class CrmUI extends CrescentView {
 
 		// Add status
 
-		createStatusListSelect.setNullSelectionAllowed(false);
+		//createStatusListSelect.setNullSelectionAllowed(false);
 		createStatusListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createStatusLayout.addComponent(createStatusName);
@@ -616,7 +622,7 @@ public class CrmUI extends CrescentView {
 		// Add Group
 
 		//createGroupName 
-		createGroupListSelect.setNullSelectionAllowed(false);
+		//createGroupListSelect.setNullSelectionAllowed(false);
 		createGroupListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 
 		createGroupLayout.addComponent(createGroupName);
@@ -636,25 +642,26 @@ public class CrmUI extends CrescentView {
 			Boolean nullSelectionAllow = false;
 			Boolean newItemsAllowed = true;
 			
-			
+			/*
 			createClientStatus.setInvalidAllowed(invalidAllow);
 			createClientLocation.setInvalidAllowed(invalidAllow);
 			createClientGroup.setInvalidAllowed(invalidAllow);
-			
+			*/
 			createClientStatus.setTextInputAllowed(textInputAllow);
-			createClientStatus.setNewItemsAllowed(newItemsAllowed);
-			createClientStatus.setNullSelectionAllowed(nullSelectionAllow);
+			//createClientStatus.setNewItemsAllowed(newItemsAllowed);
+			//createClientStatus.setNullSelectionAllowed(nullSelectionAllow);
 			
 			
 			createClientLocation.setTextInputAllowed(textInputAllow);
-			createClientLocation.setNewItemsAllowed(newItemsAllowed);
-			createClientLocation.setNullSelectionAllowed(nullSelectionAllow);
+			//createClientLocation.setNewItemsAllowed(newItemsAllowed);
+			//createClientLocation.setNullSelectionAllowed(nullSelectionAllow);
 			
 			createClientGroup.setTextInputAllowed(textInputAllow);
-			createClientGroup.setNewItemsAllowed(newItemsAllowed);
-			createClientGroup.setNullSelectionAllowed(nullSelectionAllow);
+			//createClientGroup.setNewItemsAllowed(newItemsAllowed);
+			//createClientGroup.setNullSelectionAllowed(nullSelectionAllow);
 			
 		} else {
+			/*
 			createClientStatus.setInvalidAllowed(false);
 			createClientLocation.setInvalidAllowed(false);
 			createClientGroup.setInvalidAllowed(false);
@@ -662,6 +669,7 @@ public class CrmUI extends CrescentView {
 			createClientStatus.setNullSelectionAllowed(false);
 			createClientLocation.setNullSelectionAllowed(false);
 			createClientGroup.setNullSelectionAllowed(false);
+			*/
 		}
 		
 		createClientLayout.setMargin(true);
@@ -804,10 +812,14 @@ public class CrmUI extends CrescentView {
 			styles.add("."+ statusName+ " { color: " + statusColor + "; }");
 			}
 		}
+		//TODO update this to work with vaadin 8
 		
-		clientGrid.setRowStyleGenerator(client -> {
+		/*
+		clientGrid.setStyleGenerator(client -> {
 			
 			if (((Status)client.getItem().getItemProperty(Client.STATUS_GRID_NAME).getValue())!= null) {
+			
+			
 				String cssName = ((Status)client.getItem().getItemProperty(Client.STATUS_GRID_NAME).getValue()).getStatusName();
 				
 				cssName = InhalerUtils.removeSpecialCharacters(cssName);
@@ -817,17 +829,23 @@ public class CrmUI extends CrescentView {
 				return null;
 			}
 		});
+		*/
 	}
 	
 
 
 	public void updateCreationLists() {
+		createStatusListSelect.setItems(masterUi.userDataHolder.getAllStatus());
+		createLocationListSelect.setItems(masterUi.userDataHolder.getAllLocations());
+		createGroupListSelect.setItems(masterUi.userDataHolder.getAllGroups());
+		/*
 		createStatusListSelect.removeAllItems();
 		createStatusListSelect.addItems(masterUi.userDataHolder.getAllStatus());
 		createLocationListSelect.removeAllItems();
 		createLocationListSelect.addItems(masterUi.userDataHolder.getAllLocations());
 		createGroupListSelect.removeAllItems();
 		createGroupListSelect.addItems(masterUi.userDataHolder.getAllGroups());
+		*/
 	}
 
 

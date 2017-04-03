@@ -8,8 +8,8 @@ import clientInfo.TemplateField;
 import clientInfo.UserDataHolder;
 import debugging.Debugging;
 
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 public class CustomFieldEditor extends VerticalLayout {
 

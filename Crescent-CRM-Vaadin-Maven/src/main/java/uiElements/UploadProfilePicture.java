@@ -23,20 +23,20 @@ import clientInfo.Client;
 //Need debugging
 import debugging.Debugging;
 
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Panel;
-import com.vaadin.v7.ui.Upload;
-import com.vaadin.v7.ui.Upload.FailedEvent;
-import com.vaadin.v7.ui.Upload.FinishedEvent;
-import com.vaadin.v7.ui.Upload.Receiver;
-import com.vaadin.v7.ui.Upload.StartedEvent;
-import com.vaadin.v7.ui.Upload.SucceededEvent;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.FailedEvent;
+import com.vaadin.ui.Upload.FinishedEvent;
+import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Upload.StartedEvent;
+import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
-import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 
 

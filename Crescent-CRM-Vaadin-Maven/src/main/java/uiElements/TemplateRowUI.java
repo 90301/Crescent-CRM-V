@@ -9,10 +9,10 @@ import java.util.ArrayList;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
 
 import clientInfo.TemplateField;
 import dbUtils.InhalerUtils;
@@ -41,7 +41,7 @@ public class TemplateRowUI extends HorizontalLayout{
 	Button removeButton = new Button("Remove", event -> this.removeRowClick());
 	
 	public void initializeUI(){
-		fieldType.setNullSelectionAllowed(false); 
+		//fieldType.setNullSelectionAllowed(false); 
 		this.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
 		this.setSpacing(true);
 		this.addComponent(fieldType);
@@ -53,9 +53,9 @@ public class TemplateRowUI extends HorizontalLayout{
 	public void populateComboBoxes(){
 		
 		for(String DataType:TemplateField.DataTypes){
-			fieldType.addItem(DataType);
+			//fieldType.addItem(DataType);
 		}
-		fieldType.select(TemplateField.DATA_TYPE_TEXT);
+		//fieldType.select(TemplateField.DATA_TYPE_TEXT);
 	}
 	
 	private void removeRowClick() {

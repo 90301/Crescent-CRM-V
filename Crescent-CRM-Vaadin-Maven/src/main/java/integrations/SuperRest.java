@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Layout;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import configuration.Configuration;
 import dbUtils.InhalerUtils;

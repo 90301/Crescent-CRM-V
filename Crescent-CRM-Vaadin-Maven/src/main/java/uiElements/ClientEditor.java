@@ -6,12 +6,12 @@ import java.util.Date;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.CheckBox;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.VerticalLayout;
 
 import ccrmV.CrmUI;
 import clientInfo.Client;
@@ -24,6 +24,12 @@ import dbUtils.InhalerUtils;
 import debugging.Debugging;
 
 public class ClientEditor extends VerticalLayout {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 
 	public static final int MAX_NOTE_ROWS = 15;
 
@@ -94,6 +100,7 @@ public class ClientEditor extends VerticalLayout {
 		clientNoteBox.setResponsive(true);
 
 		//clientLocation 
+		/*
 		clientLocation.setNullSelectionAllowed(false);
 		clientLocation.setInvalidAllowed(false);
 
@@ -104,6 +111,7 @@ public class ClientEditor extends VerticalLayout {
 		//clientStatus 
 		clientStatus.setNullSelectionAllowed(false);
 		clientStatus.setInvalidAllowed(false);
+		*/
 
 		clientLastUpdate.setSizeFull();
 		
