@@ -16,7 +16,9 @@
 	<properties>
 		
 		<vaadin.version>8.0.5</vaadin.version>
-		<vaadin.plugin.version>8.0.5</vaadin.plugin.version>
+		
+		<vaadin.plugin.version>${vaadin.version}</vaadin.plugin.version>
+		
 		
 		<jetty.plugin.version>9.3.9.v20160517</jetty.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -35,51 +37,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-
-<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-compatibility-server</artifactId>
-    <version>8.0.5</version>
-</dependency>
-<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-compatibility-client-compiled</artifactId>
-    <version>8.0.5</version>
-</dependency>
-
-<!-- Optional for extending client-side See: https://vaadin.com/book/-/page/clientside.html
--->
-<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-compatibility-client</artifactId>
-    <version>8.0.5</version>
-    <scope>provided</scope>
-</dependency>
-
-
-<!-- Optional for optimizing client-side widgets See: https://vaadin.com/book/-/page/mobile.optimization.html
-
-<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-client-compiler</artifactId>
-    <version>8.0.5</version>
-    <scope>provided</scope>
-</dependency>
--->
-
-<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-themes</artifactId>
-    <version>8.0.5</version>
-</dependency>
-
-<!-- Optional push support for communication See: https://vaadin.com/book/-/page/advanced.push.html
--->
-<dependency>
-    <groupId>com.vaadin</groupId>
-    <artifactId>vaadin-push</artifactId>
-    <version>8.0.5</version>
-</dependency>
 
 			<dependency>
      			<groupId>com.google.apis</groupId>
@@ -104,9 +61,10 @@
 			<version>3.0.1</version>
 			<scope>provided</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
+			<artifactId>vaadin-compatibility-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -114,12 +72,13 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiled</artifactId>
+			<artifactId>vaadin-compatibility-client-compiled</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-themes</artifactId>
+			<artifactId>vaadin-compatibility-themes</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
@@ -177,22 +136,29 @@
 					<packagingExcludes>WEB-INF/classes/VAADIN/widgetsets/WEB-INF/**</packagingExcludes>
 				</configuration>
 			</plugin>
+			
+			
 			<plugin>
 				<groupId>com.vaadin</groupId>
 				<artifactId>vaadin-maven-plugin</artifactId>
-				<version>${vaadin.plugin.version}</version>
+				<version>${vaadin.version}</version>
 				<executions>
 					<execution>
 						<goals>
+							
 							<goal>update-theme</goal>
 							<goal>update-widgetset</goal>
+							
 							<goal>compile</goal>
-							<!-- Comment out compile-theme goal to use on-the-fly theme compilation -->
+							
+							
 							<goal>compile-theme</goal>
+							
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -211,16 +177,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- The Jetty plugin allows us to easily test the development build by
-				running jetty:run on the command line. -->
-			<plugin>
-				<groupId>org.eclipse.jetty</groupId>
-				<artifactId>jetty-maven-plugin</artifactId>
-				<version>${jetty.plugin.version}</version>
-				<configuration>
-					<scanIntervalSeconds>2</scanIntervalSeconds>
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 

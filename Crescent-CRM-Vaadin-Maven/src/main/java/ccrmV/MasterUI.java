@@ -160,7 +160,12 @@ public class MasterUI extends UI {
 		
 		getPage().addUriFragmentChangedListener(
 	               new UriFragmentChangedListener() {
-	           public void uriFragmentChanged(
+	           /**
+					 * 
+					 */
+					private static final long serialVersionUID = 1L;
+
+			public void uriFragmentChanged(
 	                   UriFragmentChangedEvent source) {
 	               enter(source);
 	            }

@@ -19,16 +19,17 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.TwinColSelect;
+import com.vaadin.v7.ui.TwinColSelect;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
@@ -54,8 +55,8 @@ public class UserEditor extends CrescentView {
 	Layout settingsLayout = new VerticalLayout();
 
 	ComboBox settingsDatabaseComboBox = new ComboBox("Database");
-	ComboBox settingsThemeComboBox = new ComboBox("Theme");
-	ComboBox settingsViewModeComboBox = new ComboBox("Select View Mode");
+	ComboBox<String> settingsThemeComboBox = new ComboBox<String>("Theme");
+	ComboBox<String> settingsViewModeComboBox = new ComboBox<String>("Select View Mode");
 	
 	Button settingsChangePasswordButton = new Button("Change Password", e -> settingsChangePasswordClick());
 	
@@ -270,7 +271,7 @@ public class UserEditor extends CrescentView {
 		// settingsDatabaseComboBox
 		// settingsThemeComboBox
 		// settingsChangePasswordButton
-		
+		/*
 		settingsThemeComboBox.setNullSelectionAllowed(false);
 		// settings action listeners
 		settingsDatabaseComboBox.setImmediate(true);
@@ -278,7 +279,7 @@ public class UserEditor extends CrescentView {
 		
 		settingsViewModeComboBox.setNullSelectionAllowed(false);
 		settingsViewModeComboBox.setImmediate(true);
-		
+		*/
 		
 		settingsOldPassword.setVisible(false);
 		settingsNewPassword.setVisible(false);
@@ -319,15 +320,15 @@ public class UserEditor extends CrescentView {
 
 		// adminUserListSelect.setRows(20);
 		adminUserListSelect.setSizeFull();
-		adminUserListSelect.setNullSelectionAllowed(false);
+		//adminUserListSelect.setNullSelectionAllowed(false);
 
 		// Twin Col Select
 		adminDatabaseTwinColSelect.setLeftColumnCaption("Databases Avaliable");
 		// Accessible
 		adminDatabaseTwinColSelect.setRightColumnCaption("Databases Accessible");
-		adminDatabaseTwinColSelect.setImmediate(true);
+		//adminDatabaseTwinColSelect.setImmediate(true);
 
-		adminDatabaseTwinColSelect.setNullSelectionAllowed(false);
+		//adminDatabaseTwinColSelect.setNullSelectionAllowed(false);
 
 		// Admin Settings Layout
 		// adminSettingsLayout
@@ -631,8 +632,8 @@ public class UserEditor extends CrescentView {
 	private void populateAllData() {
 
 		// settings
-		settingsDatabaseComboBox.removeAllItems();
-		settingsDatabaseComboBox.addItems(masterUi.getUser().getDatabasesAccsessable());
+		//settingsDatabaseComboBox.removeAllItems();
+		settingsDatabaseComboBox.setItems(masterUi.getUser().getDatabasesAccsessable());
 		settingsDatabaseComboBox.setValue(masterUi.user.getDatabaseSelected());
 
 		if (masterUi.user.getAdmin()) {
@@ -653,17 +654,20 @@ public class UserEditor extends CrescentView {
 		//Themes
 		themeMutex = true;//Don't run the event listener code for selection
 		
+		/*
 		settingsThemeComboBox.removeAllItems();
 		for (String themeName : MasterUI.avaliableThemes) {
 			settingsThemeComboBox.addItem(themeName);
 		}
-		settingsThemeComboBox.select(masterUi.currentTheme);
+		*/
+		settingsThemeComboBox.setItems(MasterUI.avaliableThemes);
+		settingsThemeComboBox.setValue(masterUi.currentTheme);
 		
 		themeMutex = false;// The theme code can now be run
 		
-		settingsViewModeComboBox.removeAllItems();
-		settingsViewModeComboBox.addItems(User.VIEW_MODES);
-		settingsViewModeComboBox.select(masterUi.getUser().getViewMode());
+		//settingsViewModeComboBox.removeAllItems();
+		settingsViewModeComboBox.setItems(User.VIEW_MODES);
+		settingsViewModeComboBox.setValue(masterUi.getUser().getViewMode());
 	}
 
 	/**
