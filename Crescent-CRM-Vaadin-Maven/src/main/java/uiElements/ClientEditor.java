@@ -51,9 +51,9 @@ public class ClientEditor extends VerticalLayout {
 
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
-	ComboBox clientStatus = new ComboBox("Status"); 
-	ComboBox clientLocation = new ComboBox("Location");
-	ComboBox clientGroup = new ComboBox("Group");
+	ComboBox<Status> clientStatus = new ComboBox<Status>("Status"); 
+	ComboBox<Location> clientLocation = new ComboBox<Location>("Location");
+	ComboBox<Group> clientGroup = new ComboBox<Group>("Group");
 	Button clientUpdateButton = new Button("Update", event -> this.updateClientClick());
 	Button clientArchiveButton = new Button("Archive", e-> this.archiveClick());
 	Label clientNameLabel = new Label("Client Name");
@@ -70,7 +70,7 @@ public class ClientEditor extends VerticalLayout {
 	UploadProfilePicture uploadProfilePicture = new UploadProfilePicture();
 	
 	//Note History
-	ComboBox noteHistoryComboBox = new ComboBox("Note History");
+	ComboBox<String> noteHistoryComboBox = new ComboBox<String>("Note History");
 	Button noteHistoryPreviewButton = new Button("Preview",e ->this.noteHistoryPreviewClick());
 	Button noteHistoryLoadButton = new Button("Load",e -> this.noteHistoryLoadClick());
 	TextArea notePreviewBox = new TextArea("Preview");
@@ -214,18 +214,18 @@ public class ClientEditor extends VerticalLayout {
 		} else {
 			// normal client creation
 			// if valid, set the field
-			Group cGroup = crmUi.masterUi.userDataHolder.getGroup((String) clientGroup.getValue());
+			Group cGroup = crmUi.masterUi.userDataHolder.getGroup(clientGroup.getValue().getPrimaryKey());
 			if (cGroup != null) {
 				crmUi.selectedClient.setGroup(cGroup);
 			}
 			// Resolve field
-			Location cLocation = crmUi.masterUi.userDataHolder.getLocation((String) clientLocation.getValue());
+			Location cLocation = crmUi.masterUi.userDataHolder.getLocation(clientLocation.getValue().getPrimaryKey());
 			// if valid, set the field
 			if (cLocation != null) {
 				crmUi.selectedClient.setLocation(cLocation);
 			}
 			// Resolve field
-			Status cStatus = crmUi.masterUi.userDataHolder.getStatus((String) clientStatus.getValue());
+			Status cStatus = crmUi.masterUi.userDataHolder.getStatus(clientStatus.getValue().getPrimaryKey());
 			// if valid, set the field
 			if (cStatus != null) {
 				crmUi.selectedClient.setStatus(cStatus);
@@ -288,10 +288,11 @@ public class ClientEditor extends VerticalLayout {
 		clientLocation.clear();
 		clientGroup.clear();
 
+		/*
 		clientStatus.removeAllItems();
 		clientLocation.removeAllItems();
 		clientGroup.removeAllItems();
-
+		*/
 		// Client editor
 		crmUi.fillComboBox(clientStatus, crmUi.masterUi.userDataHolder.getAllStatus());
 		crmUi.fillComboBox(clientLocation, crmUi.masterUi.userDataHolder.getAllLocations());
@@ -325,9 +326,9 @@ public class ClientEditor extends VerticalLayout {
 		Debugging.output("showing client information for: " + c,Debugging.OLD_OUTPUT);
 		// LOAD INFORMATION
 		clientNameLabel.setValue(c.getName());
-		clientStatus.setValue(c.getStatusName());
-		clientLocation.setValue(c.getLocationName());
-		clientGroup.setValue(c.getGroupName());
+		clientStatus.setValue(c.getStatus());
+		clientLocation.setValue(c.getLocation());
+		clientGroup.setValue(c.getGroup());
 
 		clientNoteBox.setValue(c.getNotes());
 		//clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length+2,MAX_NOTE_ROWS));
@@ -348,8 +349,8 @@ public class ClientEditor extends VerticalLayout {
 		pPicture.loadprofilePictureField(c);
 		
 		//note history
-		noteHistoryComboBox.removeAllItems();
-		noteHistoryComboBox.addItems(
+		//noteHistoryComboBox.removeAllItems();
+		noteHistoryComboBox.setItems(
 				InhalerUtils.reverseList(
 						c.getNoteHistory().keySet()));
 		

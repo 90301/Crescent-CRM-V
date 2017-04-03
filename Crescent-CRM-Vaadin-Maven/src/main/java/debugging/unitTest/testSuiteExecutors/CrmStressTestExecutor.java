@@ -63,9 +63,9 @@ public class CrmStressTestExecutor extends TestSuiteExecutor {
 			
 			this.crmUi.createClientName.setValue(name);
 			
-			this.crmUi.createClientStatus.setValue(allStatusNames.get(statusNum));
-			this.crmUi.createClientGroup.setValue(allGroupNames.get(groupNum));
-			this.crmUi.createClientLocation.setValue(allLocationNames.get(locationNum));
+			//this.crmUi.createClientStatus.setValue(allStatusNames.get(statusNum));
+			//this.crmUi.createClientGroup.setValue(allGroupNames.get(groupNum));
+			//this.crmUi.createClientLocation.setValue(allLocationNames.get(locationNum));
 			
 			Debugging.output("status: " + this.crmUi.createClientStatus.getValue(), Debugging.RAPID_CLIENT);
 			Debugging.output("location: " + this.crmUi.createClientLocation.getValue(), Debugging.RAPID_CLIENT);

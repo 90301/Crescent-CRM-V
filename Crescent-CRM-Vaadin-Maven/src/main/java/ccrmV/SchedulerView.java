@@ -19,15 +19,22 @@ import clientInfo.DataHolder;
 import clientInfo.ScheduleEvent;
 import clientInfo.UserDataHolder;
 
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.PopupDateField;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.handler.BasicDateClickHandler;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
+import com.vaadin.v7.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
+import com.vaadin.v7.ui.Calendar;
 
 import uiElements.NavBar;
 import uiElements.SchedulerModule;
