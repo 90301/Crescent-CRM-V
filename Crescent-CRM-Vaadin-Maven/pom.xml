@@ -145,17 +145,25 @@
 				<version>${vaadin.version}</version>
 				<executions>
 					<execution>
+						
+						<configuration>
+							<modules>
+                                <module>
+   									 <inherits name="com.vaadin.v7.Vaadin7WidgetSet"/>
+								</module>
+                        	</modules>
+						
+						
 						<goals>
-							
 							<goal>update-theme</goal>
 							<goal>update-widgetset</goal>
 							
 							<goal>compile</goal>
-							
-							
 							<goal>compile-theme</goal>
 							
 						</goals>
+							
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

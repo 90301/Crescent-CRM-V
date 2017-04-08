@@ -3,6 +3,7 @@
  */
 package ccrmV;
 
+import com.vaadin.annotations.Widgetset;
 //import com.vaadin.client.ui.Action;
 import com.vaadin.event.FieldEvents.FocusEvent;
 import com.vaadin.event.FieldEvents.FocusListener;
@@ -27,7 +28,7 @@ import com.vaadin.ui.VerticalLayout;
 import clientInfo.DataHolder;
 import debugging.profiling.ProfilingTimer;
 import users.User;
-
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 public class LoginView extends VerticalLayout implements View {
 
 	/**
