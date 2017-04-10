@@ -6,12 +6,12 @@ import java.util.Date;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.CheckBox;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import ccrmV.CrmUI;
 import clientInfo.Client;
@@ -45,9 +45,9 @@ public class ClientEditor extends VerticalLayout {
 
 	// Current Client Editing
 	TextArea clientNoteBox  = new TextArea("Client Notes");
-	ComboBox clientStatus = new ComboBox("Status"); 
-	ComboBox clientLocation = new ComboBox("Location");
-	ComboBox clientGroup = new ComboBox("Group");
+	ComboBox<Status> clientStatus = new ComboBox<Status>("Status"); 
+	ComboBox<Location> clientLocation = new ComboBox<Location>("Location");
+	ComboBox<Group> clientGroup = new ComboBox<Group>("Group");
 	Button clientUpdateButton = new Button("Update", event -> this.updateClientClick());
 	Button clientArchiveButton = new Button("Archive", e-> this.archiveClick());
 	Label clientNameLabel = new Label("Client Name");
@@ -92,18 +92,6 @@ public class ClientEditor extends VerticalLayout {
 		clientNoteBox.setSizeFull();
 		clientNoteBox.setWidth(NOTE_WIDTH);
 		clientNoteBox.setResponsive(true);
-
-		//clientLocation 
-		clientLocation.setNullSelectionAllowed(false);
-		clientLocation.setInvalidAllowed(false);
-
-		//clientGroup 
-		clientGroup.setNullSelectionAllowed(false);
-		clientGroup.setInvalidAllowed(false);
-
-		//clientStatus 
-		clientStatus.setNullSelectionAllowed(false);
-		clientStatus.setInvalidAllowed(false);
 
 		clientLastUpdate.setSizeFull();
 		
@@ -206,22 +194,33 @@ public class ClientEditor extends VerticalLayout {
 		} else {
 			// normal client creation
 			// if valid, set the field
-			Group cGroup = crmUi.masterUi.userDataHolder.getGroup((String) clientGroup.getValue());
+			Group g = clientGroup.getValue();
+			if (g!=null) {
+			Group cGroup = crmUi.masterUi.userDataHolder.getGroup(g.getPrimaryKey());
+			
 			if (cGroup != null) {
 				crmUi.selectedClient.setGroup(cGroup);
 			}
+			}
 			// Resolve field
-			Location cLocation = crmUi.masterUi.userDataHolder.getLocation((String) clientLocation.getValue());
+			
+			Location l = clientLocation.getValue();
+			if (l!=null) {
+			Location cLocation = crmUi.masterUi.userDataHolder.getLocation(l.getPrimaryKey());
 			// if valid, set the field
 			if (cLocation != null) {
 				crmUi.selectedClient.setLocation(cLocation);
 			}
+			}
 			// Resolve field
-			Status cStatus = crmUi.masterUi.userDataHolder.getStatus((String) clientStatus.getValue());
+			Status s = clientStatus.getValue();
+			if (s!=null) {
+			Status cStatus = crmUi.masterUi.userDataHolder.getStatus(s.getPrimaryKey());
 			// if valid, set the field
 			if (cStatus != null) {
 				crmUi.selectedClient.setStatus(cStatus);
 			}
+		}
 
 		}
 		crmUi.selectedClient.setLastUpdatedToNow();
@@ -276,19 +275,15 @@ public class ClientEditor extends VerticalLayout {
 	}
 
 	public void updateAllComboBoxes() {
-		clientStatus.clear();
-		clientLocation.clear();
-		clientGroup.clear();
-
-		clientStatus.removeAllItems();
-		clientLocation.removeAllItems();
-		clientGroup.removeAllItems();
+		clientStatus.setValue(clientStatus.getEmptyValue());
+		clientLocation.setValue(clientLocation.getEmptyValue());
+		clientGroup.setValue(clientGroup.getEmptyValue());
 
 		// Client editor
-		crmUi.fillComboBox(clientStatus, crmUi.masterUi.userDataHolder.getAllStatus());
-		crmUi.fillComboBox(clientLocation, crmUi.masterUi.userDataHolder.getAllLocations());
-		crmUi.fillComboBox(clientGroup, crmUi.masterUi.userDataHolder.getAllGroups());
 
+		clientStatus.setItems(crmUi.masterUi.userDataHolder.getAllStatus());
+		clientLocation.setItems(crmUi.masterUi.userDataHolder.getAllLocations());
+		clientGroup.setItems(crmUi.masterUi.userDataHolder.getAllGroups());
 	}
 
 	public void selectClient(Client c) {
@@ -317,9 +312,9 @@ public class ClientEditor extends VerticalLayout {
 		Debugging.output("showing client information for: " + c,Debugging.OLD_OUTPUT);
 		// LOAD INFORMATION
 		clientNameLabel.setValue(c.getName());
-		clientStatus.setValue(c.getStatusName());
-		clientLocation.setValue(c.getLocationName());
-		clientGroup.setValue(c.getGroupName());
+		clientStatus.setValue(c.getStatus());
+		clientLocation.setValue(c.getLocation());
+		clientGroup.setValue(c.getGroup());
 
 		clientNoteBox.setValue(c.getNotes());
 		//clientNoteBox.setRows(Math.min(c.getNotes().split("\\r?\\n").length+2,MAX_NOTE_ROWS));
@@ -340,8 +335,7 @@ public class ClientEditor extends VerticalLayout {
 		pPicture.loadprofilePictureField(c);
 		
 		//note history
-		noteHistoryComboBox.removeAllItems();
-		noteHistoryComboBox.addItems(
+		noteHistoryComboBox.setItems(
 				InhalerUtils.reverseList(
 						c.getNoteHistory().keySet()));
 		

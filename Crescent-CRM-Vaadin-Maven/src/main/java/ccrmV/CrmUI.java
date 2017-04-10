@@ -17,6 +17,10 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.TextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
@@ -24,8 +28,19 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.*;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
+
 import clientInfo.*;
 import dbUtils.BackupManager;
 import dbUtils.InhalerUtils;
@@ -582,7 +597,7 @@ public class CrmUI extends CrescentView {
 		
 		//createLocationName 
 	
-		createLocationListSelect.setNullSelectionAllowed(false);
+		//createLocationListSelect.setNullSelectionAllowed(false);
 		createLocationListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createLocationLayout.addComponent(createLocationName);
@@ -597,7 +612,6 @@ public class CrmUI extends CrescentView {
 
 		// Add status
 
-		createStatusListSelect.setNullSelectionAllowed(false);
 		createStatusListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createStatusLayout.addComponent(createStatusName);
@@ -613,7 +627,6 @@ public class CrmUI extends CrescentView {
 		// Add Group
 
 		//createGroupName 
-		createGroupListSelect.setNullSelectionAllowed(false);
 		createGroupListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 
 		createGroupLayout.addComponent(createGroupName);
@@ -633,32 +646,17 @@ public class CrmUI extends CrescentView {
 			Boolean nullSelectionAllow = false;
 			Boolean newItemsAllowed = true;
 			
-			
-			createClientStatus.setInvalidAllowed(invalidAllow);
-			createClientLocation.setInvalidAllowed(invalidAllow);
-			createClientGroup.setInvalidAllowed(invalidAllow);
-			
 			createClientStatus.setTextInputAllowed(textInputAllow);
-			createClientStatus.setNewItemsAllowed(newItemsAllowed);
-			createClientStatus.setNullSelectionAllowed(nullSelectionAllow);
+
 			
 			
 			createClientLocation.setTextInputAllowed(textInputAllow);
-			createClientLocation.setNewItemsAllowed(newItemsAllowed);
-			createClientLocation.setNullSelectionAllowed(nullSelectionAllow);
+
 			
 			createClientGroup.setTextInputAllowed(textInputAllow);
-			createClientGroup.setNewItemsAllowed(newItemsAllowed);
-			createClientGroup.setNullSelectionAllowed(nullSelectionAllow);
-			
+
 		} else {
-			createClientStatus.setInvalidAllowed(false);
-			createClientLocation.setInvalidAllowed(false);
-			createClientGroup.setInvalidAllowed(false);
-			
-			createClientStatus.setNullSelectionAllowed(false);
-			createClientLocation.setNullSelectionAllowed(false);
-			createClientGroup.setNullSelectionAllowed(false);
+
 		}
 		
 		createClientLayout.setMargin(true);
@@ -739,7 +737,7 @@ public class CrmUI extends CrescentView {
 		layout.addComponent(midLayout);
 		midLayout.addComponent(clientGrid);
 		//clientTable.setSelectionMode(true);
-		clientGrid.setImmediate(true);
+		//clientGrid.setImmediate(true);
 		//clientTable.addValueChangeListener(event -> this.selectItem(event));
 		
 
