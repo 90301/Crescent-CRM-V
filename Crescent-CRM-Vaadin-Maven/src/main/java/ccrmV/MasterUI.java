@@ -15,6 +15,7 @@ import com.vaadin.annotations.JavaScript;
 import com.vaadin.annotations.PreserveOnRefresh;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.annotations.Widgetset;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.server.Page.UriFragmentChangedEvent;
 import com.vaadin.server.Page.UriFragmentChangedListener;
@@ -43,6 +44,7 @@ import users.User;
 @PreserveOnRefresh
 @JavaScript({"https://www.gstatic.com/firebasejs/3.7.3/firebase.js","javascript/firebaseClient.js"})
 @Theme("darkTheme")
+@Widgetset("com.vaadin.v7.Vaadin7WidgetSet")
 public class MasterUI extends UI {
 
 	/**

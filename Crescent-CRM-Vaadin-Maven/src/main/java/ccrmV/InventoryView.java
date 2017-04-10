@@ -1,19 +1,19 @@
 package ccrmV;
 
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.TextField;
 
 import clientInfo.UserDataHolder;
 import dbUtils.MaxField;

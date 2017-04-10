@@ -14,8 +14,8 @@
 	</prerequisites>
 
 	<properties>
-		<vaadin.version>7.7.1</vaadin.version>
-		<vaadin.plugin.version>7.7.1</vaadin.plugin.version>
+		<vaadin.version>8.0.5</vaadin.version>
+		<vaadin.plugin.version>8.0.5</vaadin.plugin.version>
 		<jetty.plugin.version>9.3.9.v20160517</jetty.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -59,7 +59,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-server</artifactId>
+			<artifactId>vaadin-compatibility-server</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
@@ -67,7 +67,7 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-client-compiled</artifactId>
+			<artifactId>vaadin-compatibility-client-compiled</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>

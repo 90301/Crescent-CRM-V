@@ -5,7 +5,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 
 import java.awt.image.BufferedImage;
