@@ -52,8 +52,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.52;
-	public static final String versionDescription = " Vaadin 8";
+	public static final double versionNumber = 1.53;
+	public static final String versionDescription = " Client Rename";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub

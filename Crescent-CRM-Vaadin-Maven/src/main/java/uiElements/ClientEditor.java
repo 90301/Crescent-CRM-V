@@ -87,6 +87,8 @@ public class ClientEditor extends VerticalLayout {
 
 
 		//clientNameLabel 
+		clientEditorNameLayout.setDefaultComponentAlignment(Alignment.BOTTOM_CENTER);
+		
 		clientEditorNameLayout.addComponent(clientNameLabel);
 		clientEditorNameLayout.addComponent(clientRenameTextField);
 		
@@ -290,7 +292,7 @@ public class ClientEditor extends VerticalLayout {
 		} else {
 			//if showing textbox, and name is different but not blank, attemot to change the name.
 			String updatedName = clientRenameTextField.getValue();
-			if (InhalerUtils.stringNullCheck(updatedName) && this.crmUi.selectedClient!=null && !updatedName.contentEquals(this.crmUi.selectedClient.getName())) {
+			if (!InhalerUtils.stringNullCheck(updatedName) && this.crmUi.selectedClient!=null && !updatedName.contentEquals(this.crmUi.selectedClient.getName())) {
 				this.crmUi.masterUi.userDataHolder.renameClient(this.crmUi.selectedClient, updatedName);
 				this.toggleRename(false);
 			}
