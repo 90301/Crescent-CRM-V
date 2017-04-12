@@ -164,6 +164,9 @@ public class ClientEditor extends VerticalLayout {
 		this.addComponent(noteHistoryLayout);
 		
 		this.addComponent(clientEditorActionLayout);
+		
+		
+		this.toggleRename(false);
 	}
 
 	/**
@@ -381,6 +384,7 @@ public class ClientEditor extends VerticalLayout {
 						c.getNoteHistory().keySet()));
 		
 		this.notePreviewBox.setVisible(false);
+		this.toggleRename(false);
 	}
 
 	/**
