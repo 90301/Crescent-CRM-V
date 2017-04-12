@@ -31,35 +31,20 @@ public class User extends MaxObject {
 	 * Here we define variables for the class.
 	 * Each variable that is used must also have a field name
 	 * -----------------------------------------------------
-	 * IMPORTANT:
-	 * if you update a variable or make a new one, you MUST update
-	 * the following methods:
-	 * > updateDBMap
-	 * > loadInternalFromMap
-	 * > createTableForClass
-	 * > setupDBTypes
-	 * 
 	 */
 	
 	/*
 	 * Logging in info
 	 */
 	
-	
-	/*
-	 
-	String userName;
-	public static final String userNameField = "UserName";
-	String passHash;
-	public static final String passHashField = "PassHash";
-	
-	*/
-	
 	MaxField<String> userName = new MaxField<String>("UserName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "",
 			this);
 	
 	MaxField<String> passHash = new MaxField<String>("PassHash", MaxDBTable.DATA_MYSQL_TYPE_STRING, "", "",
 			this);
+			
+	MaxField<ArrayList<String>> authCookies = new MaxField<ArrayList<String>>("authCookies", MaxDBTable.DATA_MYSQL_TYPE_STRING,
+			new ArrayList<String>(), new ArrayList<String>(), this);
 	
 	MaxField<ArrayList<String>> databasesAccsessable = new MaxField<ArrayList<String>>("databasesAccsessable", MaxDBTable.DATA_MYSQL_TYPE_STRING,
 			new ArrayList<String>(), new ArrayList<String>(), this);
@@ -93,6 +78,8 @@ public class User extends MaxObject {
 	
 	MaxField<String> viewMode = new MaxField<String>("viewMode", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, VIEW_MODE_DEFAULT, VIEW_MODE_DEFAULT,
 			this);
+			
+	
 	
 	
 	public static final String VIEW_MODE_DEFAULT = "Default View";
@@ -101,22 +88,6 @@ public class User extends MaxObject {
 	public static final String VIEW_MODE_SMALL = "Small View";
 	
 	public static final String[] VIEW_MODES = {VIEW_MODE_DEFAULT,VIEW_MODE_DESKTOP,VIEW_MODE_MOBILE,VIEW_MODE_SMALL};
-	/*
-	 * Database selection
-	 */
-	//TODO: make this concurrent
-	//ArrayList<String> databasesAccsessable = new ArrayList<String>();
-	//public static final String dataBasesAccsessableField = "databasesAccsessable";
-	
-	//Serialized with gson as json text
-	
-	
-	//String databaseSelected;
-	//public static final String databaseSelectedField = "databaseSelectedField";
-	
-	//Boolean admin;
-	//public static final String adminField = "admin";
-	
 	
 	/*
 	 * TODO:
@@ -132,8 +103,11 @@ public class User extends MaxObject {
 		
 		databasesAccsessable.setConversion(arraylistToString);
 		
+		authCookies.setConversion(arraylistToString);
+		
 		this.setKeyField(userName);
 		
+		/*
 		this.addMaxField(userName);
 		this.addMaxField(passHash);
 		this.addMaxField(databasesAccsessable);
@@ -145,6 +119,7 @@ public class User extends MaxObject {
 		
 		this.addMaxField(theme);
 		this.addMaxField(viewMode);
+		*/
 	}
 	public User() {
 		init();
@@ -159,11 +134,12 @@ public class User extends MaxObject {
 		return this.getPrimaryKey();
 	}
 
-	
+	/*
 	@Override
 	public String getPrimaryKey() {
 		return userName.getFieldValue();
 	}
+	*/
 	
 	public void setPassword(String pass) {
 		
@@ -180,7 +156,6 @@ public class User extends MaxObject {
 	
 	public void setUserName(String userName) {
 		this.userName.setFieldValue(userName);
-		
 	}
 
 	public void setAdmin(boolean admin) {
@@ -254,6 +229,30 @@ public class User extends MaxObject {
 	public void setViewMode(String viewMode) {
 		this.viewMode.setFieldValue(viewMode);
 	}
+	
+	//Auth Keys
+	public ArrayList<String> getAuthKeys() {
+	    return this.authCookies.getFieldValue();
+	}
+	
+	public void setAuthKeys(ArrayList<String> authKeys) {
+	    this.authCookies.setFieldValue(authKeys);
+	}
+	
+	public void addAuthKey(String key) {
+	    this.authCookies.getFieldValue().add(key);
+	    this.updateDBMap();
+	}
+	
+	public void removeAuthKey(String key) {
+	    this.authCookies.getFieldValue().remove(key);
+	    this.updateDBMap();
+	}
+	
+	public boolean containsAuthKey(String key) {
+	    return this.authCookies.getFieldValue().contains(key);
+	}
+	
 	/**
 	 * This SETS the databases that are accessible to a user.
 	 * @param databases a list of the databases the user will be able to use
