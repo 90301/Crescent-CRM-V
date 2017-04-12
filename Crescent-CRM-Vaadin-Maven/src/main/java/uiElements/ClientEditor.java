@@ -9,6 +9,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
@@ -38,6 +39,7 @@ public class ClientEditor extends VerticalLayout {
 
 
 	//VerticalLayout this = new VerticalLayout();
+	HorizontalLayout clientEditorNameLayout = new HorizontalLayout();
 	HorizontalLayout clientEditorMetaLayout = new HorizontalLayout();
 	HorizontalLayout clientEditorActionLayout = new HorizontalLayout();
 	HorizontalLayout uploadProfileLayout = new HorizontalLayout();
@@ -53,6 +55,10 @@ public class ClientEditor extends VerticalLayout {
 	Label clientNameLabel = new Label("Client Name");
 	Label clientLastUpdate = new Label("Last Updated: --/--/----");
 	CheckBox clientContactNowCheckBox = new CheckBox("Contact Now");
+	
+	//Rename clients
+	Button clientRenameButton = new Button("Rename", e-> this.renameClick());
+	TextField clientRenameTextField = new TextField("New Name");
 	//ComboBox clientContactFrequency = new ComboBox("Contact Frequency");
 
 	//Custom Fields
@@ -74,12 +80,6 @@ public class ClientEditor extends VerticalLayout {
 		genClientEditor();
 	}
 
-
-
-	
-
-
-
 	/**
 	 * Adds all the components for the clientEditor
 	 */
@@ -87,6 +87,10 @@ public class ClientEditor extends VerticalLayout {
 
 
 		//clientNameLabel 
+		clientEditorNameLayout.addComponent(clientNameLabel);
+		clientEditorNameLayout.addComponent(clientRenameTextField);
+		
+		clientEditorNameLayout.addComponent(clientRenameButton);
 
 		//clientNoteBox
 		clientNoteBox.setSizeFull();
@@ -145,7 +149,7 @@ public class ClientEditor extends VerticalLayout {
 		//holds the client editor
 		this.setSpacing(true);
 
-		this.addComponent(clientNameLabel);
+		this.addComponent(clientEditorNameLayout);
 
 		this.addComponent(clientEditorMetaLayout);
 		
@@ -273,6 +277,43 @@ public class ClientEditor extends VerticalLayout {
 		crmUi.updateClientGrid();
 		
 	}
+	
+	public void renameClick() {
+		//TODO write unit test for this
+		
+		//if not showing textbox, show textbox
+		if (!renameOn) {
+			toggleRename(true);
+		} else {
+			//if showing textbox, and name is different but not blank, attemot to change the name.
+			String updatedName = clientRenameTextField.getValue();
+			if (InhalerUtils.stringNullCheck(updatedName) && this.crmUi.selectedClient!=null && !updatedName.contentEquals(this.crmUi.selectedClient.getName())) {
+				this.crmUi.masterUi.userDataHolder.renameClient(this.crmUi.selectedClient, updatedName);
+				this.toggleRename(false);
+			}
+		}
+		
+	}
+	
+	boolean renameOn = false;
+	
+	public void toggleRename(Boolean renameOn) {
+
+			this.clientNameLabel.setVisible(!renameOn);
+			this.clientRenameTextField.setVisible(renameOn);
+			if (this.crmUi.selectedClient!=null) {
+				this.clientNameLabel.setValue(this.crmUi.selectedClient.getName());
+				this.clientRenameTextField.setValue(this.crmUi.selectedClient.getName());
+			}
+			if (renameOn) {
+				this.clientRenameButton.setCaption("Set Name");
+			} else {
+				this.clientRenameButton.setCaption("Edit Name");
+			}
+			//TODO make these constants
+			this.renameOn = renameOn;
+	}
+	
 
 	public void updateAllComboBoxes() {
 		clientStatus.setValue(clientStatus.getEmptyValue());

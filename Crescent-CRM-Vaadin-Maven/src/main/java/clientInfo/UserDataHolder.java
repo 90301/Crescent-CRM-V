@@ -364,6 +364,27 @@ public class UserDataHolder extends MaxObject {
 		}
 		return allStringClients;
 	}
+	
+	/**
+	 * Attempts to rename a client
+	 * @param c the client to rename
+	 * @param name - the new name
+	 * @return if it was able to rename the client (true if success)
+	 */
+	public Boolean renameClient(Client c, String name) {
+		//ensure the name doesn't already exist
+		if (!this.getClientMap().containsKey(name)) {
+			//remove the old client
+			this.delete(c, Client.class);
+			//rename the new client
+			c.setName(name);
+			this.store(c, Client.class);
+			
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	/*
 	 * LOCATION
