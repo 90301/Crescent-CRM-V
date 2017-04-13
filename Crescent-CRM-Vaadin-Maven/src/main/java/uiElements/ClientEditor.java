@@ -9,7 +9,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
@@ -293,8 +295,27 @@ public class ClientEditor extends VerticalLayout {
 			//if showing textbox, and name is different but not blank, attemot to change the name.
 			String updatedName = clientRenameTextField.getValue();
 			if (!InhalerUtils.stringNullCheck(updatedName) && this.crmUi.selectedClient!=null && !updatedName.contentEquals(this.crmUi.selectedClient.getName())) {
-				this.crmUi.masterUi.userDataHolder.renameClient(this.crmUi.selectedClient, updatedName);
-				this.toggleRename(false);
+				boolean clientRenamed = this.crmUi.masterUi.userDataHolder.renameClient(this.crmUi.selectedClient, updatedName);
+				 
+				if (!clientRenamed) {
+					//show error message
+					Notification n = new Notification("Client with that name already exists.");
+					n.setDelayMsec(200);
+					n.show(UI.getCurrent().getPage());
+					
+				} else {
+					//update the grid
+					this.crmUi.updateClientGrid();
+					this.toggleRename(false);
+					
+					Notification n = new Notification("Client renamed to: " + updatedName);
+					n.setDelayMsec(200);
+					n.show(UI.getCurrent().getPage());
+				}
+			} else {
+				Notification n = new Notification("Client name is not valid or not changed.");
+				n.setDelayMsec(200);
+				n.show(UI.getCurrent().getPage());
 			}
 		}
 		

@@ -430,7 +430,7 @@ public class InhalerUtils {
 	public static Boolean stringNullCheck(String testingString) {
 
 		Boolean rtrn = false;
-		if (testingString == null || testingString == "" || testingString == "null") {
+		if (testingString == null || testingString.equals("") || testingString.equals("null")) {
 			rtrn = true;
 		}
 

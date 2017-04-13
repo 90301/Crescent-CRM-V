@@ -134,12 +134,12 @@ public class User extends MaxObject {
 		return this.getPrimaryKey();
 	}
 
-	/*
+	
 	@Override
 	public String getPrimaryKey() {
 		return userName.getFieldValue();
 	}
-	*/
+	
 	
 	public void setPassword(String pass) {
 		
