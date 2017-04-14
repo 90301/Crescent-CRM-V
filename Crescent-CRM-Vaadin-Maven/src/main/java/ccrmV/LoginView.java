@@ -31,6 +31,7 @@ import com.vaadin.v7.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
 import debugging.profiling.ProfilingTimer;
+import users.AuthService;
 import users.User;
 
 public class LoginView extends VerticalLayout implements View {
@@ -171,17 +172,26 @@ public MasterUI masterUi;
 				User loggedInUser = DataHolder.getUser(MasterUI.DEV_AUTOLOGIN_USER);
 				masterUi.user = loggedInUser;
 				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
-			} else {
+			} else if(rememberMe.equals(true)){
+				AuthService.rememberUser(userField.getValue());
+				
+				loginSuccess = true;
+				User loggedInUser = DataHolder.getUser(userField.getValue());
+				masterUi.user = loggedInUser;
+				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
+			  } else{
+				  
 			loginSuccess = true;
 			User loggedInUser = DataHolder.getUser(userField.getValue());
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
-			}
+			
 			//hLayoutIncorrect.setVisible(false);
 			//hLayoutUser.setVisible(false);
 			
 			
 			masterUi.startMainApp();
+			  }
 			
 		} else {
 			
