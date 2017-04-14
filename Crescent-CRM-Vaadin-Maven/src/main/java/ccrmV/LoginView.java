@@ -18,6 +18,7 @@ import com.vaadin.v7.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.v7.ui.Label;
@@ -49,6 +50,9 @@ public class LoginView extends VerticalLayout implements View {
 			, ContentMode.HTML);
 	public Button loginButton  = new Button("Login", event -> attemptLogin());
 	public Button registerButton = new Button("Register", event -> createNewUserClick());
+	public CheckBox rememberMe = new CheckBox();
+	public Label rememberMeLabel = new Label("Remember Me");
+	public Layout rememberLayout = new HorizontalLayout();
 	public Layout userCreatorLayout = new VerticalLayout();
 	public HorizontalLayout buttonLayout = new HorizontalLayout();
 	private static final int PASS_MIN_LENGTH = 5;
@@ -107,10 +111,13 @@ public class LoginView extends VerticalLayout implements View {
 		buttonLayout.setSpacing(true);
 		buttonLayout.addComponent(loginButton);
 		buttonLayout.addComponent(registerButton);
+		
 		this.addComponent(buttonLayout);
+		rememberLayout.addComponent(rememberMe);
+		rememberLayout.addComponent(rememberMeLabel);
+		this.addComponent(rememberLayout);
 		this.addComponent(versionLabel);
 		this.setComponentAlignment(versionLabel, Alignment.BOTTOM_CENTER);
-		
 		
 		//hLayoutIncorrect.setVisible(false);
 		//hLayoutUser.setVisible(false);
