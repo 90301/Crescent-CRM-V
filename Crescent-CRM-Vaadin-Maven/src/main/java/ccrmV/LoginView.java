@@ -31,7 +31,6 @@ import com.vaadin.v7.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
 import debugging.profiling.ProfilingTimer;
-import users.AuthService;
 import users.User;
 
 public class LoginView extends VerticalLayout implements View {
@@ -58,6 +57,7 @@ public class LoginView extends VerticalLayout implements View {
 	public HorizontalLayout buttonLayout = new HorizontalLayout();
 	private static final int PASS_MIN_LENGTH = 5;
 	public String host;
+	User u = new User();
 	//public HorizontalLayout hLayoutIncorrect = new HorizontalLayout();
 	//public HorizontalLayout hLayoutUser = new HorizontalLayout();
 	
@@ -164,7 +164,10 @@ public MasterUI masterUi;
 	public void attemptLogin() {
 		ProfilingTimer loginTime = new ProfilingTimer("Login Time");
 		String code = "";
-		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE ||
+		String user = userField.getValue();
+		String pass = passField.getValue();
+		Boolean remember = rememberMe.getValue();
+		if ((code=DataHolder.attemptLogin(user, pass))==DataHolder.SUCCESS_CODE ||
 				(MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			if ((MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			//dev mode auto login	
@@ -172,8 +175,9 @@ public MasterUI masterUi;
 				User loggedInUser = DataHolder.getUser(MasterUI.DEV_AUTOLOGIN_USER);
 				masterUi.user = loggedInUser;
 				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
-			} else if(rememberMe.equals(true)){
-				AuthService.rememberUser(userField.getValue());
+			} else if(remember){
+				User.rememberUser(user);
+				
 				
 				loginSuccess = true;
 				User loggedInUser = DataHolder.getUser(userField.getValue());

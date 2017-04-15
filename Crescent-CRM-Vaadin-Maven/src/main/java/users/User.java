@@ -3,6 +3,7 @@
  */
 package users;
 
+import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.KeySpec;
@@ -13,6 +14,9 @@ import java.util.HashMap;
 
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
+import javax.servlet.http.Cookie;
+
+import com.vaadin.server.VaadinService;
 
 import ccrmV.MasterUI;
 import clientInfo.DataHolder;
@@ -32,7 +36,12 @@ public class User extends MaxObject {
 	 * Each variable that is used must also have a field name
 	 * -----------------------------------------------------
 	 */
-	
+
+	private static SecureRandom random = new SecureRandom();
+	private static final String COOKIE_NAME = "remember-me";
+    public static final String SESSION_USERNAME = "username";
+    User u = new User();
+    
 	/*
 	 * Logging in info
 	 */
@@ -155,7 +164,9 @@ public class User extends MaxObject {
 	
 	
 	public void setUserName(String userName) {
+		
 		this.userName.setFieldValue(userName);
+		DataHolder.store(u, User.class);
 	}
 
 	public void setAdmin(boolean admin) {
@@ -242,16 +253,37 @@ public class User extends MaxObject {
 	public void addAuthKey(String key) {
 	    this.authCookies.getFieldValue().add(key);
 	    this.updateDBMap();
+	    DataHolder.store(u, User.class);
 	}
 	
 	public void removeAuthKey(String key) {
 	    this.authCookies.getFieldValue().remove(key);
 	    this.updateDBMap();
+	    DataHolder.store(u, User.class);
 	}
 	
 	public boolean containsAuthKey(String key) {
 	    return this.authCookies.getFieldValue().contains(key);
 	}
+	
+	
+	public static String storeUser(String username) {
+        String randomId = new BigInteger(130, random).toString(32);
+        
+        return randomId;
+    }
+	
+	
+	public static void rememberUser(String username) {
+		//User u = new User();
+        String id = storeUser(username);
+        
+        Cookie cookie = new Cookie(COOKIE_NAME, id);
+        cookie.setPath("/");
+        cookie.setMaxAge(60 * 60 * 24 * 30); // valid for 30 days
+        VaadinService.getCurrentResponse().addCookie(cookie);
+    }
+    
 	
 	/**
 	 * This SETS the databases that are accessible to a user.
