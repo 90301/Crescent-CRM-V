@@ -134,7 +134,6 @@ public class LoginView extends VerticalLayout implements View {
 		this.passField.clear();
 	}
 	
-	
 	/**
 	 * Adds the login command to the password box
 	 * If you hit enter, it's the same as clicking the login button
@@ -164,10 +163,7 @@ public MasterUI masterUi;
 	public void attemptLogin() {
 		ProfilingTimer loginTime = new ProfilingTimer("Login Time");
 		String code = "";
-		String user = userField.getValue();
-		String pass = passField.getValue();
-		Boolean remember = rememberMe.getValue();
-		if ((code=DataHolder.attemptLogin(user, pass))==DataHolder.SUCCESS_CODE ||
+		if ((code=DataHolder.attemptLogin(userField.getValue(), passField.getValue()))==DataHolder.SUCCESS_CODE ||
 				(MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			if ((MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			//dev mode auto login	
@@ -175,27 +171,26 @@ public MasterUI masterUi;
 				User loggedInUser = DataHolder.getUser(MasterUI.DEV_AUTOLOGIN_USER);
 				masterUi.user = loggedInUser;
 				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
-			} else if(remember){
-				User.rememberUser(user);
-				
-				
+			} else if(rememberMe.getValue()) {
+				u.rememberUser(userField.getValue());
 				loginSuccess = true;
 				User loggedInUser = DataHolder.getUser(userField.getValue());
 				masterUi.user = loggedInUser;
 				masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
-			  } else{
-				  
+				
+			} else {
+			 
+			
 			loginSuccess = true;
 			User loggedInUser = DataHolder.getUser(userField.getValue());
 			masterUi.user = loggedInUser;
 			masterUi.userDataHolder = DataHolder.getUserDataHolder(loggedInUser);
-			
+			}
 			//hLayoutIncorrect.setVisible(false);
 			//hLayoutUser.setVisible(false);
 			
 			
 			masterUi.startMainApp();
-			  }
 			
 		} else {
 			
