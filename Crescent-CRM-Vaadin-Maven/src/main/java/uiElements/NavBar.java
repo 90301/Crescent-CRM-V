@@ -7,9 +7,9 @@ import java.util.LinkedHashMap;
 
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 import ccrmV.CrescentView;
 import ccrmV.MasterUI;
@@ -55,20 +55,7 @@ public class NavBar extends VerticalLayout {
 	{
 		
 		navButtonLayout.setSpacing(true);
-		
-		/*
-		crmButton = new Button("Clients", event -> this.crmClick() );
-		
-		categoryEditorButton = new Button("Categories", event -> this.categoryEditorClick() );
-		
-		userEditorButton = new Button("User Editor", event -> this.userEditorClick() );
-		
-		schedulerButton = new Button("Scheduler", event -> this.schedulerClick() );
-		
-		inventoryButton = new Button("Inventory", event -> this.inventoryClick() );
-		
-		debugButton = new Button("Debugging", event -> this.debugClick() );
-		*/
+		navButtonLayout.setMargin(false);
 		
 		logoutButton = new Button("Log Out", event -> this.logoutClick());
 		
@@ -86,29 +73,17 @@ public class NavBar extends VerticalLayout {
 		
 		this.addStyleName("navBarMargin");
 		
-		//this.removeAllComponents();
 		
 		for (Button b : navButtons.values()) {
 			b.setWidth(BUTTON_WIDTH);
 			b.setHeight(BUTTON_HEIGHT);
 		}
 		
-		this.setSpacing(true);		
+		this.setSpacing(true);
+		this.setMargin(false);
 
 		this.addComponent(statusLabel);
 
-		/*
-		setupButton(crmButton);
-		setupButton(categoryEditorButton);
-		setupButton(userEditorButton);
-		setupButton(schedulerButton);
-		setupButton(inventoryButton);
-		
-		if (MasterUI.DEVELOPER_MODE) {
-			setupButton(debugButton);
-		}
-		*/
-		
 		this.addComponent(navButtonLayout);
 		//add logout button
 		setupButton(logoutButton);
@@ -152,18 +127,6 @@ public class NavBar extends VerticalLayout {
         b.setHeight(BUTTON_HEIGHT);
         this.addComponent(b);
 	}
-	
-	/*
-		private void categoryEditorClick() {
-		masterUi.enterCategoryEditor();
-	}
-	private void debugClick() {
-		masterUi.enterDebug();
-	}
-	private void inventoryClick() {
-		masterUi.enterInventory();
-	}
-	*/
 
 	public void updateInfo() {
 		statusLabel.setCaption("" + masterUi.getUser().getPrimaryKey());
@@ -171,21 +134,7 @@ public class NavBar extends VerticalLayout {
 	}
 
 	private void logoutClick() {
-		// TODO Auto-generated method stub
 		masterUi.logout();
 	}
-/*
-	private void schedulerClick() {
-		masterUi.enterScheduler();
-	}
-
-	private void userEditorClick() {
-		masterUi.enterUserEditor();
-	}
-
-	private void crmClick() {
-		masterUi.enterCRM();
-	}
-	*/
 
 }

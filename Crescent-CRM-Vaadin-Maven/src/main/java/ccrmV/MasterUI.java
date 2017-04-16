@@ -54,7 +54,6 @@ public class MasterUI extends UI {
 
 	public static final double versionNumber = 1.53;
 	public static final String versionDescription = " Client Rename";
-	User u = new User();
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
@@ -380,13 +379,16 @@ public class MasterUI extends UI {
 	}
 	
 	public void logout() {
+		user.deleteRememberMeCookie();
 		loggedIn = false;
 		userDataHolder = null;
 		user = null;
 		loginView.clearFields();
+		
+		
 		mainNavigator.navigateTo(LOGIN);
 		
-		u.deleteRememberMeCookie();
+		
 	}
 
 	public User getUser() {
