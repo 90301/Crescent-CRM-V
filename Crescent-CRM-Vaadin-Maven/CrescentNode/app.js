@@ -70,7 +70,7 @@ net.createServer(function(socket) { //Start server, create socket variable
 	  
 	  if(array[0] = "login1"){
 		  var holder = array[1];
-		  var credentialsArray = holder.split("/");
+		  var credentialsArray = holder.split("/"); //split user/pass
 		  var user = credentialsArray[0];
 		  var password = credentialsArray[1];
 		  

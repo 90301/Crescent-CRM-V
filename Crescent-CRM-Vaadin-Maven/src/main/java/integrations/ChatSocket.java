@@ -96,12 +96,11 @@ public class ChatSocket {
 
 	public String echo(String message) {
 		try {
-			// out & in 
+			
 			PrintWriter out = new PrintWriter(getSocket().getOutputStream(), true);
 			BufferedReader in = new BufferedReader(new InputStreamReader(getSocket().getInputStream()));
 
 
-			// writes str in the socket and read
 			out.println(message);
 			String returnStr = in .readLine();
 			return returnStr;
