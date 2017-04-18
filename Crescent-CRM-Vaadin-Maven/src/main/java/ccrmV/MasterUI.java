@@ -52,8 +52,8 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.53;
-	public static final String versionDescription = " Client Rename";
+	public static final double versionNumber = 1.54;
+	public static final String versionDescription = " Remember-me and Sockets";
 
 	public MasterUI() {
 		// TODO Auto-generated constructor stub
