@@ -30,13 +30,6 @@ import users.User;
 @SuppressWarnings("unused")
 public class DataHolder {
 
-	//will not be static after the transition
-	/*
-	private static ConcurrentHashMap<String, Client> localClientMap = new ConcurrentHashMap<String, Client>();
-	private static ConcurrentHashMap<String, Location> localLocationMap = new ConcurrentHashMap<String, Location>();
-	private static ConcurrentHashMap<String, Status> localStatusMap = new ConcurrentHashMap<String, Status>();
-	private static ConcurrentHashMap<String, Group> localGroupMap = new ConcurrentHashMap<String, Group>();
-	*/
 	//Will be static after the transition
 	private static ConcurrentHashMap<String, User> localUserMap = new ConcurrentHashMap<String, User>();
 	private static ConcurrentHashMap<String, UserDataHolder> userDataHolderMap = new ConcurrentHashMap<String,UserDataHolder>();
@@ -171,58 +164,6 @@ public class DataHolder {
 		return (ConcurrentHashMap<String, T>) localMapLookup.get(ref);
 	}
 
-	// BACKUPS
-
-	/**
-	 * @deprecated
-	 */
-	public static void backupAllCsv() {
-		/*
-		ArrayList<String> fileNames = new ArrayList<String>();
-		fileNames.add("status.csv");
-		fileNames.add("location.csv");
-		fileNames.add("group.csv");
-		fileNames.add("client.csv");
-
-		Integer i = 0;
-		BackupManager.backupToCSV(fileNames.get(i), localStatusMap.values());
-		i++;
-		BackupManager.backupToCSV(fileNames.get(i), localLocationMap.values());
-		i++;
-		BackupManager.backupToCSV(fileNames.get(i), localGroupMap.values());
-		i++;
-		BackupManager.backupToCSV(fileNames.get(i), localClientMap.values());
-		i++;
-		// zip files
-		DateFormat zipDateFormat = new SimpleDateFormat("yyyy_MMMMM_dd_HH_mm");
-		Date date = new Date();
-		zipDateFormat.format(date);
-
-		String zipFileName = "Backup_" + zipDateFormat.format(date);
-		BackupManager.zipFiles(fileNames, zipFileName);
-		*/
-	}
-
-	/**
-	 * @deprecated
-	 */
-	private static void restoreAllCsv() {
-		/*
-		BackupManager.restore("status", Status.class, localStatusMap);
-		BackupManager.restore("location", Location.class, localLocationMap);
-		BackupManager.restore("group", Group.class, localGroupMap);
-		BackupManager.restore("client", Client.class, localClientMap);
-		*/
-	}
-
-	public static void restoreFromBackup(String fileName) {
-		BackupManager.unzipFiles(fileName);
-		// backup first
-
-		// restore
-		restoreAllCsv();
-	}
-
 	/**
 	 * Loads values from a remote class
 	 * 
@@ -330,17 +271,14 @@ public class DataHolder {
 
 
 	public static User getUser(String userName) {
-		// TODO Auto-generated method stub
 		return localUserMap.get(userName);
 	}
 	
 	public static ConcurrentHashMap<String, User> getUserMap() {
-		// TODO Auto-generated method stub
 		return localUserMap;
 	}
 	
 	public static ConcurrentHashMap<String, UserDataHolder> getUserDataHolderMap() {
-		// TODO Auto-generated method stub
 		return userDataHolderMap;
 	}
 	
@@ -398,7 +336,6 @@ public class DataHolder {
 	 * @return the object if it exists, or null
 	 */
 	public static <T extends MaxObject> MaxObject retrieve(String itemName, Class<T> ref) {
-		// TODO Auto-generated method stub
 		MaxObject item;
 		@SuppressWarnings("unchecked")
 		Map<String,T> lMap = (Map<String, T>) localMapLookup.get(ref);
