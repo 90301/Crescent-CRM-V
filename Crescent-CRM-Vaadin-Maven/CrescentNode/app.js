@@ -1,61 +1,17 @@
-var login = require("facebook-chat-api");
-var fs = require('fs');
+const login = require("facebook-chat-api");
+const fs = require('fs');
 var prompt = require ('prompt');
 var net = require ('net');
 //var client = net.connect(5001, 'localhost');
 var FB = require('fb');
 
-// This code is not ready for implementation yet.
-//var fbToken = require('FacebookToken');
-
-
-/*var io  = require('socket.io').listen(5001),
-    dl  = require('delivery'),
-    fs  = require('fs');*/
-
-var fileName = ("test.txt");
-
-/*var loginFile = process.argv[2];
-var user = ('');
-var pass = ('');
-//var fileText = ('');
-
-
-if (process.argv.length < 3){
-	console.log('Improper Usage, try: node.js ' + process.argv[1] + ' login.txt');
-	process.exit(1);
-}
-
-var fr = require('fs');
-
-
-fr.readFile(loginFile, 'utf8', function(err, data) {
-	if(err) throw err;
-	console.log('Login data successfully retrieved.');	
-	user += data;
-	var index = user.indexOf(' ');
-		user = user.substring(0, index);
-		pass = user.substring(index + 5);
-		console.log(user);
-		console.log(pass);
-	
-});*/
-
 	/**********************************************************
-	* Starts a local node.js server
+	* Nodejs Server info
 	*
     **********************************************************/
-const http = require('http');
-
 const hostname = '127.0.0.1';
 const port = 3000;
-//const credsPort = 3002;
 
-const server = http.createServer((req, res) => {
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Test\n');
-});
 
   /*net.createServer(function(sock){
   	console.log('Connected: ' + sock.remoteAddress + ':' + sock.remotePort);
@@ -69,22 +25,108 @@ const server = http.createServer((req, res) => {
 
   console.log('Server listening on ' + hostname + ':' + credsPort);*/
 
-	/**********************************************************
-	* Prompts user for login information
-	* This will later be taken out, currently in-use
-	* so testing developer doesn't have information saved
-	*
-    **********************************************************/
+
+/*server.listen(function (err, data) {
+	if(err) return console.error(err);
+	console.log('Waiting for threadID at Port: ' + threadIDPort);
+	//JSON.stringify(data);
+	threadID = JSON.stringify(data);
+});*/
+
+
+
+
+
+/**********************************************************
+* 1.) Creates a listen instance, assigns random port.
+* 
+* 2.) Splits string into a size 2 array at a trigger point
+* ":" and "/"(for user/pass). 
+* 
+* 3.) Reads code before ":" and performs a function
+* assigned to that code.
+*
+**********************************************************/
+
+net.createServer(function(socket) { //Start server, create socket variable
+
+
+  console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort); //IP and Port auto-assigned
+
+
+  socket.on('data', function(data) {
+	  // data was received in the socket 
+	  // Writes the received message back to the socket (echo)
+	  socket.write(data);
+	  var code = '';
+	  code = data.toString('utf8');
+	  console.log(data.toString('utf8'));
+	  
+	  var string = code;
+	  var array = string.split(":");
+	  
+	  //console.log(array[0]);
+	  //console.log(array.length);
+	  
+	  if(array[0] = "login1"){
+		  var holder = array[1];
+		  var credentialsArray = holder.split("/");
+		  var user = credentialsArray[0];
+		  var password = credentialsArray[1];
+		  
+		  //console.log(user);
+		  //console.log(password);
+		  
+		  login({email: user, password: password}, function callback (err, api) {
+			    if(err) return console.error(err);
+
+			    api.setOptions({
+			      logLevel: "silent" //Turns off messageID notification
+			    });
+
+
+			api.getFriendsList((err, data) => {
+			        if(err) return console.error(err);
+
+			        socket.write("hi");
+			        console.log(data);
+			    });
+		  });
+	  }
+  });  
+  
+  
+  // Add a 'close' - "event handler" in this socket instance
+  socket.on('close', function(data) {
+	  // closed connection
+	  console.log('CLOSED: ' + socket.remoteAddress +' '+ socket.remotePort);
+  });
+
+
+}).listen(port, hostname);
+
+console.log('Server listening on ' + hostname +':'+ port);
+
+
+
+
+
+/******************************************************************************************************************
+* Everything below this point will be either:
+* 
+* 1.) Moved to above
+* 
+* 2.) Heavily edited
+* 
+* 3.) Deleted
+*
+******************************************************************************************************************/
 prompt.start();
 prompt.get(['email', 'password'], function (err, result) {
   console.log('Login Successful!');
 
 
 
-  
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
 
 	/**********************************************************
 	* Logs into Facebook using previously povided credentials
@@ -98,6 +140,28 @@ login({email: result.email, password: result.password}, function callback (err, 
     });
 
 
+api.getFriendsList((err, data) => {
+        if(err) return console.error(err);
+
+        fs.writeFile('friendinfo.txt', JSON.stringify(data), (err) => { //Writes retrieved data to a file
+              	if(err) throw err;
+                console.log('It\'s saved!');
+
+            	});
+
+        console.log(data);
+    });
+
+/*api.getThreadHistory(threadID, 0, 5, null, function(err, history){
+            if (err) throw err;
+
+            	console.log(history);
+            	fs.writeFile(fileName, JSON.stringify(history), (err) => { //Writes retieved data to a file
+              	if(err) throw err;
+                console.log('It\'s saved!');
+
+            	});
+})*/
 
 	/**********************************************************
 	* Begins listening for user chat data. 
@@ -119,11 +183,11 @@ login({email: result.email, password: result.password}, function callback (err, 
               	if(err) console.log(err);
             });
 
-
+   var clientID = getClientID();
 /*******************************************************
- *
+ *event.threadID
  *******************************************************/
-api.getThreadHistory(event.threadID, 0, 5, null, function(err, history){
+api.getThreadHistory(clientID, 0, 5, null, function(err, history){
             if (err) throw err;
 
 
@@ -207,13 +271,31 @@ api.getThreadHistory(event.threadID, 0, 5, null, function(err, history){
   			});
 		});*/
 	};
-
-	function receiveCreds(socket){
-
-  		net.createServer(function(sock){
-  			console.log('Connected: ' + sock.remoteAddress + ':' + sock.remotePort);
-
-});	
+	function getClientID(){
+	    var threadID = '';
+	    server.listen(function (err, data) {
+		if(err) return console.error(err);
+		threadID = Stringify(data);
+	    });	
+		return threadID;	    
 };
+
+	function getUser(){
+		var getUser = ' ';
+		server.listen(function(err, user){
+			if(err) return console.error(err);
+			getUser = Stringify(user);
+		})
+		return getUser;
+	};
+	
+	function getPass(){
+		var getPass = ' ';
+		server.listen(function(err, pass){
+			if(err) return console.error(err);
+			getPass = Stringify(pass);
+		})
+		return getPass
+	};
 });
 });
