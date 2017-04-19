@@ -2,7 +2,7 @@ const login = require("facebook-chat-api");
 const fs = require('fs');
 var prompt = require ('prompt');
 var net = require ('net');
-//var client = net.connect(5001, 'localhost');
+//var client = net.connect(3002, 'localhost');
 var FB = require('fb');
 
 	/**********************************************************
@@ -57,7 +57,7 @@ net.createServer(function(socket) { //Start server, create socket variable
   socket.on('data', function(data) {
 	  // data was received in the socket 
 	  // Writes the received message back to the socket (echo)
-	  socket.write(data);
+	  //socket.write(data);
 	  var code = '';
 	  code = data.toString('utf8');
 	  console.log(data.toString('utf8'));
@@ -85,17 +85,38 @@ net.createServer(function(socket) { //Start server, create socket variable
 			    });
 
 
+			    api.getThreadList(0, 5, 'inbox', function(err, arr){
+			    	
+			    	var messages = JSON.stringify(arr);
+			    	var holder;
+			    	holder = arr.find(funcThreadID);
+			    	console.log(arr.find(funcThreadID));
+			    	console.log(messages);
+			    	
+			    	
+			    }); 
+			    
+			    
 			api.getFriendsList((err, data) => {
 			        if(err) return console.error(err);
-
-			        socket.write("hi");
+			       
+			        var client = net.connect(3002, 'localhost');
+			        let buffer = new Buffer(JSON.stringify(data));
+			        
+			        client.write(buffer);
 			        console.log(data);
+			        client.end();
 			    });
 		  });
 	  }
+
+	  
+	  
   });  
   
-  
+  function funcThreadID(element) {
+	  return element = "threadID";
+	}
   // Add a 'close' - "event handler" in this socket instance
   socket.on('close', function(data) {
 	  // closed connection
@@ -192,13 +213,13 @@ api.getThreadHistory(clientID, 0, 5, null, function(err, history){
 
 
             	console.log(history);
-            	fs.writeFile(fileName, JSON.stringify(history), (err) => { //Writes retieved data to a file
+            	fs.writeFile(fileName, JSON.stringify(history), (err) => { //Writes retrieved data to a file
               	if(err) throw err;
                 console.log('It\'s saved!');
 
             	});
 })
-            sendPacket(fileName);
+            //sendPacket(fileName);
 
             break;
 
