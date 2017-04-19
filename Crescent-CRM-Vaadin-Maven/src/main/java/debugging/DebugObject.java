@@ -75,6 +75,8 @@ public class DebugObject {
 				output+= System.getProperty("line.separator");
 			}
 		}
+		
+		output += currentBlock;
 		return output;
 
 	}

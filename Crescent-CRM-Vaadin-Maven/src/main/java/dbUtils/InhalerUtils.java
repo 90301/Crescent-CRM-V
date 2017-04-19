@@ -631,5 +631,21 @@ public class InhalerUtils {
 
 		return output;
 	}
+	
+	public static String toStringMaxObject(MaxObject obj) {
+		String output = "Max Object: " + obj.getClass();
+		output += System.getProperty("line.separator");
+		//end metadata
+		for (MaxField<?> mf : obj.getAutoGenList()) {
+			output += mf.getFieldName() + " : " + mf.getFieldValue();
+			if (mf.getConversion()!=null) {
+				output += " Converted: " + mf.getConvertedFieldValue();
+			}
+			
+			output += System.getProperty("line.separator");
+		}
+		
+		return output;
+	}
 
 }

@@ -91,7 +91,9 @@ public class Debugging {
 	public static final Boolean CRM_OUTPUT_ENABLED = true;
 
 	// Max Object Debugging
+	@Deprecated
 	public static final String MAX_OBJECT_OUTPUT = CONSOLE_OUTPUT;
+	@Deprecated
 	public static final Boolean MAX_OBJECT_OUTPUT_ENABLED = true;
 
 	// Schedule Event Debugging
@@ -160,6 +162,7 @@ public class Debugging {
     public static final DebugObject TABLE_SETUP = new DebugObject(CONSOLE_OUTPUT, true, true, "Table Setup: ");
     public static final DebugObject PUSH_BULLET = new DebugObject(CONSOLE_OUTPUT, true, true, "Push Bullet: ");
     public static final DebugObject USER_DATABASE_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "User Database Debugging: ");
+    public static final DebugObject MAX_OBJ_DEBUG = new DebugObject(CONSOLE_OUTPUT, true, true, "Max Object Debugging: ");
     
 	public static Collection<DebugObject> debugObjectsInUse = new ArrayList<DebugObject>();
 	//Andrew's Debugging Variables

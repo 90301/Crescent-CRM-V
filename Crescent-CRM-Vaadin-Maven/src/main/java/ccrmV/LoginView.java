@@ -32,6 +32,8 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
+import dbUtils.InhalerUtils;
+import debugging.Debugging;
 import debugging.profiling.ProfilingTimer;
 import users.User;
 
@@ -192,6 +194,10 @@ public class LoginView extends VerticalLayout implements View {
 				if (rememberMe.getValue()) {
 					//store the cookie
 					loggedInUser.rememberUser();
+					
+					Debugging.output("Remembered user: " + InhalerUtils.toStringMaxObject(loggedInUser), Debugging.USER_DATABASE_DEBUG);
+					
+					DataHolder.store(loggedInUser,User.class);
 				}
 				logInAs(loggedInUser);
 			}

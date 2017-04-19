@@ -40,7 +40,6 @@ public class User extends MaxObject {
 
 	private static SecureRandom random = new SecureRandom();
 	public static final String COOKIE_NAME = "remember-me";
-	public static final String SESSION_USERNAME = "username";
 
 	/*
 	 * Logging in info
@@ -98,10 +97,12 @@ public class User extends MaxObject {
 	 */
 
 	{
+		arraylistToString.setDefaultStoreValue("");
 
 		databasesAccsessable.setConversion(arraylistToString);
 
 		authCookies.setConversion(arraylistToString);
+		
 
 		this.setKeyField(userName);
 
@@ -138,9 +139,7 @@ public class User extends MaxObject {
 	}
 
 	public void setUserName(String userName) {
-		User u = new User();
 		this.userName.setFieldValue(userName);
-		DataHolder.store(u, User.class);
 	}
 
 	public void setAdmin(boolean admin) {
@@ -229,17 +228,13 @@ public class User extends MaxObject {
 	}
 
 	public void addAuthKey(String key) {
-		User u = new User();
 		this.authCookies.getFieldValue().add(key);
 		this.updateDBMap();
-		DataHolder.store(u, User.class);
 	}
 
 	public void removeAuthKey(String key) {
-		User u = new User();
 		this.authCookies.getFieldValue().remove(key);
 		this.updateDBMap();
-		DataHolder.store(u, User.class);
 	}
 
 	public boolean containsAuthKey(String key) {
@@ -262,7 +257,7 @@ public class User extends MaxObject {
 		cookie.setMaxAge(60 * 60 * 24 * 40); // valid for 30 days
 		VaadinService.getCurrentResponse().addCookie(cookie);
 
-		DataHolder.store(this, User.class);
+		//DataHolder.store(this, User.class);
 	}
 
 	public void deleteRememberMeCookie() {

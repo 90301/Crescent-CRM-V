@@ -55,54 +55,6 @@ public abstract class MaxObject {
 	 * End variables and data structures
 	 */
 	
-	/**
-	 * Creates a sql statement to insert a MaxObject into a database.
-	 * @return sql insertion string.
-	 */
-	@Deprecated
-	public String getInsertValues() {
-		// TODO: update this to use a custom SQL object class
-		// with a special variables and a special function to get the key and
-		// value
-		// SQL representation
-		this.updateDBMap();
-		String insertValues = " ";
-		String keys = "(";
-		String values = "(";
-		Boolean firstLoop = true;
-		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
-		for (String key : dbMap.keySet()) {
-			Object value = dbMap.get(key);
-			// special case for first loop (doesn't have a comma)
-			if (!firstLoop) {
-				keys += ", ";
-				values += ", ";
-			} else {
-				firstLoop = false;
-			}
-			keys += key;
-
-			if (value instanceof Date) {
-				//special case for dates
-				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String modValue = sdf.format(value);
-				Debugging.output("date: " + modValue,Debugging.DATABASE_OUTPUT);
-				values += "'" + modValue + "'";
-			} else if (value instanceof Boolean) {
-				//MYSQL requires no quotes for a true/false value
-					values +=  ""+value;
-				
-			} else {
-				values += "'" + value + "'";
-			}
-
-		}
-		keys += ")";
-		values += ")";
-		insertValues += keys + " VALUES " + values;
-		return insertValues;
-	}
-	
 
 	/**
 	 * PREPARED statement version of insertion
@@ -204,15 +156,13 @@ public abstract class MaxObject {
 			item = (V) dbMap.get(fieldName);
 			Debugging.output(
 					"Found Field: " + fieldName + " = " + item
-					, Debugging.MAX_OBJECT_OUTPUT
-					, Debugging.MAX_OBJECT_OUTPUT_ENABLED);
+					, Debugging.MAX_OBJ_DEBUG);
 			
 		} else {
 			item = defaultValue;
 			Debugging.output(
 					"Failed to find Field: " + fieldName + " default value: " + item
-					, Debugging.MAX_OBJECT_OUTPUT
-					, Debugging.MAX_OBJECT_OUTPUT_ENABLED);
+					, Debugging.MAX_OBJ_DEBUG);
 		}
 		return item;
 	}
@@ -261,9 +211,8 @@ public abstract class MaxObject {
 					//This should be fixed later
 					Debugging.output("key not found: " + key + " in: " + this,Debugging.DATABASE_OUTPUT_ERROR);
 					
-				} else {
-					e.printStackTrace();
 				}
+				e.printStackTrace();
 			}
 		}
 		if (this.getClass().isInstance(User.class)) {
@@ -325,78 +274,6 @@ public abstract class MaxObject {
 		updateConversions();
 		
 		
-	}
-
-
-
-	/**
-	 * @deprecated
-	 * Loads data into dbMap from a csv file map.
-	 * 
-	 * @param entity
-	 *            <field, object> format. ex: name,john smith
-	 */
-	public void loadFromCSV(Map<String, String> entity) {
-		
-		//TODO: comment and debug this method
-		setupDBDatatypes();
-		//setup the variables and their types. this must be done for every subclass (IE client/status)
-		Debugging.output("MaxObject.loadFromCSV()",Debugging.DATABASE_OUTPUT);
-		try {
-			//go through every field, and get the respective name
-			// [Name:Jessie] -> get all fields (Name,id,...ect)
-			for (String key : entity.keySet()) {
-				Debugging.output("Loading: " + key + " from csv with value: " + entity.get(key),Debugging.DATABASE_OUTPUT);
-
-				//reference class, used to create an object
-				Class<?> ref = dbDatatypes.get(key);
-
-				Debugging.output("loaded ref: " + ref,Debugging.DATABASE_OUTPUT);
-				Object obj;
-				
-				if (ref==null) {
-					//null checking
-					Debugging.output("Null value encountered.",Debugging.DATABASE_OUTPUT);
-				}
-				
-				
-				if (ref.equals(Integer.class)) {
-					obj = 0;
-				} else {
-
-					obj = ref.newInstance();
-				}
-				//convert the string to the respective data type.
-				try {
-				if (obj.getClass() == String.class) {
-					obj = entity.get(key);
-				} else if (obj.getClass() == Integer.class) {
-					obj = Integer.parseInt(entity.get(key));
-				} else if (obj.getClass() == java.util.Date.class) {
-					obj = Client.SIMPLE_DATE_FORMAT.parse(entity.get(key));
-				}else {
-					Debugging.output("Class: " + obj.getClass() + " WAS NOT PROGRAMED!",Debugging.DATABASE_OUTPUT);
-				}
-
-				dbMap.put(key, obj);
-				} catch (Exception e) {
-					//Data does not match expected input
-					System.err.println("Bad data encountered in file, discarding line with item: " + entity.get(key));
-				}
-
-			}
-
-			loadInternalFromMap();
-
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	
