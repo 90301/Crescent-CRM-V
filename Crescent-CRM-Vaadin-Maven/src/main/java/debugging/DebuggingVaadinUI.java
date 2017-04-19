@@ -11,9 +11,9 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.TextArea;
-import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextArea;
+import com.vaadin.ui.VerticalLayout;
 
 import ccrmV.CrescentView;
 import ccrmV.MasterUI;
@@ -155,14 +155,14 @@ public class DebuggingVaadinUI extends CrescentView{
 	private void outputLog(DebugObject obj, DebuggingVaadinRichTextConsole console) {
 		obj.outputLog();
 		// System.out.println(obj + " NAME: " + obj.getName());
-		console.setValue(obj.debugLog);
+		console.setValue(obj.getOutput());
 
 	}
 
 	private void outputLog(DebugObject obj, TextArea console) {
 		obj.outputLog();
 		// System.out.println(obj + " NAME: " + obj.getName());
-		console.setValue(obj.debugLog);
+		console.setValue(obj.getOutput());
 
 	}
 

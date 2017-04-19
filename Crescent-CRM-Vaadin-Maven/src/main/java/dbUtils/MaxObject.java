@@ -20,6 +20,7 @@ import clientInfo.Client;
 import clientInfo.UserDataHolder;
 import debugging.Debugging;
 import debugging.profiling.RapidProfilingTimer;
+import users.User;
 
 /**
  * A serialization for objects SUBCLASSES MUST IMPLEMENT A NO ARGUMENT
@@ -58,12 +59,12 @@ public abstract class MaxObject {
 	 * Creates a sql statement to insert a MaxObject into a database.
 	 * @return sql insertion string.
 	 */
+	@Deprecated
 	public String getInsertValues() {
 		// TODO: update this to use a custom SQL object class
 		// with a special variables and a special function to get the key and
 		// value
 		// SQL representation
-		//TODO: escape  commas in notes to prevent issues
 		this.updateDBMap();
 		String insertValues = " ";
 		String keys = "(";
@@ -112,7 +113,6 @@ public abstract class MaxObject {
 		// with a special variables and a special function to get the key and
 		// value
 		// SQL representation
-		//TODO: escape  commas in notes to prevent issues
 		preparedListOrder.clear();
 		
 		this.updateDBMap();
@@ -150,7 +150,6 @@ public abstract class MaxObject {
 		// with a special variables and a special function to get the key and
 		// value
 		// SQL representation
-		//TODO: escape  commas in notes to prevent issues
 		//this.updateDBMap();
 		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
 		
@@ -165,20 +164,16 @@ public abstract class MaxObject {
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String modValue = sdf.format(value);
 				Debugging.output("date: " + modValue,Debugging.DATABASE_OUTPUT);
-				//values += "'" + modValue + "'";
 				//Experimental Date Storage
 				//updateStatement.setDate(currentValue, (Date) value);
 				updateStatement.setString(currentValue, modValue);
 				
 			} else if (value instanceof Boolean) {
-				//MYSQL requires no quotes for a true/false value
-					//values +=  ""+value;
 				updateStatement.setBoolean(currentValue, (boolean) value);
 			} else if (value instanceof Integer) {
 				updateStatement.setInt(currentValue, (Integer) value);
 			
 			} else {
-				//values += "'" + value + "'";
 				updateStatement.setString(currentValue, (String) value);
 			}
 			} catch (Exception e) {
@@ -232,15 +227,22 @@ public abstract class MaxObject {
 		}
 		
 		
+		
 		Debugging.output("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.",Debugging.DATABASE_OUTPUT);
+		
+		Debugging.output("MaxObject.loadFromDB() Class: " + this.getClass() ,Debugging.USER_DATABASE_DEBUG);
+		
 		//for (String key : dbMap.keySet()) {
 		
 		Collection<String> keysToUse = null;
 		if (USE_BETTER_DB_DATATYPES) {
 			keysToUse = betterDbDatatypes.get(this.getClass()).keySet();
+			Debugging.output("Keys To Use: " + InhalerUtils.toString(keysToUse) ,Debugging.USER_DATABASE_DEBUG);
 		} else {
 			keysToUse = dbDatatypes.keySet();
 		}
+		
+		Debugging.output(InhalerUtils.toStringColumns(rs), Debugging.USER_DATABASE_DEBUG);
 		
 		for (String key : keysToUse) {
 			Debugging.output("Key: " + key,Debugging.DATABASE_OUTPUT);
@@ -264,7 +266,12 @@ public abstract class MaxObject {
 				}
 			}
 		}
+		if (this.getClass().isInstance(User.class)) {
+			Debugging.output("IDENTIFIED AS A USER CLASS!" ,Debugging.USER_DATABASE_DEBUG);
+		}
 		loadInternalFromMap();
+		
+		Debugging.USER_DATABASE_DEBUG.nextBlock();
 
 	}
 

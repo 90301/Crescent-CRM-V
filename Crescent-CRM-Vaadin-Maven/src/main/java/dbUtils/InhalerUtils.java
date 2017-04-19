@@ -6,6 +6,8 @@ package dbUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,15 +50,15 @@ public class InhalerUtils {
 	private static final String DELIMITER = "|";
 	private static final String ROOT_DOC_STRING = "root";
 
-	
 	/**
-	 * This method will replace any and all spaces in a given string with hyphens
+	 * This method will replace any and all spaces in a given string with
+	 * hyphens
 	 */
-	public static String replaceStringSpaces(String string){
+	public static String replaceStringSpaces(String string) {
 		string = string.replace(" ", "-");
 		return string;
 	}
-	
+
 	/**
 	 * Caution: Do not use this method when dealing with maxObject database
 	 * serialization (dealing with dbMap)
@@ -113,7 +115,7 @@ public class InhalerUtils {
 	public static Collection<String> csvToList(String csv) {
 		ArrayList<String> list = new ArrayList<String>();
 		for (String s : csv.split("\\" + DELIMITER)) {
-			Debugging.output("CSV ITEM: " + s,Debugging.DATABASE_OUTPUT);
+			Debugging.output("CSV ITEM: " + s, Debugging.DATABASE_OUTPUT);
 			list.add(s);
 		}
 
@@ -162,14 +164,13 @@ public class InhalerUtils {
 	 */
 	public static String mapToXML(Map<String, String> map) {
 		//clean map
-		
-		Map<String,String> mapUsed = cleanLinkedMap(map);
-		
+
+		Map<String, String> mapUsed = cleanLinkedMap(map);
+
 		String xml = "";
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder;
-		
-		
+
 		try {
 			docBuilder = docFactory.newDocumentBuilder();
 
@@ -178,11 +179,11 @@ public class InhalerUtils {
 			doc.appendChild(rootElement);
 
 			for (String key : mapUsed.keySet()) {
-				
+
 				Debugging.output("Writing (key): " + key, Debugging.XML_CONVERSION);
-				
+
 				Debugging.output("Writing (Value): " + mapUsed.get(key), Debugging.XML_CONVERSION);
-				
+
 				Element child = doc.createElement(key);
 				// Attr child = doc.createAttribute(key);
 				child.appendChild(doc.createTextNode(mapUsed.get(key)));
@@ -213,36 +214,41 @@ public class InhalerUtils {
 			Debugging.output("Created XML: " + xml, Debugging.XML_CONVERSION);
 
 		} catch (ParserConfigurationException e) {
-			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+					Debugging.XML_CONVERSION_ERROR);
 			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION);
 			//e.printStackTrace();
 		} catch (TransformerException e) {
-			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+					Debugging.XML_CONVERSION_ERROR);
 			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION);
 			//e.printStackTrace();
 		} catch (DOMException e) {
 			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION);
-			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
-			
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+					Debugging.XML_CONVERSION_ERROR);
+
 		}
 		return xml;
 	}
 
 	/**
 	 * Cleans a map for storage.
-	 * @param map - used for storage
+	 * 
+	 * @param map
+	 *            - used for storage
 	 * @return
 	 */
 	public static Map<String, String> cleanLinkedMap(Map<String, String> map) {
-		Map<String,String> cleanMap = new LinkedHashMap<String,String>();
-		for(String key : map.keySet()) {
+		Map<String, String> cleanMap = new LinkedHashMap<String, String>();
+		for (String key : map.keySet()) {
 			String nKey = key;
 			String value = map.get(key);
 			String nValue = value;
 			//test if key is proper
 			if (key.contains(" ")) {
 				nKey = key.replace(' ', '-');
-				
+
 			}
 			//test if  body is correct
 
@@ -250,17 +256,17 @@ public class InhalerUtils {
 		}
 		return cleanMap;
 	}
-	
+
 	public static Map<String, String> cleanHashMap(Map<String, String> map) {
-		Map<String,String> cleanMap = new HashMap<String,String>();
-		for(String key : map.keySet()) {
+		Map<String, String> cleanMap = new HashMap<String, String>();
+		for (String key : map.keySet()) {
 			String nKey = key;
 			String value = map.get(key);
 			String nValue = value;
 			//test if key is proper
 			if (key.contains(" ")) {
 				nKey = key.replace(' ', '-');
-				
+
 			}
 			//test if  body is correct
 
@@ -277,131 +283,137 @@ public class InhalerUtils {
 	 * @return
 	 */
 	public static HashMap<String, String> xmlToMap(String xml) {
-		HashMap<String,String> map = new HashMap<String,String>();
-		if (xml==null || xml.equals("")) {
+		HashMap<String, String> map = new HashMap<String, String>();
+		if (xml == null || xml.equals("")) {
 			return map;
 		}
 		try {
-			
-		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-		 InputSource is = new InputSource(new StringReader(xml));
-		    //builder.parse(is);
-		    
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+			InputSource is = new InputSource(new StringReader(xml));
+			//builder.parse(is);
+
 			Document doc = dBuilder.parse(is);
-			
+
 			Element rootElement = doc.getDocumentElement();
-			
+
 			NodeList childElementList = rootElement.getChildNodes();
-			
-			for (int i=0;i<childElementList.getLength();i++) {
+
+			for (int i = 0; i < childElementList.getLength(); i++) {
 				Node child = childElementList.item(i);
-				
-				if (child.getNodeType()== Node.ELEMENT_NODE) {
-				String key = child.getNodeName();
-				
-				String value = child.getTextContent();
-				
-				//String value1 = child.getNodeValue();
-				map.put(key, value);
-				
-				Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
+
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					String key = child.getNodeName();
+
+					String value = child.getTextContent();
+
+					//String value1 = child.getNodeValue();
+					map.put(key, value);
+
+					Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
 				}
 			}
-			
 
 		} catch (SAXException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
-				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
 			} else {
-				
+
 			}
 		} catch (IOException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
-				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
 			} else {
-				
+
 			}
 		} catch (ParserConfigurationException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
-				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
 			} else {
-				
+
 			}
 		} catch (DOMException e) {
 			//map = new HashMap<String,String>();
-			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+					Debugging.XML_CONVERSION_ERROR);
 		}
-		
+
 		return map;
-		
+
 	}
-	
+
 	public static HashMap<String, String> xmlToLinkedHashMap(String xml) {
-		HashMap<String,String> map = new LinkedHashMap<String,String>();
-		if (xml==null || xml.equals("")) {
+		HashMap<String, String> map = new LinkedHashMap<String, String>();
+		if (xml == null || xml.equals("")) {
 			return map;
 		}
 		try {
-			
-		DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-		 InputSource is = new InputSource(new StringReader(xml));
-		    //builder.parse(is);
-		    
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+			InputSource is = new InputSource(new StringReader(xml));
+			//builder.parse(is);
+
 			Document doc = dBuilder.parse(is);
-			
+
 			Element rootElement = doc.getDocumentElement();
-			
+
 			NodeList childElementList = rootElement.getChildNodes();
-			
-			for (int i=0;i<childElementList.getLength();i++) {
+
+			for (int i = 0; i < childElementList.getLength(); i++) {
 				Node child = childElementList.item(i);
-				
-				if (child.getNodeType()== Node.ELEMENT_NODE) {
-				String key = child.getNodeName();
-				
-				String value = child.getTextContent();
-				
-				//String value1 = child.getNodeValue();
-				map.put(key, value);
-				
-				Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
+
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					String key = child.getNodeName();
+
+					String value = child.getTextContent();
+
+					//String value1 = child.getNodeValue();
+					map.put(key, value);
+
+					Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
 				}
 			}
-			
 
 		} catch (SAXException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
-				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
 			} else {
-				
+
 			}
 		} catch (IOException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
-				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
 			} else {
-				
+
 			}
 		} catch (ParserConfigurationException e) {
 			if (MasterUI.DEVELOPER_MODE) {
 				//e.printStackTrace();
-				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
 			} else {
-				
+
 			}
 		} catch (DOMException e) {
 			//map = new HashMap<String,String>();
-			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(), Debugging.XML_CONVERSION_ERROR);
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+					Debugging.XML_CONVERSION_ERROR);
 		}
-		
+
 		return map;
-		
+
 	}
 
 	/**
@@ -434,95 +446,100 @@ public class InhalerUtils {
 			rtrn = true;
 		}
 
-		Debugging.output("Tested: " + testingString + " Null?: " + rtrn,Debugging.DATABASE_OUTPUT);
+		Debugging.output("Tested: " + testingString + " Null?: " + rtrn, Debugging.DATABASE_OUTPUT);
 		return rtrn;
 	}
-	
+
 	public static String genRandomKey() {
 		UUID uid = UUID.randomUUID();
-		
+
 		return uid.toString();
 	}
-	
+
 	public static String removeSpecialCharacters(String str) {
 		String str2 = str;
 		str2 = str2.replaceAll("[^A-Za-z0-9]", "");
-		
+
 		return str2;
 	}
-	
+
 	/**
-	 * ._____________________________________________________________.
-	 * | Attempts to Format a block of text by surrounding it with a |
-	 * | box . . . . . . . . . . . . . . . . . . . . . . . . . . . . |
+	 * ._____________________________________________________________. |
+	 * Attempts to Format a block of text by surrounding it with a | | box . . .
+	 * . . . . . . . . . . . . . . . . . . . . . . . . . |
 	 * |_____________________________________________________________|
-	 * @param s the string to box
+	 * 
+	 * @param s
+	 *            the string to box
 	 * @return the string with a box around it
 	 */
 	public static String boxString(String s) {
 		String output = "";
-		
+
 		//split string into an array of lines
 		String lines[] = s.split("\\r?\\n");
-		
+
 		//find the longest line
 		int longestLine = 0;
-		
+
 		for (String line : lines) {
 			if (line.length() > longestLine) {
 				longestLine = line.length();
 			}
 		}
-		
+
 		//create top and bottom sections of the box
 		String topBox = "._";
 		String bottomBox = "|_";
 		for (int i = 0; i < longestLine; i++) {
-				topBox += "_";
-				bottomBox += "_";
+			topBox += "_";
+			bottomBox += "_";
 		}
 		topBox += "_.";
 		bottomBox += "_|";
-		
+
 		output += topBox + System.lineSeparator();
-		
+
 		for (String line : lines) {
-			String spacedLine = addSpacing(line,longestLine);
-			
+			String spacedLine = addSpacing(line, longestLine);
+
 			output += "| " + spacedLine + " |" + System.lineSeparator();
 		}
-		
+
 		output += bottomBox;
-		
+
 		return output;
 	}
-	
+
 	public static final String SPACING_FORMAT_BLANK_LINE = "<BLANK_LINE>";
 	public static final String SPACING_FORMAT_CENTERED = "<CENTERED>";
-	
+
 	/**
-	 * Adds spacing to string to the length.
-	 * dots are added every other character to help with formatting
+	 * Adds spacing to string to the length. dots are added every other
+	 * character to help with formatting
 	 * 
-	 * Other advanced features are included if certain constants are found
-	 * in the string, to see all the available constants, look at SPACING_FORMAT constants.
+	 * Other advanced features are included if certain constants are found in
+	 * the string, to see all the available constants, look at SPACING_FORMAT
+	 * constants.
 	 * 
-	 * @param input the string to add spacing to
-	 * @param length the length of the string to space to
+	 * @param input
+	 *            the string to add spacing to
+	 * @param length
+	 *            the length of the string to space to
 	 * @return the formatted string
 	 */
 	public static String addSpacing(String input, int length) {
 		String output = input;
-		
+
 		//check input for special formatting
 		if (input.contains(SPACING_FORMAT_BLANK_LINE)) {
 			//Creates a blank line
 			//____________________
 			output = "";
-			for (int i=0;i<length;i++) {
+			for (int i = 0; i < length; i++) {
 				output += "_";
 			}
-			
+
 		} else if (input.contains(SPACING_FORMAT_CENTERED)) {
 			//Creates centered text
 			//____Centered Text____
@@ -530,45 +547,88 @@ public class InhalerUtils {
 			//determine spacing to add
 			output = "";
 			int inputLength = strippedInput.length();
-			int halfway = (length - inputLength)/2;
-			
-			if (halfway <0) {
+			int halfway = (length - inputLength) / 2;
+
+			if (halfway < 0) {
 				return "Error formatting: " + input;
 			}
-			
+
 			String spacingStart = "";
-			for (int i = 0;i<halfway;i++) {
+			for (int i = 0; i < halfway; i++) {
 				spacingStart += "_";
 			}
 			output = spacingStart + strippedInput;
 			//add remaining spacing
-			for (int i = output.length();i<length;i++) {
+			for (int i = output.length(); i < length; i++) {
 				output += "_";
 			}
-			
-			
+
 		} else {
-		
+
 			//STANDARD SPACING
-		for (int i = output.length();i<length;i++) {
-			if (i%2==0) {
-				output += " ";
-			} else {
-				output += ".";
+			for (int i = output.length(); i < length; i++) {
+				if (i % 2 == 0) {
+					output += " ";
+				} else {
+					output += ".";
+				}
 			}
+
 		}
-		
-		}
-		
+
 		return output;
 	}
-	
+
 	public static Collection<String> reverseList(Collection<String> input) {
 		ArrayList<String> output = new ArrayList<String>();
 		for (String inputValue : input) {
-			output.add(0,inputValue);
+			output.add(0, inputValue);
 		}
-		
+
+		return output;
+	}
+
+	/*
+	 * CONVERT Collections to String representation
+	 */
+	public static String toString(Collection<?> col) {
+		String output = col.getClass() + " {";
+		for (Object o : col) {
+			if (o != null) {
+				output += o + DELIMITER;
+			} else {
+				output += "NULL" + DELIMITER;
+			}
+		}
+
+		output += "}";
+
+		return output;
+	}
+
+	public static String toStringColumns(ResultSet rs) {
+		String output = "";
+		int cols;
+
+		try {
+			cols = rs.getMetaData().getColumnCount();
+
+			output += "Columns: " + cols;
+			//end metadata
+			output += System.getProperty("line.separator");
+
+			for (int i = 1; i <= cols; i++) {
+				//This is 1 indexed for some reason
+				output += rs.getMetaData().getColumnName(i) + " | " + rs.getMetaData().getColumnTypeName(i);
+				output += System.getProperty("line.separator");
+			}
+
+		} catch (SQLException e) {
+
+			output += " Error occured: " + e.getMessage();
+			//e.printStackTrace();
+		}
+
 		return output;
 	}
 

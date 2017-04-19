@@ -105,19 +105,6 @@ public class User extends MaxObject {
 
 		this.setKeyField(userName);
 
-		/*
-		this.addMaxField(userName);
-		this.addMaxField(passHash);
-		this.addMaxField(databasesAccsessable);
-		this.addMaxField(databaseSelected);
-		this.addMaxField(admin);
-		
-		this.addMaxField(facebookKey);
-		this.addMaxField(googleKey);
-		
-		this.addMaxField(theme);
-		this.addMaxField(viewMode);
-		*/
 	}
 
 	public User() {
