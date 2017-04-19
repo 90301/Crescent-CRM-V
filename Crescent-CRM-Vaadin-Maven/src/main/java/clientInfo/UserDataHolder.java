@@ -464,4 +464,48 @@ public class UserDataHolder extends MaxObject {
 		}
 	}
 
+	/*
+	 * Delete utilities
+	 */
+	/**
+	 * 
+	 * @param g
+	 * @return TRUE if a client contains group g
+	 */
+	public boolean checkClientsFor(Group g) {
+		
+		for (Client c : this.getAllClients()) {
+			if (c.getGroup().getPrimaryKey().equals(g.getPrimaryKey())) {
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	public boolean checkClientsFor(Status s) {
+		
+		for (Client c : this.getAllClients()) {
+			if (c.getStatus().getPrimaryKey().equals(s.getPrimaryKey())) {
+				return true;
+			}
+		}
+		
+		return false;
+		
+	}
+
+	public boolean checkClientsFor(Location l) {
+	
+	for (Client c : this.getAllClients()) {
+		if (c.getLocation().getPrimaryKey().equals(l.getPrimaryKey())) {
+			return true;
+		}
+	}
+	
+	return false;
+	
+}
+
 }

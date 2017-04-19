@@ -4,16 +4,20 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ColorPicker;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import clientInfo.Group;
 import clientInfo.Location;
@@ -28,6 +32,11 @@ public class CategoryEditorView extends CrescentView {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private static final String TAB_WIDTH = "600px";
+	private static final String TAB_HEIGHT = "800px";
+	private static final Boolean MANUAL_TAB_SIZE = false;
+	private static final Boolean MANUAL_TAB_HEIGHT = true;
 
 	//MasterUI masterUi;
 	//NavBar navBar;
@@ -46,6 +55,7 @@ public class CategoryEditorView extends CrescentView {
 	 *Each editor will have it's own layout, this way we can move them between tabs or accordians or anything else.
 	 */
 	TabSheet categoryTabs = new TabSheet();
+	//Accordion categoryTabs = new Accordion();
 
 	VerticalLayout locationEditorLayout = new VerticalLayout();
 	VerticalLayout statusEditorLayout = new VerticalLayout();
@@ -62,13 +72,26 @@ public class CategoryEditorView extends CrescentView {
 	ListSelect<Location> newLocationAllLocations = new ListSelect<Location>("Locations");//Should Filter as the user types for the new location
 
 	HorizontalLayout locationSeperator = new HorizontalLayout();
-	Label hrule = new Label("-----------------------------------------------------");
-
+	//Label hrule = new Label("------------------------------------------------------------------------------------------------------------------");
+	
+	public static final String hRuleText =
+			"------------------------------------------------------------------------------------------------------------------";
+	
+	Label groupHrule = CategoryEditorView.genHrule();
+	Label statusHrule = CategoryEditorView.genHrule();
+	Label locationHrule = CategoryEditorView.genHrule();
+	
 	VerticalLayout editExistingLocationLayout = new VerticalLayout();
 	Label editLocationsSelectedLabel = new Label("Editing Location: ");
 	ComboBox<Location> editLocationSelectionBox = new ComboBox<Location>();
 	TwinColSelect<Location> editLocationProximitySelect = new TwinColSelect<Location>("Proximity");
+	
+	HorizontalLayout editLocationActionLayout = new HorizontalLayout();
+	
 	Button editLocationUpdateButton = new Button("Update", e -> editLocationUpdateClick());
+	Button editLocationDeleteButton = new Button("Delete", e -> editLocationDeleteClick());
+	
+	
 	/*
 	 * |---------------------------------------------|
 	 * | (New Location) - - - - - - - - - - - - - - -|
@@ -78,7 +101,7 @@ public class CategoryEditorView extends CrescentView {
 	 * | (Selected Location Label) - - - - - - - - - |
 	 * | (Location to Edit Drop-down box) - - - - - -|
 	 * | (proximity Twin Col Select) - - - - - - - - |
-	 * | (update button) - - - - - - - - - - - - - - |
+	 * | (Delete button) (update button) - - - - - - |
 	 * |---------------------------------------------|
 	 * 
 	 */
@@ -94,8 +117,11 @@ public class CategoryEditorView extends CrescentView {
 	Label editStatusSelectedLabel = new Label("Editing Status: ");
 	ComboBox<Status> editStatusSelectionBox = new ComboBox<Status>();
 	ColorPicker editStatusColorPicker = new ColorPicker();
+	
+	HorizontalLayout editStatusActionLayout = new HorizontalLayout();
 
 	Button editStatusUpdateButton = new Button("Update", e -> editStatusUpdateClick());
+	Button editStatusDeleteButton = new Button("Delete", e -> editStatusDeleteClick());
 
 	/*
 	 * |---------------------------------------------|
@@ -122,8 +148,11 @@ public class CategoryEditorView extends CrescentView {
 	Label editGroupSelectedLabel = new Label("Editing Group: ");
 	ComboBox<Group> editGroupSelectionBox = new ComboBox<Group>();
 	ColorPicker editGroupColorPicker = new ColorPicker();
+	
+	HorizontalLayout editGroupActionLayout = new HorizontalLayout();
 
 	Button editGroupUpdateButton = new Button("Update", e -> editGroupUpdateClick());
+	Button editGroupDeleteButton = new Button("Delete", e -> editGroupDeleteClick());
 
 	/*
 	 * |---------------------------------------------|
@@ -144,6 +173,10 @@ public class CategoryEditorView extends CrescentView {
 		setupUI(newLocationLayout, editExistingLocationLayout);
 		setupUI(newStatusLayout, editExistingStatusLayout);
 		setupUI(newGroupLayout, editExistingGroupLayout);
+		
+		setupActionLayout(editLocationActionLayout);
+		setupActionLayout(editStatusActionLayout);
+		setupActionLayout(editGroupActionLayout);
 
 		//Tab Names
 		locationEditorLayout.setCaption("Locations");
@@ -152,6 +185,7 @@ public class CategoryEditorView extends CrescentView {
 		//Layout Names
 
 		//Locations
+		//TODO add this to setup UI
 		newLocationLayout.setCaption("New Locations");
 		editExistingLocationLayout.setCaption("Edit Existing Locations");
 
@@ -174,6 +208,8 @@ public class CategoryEditorView extends CrescentView {
 		editGroupColorPicker.setHistoryVisibility(false);
 		editGroupColorPicker.setTextfieldVisibility(false);
 		editGroupColorPicker.setHSVVisibility(false);
+		
+		editGroupColorPicker.setVisible(false);
 
 		//Events
 		editLocationSelectionBox.addValueChangeListener(e -> selectLocation());
@@ -184,11 +220,15 @@ public class CategoryEditorView extends CrescentView {
 	public static void setupUI(HorizontalLayout newLayout, VerticalLayout existingLayout) {
 		newLayout.setSpacing(true);
 		newLayout.addStyleName("leftPadding");
+		newLayout.setMargin(false);
 
 		existingLayout.setSpacing(true);
+		existingLayout.setMargin(false);
 		existingLayout.addStyleName("leftPadding");
 		existingLayout.addStyleName("bottomPadding");
 	}
+
+
 
 	@Override
 	public void enterView(ViewChangeEvent event) {
@@ -202,15 +242,21 @@ public class CategoryEditorView extends CrescentView {
 		newLocationLayout.addComponent(newLocationCreateButton);
 		newLocationLayout.addComponent(newLocationAllLocations);
 
-		hrule.setCaptionAsHtml(true);
-		locationSeperator.addComponent(hrule);
+		//hrule.setCaptionAsHtml(true);
+		locationSeperator.addComponent(locationHrule);
 
 		//Edit existing 
 		editExistingLocationLayout.addComponent(editLocationsSelectedLabel);
 		editExistingLocationLayout.addComponent(editLocationSelectionBox);
 		editExistingLocationLayout.addComponent(editLocationProximitySelect);
-		editExistingLocationLayout.addComponent(editLocationUpdateButton);
-		editExistingLocationLayout.setComponentAlignment(editLocationUpdateButton, Alignment.BOTTOM_RIGHT);
+		
+		//editExistingLocationLayout.addComponent(editLocationUpdateButton);
+		//editExistingLocationLayout.setComponentAlignment(editLocationUpdateButton, Alignment.BOTTOM_RIGHT);
+		//editLocationActionLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
+		editLocationActionLayout.addComponent(editLocationUpdateButton);
+		editLocationActionLayout.addComponent(editLocationDeleteButton);
+		
+		editExistingLocationLayout.addComponent(editLocationActionLayout);
 
 		locationEditorLayout.addComponent(newLocationLayout);
 
@@ -223,13 +269,19 @@ public class CategoryEditorView extends CrescentView {
 		newStatusLayout.addComponent(newStatusCreateButton);
 		newStatusLayout.addComponent(newStatusAllStatus);
 
-		statusSeperator.addComponent(hrule);
+		statusSeperator.addComponent(statusHrule);
 
 		editExistingStatusLayout.addComponent(editStatusSelectedLabel);
 		editExistingStatusLayout.addComponent(editStatusSelectionBox);
 		editExistingStatusLayout.addComponent(editStatusColorPicker);
+		/*
 		editExistingStatusLayout.addComponent(editStatusUpdateButton);
 		editExistingStatusLayout.setComponentAlignment(editStatusUpdateButton, Alignment.BOTTOM_RIGHT);
+		*/
+		editStatusActionLayout.addComponent(editStatusUpdateButton);
+		editStatusActionLayout.addComponent(editStatusDeleteButton);
+		
+		editExistingStatusLayout.addComponent(editStatusActionLayout);
 
 		statusEditorLayout.addComponent(newStatusLayout);
 
@@ -242,13 +294,19 @@ public class CategoryEditorView extends CrescentView {
 		newGroupLayout.addComponent(newGroupCreateButton);
 		newGroupLayout.addComponent(newGroupAllGroups);
 
-		GroupSeperator.addComponent(hrule);
+		GroupSeperator.addComponent(groupHrule);
 
 		editExistingGroupLayout.addComponent(editGroupSelectedLabel);
 		editExistingGroupLayout.addComponent(editGroupSelectionBox);
 		editExistingGroupLayout.addComponent(editGroupColorPicker);
+		/*
 		editExistingGroupLayout.addComponent(editGroupUpdateButton);
 		editExistingGroupLayout.setComponentAlignment(editGroupUpdateButton, Alignment.BOTTOM_RIGHT);
+		*/
+		editGroupActionLayout.addComponent(editGroupUpdateButton);
+		editGroupActionLayout.addComponent(editGroupDeleteButton);
+		
+		editExistingGroupLayout.addComponent(editGroupActionLayout);
 
 		groupEditorLayout.addComponent(newGroupLayout);
 
@@ -257,6 +315,17 @@ public class CategoryEditorView extends CrescentView {
 		groupEditorLayout.addComponent(editExistingGroupLayout);
 
 		//Tab Layout
+		
+		//categoryTabs.setWidth(TAB_WIDTH);
+		categoryTabs.setResponsive(true);
+		
+		if (MANUAL_TAB_SIZE) {
+			categoryTabs.setWidth(TAB_WIDTH);
+			categoryTabs.setHeight(TAB_HEIGHT);
+		} else if (MANUAL_TAB_HEIGHT) {
+			categoryTabs.setHeight(TAB_HEIGHT);
+		}
+		
 		categoryTabs.addComponent(locationEditorLayout);
 
 		categoryTabs.addComponent(statusEditorLayout);
@@ -271,6 +340,17 @@ public class CategoryEditorView extends CrescentView {
 		populateAllGroupBoxes();
 
 		//alreadyGenerated = true;
+	}
+	
+	public static Label genHrule() {
+		return new Label(hRuleText);
+	}
+
+	public HorizontalLayout setupActionLayout(HorizontalLayout actionLayout) {
+		actionLayout.setMargin(false);
+		actionLayout.setDefaultComponentAlignment(Alignment.BOTTOM_RIGHT);
+		
+		return actionLayout;
 	}
 
 	public void createLocationClick() {
@@ -558,6 +638,79 @@ public class CategoryEditorView extends CrescentView {
 		editStatusSelectedLabel.setValue(s.getStatusName());
 
 		editStatusColorPicker.setValue(s.getJavaColor());
+	}
+	
+	
+	private void editGroupDeleteClick() {
+		Group g = this.selectedGroup;
+		if (g != null) {
+			//test to see if any client has this group. if a client is a member of this group, throw an error.
+			if (this.masterUi.userDataHolder.checkClientsFor(g)) {
+				//Throw error
+				Notification n = new Notification("Can't delete group : " + g.getGroupName() + " Because it exists in client(s)");
+				n.show(UI.getCurrent().getPage());
+			} else {
+				//delete group
+				this.masterUi.userDataHolder.delete(g, Group.class);
+				
+				Notification n = new Notification("Deleted Group : " + g.getGroupName() );
+				n.show(UI.getCurrent().getPage());
+				
+				editGroupSelectionBox.clear();
+				
+				populateAllLocationBoxes();
+				
+			}
+			
+		}
+	}
+
+	private void editStatusDeleteClick() {
+		Status s = this.selectedStatus;
+		if (s != null) {
+			//test to see if any client has this group. if a client is a member of this group, throw an error.
+			if (this.masterUi.userDataHolder.checkClientsFor(s)) {
+				//Throw error
+				Notification n = new Notification("Can't delete status : " + s.getPrimaryKey() + " Because it exists in client(s)");
+				n.show(UI.getCurrent().getPage());
+			} else {
+				//delete group
+				this.masterUi.userDataHolder.delete(s, Status.class);
+				
+				Notification n = new Notification("Deleted Status : " + s.getPrimaryKey() );
+				n.show(UI.getCurrent().getPage());
+				
+				editStatusSelectionBox.clear();
+				
+				populateAllLocationBoxes();
+				
+			}
+			
+		}
+	}
+
+	private void editLocationDeleteClick() {
+		Location l = this.selectedLocation;
+		if (l != null) {
+			//test to see if any client has this group. if a client is a member of this group, throw an error.
+			if (this.masterUi.userDataHolder.checkClientsFor(l)) {
+				//Throw error
+				Notification n = new Notification("Can't delete location : " + l.getPrimaryKey() + " Because it exists in client(s)");
+				n.show(UI.getCurrent().getPage());
+			} else {
+				//delete group
+				this.masterUi.userDataHolder.delete(l, Location.class);
+				
+				Notification n = new Notification("Deleted Location : " + l.getPrimaryKey() );
+				n.show(UI.getCurrent().getPage());
+				
+				editLocationSelectionBox.clear();
+				
+				populateAllLocationBoxes();
+				
+			}
+			
+		}
 	}
 
 }
