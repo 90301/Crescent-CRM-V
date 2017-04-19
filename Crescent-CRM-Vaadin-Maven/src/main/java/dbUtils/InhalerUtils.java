@@ -11,10 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 //XML IMPORTS
@@ -586,6 +588,21 @@ public class InhalerUtils {
 		}
 
 		return output;
+	}
+	
+	/**
+	 * Returns a set for selecting a single object.
+	 * Made for vaadin 8 conversion
+	 * @param <T>
+	 * @param obj the object to select
+	 * @return the set used for selection
+	 */
+	public static <T> Set<T> singleSelect(T obj) {
+		Set<T> selectionSet = new HashSet<T>();
+		
+		selectionSet.add(obj);
+		
+		return selectionSet;
 	}
 
 	/*

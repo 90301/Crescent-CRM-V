@@ -1,36 +1,33 @@
 package ccrmV;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-
-import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.Page;
-import com.vaadin.v7.shared.ui.colorpicker.Color;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.ColorPicker;
-import com.vaadin.v7.ui.ComboBox;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.ui.Layout;
-import com.vaadin.v7.ui.ListSelect;
-import com.vaadin.ui.Notification;
+import com.vaadin.ui.ColorPicker;
+import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.ListSelect;
 import com.vaadin.ui.TabSheet;
-import com.vaadin.v7.ui.TextField;
-import com.vaadin.v7.ui.TwinColSelect;
-import com.vaadin.v7.ui.VerticalLayout;
-import com.vaadin.v7.ui.components.colorpicker.ColorPickerSelect;
-
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.VerticalLayout;
 import clientInfo.Group;
 import clientInfo.Location;
 import clientInfo.Status;
 import clientInfo.UserDataHolder;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
-import uiElements.NavBar;
 
 public class CategoryEditorView extends CrescentView {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	//MasterUI masterUi;
 	//NavBar navBar;
@@ -62,15 +59,15 @@ public class CategoryEditorView extends CrescentView {
 	HorizontalLayout newLocationLayout = new HorizontalLayout();
 	TextField newLocationNameTextBox = new TextField();
 	Button newLocationCreateButton = new Button("Create", e -> createLocationClick());
-	ListSelect newLocationAllLocations = new ListSelect("Locations");//Should Filter as the user types for the new location
+	ListSelect<Location> newLocationAllLocations = new ListSelect<Location>("Locations");//Should Filter as the user types for the new location
 
 	HorizontalLayout locationSeperator = new HorizontalLayout();
 	Label hrule = new Label("-----------------------------------------------------");
 
 	VerticalLayout editExistingLocationLayout = new VerticalLayout();
 	Label editLocationsSelectedLabel = new Label("Editing Location: ");
-	ComboBox editLocationSelectionBox = new ComboBox();
-	TwinColSelect editLocationProximitySelect = new TwinColSelect("Proximity");
+	ComboBox<Location> editLocationSelectionBox = new ComboBox<Location>();
+	TwinColSelect<Location> editLocationProximitySelect = new TwinColSelect<Location>("Proximity");
 	Button editLocationUpdateButton = new Button("Update", e -> editLocationUpdateClick());
 	/*
 	 * |---------------------------------------------|
@@ -89,13 +86,13 @@ public class CategoryEditorView extends CrescentView {
 	HorizontalLayout newStatusLayout = new HorizontalLayout();
 	TextField newStatusNameTextBox = new TextField();
 	Button newStatusCreateButton = new Button("Create", e -> createStatusClick());
-	ListSelect newStatusAllStatus = new ListSelect("Status");//Should Filter as the user types for the new location
+	ListSelect<Status> newStatusAllStatus = new ListSelect<Status>("Status");//Should Filter as the user types for the new location
 
 	HorizontalLayout statusSeperator = new HorizontalLayout();
 
 	VerticalLayout editExistingStatusLayout = new VerticalLayout();
 	Label editStatusSelectedLabel = new Label("Editing Status: ");
-	ComboBox editStatusSelectionBox = new ComboBox();
+	ComboBox<Status> editStatusSelectionBox = new ComboBox<Status>();
 	ColorPicker editStatusColorPicker = new ColorPicker();
 
 	Button editStatusUpdateButton = new Button("Update", e -> editStatusUpdateClick());
@@ -117,13 +114,13 @@ public class CategoryEditorView extends CrescentView {
 	HorizontalLayout newGroupLayout = new HorizontalLayout();
 	TextField newGroupNameTextBox = new TextField();
 	Button newGroupCreateButton = new Button("Create", e -> createGroupClick());
-	ListSelect newGroupAllGroups = new ListSelect("Group");//Should Filter as the user types for the new location
+	ListSelect<Group> newGroupAllGroups = new ListSelect<Group>("Group");//Should Filter as the user types for the new location
 
 	HorizontalLayout GroupSeperator = new HorizontalLayout();
 
 	VerticalLayout editExistingGroupLayout = new VerticalLayout();
 	Label editGroupSelectedLabel = new Label("Editing Group: ");
-	ComboBox editGroupSelectionBox = new ComboBox();
+	ComboBox<Group> editGroupSelectionBox = new ComboBox<Group>();
 	ColorPicker editGroupColorPicker = new ColorPicker();
 
 	Button editGroupUpdateButton = new Button("Update", e -> editGroupUpdateClick());
@@ -158,16 +155,9 @@ public class CategoryEditorView extends CrescentView {
 		newLocationLayout.setCaption("New Locations");
 		editExistingLocationLayout.setCaption("Edit Existing Locations");
 
-		newLocationAllLocations.setNullSelectionAllowed(false);
-		editLocationSelectionBox.setNullSelectionAllowed(false);
-		editLocationProximitySelect.setNullSelectionAllowed(false);
-
 		//Status
 		newStatusLayout.setCaption("New Status");
 		editExistingStatusLayout.setCaption("Edit Existing Status");
-
-		newStatusAllStatus.setNullSelectionAllowed(false);
-		editStatusSelectionBox.setNullSelectionAllowed(false);
 
 		editStatusColorPicker.setCaption("Status Color (Beta)");
 		editStatusColorPicker.setSwatchesVisibility(true);
@@ -178,9 +168,6 @@ public class CategoryEditorView extends CrescentView {
 		//Group
 		newGroupLayout.setCaption("New Group");
 		editExistingGroupLayout.setCaption("Edit Existing Group");
-
-		newGroupAllGroups.setNullSelectionAllowed(false);
-		editGroupSelectionBox.setNullSelectionAllowed(false);
 
 		editGroupColorPicker.setCaption("Group Color (Beta)");
 		editGroupColorPicker.setSwatchesVisibility(true);
@@ -316,7 +303,7 @@ public class CategoryEditorView extends CrescentView {
 		}
 		populateAllLocationBoxes();
 
-		newLocationAllLocations.setValue(l);
+		newLocationAllLocations.setValue(InhalerUtils.singleSelect(l));
 
 		return l;
 	}
@@ -331,7 +318,7 @@ public class CategoryEditorView extends CrescentView {
 		}
 		populateAllStatusBoxes();
 
-		newStatusAllStatus.setValue(s);
+		newStatusAllStatus.setValue(InhalerUtils.singleSelect(s));
 
 		return s;
 	}
@@ -346,7 +333,7 @@ public class CategoryEditorView extends CrescentView {
 		}
 		populateAllGroupBoxes();
 
-		newGroupAllGroups.setValue(g);
+		newGroupAllGroups.setValue(InhalerUtils.singleSelect(g));
 
 		return g;
 	}
@@ -396,7 +383,7 @@ public class CategoryEditorView extends CrescentView {
 
 	public void editStatusUpdate() {
 		UserDataHolder udh = masterUi.userDataHolder;
-		int color = editStatusColorPicker.getColor().getRGB();
+		int color = editStatusColorPicker.getValue().getRGB();
 		selectedStatus.setColor(color);
 
 		udh.store(selectedStatus, Status.class);
@@ -420,67 +407,41 @@ public class CategoryEditorView extends CrescentView {
 		//Get the current User Data Holder
 		UserDataHolder udh = masterUi.userDataHolder;
 
-		newLocationAllLocations.removeAllItems();
-		newLocationAllLocations.addItems(udh.getAllLocations());
+		newLocationAllLocations.setItems(udh.getAllLocations());
 
-		editLocationSelectionBox.removeAllItems();
-		editLocationSelectionBox.addItems(udh.getAllLocations());
+		editLocationSelectionBox.setItems(udh.getAllLocations());
 
-		editLocationProximitySelect.removeAllItems();
-		editLocationProximitySelect.addItems(udh.getAllLocations());
-	}
-
-	/**
-	 * Adds item only if it doesn't exist (not good for removing / renaming
-	 * locations)
-	 */
-	public void safePopulateLocations() {
-		UserDataHolder udh = masterUi.userDataHolder;
-
-		for (Location l : udh.getAllLocations()) {
-			if (!newLocationAllLocations.containsId(l)) {
-				newLocationAllLocations.addItem(l);
-			}
-
-			if (!editLocationSelectionBox.containsId(l)) {
-				editLocationSelectionBox.addItem(l);
-			}
-
-			if (!editLocationProximitySelect.containsId(l)) {
-				editLocationProximitySelect.addItem(l);
-			}
-
-		}
+		editLocationProximitySelect.setItems(udh.getAllLocations());
 	}
 
 	private void populateAllStatusBoxes() {
 		UserDataHolder udh = masterUi.userDataHolder;
 
-		newStatusAllStatus.removeAllItems();
-		newStatusAllStatus.addItems(udh.getAllStatus());
+		newStatusAllStatus.setItems(udh.getAllStatus());
 
-		editStatusSelectionBox.removeAllItems();
-		editStatusSelectionBox.addItems(udh.getAllStatus());
+		editStatusSelectionBox.setItems(udh.getAllStatus());
 
 	}
 
 	public void populateAllGroupBoxes() {
 		UserDataHolder udh = masterUi.userDataHolder;
 
-		newGroupAllGroups.removeAllItems();
-		newGroupAllGroups.addItems(udh.getAllGroups());
+		newGroupAllGroups.setItems(udh.getAllGroups());
 
-		editGroupSelectionBox.removeAllItems();
-		editGroupSelectionBox.addItems(udh.getAllGroups());
+		editGroupSelectionBox.setItems(udh.getAllGroups());
 
 	}
 
 	private void loadProximity(Location l) {
-		editLocationProximitySelect.removeAllItems();
-		editLocationProximitySelect.addItems(masterUi.userDataHolder.getAllLocations());
-
+		//editLocationProximitySelect.removeAllItems();
+		ArrayList<Location> allLocations = new ArrayList<Location>();
+		allLocations.addAll(masterUi.userDataHolder.getAllLocations());
 		//Must remove own location from combo box items
-		editLocationProximitySelect.removeItem(l);
+		allLocations.remove(l);
+		editLocationProximitySelect.setItems(allLocations);
+
+		
+		//editLocationProximitySelect.removeItem(l);
 		//then add all the locations to the "proximity side" if they are a proximity location
 		for (Location closeLocation : l.getRealCloseLocations()) {
 			editLocationProximitySelect.select(closeLocation);
@@ -596,7 +557,7 @@ public class CategoryEditorView extends CrescentView {
 
 		editStatusSelectedLabel.setValue(s.getStatusName());
 
-		editStatusColorPicker.setColor(s.getJavaColor());
+		editStatusColorPicker.setValue(s.getJavaColor());
 	}
 
 }
