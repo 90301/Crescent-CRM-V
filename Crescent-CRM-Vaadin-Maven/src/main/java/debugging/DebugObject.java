@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.omg.CORBA.Environment;
 
 import ccrmV.MasterUI;
+import dbUtils.InhalerUtils;
 
 public class DebugObject {
 
@@ -83,5 +84,33 @@ public class DebugObject {
 
 	public String getName() {
 		return outputPreface;
+	}
+
+	public String getBlockFilteredOutput(String searchString) {
+		String output = "";
+		String[] searchStrings = InhalerUtils.parseSearchString(searchString);
+		for (String block : blocks) {
+			if (InhalerUtils.containsAny(searchStrings, block)) {
+				output += Debugging.LINE + System.getProperty("line.separator");
+				if (DOUBLE_SPACING) {
+					output+= System.getProperty("line.separator");
+				}
+				output+= block;
+			}
+		}
+		return output;
+	}
+	
+	public String getLineFilteredOutput(String searchString) {
+		String output = "";
+		String[] searchStrings = InhalerUtils.parseSearchString(searchString);
+		
+		for (String line : debugLog.split("\\r?\\n")) {
+			if (InhalerUtils.containsAny(searchStrings, line)) {
+				output += System.getProperty("line.separator");
+				output+= line;
+			}
+		}
+		return output;
 	}
 }

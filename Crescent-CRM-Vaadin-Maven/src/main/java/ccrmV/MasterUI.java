@@ -52,16 +52,15 @@ public class MasterUI extends UI {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public static final double versionNumber = 1.55;
-	public static final String versionDescription = " User Stability Restored";
+	public static final double versionNumber = 1.56;
+	public static final String versionDescription = " Debug Searching";
 
 	public MasterUI() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public MasterUI(Component content) {
 		super(content);
-		// TODO Auto-generated constructor stub
 	}
 
 	Navigator mainNavigator;
@@ -160,13 +159,17 @@ public class MasterUI extends UI {
 			//DEVELOPER_MODE = false;
 		}
 		
-		getPage().addUriFragmentChangedListener(
+		//disabled due to deprecation
+		/*
+		getPage()
+		.addUriFragmentChangedListener(
 	               new UriFragmentChangedListener() {
 	           public void uriFragmentChanged(
 	                   UriFragmentChangedEvent source) {
 	               enter(source);
 	            }
 	        });
+	        */
 		
 		userAgent = request.getHeader("User-Agent");
 		

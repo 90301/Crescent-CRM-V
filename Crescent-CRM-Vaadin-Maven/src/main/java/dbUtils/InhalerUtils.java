@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 //XML IMPORTS
 import javax.xml.parsers.DocumentBuilder;
@@ -664,5 +665,27 @@ public class InhalerUtils {
 		
 		return output;
 	}
+	
+	//Search Utils
+	/**
+	 * Searches a line in an attempt to find any of the strings in "SearchStrings" array
+	 * @param searchStrings - the strings to look for
+	 * @param testString - the string to search through
+	 * @return true if the testString contains any of the search Strings
+	 */
+	public static boolean containsAny(String[] searchStrings, String testString) {
+		for (String s : searchStrings) {
+			if (testString.contains(s)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public static String[] parseSearchString(String searchString) {
+		return searchString.split(Pattern.quote("||"));
+	}
+	
 
 }
