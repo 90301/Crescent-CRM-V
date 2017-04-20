@@ -203,7 +203,7 @@ public class LoginView extends VerticalLayout implements View {
 				User loggedInUser = DataHolder.getUser(userField.getValue());
 
 				if (rememberMe.getValue()) {
-					//store the cookie     
+					//store the cookie 
 					loggedInUser.rememberUser();
 					
 					Debugging.output("Remembered user: " + InhalerUtils.toStringMaxObject(loggedInUser), Debugging.USER_DATABASE_DEBUG);
