@@ -184,13 +184,18 @@ public class LoginView extends VerticalLayout implements View {
 
 	}
 
+	public void switchToLogin() {
+		registerButton.setVisible(true);
+		createNewUserButton.setVisible(false);
+		passConfirmField.setVisible(false);
+		userCreated = false;
+	}
+	
 	public void attemptLogin() {
 		ProfilingTimer loginTime = new ProfilingTimer("Login Time");
 		String code = "";
 		
-		registerButton.setVisible(true);
-		createNewUserButton.setVisible(false);
-		passConfirmField.setVisible(false);
+		if (!userCreated){
 		
 		if ((code = DataHolder.attemptLogin(userField.getValue(), passField.getValue())) == DataHolder.SUCCESS_CODE
 				|| (MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
@@ -232,6 +237,10 @@ public class LoginView extends VerticalLayout implements View {
 			welcomeLabel.setData(code);
 		}
 		loginTime.stopTimer();
+		
+		} else {
+			switchToLogin();
+		}
 	}
 
 	// Transition to main screen when credentials are correctly entered
@@ -252,12 +261,15 @@ public class LoginView extends VerticalLayout implements View {
 		registerButton.setVisible(false);
 	}
 	
+	Boolean userCreated = false;
+	
 	// Registers a new user
 	private void createNewUserClick() {
 		
 		String userName = userField.getValue();
 		String pass = passField.getValue();
         String passConf = passConfirmField.getValue();
+        
         
 		User newUser = new User();
 		// Check to see if a user already has a specific name
@@ -272,6 +284,7 @@ public class LoginView extends VerticalLayout implements View {
 	                  Notification.Type.HUMANIZED_MESSAGE);
 			notification.setDelayMsec(5000);
 			notification.show(Page.getCurrent());
+			userCreated = true;
 			newUser.setUserName(userName);
 			newUser.setPassword(pass);
 			newUser.setAdmin(false);

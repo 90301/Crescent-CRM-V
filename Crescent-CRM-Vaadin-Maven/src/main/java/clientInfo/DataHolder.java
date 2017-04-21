@@ -145,7 +145,7 @@ public class DataHolder {
 	 */
 	public static String attemptLogin(String userName, String pass) {
 		User userLoggingIn = localUserMap.get(userName);
-		if (userLoggingIn != null) {
+		if (userLoggingIn != null && !userName.equals("")) {
 			boolean loginSucsess =  userLoggingIn.checkPassword(pass);
 			if (loginSucsess) {
 				Debugging.output("Logged into: " + userLoggingIn,Debugging.DATABASE_OUTPUT);
