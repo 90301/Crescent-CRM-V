@@ -234,6 +234,7 @@ public class LoginView extends VerticalLayout implements View {
 		loginTime.stopTimer();
 	}
 
+	// Transition to main screen when credentials are correctly entered
 	public void logInAs(User u) {
 		loginSuccess = true;
 		masterUi.user = u;
@@ -241,12 +242,17 @@ public class LoginView extends VerticalLayout implements View {
 		masterUi.startMainApp();
 	}
 
+	
+	// When clicked, gives the ability to register a new user. 
+	// Adds the password confirmation field and a button to create a new user
+	// Removes the register button from view
 	private void registerClick() {
 		passConfirmField.setVisible(true);
 		createNewUserButton.setVisible(true);
 		registerButton.setVisible(false);
 	}
 	
+	// Registers a new user
 	private void createNewUserClick() {
 		
 		String userName = userField.getValue();
@@ -278,13 +284,14 @@ public class LoginView extends VerticalLayout implements View {
 			passConfirmField.setValue("");
 			
 		} else {
-
+				// Password is not long enough (minimum currently set to 5)
 			if (pass.length() < PASS_MIN_LENGTH) {
 				Notification notification = new Notification("Password is too short.",
 						"<br>Minimum Length: " + PASS_MIN_LENGTH + "<br>Click to Dismiss",
 						Notification.Type.ERROR_MESSAGE, true);
 				notification.show(Page.getCurrent());
 			} else if (pass != passConf) {
+				// The passwords in both fields are not the same
 				Notification notification = new Notification("Passwords do not match.",
 						"<br>Click to Dismiss", Notification.Type.ERROR_MESSAGE, true);
 				notification.show(Page.getCurrent());
