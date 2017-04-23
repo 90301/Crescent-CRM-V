@@ -12,8 +12,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
-import com.vaadin.v7.ui.Label;
-import com.vaadin.v7.ui.TextArea;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.VerticalLayout;
 
 import ccrmV.CrmUI;
@@ -157,8 +157,10 @@ public class ClientEditor extends VerticalLayout {
 
 		this.addComponent(clientEditorMetaLayout);
 		
+		//TODO
 		this.addComponent(uploadProfileLayout);
-
+		uploadProfileLayout.setVisible(false);
+		
 		this.addComponent(templateEditor);
 		this.addComponent(customFieldEditor);
 

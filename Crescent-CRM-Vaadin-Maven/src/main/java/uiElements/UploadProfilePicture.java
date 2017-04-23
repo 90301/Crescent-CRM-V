@@ -1,6 +1,6 @@
 /**
  * Author: Andrew Dorsett
- * Last Modified: 2/10/17
+ * Last Modified: 4/20/17
  */
 package uiElements;
 
@@ -19,43 +19,48 @@ import org.imgscalr.Scalr;
 
 //Not sure if this is needed
 import clientInfo.Client;
-
+import dbUtils.InhalerUtils;
 //Need debugging
 import debugging.Debugging;
 
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Panel;
-import com.vaadin.v7.ui.Upload;
-import com.vaadin.v7.ui.Upload.FailedEvent;
-import com.vaadin.v7.ui.Upload.FinishedEvent;
-import com.vaadin.v7.ui.Upload.Receiver;
-import com.vaadin.v7.ui.Upload.StartedEvent;
-import com.vaadin.v7.ui.Upload.SucceededEvent;
+import com.vaadin.ui.Upload;
+import com.vaadin.ui.Upload.ChangeEvent;
+import com.vaadin.ui.Upload.FailedEvent;
+import com.vaadin.ui.Upload.FinishedEvent;
+import com.vaadin.ui.Upload.Receiver;
+import com.vaadin.ui.Upload.StartedEvent;
+import com.vaadin.ui.Upload.SucceededEvent;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Page;
-import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 
 
 public class UploadProfilePicture extends HorizontalLayout implements Upload.StartedListener, 
 Upload.ProgressListener, Upload.FailedListener, Upload.SucceededListener,
-Upload.FinishedListener, Receiver{
+Upload.FinishedListener, Receiver, Upload.ChangeListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public Boolean hasUploaded;
 	public File recentUpload;
 	public String link;
 	//Find home folder that contains all Client Photos
 	public static String PROFILE_PICTURE_FOLDER = System.getProperty("user.home")+"/ClientPictures/";
-	
-	ArrayList<String> allowedMimeTypes;
+
 	BufferedImage originalImage;
 	Client c;
 	FileResource resource;
 	String fileName = "";
-	Upload uploadPhoto = new Upload("Upload Image", this);
+	Upload uploadPhoto = new Upload("Upload Image",this);
+
 
 	public Boolean getHasUploaded() {
 		return hasUploaded;
@@ -82,11 +87,16 @@ Upload.FinishedListener, Receiver{
 	}
 
 	{
-		uploadPhoto.addFinishedListener(e->isFinished(e));
-		uploadPhoto.addStartedListener(e->uploadStarted(e));
-		ArrayList<String> allowedMimeTypes = new ArrayList<String>();
-		allowedMimeTypes.add("image/jpeg");
-		allowedMimeTypes.add("image/png");
+		uploadPhoto.setImmediateMode(true);
+
+		//uploadPhoto.addFinishedListener(e->this.isFinished(e));
+		//uploadPhoto.addStartedListener(e->this.uploadStarted(e));
+		uploadPhoto.addStartedListener(this);
+		uploadPhoto.addFinishedListener(this);
+		uploadPhoto.addChangeListener(this);
+		uploadPhoto.addFailedListener(this);
+		uploadPhoto.addSucceededListener(this);
+
 	}
 
 	//Constructor
@@ -99,9 +109,9 @@ Upload.FinishedListener, Receiver{
 	public String updateProfilePicture(){
 
 		String photoLink = getLink();
-		
+
 		setLink(null);
-		
+
 		setHasUploaded(false);
 
 		if(photoLink == null){
@@ -129,46 +139,46 @@ Upload.FinishedListener, Receiver{
 		}
 		try {
 
-		  //read image file
-		  bufferedImage = ImageIO.read(imageFile);
+			//read image file
+			bufferedImage = ImageIO.read(imageFile);
 
-		  // create a blank, RGB, same width and height, and a white background
-		  BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
-				bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-		  newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
-		  //Change the.png extension to .jpg
-		  File imageFile2 = new File(PROFILE_PICTURE_FOLDER + imageName +".jpg");
-		  // write to jpeg file
-		  imageFile.renameTo(imageFile2);
-		  ImageIO.write(newBufferedImage, "jpg", imageFile);
+			// create a blank, RGB, same width and height, and a white background
+			BufferedImage newBufferedImage = new BufferedImage(bufferedImage.getWidth(),
+					bufferedImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+			newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
+			//Change the.png extension to .jpg
+			File imageFile2 = new File(PROFILE_PICTURE_FOLDER + imageName +".jpg");
+			// write to jpeg file
+			imageFile.renameTo(imageFile2);
+			ImageIO.write(newBufferedImage, "jpg", imageFile);
 
-		  System.out.println("Done");
+			System.out.println("Done");
 
 		} catch (IOException e) {
 
-		  e.printStackTrace();
+			e.printStackTrace();
 
 		}
 
-	   
+
 
 		return imageFile;
 	}
-	
+
 	//TODO Need this done ASAP
 	public String resizeImage(FileResource resource){
 
 		File imageFile = resource.getSourceFile().getAbsoluteFile();
-		
+
 		//Copy of the File that will be deleted
 		File imageToDelete = resource.getSourceFile().getAbsoluteFile();
 
 		Debugging.output("ImageFile: " + imageFile, Debugging.UPLOAD_IMAGE);
-		
+
 		if(imageFile.getName().contains("png")){
 			imageFile = convertPNGtoJPEG(imageFile);
 		}
-		
+
 		BufferedImage originalImage = null;
 		try {
 			originalImage = ImageIO.read(imageFile);
@@ -206,7 +216,7 @@ Upload.FinishedListener, Receiver{
 		//Delete original image file. 
 		Boolean deletion = imageToDelete.delete();
 		Debugging.output("Original Image deleted? " + deletion, Debugging.UPLOAD_IMAGE);
-		
+
 		return link;
 
 	}
@@ -243,6 +253,13 @@ Upload.FinishedListener, Receiver{
 	 * Adding the label and buttons using this method. Will need some editing.
 	 */
 	public void addUploadUI(){
+
+		String output ="";
+
+		output += InhalerUtils.toString(uploadPhoto.getListeners(Object.class));
+
+		Debugging.output("Started Listeners: " + output, Debugging.UPLOAD_IMAGE);
+
 		setHasUploaded(false);
 		this.setSpacing(true);
 		this.removeAllComponents();
@@ -266,42 +283,48 @@ Upload.FinishedListener, Receiver{
 	}
 	@Override
 	public void uploadSucceeded(SucceededEvent event) {
-		// TODO Auto-generated method stub
+
+		Notification n = new Notification("UPLOAD Finished! :) ");
+
+		n.show(UI.getCurrent().getPage());
+
 
 	}
 	@Override
 	public void uploadFailed(FailedEvent event) {
 		// TODO Auto-generated method stub
+		Notification n = new Notification("UPLOAD Failed! :(");
 
+		n.show(UI.getCurrent().getPage());
 	}
 	@Override
 	public void updateProgress(long readBytes, long contentLength) {
 		// TODO Auto-generated method stub
 
 	}
-	//TODO Fix this bulls
+	//TODO
 	public void uploadStarted(StartedEvent event) {
 		// TODO Auto-generated method stub
-		
+
 		String fileName = event.getMIMEType();
 		Debugging.output("File Type in UploadStarted: " + fileName,  Debugging.UPLOAD_IMAGE);
-		
-			if(fileName.contains("image")){
-				
-			}
-			else{
-				Notification.show("Error", "\nFile Types Allowed: .jpg and .png" + "\nClick on error message to dismiss.", Type.ERROR_MESSAGE);
-				uploadPhoto.interruptUpload();
-			}
-		
+
+		if(fileName.contains("image")){
+
+		}
+		else{
+			Notification.show("Error", "\nFile Types Allowed: .jpg and .png" + "\nClick on error message to dismiss.", Type.ERROR_MESSAGE);
+			uploadPhoto.interruptUpload();
+		}
+
 	}
 
 	@Override
 	public OutputStream receiveUpload(String filename, String mimeType) {
 		// TODO Auto-generated method stub
-		makeDirectory();
+		//makeDirectory();
 		FileOutputStream fos = null;
-
+		Debugging.output("REceived the upload",  Debugging.UPLOAD_IMAGE);
 		//If upload button is selected amd there isn'ta file, break from method
 
 		try {
@@ -325,5 +348,11 @@ Upload.FinishedListener, Receiver{
 		File f = new File(PROFILE_PICTURE_FOLDER);
 		Boolean worked = f.mkdirs();
 		Debugging.output("Created new directory: " + worked,  Debugging.UPLOAD_IMAGE);
+	}
+
+	@Override
+	public void filenameChanged(ChangeEvent event) {
+		// TODO Auto-generated method stub
+
 	}
 }

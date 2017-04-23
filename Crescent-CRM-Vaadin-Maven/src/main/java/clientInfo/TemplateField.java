@@ -12,7 +12,8 @@ public class TemplateField extends MaxObject{
 	public static final String DATA_TYPE_NUMBER = "Number";
 	public static final String DATA_TYPE_DATE = "Date";
 	public static final String DATA_TYPE_TEXT = "Text";
-	public static final String[] DataTypes = {DATA_TYPE_NUMBER,DATA_TYPE_DATE, DATA_TYPE_TEXT};
+	//Add Date back later
+	public static final String[] DataTypes = {DATA_TYPE_NUMBER, DATA_TYPE_TEXT};
 	
 
 	MaxField<String> fieldName = new MaxField<String>("fieldName", MaxDBTable.DATA_MYSQL_TYPE_KEY_STRING, "", "", this);
