@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import org.json.simple.*;
 
 
 import debugging.Debugging;
@@ -29,7 +30,7 @@ public class ChatSocket {
 		
 		if (!DISABLE_SOCKET_CODE) {
 		try {
-			int threadID;
+			//int threadID;
 			ChatSocket client = new ChatSocket();
 			
 			
@@ -37,11 +38,17 @@ public class ChatSocket {
 			
 			
 			String message = "login1:troywingert20@gmail.com/test1234"; //retrieve friends list
+			
 			String message2 = ("login2:troywingert20@gmail.com/test1234/"); //retrieve messages
 
 			System.out.println("Sending: " + message);
 			String returnStr = client.SendAndReceive(message);
 			System.out.println("Receiving: " + returnStr);
+			
+			System.out.println("Sending threadID...");
+			String threadID = parseThreadIDs(returnStr);
+			String messageReturn = client.SendAndReceive("threadID/" + threadID);
+			System.out.println("Receiving messages: " + messageReturn);
 			
 			//ChatSocket.sendCredentials("troywingert20@gmail.com", "zigzag14"); This is the test account
 			
@@ -110,17 +117,40 @@ public class ChatSocket {
 			
 			input = client.getInputStream();
 			String inputString = ChatSocket.inputStreamAsString(input);
-			System.out.println(inputString);
+			//System.out.println(inputString);
 
             client.close();
             javaSocket.close();
 			
-            return message;
+            return inputString;
 		} catch(IOException e){
 			e.printStackTrace();
 		}
 		return null;
 	}
+	
+	public static String parseThreadIDs(String jsonThreadIds) throws IOException{
+		
+		String[] sectionOne = jsonThreadIds.split("\"");
+		String threadID = sectionOne[3];
+		
+		/*PrintWriter out = new PrintWriter(getSocket().getOutputStream(), true);
+		out.println("threadID/" + threadID);
+		
+		InputStream input;
+		javaSocket = new ServerSocket(NODE_PORT_RECEIVE);
+		Socket client;
+		client = javaSocket.accept();
+		
+		input = client.getInputStream();
+		String inputString = ChatSocket.inputStreamAsString(input);
+		
+		client.close();
+		javaSocket.close();*/
+		
+		return threadID;
+	}
+	
 	public String echo(String message) {
 		try {
 			
@@ -154,7 +184,7 @@ public class ChatSocket {
         return sb.toString();
     }
 	
-	private Socket getSocket() {
+	private static Socket getSocket() {
 		return socket;
 	}
 

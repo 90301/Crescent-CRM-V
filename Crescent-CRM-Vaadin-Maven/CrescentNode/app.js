@@ -85,32 +85,52 @@ net.createServer(function(socket) { //Start server, create socket variable
 			    });
 
 
-			    api.getThreadList(0, 5, 'inbox', function(err, arr){
+			    api.getThreadList(0, null, 'inbox', function(err, arr){
+			    	if(err) return console.error(err);
 			    	
-			    	var messages = JSON.stringify(arr);
-			    	var holder;
-			    	holder = arr.find(funcThreadID);
-			    	console.log(arr.find(funcThreadID));
-			    	console.log(messages);
+			    	var javaC = net.connect(3002, 'localhost');
+			    	let buffer = new Buffer(JSON.stringify(arr))
+			    	
+			    	javaC.write(buffer);
+			    	//console.log(arr);
+			    	javaC.end();
 			    	
 			    	
 			    }); 
 			    
+			   
 			    
-			api.getFriendsList((err, data) => {
+			    
+			/*api.getFriendsList((err, data) => {
 			        if(err) return console.error(err);
 			       
 			        var client = net.connect(3002, 'localhost');
-			        let buffer = new Buffer(JSON.stringify(data));
+			        let buffer1 = new Buffer(JSON.stringify(data));
 			        
-			        client.write(buffer);
+			        client.write(buffer1);
 			        console.log(data);
 			        client.end();
-			    });
+			    });*/
 		  });
 	  }
 
+	  var array2 = string.split("/");
 	  
+	  if(array2[0] = "threadID"){
+		  api.getThreadHistory(array2[1], 0, 5, null, function(err, history){
+	          if (err) throw err;
+
+	          var javaC2 = net.connect(3002, 'localhost');
+	          let buffer2 = new Buffer(JOSN.stringify(history))
+	          javaC2.write(buffer2);
+	          javaC2.end();
+	          
+	          //console.log(history);
+	})
+	  }
+	  
+	  
+
 	  
   });  
   
