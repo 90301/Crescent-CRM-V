@@ -4,8 +4,8 @@ import com.vaadin.v7.data.Container.Filter;
 import com.vaadin.v7.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.v7.ui.CheckBox;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.v7.ui.HorizontalLayout;
 import com.vaadin.v7.ui.Label;
 import com.vaadin.v7.ui.TextField;
@@ -39,9 +39,9 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 	Button filterHideFilter = new Button("<<", e -> hideFilterClick());
 	Boolean filterShowing = false;
 	
-	ComboBox filterStatus  = new ComboBox("Status");
-	ComboBox filterLocation = new ComboBox("Location");
-	ComboBox filterGroup = new ComboBox("Group");
+	ComboBox<Status> filterStatus  = new ComboBox<>("Status");
+	ComboBox<Location> filterLocation = new ComboBox<>("Location");
+	ComboBox<Group> filterGroup = new ComboBox<>("Group");
 	Button filterButton = new Button("Filter", event -> this.updateFilter());
 	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
 	TextField filterClientTextField = new TextField(" Name ");
@@ -98,10 +98,6 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		filterStatus.clear();
 		filterLocation.clear();
 		filterGroup.clear();
-		
-		filterStatus.removeAllItems();
-		filterLocation.removeAllItems();
-		filterGroup.removeAllItems();
 		
 		crmUi.fillComboBox(filterStatus, crmUi.masterUi.userDataHolder.getAllStatus());
 		crmUi.fillComboBox(filterLocation, crmUi.masterUi.userDataHolder.getAllLocations());

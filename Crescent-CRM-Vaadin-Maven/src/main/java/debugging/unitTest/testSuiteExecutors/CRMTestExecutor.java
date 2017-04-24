@@ -115,11 +115,11 @@ public class CRMTestExecutor extends TestSuiteExecutor {
 			Debugging.output("ID: " + id, CRM_TEST_DEBUG);
 		}
 		*/
-		crmUi.createClientLocation.select(locationTest1Name);
+		crmUi.createClientLocation.setValue(locationTest1);
 		
-		crmUi.createClientStatus.select(statusTest1Name);
+		crmUi.createClientStatus.setValue(statusTest1);
 		
-		crmUi.createClientGroup.select(groupTest1Name);
+		crmUi.createClientGroup.setValue(groupTest1);
 		
 		crmUi.createClientClick();
 		

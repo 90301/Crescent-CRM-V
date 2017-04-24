@@ -17,10 +17,10 @@ import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.data.Property.ValueChangeEvent;
 import com.vaadin.v7.data.util.IndexedContainer;
-import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.v7.ui.Grid;
 import com.vaadin.v7.ui.ListSelect;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
@@ -77,9 +77,9 @@ public class CrmUI extends CrescentView {
 	public TextField createGroupName = new TextField();//"Group Name");
 	public TextField createClientName = new TextField("Name");
 	
-	public ComboBox createClientStatus = new ComboBox("Status");
-	public ComboBox createClientLocation = new ComboBox("Location");
-	public ComboBox createClientGroup = new ComboBox("Group");
+	public ComboBox<Status> createClientStatus = new ComboBox<>("Status");
+	public ComboBox<Location> createClientLocation = new ComboBox<>("Location");
+	public ComboBox<Group> createClientGroup = new ComboBox<>("Group");
 	
 	//ListBox is containing current statuses...
 	ListSelect createLocationListSelect = new ListSelect();
@@ -253,11 +253,6 @@ public class CrmUI extends CrescentView {
 		createClientLocation.clear();
 		createClientGroup.clear();
 		
-		
-		createClientStatus.removeAllItems();
-		createClientLocation.removeAllItems();
-		createClientGroup.removeAllItems();
-		
 		// create clients
 		
 		fillComboBox(createClientStatus, masterUi.userDataHolder.getAllStatus());
@@ -279,18 +274,13 @@ public class CrmUI extends CrescentView {
 		//fillComboBox(csvBackupSelect, BackupManager.getCsvBackups());
 	}
 
-	
-	public <T extends Object> void fillComboBox(ComboBox box, Collection<T> values) {
+
+	@Deprecated
+	public <T extends Object> void fillComboBox(ComboBox<T> box, Collection<T> values) {
 		
 		RapidProfilingTimer rpt = new RapidProfilingTimer("CrmUI fillComboBox");
-		
-		for (Object val : values) {
-			// add any non template entity. (unless template is selected)
-			//if (val != null && !val.toString().contains(DataHolder.TEMPLATE_STRING)) {
-				box.addItem(val.toString());
-			//}
-			rpt.logTime();
-		}
+		box.setItems(values);
+		rpt.logTime();
 	}
 
 	// temp value to set the current client to
@@ -647,14 +637,11 @@ public class CrmUI extends CrescentView {
 			Boolean newItemsAllowed = true;
 			
 			createClientStatus.setTextInputAllowed(textInputAllow);
-
-			
 			
 			createClientLocation.setTextInputAllowed(textInputAllow);
-
 			
 			createClientGroup.setTextInputAllowed(textInputAllow);
-
+			
 		} else {
 
 		}
