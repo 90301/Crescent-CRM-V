@@ -1,0 +1,19 @@
+{
+  "name": "Crescent-CRM-Vaadin-Maven",
+  "version": "0.0.0",
+  "description": "Node Addon for chat",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo 'Error: no test specified' && exit 1"
+  },
+  "author": "Josh Benton",
+  "license": "Copyright",
+  "dependencies" :
+  { 
+  "facebook-chat-api" : ">= 0.0.0",
+  "fs" : ">= 0.0.0",
+  "net" : ">= 0.0.0",
+  "fb" : ">= 0.0.0",
+  "prompt" : ">= 0.0.0"
+  }
+}
