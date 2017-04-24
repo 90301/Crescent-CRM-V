@@ -80,7 +80,10 @@ public class Location extends MaxObject implements Comparable<Location> {
 	 * @return a hash set of all close locations
 	 */
 	public HashSet<Location> getRealCloseLocations() {
-		
+		if (userDataHolder==null) {
+		    Debugging.output("ERROR user data holder null: " + userDataHolder, Debugging.CONVERSION_DEBUG2);
+		    return null;
+		}
 		realCloseLocations.clear();
 		
 		for (String s : getCloseLocations()) {
@@ -88,6 +91,8 @@ public class Location extends MaxObject implements Comparable<Location> {
 			Location l = userDataHolder.getLocation(s);
 			if (l!=null) {
 				realCloseLocations.add(l);
+			} else {
+			    Debugging.output("ERROR location null: " + l, Debugging.CONVERSION_DEBUG2);
 			}
 		}
 		

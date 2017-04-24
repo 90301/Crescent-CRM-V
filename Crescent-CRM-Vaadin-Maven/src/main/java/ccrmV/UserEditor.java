@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
@@ -17,21 +17,21 @@ import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.Grid.HeaderRow;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.Grid.HeaderRow;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.ListSelect;
+import com.vaadin.v7.ui.ListSelect;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.TwinColSelect;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.PasswordField;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.TwinColSelect;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import clientInfo.DataHolder;
 import clientInfo.UserDataHolder;
@@ -41,12 +41,11 @@ import integrations.OauthUtils;
 import uiElements.NavBar;
 import users.User;
 
-public class UserEditor extends HorizontalLayout implements View {
+public class UserEditor extends CrescentView {
 
-	public MasterUI masterUi;
+	//public MasterUI masterUi;
 	Label welcomeLabel;
-	public NavBar navBar;
-	private boolean alreadyGenerated = false;
+	//public NavBar navBar;
 
 	Accordion userEditorAccordion = new Accordion();
 
@@ -244,7 +243,7 @@ public class UserEditor extends HorizontalLayout implements View {
 	 * 
 	 */
 	@Override
-	public void enter(ViewChangeEvent event) {
+	public void enterView(ViewChangeEvent event) {
 		
 		// Ensure the user is logged in
 		if (masterUi.loggedIn == false) {
@@ -255,9 +254,6 @@ public class UserEditor extends HorizontalLayout implements View {
 		// return;
 
 		// if (this.alreadyGenerated) {
-		this.removeAllComponents();
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
 		// return;
 		// }
 		// userEditorAccordion
@@ -396,11 +392,9 @@ public class UserEditor extends HorizontalLayout implements View {
 
 		// this.addComponent(welcomeLabel);
 
-		this.addComponent(navBar.sidebarLayout);
+		//this.addComponent(navBar);
 
 		this.addComponent(userEditorAccordion);
-
-		this.alreadyGenerated = true;
 
 		checkAdmin();
 	}

@@ -1,19 +1,19 @@
 package ccrmV;
 
-import com.vaadin.data.Container.Indexed;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.v7.data.Container.Indexed;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.data.util.IndexedContainer;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.TextField;
 
 import clientInfo.UserDataHolder;
 import dbUtils.MaxField;
@@ -22,11 +22,11 @@ import inventory.InventoryCategory;
 import inventory.InventoryItem;
 import uiElements.NavBar;
 
-public class InventoryView extends HorizontalLayout implements View {
+public class InventoryView extends CrescentView {
 
 	private static final int MAX_CATEGORY_ROWS = 5;
-	public MasterUI masterUi;
-	public NavBar navBar;
+	//public MasterUI masterUi;
+	//public NavBar navBar;
 	private boolean alreadyGenerated;
 
 	Accordion inventoryAccordion = new Accordion();
@@ -54,18 +54,13 @@ public class InventoryView extends HorizontalLayout implements View {
 
 	Button editInventoryUpdateButton = new Button("update", e -> editInventoryUpdateClick());
 
-	@Override
-	public void enter(ViewChangeEvent event) {
+	
+	public void enterView(ViewChangeEvent event) {
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
-
-		if (this.alreadyGenerated) {
-			this.removeAllComponents();
-			// return;
-		}
 		
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
+		//this.setSpacing(true);
+		//this.addStyleName("topScreenPadding");
 		
 		inventoryAccordion.addStyleName("lighterSelection");
 
@@ -129,7 +124,7 @@ public class InventoryView extends HorizontalLayout implements View {
 
 		populateData();
 
-		this.addComponent(navBar.sidebarLayout);
+		//this.addComponent(navBar);
 
 		this.addComponent(inventoryAccordion);
 		

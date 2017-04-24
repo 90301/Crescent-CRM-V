@@ -12,44 +12,44 @@ import java.util.concurrent.TimeUnit;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.shared.ui.calendar.DateConstants;
-import com.vaadin.shared.ui.datefield.Resolution;
+import com.vaadin.v7.shared.ui.calendar.DateConstants;
+import com.vaadin.v7.shared.ui.datefield.Resolution;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
-import com.vaadin.ui.components.calendar.event.BasicEvent;
-import com.vaadin.ui.components.calendar.event.CalendarEvent;
-import com.vaadin.ui.components.calendar.handler.BasicDateClickHandler;
+import com.vaadin.v7.ui.components.calendar.CalendarComponentEvents.DateClickEvent;
+import com.vaadin.v7.ui.components.calendar.event.BasicEvent;
+import com.vaadin.v7.ui.components.calendar.event.CalendarEvent;
+import com.vaadin.v7.ui.components.calendar.handler.BasicDateClickHandler;
 
 import clientInfo.DataHolder;
 import clientInfo.ScheduleEvent;
 import clientInfo.UserDataHolder;
 
-import com.vaadin.ui.Calendar;
-import com.vaadin.ui.ComboBox;
+import com.vaadin.v7.ui.Calendar;
+import com.vaadin.v7.ui.ComboBox;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.DateField;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.TextArea;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.PopupDateField;
+import com.vaadin.v7.ui.TextArea;
+import com.vaadin.v7.ui.TextField;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import uiElements.NavBar;
 import uiElements.SchedulerModule;
 import users.User;
 
-public class SchedulerView extends HorizontalLayout implements View {
+public class SchedulerView extends CrescentView {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -5854568268650533061L;
-	public MasterUI masterUi;
-	public NavBar navBar;
+	//public MasterUI masterUi;
+	//public NavBar navBar;
 
 	public HorizontalLayout createEventLayout = new HorizontalLayout();
 	public VerticalLayout schedulerLayout = new VerticalLayout();
@@ -129,9 +129,9 @@ public class SchedulerView extends HorizontalLayout implements View {
 	}
 
 	@Override
-	public void enter(ViewChangeEvent event) {
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
+	public void enterView(ViewChangeEvent event) {
+		//this.setSpacing(true);
+		//this.addStyleName("topScreenPadding");
 		// TODO
 		if (!masterUi.loggedIn || masterUi.user == null)
 			masterUi.enterLogin();
@@ -206,11 +206,6 @@ public class SchedulerView extends HorizontalLayout implements View {
 		/*
 		 * Add components here
 		 */
-
-		this.addComponent(navBar.sidebarLayout);
-		// this.addComponent(new Label("Scheduler"));
-
-		// this.addComponent(cal);
 
 		switchToSingleModeClick();
 

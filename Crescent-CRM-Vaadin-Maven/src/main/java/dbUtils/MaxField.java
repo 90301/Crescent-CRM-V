@@ -38,7 +38,7 @@ public class MaxField<T> {
 	 * @param fieldName - the name of the field (used in a MaxObject's DbMap)
 	 * @param fieldDBType - The database type
 	 * @param fieldValue - The value of the field (subject to change over time)
-	 * @param refClass 
+	 * @param refClass - this
 	 */
 	public MaxField(String fieldName, String fieldDBType, T fieldValue, T defaultFieldValue, MaxObject refClass) {
 		super();
@@ -50,6 +50,9 @@ public class MaxField<T> {
 		
 		//default value for grid name is just field name
 		this.gridName = this.fieldName;
+		
+		//automatic adding to maxobject
+		refClass.addMaxField(this);
 	}
 
 	/*
@@ -85,10 +88,12 @@ public class MaxField<T> {
 	 */
 	public void safeLoadValue(MaxObject maxObject) {
 		
+		Debugging.output(
+				"Default value for : " + fieldName + " default value: " + this.defaultFieldValue
+				, Debugging.MAX_OBJ_DEBUG);
+		
 		T loadedValue = maxObject.safeLoadFromInternalMap(this.fieldName, this.defaultFieldValue);
-		
-		
-		
+
 		//NOTE: this may cause a bug if the internal map is updated
 		this.setFieldValue(loadedValue);
 		
@@ -107,7 +112,13 @@ public class MaxField<T> {
 		
 		T convertedValue = (T) ((MaxConversion<T,STORE>) this.conversion).convertToUse(databaseLoadedValue);
 		
+		if (convertedValue!=null) {
+		
 		this.setFieldValue(convertedValue);
+		
+		} else {
+			this.setFieldValue(this.getDefaultFieldValue());
+		}
 	}
 	
 	@Override

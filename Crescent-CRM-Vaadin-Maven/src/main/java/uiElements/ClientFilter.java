@@ -1,14 +1,14 @@
 package uiElements;
 
-import com.vaadin.data.Container.Filter;
-import com.vaadin.data.Item;
+import com.vaadin.v7.data.Container.Filter;
+import com.vaadin.v7.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
+import com.vaadin.v7.ui.CheckBox;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.TextField;
 
 import ccrmV.CrmUI;
 import clientInfo.Client;
@@ -42,7 +42,7 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 	ComboBox filterStatus  = new ComboBox("Status");
 	ComboBox filterLocation = new ComboBox("Location");
 	ComboBox filterGroup = new ComboBox("Group");
-	//Button filterButton = new Button("Filter", event -> this.filterClick());
+	Button filterButton = new Button("Filter", event -> this.updateFilter());
 	Button resetFilterButton = new Button("Reset", event -> this.resetFilterClick());;
 	TextField filterClientTextField = new TextField(" Name ");
 	TextField filterClientNotesField = new TextField("Notes Include:");
@@ -94,16 +94,6 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		updateFilter();
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public void updateAllComboBoxes() {
 		filterStatus.clear();
 		filterLocation.clear();
@@ -124,7 +114,9 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		filterStatus.setVisible(showFilter);
 		filterLocation.setVisible(showFilter);
 		filterGroup.setVisible(showFilter);
-		//filterButton.setVisible(showFilter);
+		
+		filterButton.setVisible(showFilter);
+		
 		resetFilterButton.setVisible(showFilter);
 		filterClientTextField.setVisible(showFilter);
 		filterClientNotesField.setVisible(showFilter);
@@ -165,7 +157,7 @@ public class ClientFilter extends HorizontalLayout implements Filter {
 		this.addComponent(filterContactNowCheckBox);
 
 		//filterButton
-		//this.addComponent(filterButton);
+		this.addComponent(filterButton);
 		//resetFilterButton 
 		this.addComponent(resetFilterButton);
 		

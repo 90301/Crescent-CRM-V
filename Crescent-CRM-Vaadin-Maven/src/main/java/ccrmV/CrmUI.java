@@ -14,9 +14,13 @@ import javax.servlet.annotation.WebServlet;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.data.Item;
-import com.vaadin.data.Property.ValueChangeEvent;
-import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.data.Property.ValueChangeEvent;
+import com.vaadin.v7.data.util.IndexedContainer;
+import com.vaadin.v7.ui.ComboBox;
+import com.vaadin.v7.ui.Grid;
+import com.vaadin.v7.ui.ListSelect;
+import com.vaadin.v7.ui.TextField;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ExternalResource;
@@ -24,8 +28,19 @@ import com.vaadin.server.Page;
 import com.vaadin.server.Page.Styles;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
+import com.vaadin.ui.AbstractOrderedLayout;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.*;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Panel;
+import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
+
 import clientInfo.*;
 import dbUtils.BackupManager;
 import dbUtils.InhalerUtils;
@@ -41,7 +56,7 @@ import users.User;
 
 @SuppressWarnings("serial")
 @Theme("crescent_crm_vaadin")
-public class CrmUI extends HorizontalLayout implements View {
+public class CrmUI extends CrescentView {
 
 	/*
 	 * in order for databases to work, The driver must be added to the server.
@@ -100,7 +115,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	public IndexedContainer clients = new IndexedContainer();
 
 	//nav bar
-	public NavBar navBar;
+	//public NavBar navBar;
 	
 	VerticalLayout linkLayout = new VerticalLayout();
 
@@ -110,11 +125,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 	Label versionLabel = new Label("Version");
 
-
-
-	
-
-
 	public Client selectedClient;
 	Boolean discard = false;
 	boolean unsavedProgress = false;
@@ -122,7 +132,7 @@ public class CrmUI extends HorizontalLayout implements View {
 	private String cacheDatabaseName = "";
 	// holds all possible values that mean null.
 	HashSet<String> nullStrings = new HashSet<String>();
-	public MasterUI masterUi;
+	//public MasterUI masterUi;
 
 	
 	Layout layout = new VerticalLayout();
@@ -423,16 +433,20 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Null checking
 		try {
 			if (InhalerUtils.stringNullCheck(createClientLocation.getValue().toString())) {
+				Debugging.output("Null value detected for client location", Debugging.CRM_ERROR);
 				return;
 			}
 			if (InhalerUtils.stringNullCheck(createClientStatus.getValue().toString())) {
+				Debugging.output("Null value detected for client status", Debugging.CRM_ERROR);
 				return;
 			}
 			if (InhalerUtils.stringNullCheck(createClientGroup.getValue().toString())) {
+				Debugging.output("Null value detected for client group", Debugging.CRM_ERROR);
 				return;
 			}
 		} catch (NullPointerException e) {
-			System.err.println("Null value was entered: " + e.getMessage());
+			
+			Debugging.output("Null value detected for client: " + e.getMessage(), Debugging.CRM_ERROR);
 			return; // a null value was found
 		}
 		
@@ -539,15 +553,15 @@ public class CrmUI extends HorizontalLayout implements View {
 	}
 
 	@Override
-	public void enter(ViewChangeEvent VCevent) {
+	public void enterView(ViewChangeEvent VCevent) {
 
 		
 		if (masterUi.loggedIn == false)
 			masterUi.enterLogin();
 		
 		
-		this.setSpacing(true);
-		this.addStyleName("topScreenPadding");
+		//this.setSpacing(true);
+		//this.addStyleName("topScreenPadding");
 		
 		//only runs if it hasn't already.
 		masterUi.userDataHolder.initalizeDatabases();
@@ -555,7 +569,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Nav Bar Code
 		navBar.updateInfo();
 		
-		this.addComponent(navBar.sidebarLayout);
+		this.addComponent(navBar);
 		
 
 		((AbstractOrderedLayout) layout).setMargin(false);
@@ -583,7 +597,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		
 		//createLocationName 
 	
-		createLocationListSelect.setNullSelectionAllowed(false);
+		//createLocationListSelect.setNullSelectionAllowed(false);
 		createLocationListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createLocationLayout.addComponent(createLocationName);
@@ -598,7 +612,6 @@ public class CrmUI extends HorizontalLayout implements View {
 
 		// Add status
 
-		createStatusListSelect.setNullSelectionAllowed(false);
 		createStatusListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 		
 		createStatusLayout.addComponent(createStatusName);
@@ -614,7 +627,6 @@ public class CrmUI extends HorizontalLayout implements View {
 		// Add Group
 
 		//createGroupName 
-		createGroupListSelect.setNullSelectionAllowed(false);
 		createGroupListSelect.setRows(CREATE_LIST_SELECT_ROWS);
 
 		createGroupLayout.addComponent(createGroupName);
@@ -634,32 +646,17 @@ public class CrmUI extends HorizontalLayout implements View {
 			Boolean nullSelectionAllow = false;
 			Boolean newItemsAllowed = true;
 			
-			
-			createClientStatus.setInvalidAllowed(invalidAllow);
-			createClientLocation.setInvalidAllowed(invalidAllow);
-			createClientGroup.setInvalidAllowed(invalidAllow);
-			
 			createClientStatus.setTextInputAllowed(textInputAllow);
-			createClientStatus.setNewItemsAllowed(newItemsAllowed);
-			createClientStatus.setNullSelectionAllowed(nullSelectionAllow);
+
 			
 			
 			createClientLocation.setTextInputAllowed(textInputAllow);
-			createClientLocation.setNewItemsAllowed(newItemsAllowed);
-			createClientLocation.setNullSelectionAllowed(nullSelectionAllow);
+
 			
 			createClientGroup.setTextInputAllowed(textInputAllow);
-			createClientGroup.setNewItemsAllowed(newItemsAllowed);
-			createClientGroup.setNullSelectionAllowed(nullSelectionAllow);
-			
+
 		} else {
-			createClientStatus.setInvalidAllowed(false);
-			createClientLocation.setInvalidAllowed(false);
-			createClientGroup.setInvalidAllowed(false);
-			
-			createClientStatus.setNullSelectionAllowed(false);
-			createClientLocation.setNullSelectionAllowed(false);
-			createClientGroup.setNullSelectionAllowed(false);
+
 		}
 		
 		createClientLayout.setMargin(true);
@@ -740,7 +737,7 @@ public class CrmUI extends HorizontalLayout implements View {
 		layout.addComponent(midLayout);
 		midLayout.addComponent(clientGrid);
 		//clientTable.setSelectionMode(true);
-		clientGrid.setImmediate(true);
+		//clientGrid.setImmediate(true);
 		//clientTable.addValueChangeListener(event -> this.selectItem(event));
 		
 
@@ -795,9 +792,12 @@ public class CrmUI extends HorizontalLayout implements View {
 			String statusName = InhalerUtils.removeSpecialCharacters(s.getStatusName());
 			
 			//convert int color to hex for use with  CSS
+			if (s.getColor()!=0) {
 			String statusColor = String.format("#%06X", (0xFFFFFF & s.getColor()));
 			
+			
 			styles.add("."+ statusName+ " { color: " + statusColor + "; }");
+			}
 		}
 		
 		clientGrid.setRowStyleGenerator(client -> {

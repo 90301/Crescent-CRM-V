@@ -11,7 +11,7 @@ import debugging.Debugging;
  *
  */
 public class UnitTestCase {
-	public static final String TEST_SUCCESS_STRING = "[✔]";
+	public static final String TEST_SUCCESS_STRING = "[?]";
 	public static final String TEST_FAIL_STRING = "[X]";
 	public static final String DELIMITER = " | ";
 	//Test type constants

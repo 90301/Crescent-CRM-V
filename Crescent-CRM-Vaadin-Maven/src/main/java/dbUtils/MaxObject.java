@@ -19,6 +19,8 @@ import javax.annotation.Generated;
 import clientInfo.Client;
 import clientInfo.UserDataHolder;
 import debugging.Debugging;
+import debugging.profiling.RapidProfilingTimer;
+import users.User;
 
 /**
  * A serialization for objects SUBCLASSES MUST IMPLEMENT A NO ARGUMENT
@@ -53,54 +55,6 @@ public abstract class MaxObject {
 	 * End variables and data structures
 	 */
 	
-	/**
-	 * Creates a sql statement to insert a MaxObject into a database.
-	 * @return sql insertion string.
-	 */
-	public String getInsertValues() {
-		// TODO: update this to use a custom SQL object class
-		// with a special variables and a special function to get the key and
-		// value
-		// SQL representation
-		//TODO: escape  commas in notes to prevent issues
-		this.updateDBMap();
-		String insertValues = " ";
-		String keys = "(";
-		String values = "(";
-		Boolean firstLoop = true;
-		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
-		for (String key : dbMap.keySet()) {
-			Object value = dbMap.get(key);
-			// special case for first loop (doesn't have a comma)
-			if (!firstLoop) {
-				keys += ", ";
-				values += ", ";
-			} else {
-				firstLoop = false;
-			}
-			keys += key;
-
-			if (value instanceof Date) {
-				//special case for dates
-				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				String modValue = sdf.format(value);
-				Debugging.output("date: " + modValue,Debugging.DATABASE_OUTPUT);
-				values += "'" + modValue + "'";
-			} else if (value instanceof Boolean) {
-				//MYSQL requires no quotes for a true/false value
-					values +=  ""+value;
-				
-			} else {
-				values += "'" + value + "'";
-			}
-
-		}
-		keys += ")";
-		values += ")";
-		insertValues += keys + " VALUES " + values;
-		return insertValues;
-	}
-	
 
 	/**
 	 * PREPARED statement version of insertion
@@ -111,7 +65,6 @@ public abstract class MaxObject {
 		// with a special variables and a special function to get the key and
 		// value
 		// SQL representation
-		//TODO: escape  commas in notes to prevent issues
 		preparedListOrder.clear();
 		
 		this.updateDBMap();
@@ -149,7 +102,6 @@ public abstract class MaxObject {
 		// with a special variables and a special function to get the key and
 		// value
 		// SQL representation
-		//TODO: escape  commas in notes to prevent issues
 		//this.updateDBMap();
 		Debugging.output("Generating insert values for: " + this + " " + dbMap.size(),Debugging.DATABASE_OUTPUT);
 		
@@ -164,20 +116,16 @@ public abstract class MaxObject {
 				java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				String modValue = sdf.format(value);
 				Debugging.output("date: " + modValue,Debugging.DATABASE_OUTPUT);
-				//values += "'" + modValue + "'";
 				//Experimental Date Storage
 				//updateStatement.setDate(currentValue, (Date) value);
 				updateStatement.setString(currentValue, modValue);
 				
 			} else if (value instanceof Boolean) {
-				//MYSQL requires no quotes for a true/false value
-					//values +=  ""+value;
 				updateStatement.setBoolean(currentValue, (boolean) value);
 			} else if (value instanceof Integer) {
 				updateStatement.setInt(currentValue, (Integer) value);
 			
 			} else {
-				//values += "'" + value + "'";
 				updateStatement.setString(currentValue, (String) value);
 			}
 			} catch (Exception e) {
@@ -208,15 +156,13 @@ public abstract class MaxObject {
 			item = (V) dbMap.get(fieldName);
 			Debugging.output(
 					"Found Field: " + fieldName + " = " + item
-					, Debugging.MAX_OBJECT_OUTPUT
-					, Debugging.MAX_OBJECT_OUTPUT_ENABLED);
+					, Debugging.MAX_OBJ_DEBUG);
 			
 		} else {
 			item = defaultValue;
 			Debugging.output(
 					"Failed to find Field: " + fieldName + " default value: " + item
-					, Debugging.MAX_OBJECT_OUTPUT
-					, Debugging.MAX_OBJECT_OUTPUT_ENABLED);
+					, Debugging.MAX_OBJ_DEBUG);
 		}
 		return item;
 	}
@@ -231,15 +177,22 @@ public abstract class MaxObject {
 		}
 		
 		
+		
 		Debugging.output("MaxObject.loadFromDB() expecting: " + dbMap.keySet().size() + " keys.",Debugging.DATABASE_OUTPUT);
+		
+		Debugging.output("MaxObject.loadFromDB() Class: " + this.getClass() ,Debugging.USER_DATABASE_DEBUG);
+		
 		//for (String key : dbMap.keySet()) {
 		
 		Collection<String> keysToUse = null;
 		if (USE_BETTER_DB_DATATYPES) {
 			keysToUse = betterDbDatatypes.get(this.getClass()).keySet();
+			Debugging.output("Keys To Use: " + InhalerUtils.toString(keysToUse) ,Debugging.USER_DATABASE_DEBUG);
 		} else {
 			keysToUse = dbDatatypes.keySet();
 		}
+		
+		Debugging.output(InhalerUtils.toStringColumns(rs), Debugging.USER_DATABASE_DEBUG);
 		
 		for (String key : keysToUse) {
 			Debugging.output("Key: " + key,Debugging.DATABASE_OUTPUT);
@@ -258,12 +211,16 @@ public abstract class MaxObject {
 					//This should be fixed later
 					Debugging.output("key not found: " + key + " in: " + this,Debugging.DATABASE_OUTPUT_ERROR);
 					
-				} else {
-					e.printStackTrace();
 				}
+				e.printStackTrace();
 			}
 		}
+		if (this.getClass().isInstance(User.class)) {
+			Debugging.output("IDENTIFIED AS A USER CLASS!" ,Debugging.USER_DATABASE_DEBUG);
+		}
 		loadInternalFromMap();
+		
+		Debugging.USER_DATABASE_DEBUG.nextBlock();
 
 	}
 
@@ -318,78 +275,6 @@ public abstract class MaxObject {
 		
 		
 	}
-
-
-
-	/**
-	 * @deprecated
-	 * Loads data into dbMap from a csv file map.
-	 * 
-	 * @param entity
-	 *            <field, object> format. ex: name,john smith
-	 */
-	public void loadFromCSV(Map<String, String> entity) {
-		
-		//TODO: comment and debug this method
-		setupDBDatatypes();
-		//setup the variables and their types. this must be done for every subclass (IE client/status)
-		Debugging.output("MaxObject.loadFromCSV()",Debugging.DATABASE_OUTPUT);
-		try {
-			//go through every field, and get the respective name
-			// [Name:Jessie] -> get all fields (Name,id,...ect)
-			for (String key : entity.keySet()) {
-				Debugging.output("Loading: " + key + " from csv with value: " + entity.get(key),Debugging.DATABASE_OUTPUT);
-
-				//reference class, used to create an object
-				Class<?> ref = dbDatatypes.get(key);
-
-				Debugging.output("loaded ref: " + ref,Debugging.DATABASE_OUTPUT);
-				Object obj;
-				
-				if (ref==null) {
-					//null checking
-					Debugging.output("Null value encountered.",Debugging.DATABASE_OUTPUT);
-				}
-				
-				
-				if (ref.equals(Integer.class)) {
-					obj = 0;
-				} else {
-
-					obj = ref.newInstance();
-				}
-				//convert the string to the respective data type.
-				try {
-				if (obj.getClass() == String.class) {
-					obj = entity.get(key);
-				} else if (obj.getClass() == Integer.class) {
-					obj = Integer.parseInt(entity.get(key));
-				} else if (obj.getClass() == java.util.Date.class) {
-					obj = Client.SIMPLE_DATE_FORMAT.parse(entity.get(key));
-				}else {
-					Debugging.output("Class: " + obj.getClass() + " WAS NOT PROGRAMED!",Debugging.DATABASE_OUTPUT);
-				}
-
-				dbMap.put(key, obj);
-				} catch (Exception e) {
-					//Data does not match expected input
-					System.err.println("Bad data encountered in file, discarding line with item: " + entity.get(key));
-				}
-
-			}
-
-			loadInternalFromMap();
-
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NullPointerException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	
 	/*
@@ -405,8 +290,10 @@ public abstract class MaxObject {
 	 * @param mf the Max Field to add.
 	 */
 	public void addMaxField(MaxField<?> mf) {
+		if (!autoGenList.contains(mf) && !autoGenMap.containsKey(mf.getFieldName())) {
 		autoGenList.add(mf);
 		autoGenMap.put(mf.getFieldName(), mf);
+		}
 	}
 	
 	public MaxField<?> getField(String fieldName) {
@@ -478,7 +365,8 @@ public abstract class MaxObject {
 	 * @return
 	 */
 	public Collection<MaxField<?>> autoGenLoadInternalFromMap(Collection<MaxField<?>> maxFields) {
-		
+		RapidProfilingTimer rpt = new RapidProfilingTimer("auto gen load internal");
+		rpt.logTime();
 		for (MaxField<?> m : maxFields) {
 			if (m.getConversion()==null) {
 				m.safeLoadValue(this);
@@ -486,6 +374,7 @@ public abstract class MaxObject {
 				//if a conversion is available, use it
 				m.safeConversionLoad(this);
 			}
+			rpt.logTime();
 			
 		}
 		

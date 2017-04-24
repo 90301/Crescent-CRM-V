@@ -1,8 +1,9 @@
 package debugging;
 
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.RichTextArea;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.RichTextArea;
 
+@Deprecated
 public class DebuggingVaadinRichTextConsole extends HorizontalLayout {
 
 	/**

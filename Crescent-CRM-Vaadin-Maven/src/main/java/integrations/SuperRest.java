@@ -6,20 +6,26 @@ import java.util.Map;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.vaadin.ui.JavaScript;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import configuration.Configuration;
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
 import elemental.json.JsonArray;
+import users.User;
 
 public class SuperRest {
 	
+	
+	/*
+	 * START Firebase
+	 */
 	public static void connectToFirebase() {
 		RestTemplate firebaseConnection = new RestTemplate();
 		
@@ -45,9 +51,11 @@ public class SuperRest {
 		*/
 		
 		//Debugging.output("Response: " + response, Debugging.FIREBASE);
-		JavaScript.getCurrent().addFunction("javascript:getFirebaseDevice", e -> firebaseDevice(e));
+		JavaScript.getCurrent().addFunction("serverTokenFunction(e)", e -> firebaseDevice(e));
 		
 		JavaScript.getCurrent().execute("permRequest()");
+		
+		JavaScript.getCurrent().execute("tokenAquire()");
 	}
 
 	/**
@@ -59,6 +67,57 @@ public class SuperRest {
 		Debugging.output("JSON ARRAY: " + e, Debugging.FIREBASE);
 		
 		
+	}
+
+	public static void getToken() {
+		JavaScript.getCurrent().execute("tokenAquire()");
+		
+	}
+
+	public static void requestPermission() {
+		JavaScript.getCurrent().execute("permRequest()");
+	}
+	
+	public static void regServiceWorker() {
+		JavaScript.getCurrent().execute("regServiceWorker()");
+	}
+	/*
+	 * END Firebase
+	 */
+	
+	/*
+	 * Start Push Bullet
+	 */
+	
+	public static void connectToPushBullet(User u) {
+		RestTemplate pushBulletConnection = new RestTemplate();
+		
+		HttpHeaders headers = new HttpHeaders();
+		
+		Map<String,String> vars = new HashMap<String,String>();
+		
+		
+		
+		String key = u.getPushBulletKey();
+		if (key!="") {
+			headers.add("Access-Token",key);
+			
+			HttpEntity<Map<String,String>> request = new HttpEntity<Map<String,String>>(vars,headers);
+			
+			Debugging.output("Headers: " +headers, Debugging.PUSH_BULLET);
+			
+			/*
+			ResponseEntity<String> response = pushBulletConnection.exchange("https://api.pushbullet.com/v2/users/me",
+							HttpMethod.GET,request, String.class);
+			*/
+			ResponseEntity<String> response = pushBulletConnection.exchange("https://api.pushbullet.com/v2/chats",
+					HttpMethod.GET,request, String.class);
+			
+			String resp = response.getBody();
+			
+			Debugging.output("Response: " +resp, Debugging.PUSH_BULLET);
+			
+		}
 	}
 
 }
