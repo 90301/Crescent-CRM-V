@@ -44,10 +44,12 @@ public class LoginView extends VerticalLayout implements View {
 	 */
 	private static final long serialVersionUID = 1L;
 	public Label welcomeLabel = new Label();
-	public TextField userField = new TextField("User: ");
-	public PasswordField passField = new PasswordField("Pass: ");
+	public TextField userField = new TextField("Username: ");
+	public PasswordField passField = new PasswordField("Password: ");
+	public PasswordField passConfirmField = new PasswordField("Password Confirmation: ");
 	public Button loginButton = new Button("Login", event -> attemptLogin());
-	public Button registerButton = new Button("Register", event -> createNewUserClick());
+	public Button registerButton = new Button("Register", event -> registerClick());
+	public Button createNewUserButton = new Button("Create New User", event -> createNewUserClick());
 	public CheckBox rememberMe = new CheckBox();
 	public Label rememberMeLabel = new Label("Remember Me");
 	public Layout rememberLayout = new HorizontalLayout();
@@ -93,12 +95,16 @@ public class LoginView extends VerticalLayout implements View {
 		//this.addComponent(welcomeLabel);
 		this.addComponent(userField);
 		this.addComponent(passField);
+		this.addComponent(passConfirmField);
+		passConfirmField.setVisible(false);
 		userCreatorLayout.setCaption("Create Users");
 
 		userCreatorLayout.addComponent(registerButton);
 		buttonLayout.setSpacing(true);
 		buttonLayout.addComponent(loginButton);
 		buttonLayout.addComponent(registerButton);
+		buttonLayout.addComponent(createNewUserButton);
+		createNewUserButton.setVisible(false);
 
 		this.addComponent(buttonLayout);
 		rememberLayout.addComponent(rememberMe);
@@ -178,9 +184,19 @@ public class LoginView extends VerticalLayout implements View {
 
 	}
 
+	public void switchToLogin() {
+		registerButton.setVisible(true);
+		createNewUserButton.setVisible(false);
+		passConfirmField.setVisible(false);
+		userCreated = false;
+	}
+	
 	public void attemptLogin() {
 		ProfilingTimer loginTime = new ProfilingTimer("Login Time");
 		String code = "";
+		
+		if (!userCreated){
+		
 		if ((code = DataHolder.attemptLogin(userField.getValue(), passField.getValue())) == DataHolder.SUCCESS_CODE
 				|| (MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
 			if ((MasterUI.DEVELOPER_MODE && MasterUI.DEV_AUTO_LOGIN)) {
@@ -192,7 +208,7 @@ public class LoginView extends VerticalLayout implements View {
 				User loggedInUser = DataHolder.getUser(userField.getValue());
 
 				if (rememberMe.getValue()) {
-					//store the cookie
+					//store the cookie 
 					loggedInUser.rememberUser();
 					
 					Debugging.output("Remembered user: " + InhalerUtils.toStringMaxObject(loggedInUser), Debugging.USER_DATABASE_DEBUG);
@@ -200,6 +216,7 @@ public class LoginView extends VerticalLayout implements View {
 					DataHolder.store(loggedInUser,User.class);
 				}
 				logInAs(loggedInUser);
+
 			}
 
 			//Switch to CRM
@@ -220,8 +237,13 @@ public class LoginView extends VerticalLayout implements View {
 			welcomeLabel.setData(code);
 		}
 		loginTime.stopTimer();
+		
+		} else {
+			switchToLogin();
+		}
 	}
 
+	// Transition to main screen when credentials are correctly entered
 	public void logInAs(User u) {
 		loginSuccess = true;
 		masterUi.user = u;
@@ -229,15 +251,40 @@ public class LoginView extends VerticalLayout implements View {
 		masterUi.startMainApp();
 	}
 
+	
+	// When clicked, gives the ability to register a new user. 
+	// Adds the password confirmation field and a button to create a new user
+	// Removes the register button from view
+	private void registerClick() {
+		passConfirmField.setVisible(true);
+		createNewUserButton.setVisible(true);
+		registerButton.setVisible(false);
+	}
+	
+	Boolean userCreated = false;
+	
+	// Registers a new user
 	private void createNewUserClick() {
+		
 		String userName = userField.getValue();
 		String pass = passField.getValue();
-
+        String passConf = passConfirmField.getValue();
+        
+        
 		User newUser = new User();
 		// Check to see if a user already has a specific name
 		// This doesn't appear to be working. a user can be created with
 		// the same username.
-		if (DataHolder.getUser(userName) == null && pass.length() >= PASS_MIN_LENGTH) {
+		
+		
+		
+		if (DataHolder.getUser(userName) == null && pass.length() >= PASS_MIN_LENGTH && pass.equals(passConf)) {
+			Notification notification = new Notification("Registration successful for " + userName + "!",
+	                  "",
+	                  Notification.Type.HUMANIZED_MESSAGE);
+			notification.setDelayMsec(5000);
+			notification.show(Page.getCurrent());
+			userCreated = true;
 			newUser.setUserName(userName);
 			newUser.setPassword(pass);
 			newUser.setAdmin(false);
@@ -247,15 +294,19 @@ public class LoginView extends VerticalLayout implements View {
 			DataHolder.store(newUser, User.class);
 			userField.setValue("");
 			passField.setValue("");
-			//Notification notif = new Notification("User Created!", "\nClick to dismiss", Type.HUMANIZED_MESSAGE);
-			//notif.setDelayMsec(-1);
-			//notif.show(Page.getCurrent());
+			passConfirmField.setValue("");
+			
 		} else {
-
+				// Password is not long enough (minimum currently set to 5)
 			if (pass.length() < PASS_MIN_LENGTH) {
 				Notification notification = new Notification("Password is too short.",
 						"<br>Minimum Length: " + PASS_MIN_LENGTH + "<br>Click to Dismiss",
 						Notification.Type.ERROR_MESSAGE, true);
+				notification.show(Page.getCurrent());
+			} else if (pass != passConf) {
+				// The passwords in both fields are not the same
+				Notification notification = new Notification("Passwords do not match.",
+						"<br>Click to Dismiss", Notification.Type.ERROR_MESSAGE, true);
 				notification.show(Page.getCurrent());
 			} else {
 				// User already exists

@@ -254,7 +254,7 @@ public class User extends MaxObject {
 		this.addAuthKey(authKey);
 		Cookie cookie = new Cookie(COOKIE_NAME, authKey);
 		cookie.setPath("/");
-		cookie.setMaxAge(60 * 60 * 24 * 40); // valid for 30 days
+		cookie.setMaxAge(60 * 60 * 24 * 30); // valid for 30 days
 		VaadinService.getCurrentResponse().addCookie(cookie);
 
 		//DataHolder.store(this, User.class);
