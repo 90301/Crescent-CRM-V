@@ -83,6 +83,7 @@ net.createServer(function(socket) { //Start server, create socket variable
 	   * spitting out the correct string (threadID:1234567).
 	   **********************************************************************************************/
 	  if(array[0] == "login1"){
+		  //TODO make logging in a function
 		  var holder = array[1];
 		  var credentialsArray = holder.split("/"); //split user/pass
 		  user = credentialsArray[0];
@@ -138,13 +139,15 @@ net.createServer(function(socket) { //Start server, create socket variable
 	  }else if(array[0] == "threadID"){ 
 		  console.log("hi this is working");
 		  console.log("userHolder after Hi this is working " + userHolder);
+		  
+		  /*
 		  login({email: userHolder, password: passHolder}, function callback (err, api) {
 			    if(err) return console.error("ThreadID ERROR: " + err);
 
 			    api.setOptions({
 			      logLevel: "silent" //Turns off messageID notification
 			    });
-			    
+			*/
 		  var threadID = array[1];
 		  
 		  	  
