@@ -47,6 +47,11 @@ const port = 3000;
 * assigned to that code.
 *
 **********************************************************/
+var user;
+var password;
+var userHolder;
+var passHolder
+
 
 net.createServer(function(socket) { //Start server, create socket variable
 
@@ -55,6 +60,7 @@ net.createServer(function(socket) { //Start server, create socket variable
 
 
   socket.on('data', function(data) {
+	  console.log("userHolder after socketon " + userHolder);
 	  // data was received in the socket 
 	  // Writes the received message back to the socket (echo)
 	  //socket.write(data);
@@ -68,16 +74,23 @@ net.createServer(function(socket) { //Start server, create socket variable
 	  //console.log(array[0]);
 	  //console.log(array.length);
 	  
+	  
+	  /***********************************************************************************************
+	   * For some reason array[0] is still reading as login1 instead of threadID
+	   * even though the console.log above this  (console.log(data.toString('utf8)); is
+	   * spitting out the correct string (threadID:1234567).
+	   **********************************************************************************************/
 	  if(array[0] = "login1"){
 		  var holder = array[1];
 		  var credentialsArray = holder.split("/"); //split user/pass
-		  var user = credentialsArray[0];
-		  var password = credentialsArray[1];
-		  
+		  user = credentialsArray[0];
+		  password = credentialsArray[1];
+		  userHolder = user;
+		  passHolder = password;
 		  //console.log(user);
 		  //console.log(password);
-		  
-		  login({email: user, password: password}, function callback (err, api) {
+		  console.log("userHolder before first login " + userHolder);
+		  login({email: userHolder, password: passHolder}, function callback (err, api) {
 			    if(err) return console.error(err);
 
 			    api.setOptions({
@@ -112,25 +125,41 @@ net.createServer(function(socket) { //Start server, create socket variable
 			        client.end();
 			    });*/
 		  });
+		  console.log(userHolder);
+		  
+		  
+		  /**************************************************************************
+		   * This is what we want for the second connection. It SHOULD be threadID
+		   * and not login1. We just need to figure out why this is going wrong
+		   *************************************************************************/
+	  }else if(array[0] == "threadID"){ 
+		  console.log("hi this is working");
+		  console.log("userHolder after Hi this is working " + userHolder);
+		  login({email: userHolder, password: passHolder}, function callback (err, api) {
+			    if(err) return console.error(err);
+
+			    api.setOptions({
+			      logLevel: "silent" //Turns off messageID notification
+			    });
+			    
+		  var threadID = array[1];
+		  
+		  	  
+			  api.getThreadHistory(threadID, 0, 5, null, function(err, history){
+		          if (err) throw err;
+
+		          var javaC2 = net.connect(3002, 'localhost');
+		          let buffer2 = new Buffer(JOSN.stringify(history))
+		          javaC2.write(buffer2);
+		          javaC2.end();
+		          
+		          //console.log(history);
+		})
+		  
+		  })
+	  
 	  }
-
-	  var array2 = string.split("/");
-	  
-	  if(array2[0] = "threadID"){
-		  api.getThreadHistory(array2[1], 0, 5, null, function(err, history){
-	          if (err) throw err;
-
-	          var javaC2 = net.connect(3002, 'localhost');
-	          let buffer2 = new Buffer(JOSN.stringify(history))
-	          javaC2.write(buffer2);
-	          javaC2.end();
-	          
-	          //console.log(history);
-	})
-	  }
-	  
-	  
-
+console.log("userHolder after else if " +userHolder);
 	  
   });  
   
@@ -141,13 +170,13 @@ net.createServer(function(socket) { //Start server, create socket variable
   socket.on('close', function(data) {
 	  // closed connection
 	  console.log('CLOSED: ' + socket.remoteAddress +' '+ socket.remotePort);
-  });
 
+  });
+ 
 
 }).listen(port, hostname);
 
 console.log('Server listening on ' + hostname +':'+ port);
-
 
 
 

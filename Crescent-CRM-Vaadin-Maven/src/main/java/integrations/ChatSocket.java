@@ -39,7 +39,7 @@ public class ChatSocket {
 			
 			String message = "login1:troywingert20@gmail.com/test1234"; //retrieve friends list
 			
-			String message2 = ("login2:troywingert20@gmail.com/test1234/"); //retrieve messages
+			String message2 = "login2:troywingert20@gmail.com/test1234/"; //retrieve messages
 
 			System.out.println("Sending: " + message);
 			String returnStr = client.SendAndReceive(message);
@@ -47,7 +47,7 @@ public class ChatSocket {
 			
 			System.out.println("Sending threadID...");
 			String threadID = parseThreadIDs(returnStr);
-			String messageReturn = client.SendAndReceive("threadID/" + threadID);
+			String messageReturn = client.SendAndReceive("threadID:" + threadID);
 			System.out.println("Receiving messages: " + messageReturn);
 			
 			//ChatSocket.sendCredentials("troywingert20@gmail.com", "zigzag14"); This is the test account
