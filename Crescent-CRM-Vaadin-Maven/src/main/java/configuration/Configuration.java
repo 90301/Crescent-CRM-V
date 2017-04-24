@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import dbUtils.InhalerUtils;
 import debugging.Debugging;
@@ -31,16 +32,16 @@ public class Configuration {
 	public static final String FIRE_BASE_KEY = "Firebase-Key";
 	public static final String FB_CHAT_EMAIL = "Chat-Email";
 	public static final String FB_CHAT_PASS = "Chat-Pass";
-	
+	public static final String NODE_HOSTNAME = "Node-hostname";
 	
 	
 	public static Boolean loadMutex = false;
 	public static Boolean loadComplete = false;
 	
-	public static HashMap<String,String> loadedConfig = new HashMap<String,String>();
+	public static LinkedHashMap<String,String> loadedConfig = new LinkedHashMap<String,String>();
 	
 	//Used for update purposes as well as creating a new config
-	public static HashMap<String,String> defaultConfig = new HashMap<String,String>();
+	public static LinkedHashMap<String,String> defaultConfig = new LinkedHashMap<String,String>();
 	
 	/**
 	 * Attempts to load a config file.
@@ -67,7 +68,7 @@ public class Configuration {
 				
 				//parse the XML
 				
-				loadedConfig = InhalerUtils.xmlToMap(configXml);
+				loadedConfig = InhalerUtils.xmlToMap(configXml,loadedConfig);
 				
 				outputConfig();
 				
@@ -177,6 +178,7 @@ public class Configuration {
 		defaultConfig.put(FIRE_BASE_KEY, "");
 		defaultConfig.put(FB_CHAT_EMAIL, " ");
 		defaultConfig.put(FB_CHAT_PASS, " ");
+		defaultConfig.put(NODE_HOSTNAME, "localhost");
 		
 	}
 

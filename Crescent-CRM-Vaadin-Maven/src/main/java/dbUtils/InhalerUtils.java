@@ -351,7 +351,75 @@ public class InhalerUtils {
 		return map;
 
 	}
+	
+	public static <T extends Map<String,String>> T xmlToMap(String xml,T map) {
+		
+		if (xml == null || xml.equals("")) {
+			return map;
+		}
+		try {
 
+			DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+			InputSource is = new InputSource(new StringReader(xml));
+			//builder.parse(is);
+
+			Document doc = dBuilder.parse(is);
+
+			Element rootElement = doc.getDocumentElement();
+
+			NodeList childElementList = rootElement.getChildNodes();
+
+			for (int i = 0; i < childElementList.getLength(); i++) {
+				Node child = childElementList.item(i);
+
+				if (child.getNodeType() == Node.ELEMENT_NODE) {
+					String key = child.getNodeName();
+
+					String value = child.getTextContent();
+
+					//String value1 = child.getNodeValue();
+					map.put(key, value);
+
+					Debugging.output("Loaded XML Key Value Pair: " + key + " | " + value, Debugging.XML_CONVERSION);
+				}
+			}
+
+		} catch (SAXException e) {
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
+			} else {
+
+			}
+		} catch (IOException e) {
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
+			} else {
+
+			}
+		} catch (ParserConfigurationException e) {
+			if (MasterUI.DEVELOPER_MODE) {
+				//e.printStackTrace();
+				Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+						Debugging.XML_CONVERSION_ERROR);
+			} else {
+
+			}
+		} catch (DOMException e) {
+			//map = new HashMap<String,String>();
+			Debugging.output("" + e.getLocalizedMessage() + " | Cause: " + e.getCause(),
+					Debugging.XML_CONVERSION_ERROR);
+		}
+
+		return map;
+
+	}
+
+	@Deprecated
 	public static HashMap<String, String> xmlToLinkedHashMap(String xml) {
 		HashMap<String, String> map = new LinkedHashMap<String, String>();
 		if (xml == null || xml.equals("")) {
