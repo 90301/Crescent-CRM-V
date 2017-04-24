@@ -1,12 +1,12 @@
 package uiElements;
 
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.DateTimeField;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.v7.ui.PopupDateField;
-import com.vaadin.v7.ui.TextField;
+import com.vaadin.ui.TextField;
 
 import dbUtils.InhalerUtils;
 import clientInfo.TemplateField;
@@ -37,7 +37,7 @@ public class CustomFieldElement extends HorizontalLayout{
 
 	//Different UI elements
 	TextField textF;
-	PopupDateField dateF;
+	DateTimeField dateF;
 	public void createField(){
 
 		this.setSpacing(true);
@@ -50,12 +50,10 @@ public class CustomFieldElement extends HorizontalLayout{
 			textF = new TextField();
 			fieldComponent = textF;
 		} else if(dataType.contains(TemplateField.DATA_TYPE_NUMBER)){
-
+			textF = new TextField();
+			fieldComponent = textF;
 		} else if(dataType.contains(TemplateField.DATA_TYPE_DATE)){
-			dateF = new PopupDateField();
-			dateF.addValueChangeListener(e -> Notification.show("Value changed:",
-					String.valueOf(e.getProperty().getValue()),
-					Type.TRAY_NOTIFICATION));
+			dateF = new DateTimeField();
 			fieldComponent = dateF;
 		}
 
