@@ -140,29 +140,36 @@ net.createServer(function(socket) { //Start server, create socket variable
 		  console.log("hi this is working");
 		  console.log("userHolder after Hi this is working " + userHolder);
 		  
-		  /*
+		  
+		  
 		  login({email: userHolder, password: passHolder}, function callback (err, api) {
 			    if(err) return console.error("ThreadID ERROR: " + err);
 
+			    console.log("Logged into: " + userHolder);
 			    api.setOptions({
 			      logLevel: "silent" //Turns off messageID notification
 			    });
-			*/
+			    
+			
 		  var threadID = array[1];
+		  var threadIDClean = threadID.replace(/(?:\r\n|\r|\n)/g, '');
 		  
-		  	  
-			  api.getThreadHistory(threadID, 0, 5, null, function(err, history){
+		  console.log("thread id parsed: " + threadIDClean);
+		  
+			  api.getThreadHistory(threadIDClean, 0, 5, null, function(err, history){
 		          if (err) throw err;
 
+		          console.log("sending data from thread: " + threadIDClean);
+		          
 		          var javaC2 = net.connect(3002, senderIp);
-		          var buffer2 = new Buffer(JOSN.stringify(history))
+		          var buffer2 = new Buffer(JSON.stringify(history))
 		          javaC2.write(buffer2);
 		          javaC2.end();
 		          
 		          //console.log(history);
-		})
+		})// end of get history
 		  
-		  })
+		  }) // end of login
 	  
 	  }
 console.log("userHolder after else if " +userHolder);
