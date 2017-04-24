@@ -29,6 +29,9 @@ public class Configuration {
 	public static final String EMAIL_KEY = "Email";
 	public static final String EMAIL_PASS_KEY = "Email-Password";
 	public static final String FIRE_BASE_KEY = "Firebase-Key";
+	public static final String FB_CHAT_EMAIL = "Chat-Email";
+	public static final String FB_CHAT_PASS = "Chat-Pass";
+	
 	
 	
 	public static Boolean loadMutex = false;
@@ -172,6 +175,8 @@ public class Configuration {
 		defaultConfig.put(EMAIL_KEY, "");
 		defaultConfig.put(EMAIL_PASS_KEY, "");
 		defaultConfig.put(FIRE_BASE_KEY, "");
+		defaultConfig.put(FB_CHAT_EMAIL, " ");
+		defaultConfig.put(FB_CHAT_PASS, " ");
 		
 	}
 

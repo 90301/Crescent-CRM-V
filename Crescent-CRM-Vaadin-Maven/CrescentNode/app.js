@@ -80,15 +80,15 @@ net.createServer(function(socket) { //Start server, create socket variable
 	   * even though the console.log above this  (console.log(data.toString('utf8)); is
 	   * spitting out the correct string (threadID:1234567).
 	   **********************************************************************************************/
-	  if(array[0] = "login1"){
+	  if(array[0] == "login1"){
 		  var holder = array[1];
 		  var credentialsArray = holder.split("/"); //split user/pass
 		  user = credentialsArray[0];
 		  password = credentialsArray[1];
 		  userHolder = user;
 		  passHolder = password;
-		  //console.log(user);
-		  //console.log(password);
+		  console.log(user);
+		  console.log(password);
 		  console.log("userHolder before first login " + userHolder);
 		  login({email: userHolder, password: passHolder}, function callback (err, api) {
 			    if(err) return console.error(err);
@@ -136,7 +136,7 @@ net.createServer(function(socket) { //Start server, create socket variable
 		  console.log("hi this is working");
 		  console.log("userHolder after Hi this is working " + userHolder);
 		  login({email: userHolder, password: passHolder}, function callback (err, api) {
-			    if(err) return console.error(err);
+			    if(err) return console.error("ThreadID ERROR: " + err);
 
 			    api.setOptions({
 			      logLevel: "silent" //Turns off messageID notification

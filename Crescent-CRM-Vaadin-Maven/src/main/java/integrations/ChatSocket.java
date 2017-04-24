@@ -14,7 +14,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import org.json.simple.*;
 
-
+import configuration.Configuration;
 import debugging.Debugging;
 
 public class ChatSocket {
@@ -24,7 +24,13 @@ public class ChatSocket {
 	public static Integer NODE_PORT_RECEIVE = 3002;
 	public static String NODE_IP = "127.0.0.1";
 	public static Socket socket;
-	public static Boolean DISABLE_SOCKET_CODE = false; 
+	public static Boolean DISABLE_SOCKET_CODE = false;
+	
+	//List of constants for node JS
+	public static final String LOGIN1 = "login1";
+	public static final String LOGIN2 = "login2";
+	public static final String THREAD_ID = "threadID";
+	
 	
 	public static void setupNodeSocket() {
 		
@@ -37,9 +43,9 @@ public class ChatSocket {
 			client.socketConnect(NODE_IP, NODE_PORT_SEND);
 			
 			
-			String message = "login1:troywingert20@gmail.com/test1234"; //retrieve friends list
+			String message = "login1:" + Configuration.get(Configuration.FB_CHAT_EMAIL) + "/" + Configuration.get(Configuration.FB_CHAT_PASS);//retrieve friends list
 			
-			String message2 = "login2:troywingert20@gmail.com/test1234/"; //retrieve messages
+			String message2 = "THREAD_ID:"+ Configuration.get(Configuration.FB_CHAT_EMAIL) + "/" + Configuration.get(Configuration.FB_CHAT_PASS);//retrieve messages
 
 			System.out.println("Sending: " + message);
 			String returnStr = client.SendAndReceive(message);
