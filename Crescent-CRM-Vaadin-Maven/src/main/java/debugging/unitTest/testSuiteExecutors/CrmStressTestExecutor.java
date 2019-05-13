@@ -35,20 +35,20 @@ public class CrmStressTestExecutor extends TestSuiteExecutor {
 		
 		//populate table with clients
 		
-		ArrayList<String> allStatusNames = new ArrayList<String>();
-		ArrayList<String> allLocationNames = new ArrayList<String>();
-		ArrayList<String> allGroupNames = new ArrayList<String>();
+		ArrayList<Status> allStatusNames = new ArrayList<>();
+		ArrayList<Location> allLocationNames = new ArrayList<>();
+		ArrayList<Group> allGroupNames = new ArrayList<>();
 		
 		for (Status e: masterUi.userDataHolder.getAllStatus()) {
-			allStatusNames.add(e.getPrimaryKey());
+			allStatusNames.add(e);
 		}
 		
 		for (Location e: masterUi.userDataHolder.getAllLocations()) {
-			allLocationNames.add(e.getPrimaryKey());
+			allLocationNames.add(e);
 		}
 		
 		for (Group e: masterUi.userDataHolder.getAllGroups()) {
-			allGroupNames.add(e.getPrimaryKey());
+			allGroupNames.add(e);
 		}
 		
 		RapidProfilingTimer rapidCreateClientTimer = new RapidProfilingTimer("rapid create Timer.");

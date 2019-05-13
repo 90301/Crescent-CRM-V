@@ -9,7 +9,7 @@ var FB = require('fb');
 	* Nodejs Server info
 	*
     **********************************************************/
-const hostname = '127.0.0.1';
+const hostname = '0.0.0.0';//0.0.0.0 will listen on all devices
 const port = 3000;
 
 
@@ -50,7 +50,8 @@ const port = 3000;
 var user;
 var password;
 var userHolder;
-var passHolder
+var passHolder;
+
 
 
 net.createServer(function(socket) { //Start server, create socket variable
@@ -58,6 +59,7 @@ net.createServer(function(socket) { //Start server, create socket variable
 
   console.log('CONNECTED: ' + socket.remoteAddress +':'+ socket.remotePort); //IP and Port auto-assigned
 
+  var senderIp = socket.remoteAddress;
 
   socket.on('data', function(data) {
 	  console.log("userHolder after socketon " + userHolder);
@@ -81,14 +83,16 @@ net.createServer(function(socket) { //Start server, create socket variable
 	   * spitting out the correct string (threadID:1234567).
 	   **********************************************************************************************/
 	  if(array[0] == "login1"){
+		  //TODO make logging in a function
 		  var holder = array[1];
 		  var credentialsArray = holder.split("/"); //split user/pass
 		  user = credentialsArray[0];
 		  password = credentialsArray[1];
-		  userHolder = user;
-		  passHolder = password;
-		  console.log(user);
-		  console.log(password);
+		  userHolder = user.replace(/(?:\r\n|\r|\n)/g, '')//removes new line characters;
+		  passHolder = password.replace(/(?:\r\n|\r|\n)/g, '');//removes new line characters
+		  
+		  console.log(userHolder);
+		  console.log(passHolder);
 		  console.log("userHolder before first login " + userHolder);
 		  login({email: userHolder, password: passHolder}, function callback (err, api) {
 			    if(err) return console.error(err);
@@ -101,8 +105,8 @@ net.createServer(function(socket) { //Start server, create socket variable
 			    api.getThreadList(0, null, 'inbox', function(err, arr){
 			    	if(err) return console.error(err);
 			    	
-			    	var javaC = net.connect(3002, 'localhost');
-			    	let buffer = new Buffer(JSON.stringify(arr))
+			    	var javaC = net.connect(3002, senderIp);
+			    	var buffer = new Buffer(JSON.stringify(arr))
 			    	
 			    	javaC.write(buffer);
 			    	//console.log(arr);
@@ -135,28 +139,37 @@ net.createServer(function(socket) { //Start server, create socket variable
 	  }else if(array[0] == "threadID"){ 
 		  console.log("hi this is working");
 		  console.log("userHolder after Hi this is working " + userHolder);
+		  
+		  
+		  
 		  login({email: userHolder, password: passHolder}, function callback (err, api) {
 			    if(err) return console.error("ThreadID ERROR: " + err);
 
+			    console.log("Logged into: " + userHolder);
 			    api.setOptions({
 			      logLevel: "silent" //Turns off messageID notification
 			    });
 			    
+			
 		  var threadID = array[1];
+		  var threadIDClean = threadID.replace(/(?:\r\n|\r|\n)/g, '');
 		  
-		  	  
-			  api.getThreadHistory(threadID, 0, 5, null, function(err, history){
+		  console.log("thread id parsed: " + threadIDClean);
+		  
+			  api.getThreadHistory(threadIDClean, 0, 5, null, function(err, history){
 		          if (err) throw err;
 
-		          var javaC2 = net.connect(3002, 'localhost');
-		          let buffer2 = new Buffer(JOSN.stringify(history))
+		          console.log("sending data from thread: " + threadIDClean);
+		          
+		          var javaC2 = net.connect(3002, senderIp);
+		          var buffer2 = new Buffer(JSON.stringify(history))
 		          javaC2.write(buffer2);
 		          javaC2.end();
 		          
 		          //console.log(history);
-		})
+		})// end of get history
 		  
-		  })
+		  }) // end of login
 	  
 	  }
 console.log("userHolder after else if " +userHolder);

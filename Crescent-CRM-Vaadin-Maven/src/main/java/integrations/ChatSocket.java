@@ -36,10 +36,13 @@ public class ChatSocket {
 		
 		if (!DISABLE_SOCKET_CODE) {
 		try {
+			
+			//LOAD IP FROM CONFIG
+			NODE_IP = Configuration.get(Configuration.NODE_HOSTNAME);
 			//int threadID;
 			ChatSocket client = new ChatSocket();
 			
-			
+			Debugging.output("Attempting to connect to: " + NODE_IP, Debugging.NODE_SOCKET_DEBUG);
 			client.socketConnect(NODE_IP, NODE_PORT_SEND);
 			
 			
